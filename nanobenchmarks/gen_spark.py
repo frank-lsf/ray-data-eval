@@ -1,9 +1,11 @@
+import os
+import time
+
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 import numpy as np
-import time
 
-DATA_SIZE = 1000 * 100
+DATA_SIZE = 1000 * 100  # 100 KB
 
 
 def gen_data(_):
@@ -11,22 +13,23 @@ def gen_data(_):
 
 
 def memory_blowup(x, *, blowup: int):
-    return [x + np.random.rand(DATA_SIZE) for _ in range(blowup)]
+    return np.concatenate([x + np.random.rand(DATA_SIZE) for _ in range(blowup)])
 
 
-def get_nbytes(row):
-    return (row[0].nbytes,)
+def sum_byte_sizes(a, b):
+    size_a = a if isinstance(a, int) else a[0].nbytes
+    size_b = b if isinstance(b, int) else b[0].nbytes
+    return size_a + size_b
 
 
-def run_experiment(spark, blowup: int = -1, parallelism: int = -1, size: int = -1):
+def run_experiment(spark, blowup: int = 0, parallelism: int = -1, size: int = -1):
     start = time.perf_counter()
 
     rdd = spark.sparkContext.parallelize(range(size), parallelism)
     rdd = rdd.map(gen_data)
     if blowup > 0:
-        rdd = rdd.flatMap(lambda x: memory_blowup(x, blowup=blowup))
-    rdd = rdd.map(get_nbytes)
-    ret = rdd.reduce(lambda x, y: (x[0] + y[0],))[0]
+        rdd = rdd.map(lambda x: memory_blowup(x, blowup=blowup))
+    ret = rdd.reduce(sum_byte_sizes)
 
     end = time.perf_counter()
     print(f"\n{ret:,}")
@@ -35,7 +38,12 @@ def run_experiment(spark, blowup: int = -1, parallelism: int = -1, size: int = -
 
 
 def main():
-    spark = SparkSession.builder.appName("PySpark Ray Equivalent").getOrCreate()
+    spark = (
+        SparkSession.builder.appName("Spark")
+        .config("spark.eventLog.enabled", "true")
+        .config("spark.eventLog.dir", os.getenv("SPARK_EVENTS_FILEURL"))
+        .getOrCreate()
+    )
 
     run_experiment(spark, parallelism=100, size=10000, blowup=20)
 
