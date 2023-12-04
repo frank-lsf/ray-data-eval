@@ -45,7 +45,7 @@ def main():
         .getOrCreate()
     )
 
-    run_experiment(spark, parallelism=100, size=10000, blowup=20)
+    run_experiment(spark, parallelism=100, size=10000, blowup=100)
 
 
 if __name__ == "__main__":
