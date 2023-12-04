@@ -1,4 +1,7 @@
+.eggs
 bin
 data
+logs
 target
 __pycache__
+*.log
