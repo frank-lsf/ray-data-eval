@@ -44,7 +44,7 @@ def main():
     ray.init("auto")
     ray.data.DataContext.get_current().execution_options.verbose_progress = True
 
-    run_experiment(parallelism=16, size=10000, blowup=100)
+    run_experiment(parallelism=-1, size=10000, blowup=20)
 
 
 if __name__ == "__main__":

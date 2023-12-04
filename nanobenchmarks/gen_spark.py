@@ -22,7 +22,7 @@ def sum_byte_sizes(a, b):
     return size_a + size_b
 
 
-def run_experiment(spark, blowup: int = 0, parallelism: int = -1, size: int = -1):
+def run_experiment(spark, blowup: int = 0, parallelism: int = None, size: int = -1):
     start = time.perf_counter()
 
     rdd = spark.sparkContext.parallelize(range(size), parallelism)
@@ -45,7 +45,7 @@ def main():
         .getOrCreate()
     )
 
-    run_experiment(spark, parallelism=100, size=10000, blowup=100)
+    run_experiment(spark, size=10000, blowup=20)
 
 
 if __name__ == "__main__":
