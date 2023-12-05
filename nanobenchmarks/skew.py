@@ -4,28 +4,31 @@ import numpy as np
 import ray
 
 
-DATA_SIZE = 1000 * 100
+DATA_SIZE = 1000 * 200
 
 
 def gen_data(row):
-    return {"data": np.random.rand(DATA_SIZE), **row}
+    i = row["id"]
+    print(f"gen_data {i}: {DATA_SIZE * i:,}")
+    data = np.random.rand(DATA_SIZE * i)
+    for _ in range(i):
+        data += np.random.rand(DATA_SIZE * i)
+    return {"data": data, **row}
 
 
 def memory_blowup(row, *, blowup: int):
-    print(f"memory_blowup({blowup})", row["id"])
+    i = row["id"]
     x = row["data"]
-    return {"data": np.concatenate([x + np.random.rand(DATA_SIZE) for _ in range(blowup)])}
+    print(f"memory_blowup {i}: {x.nbytes:,} * {blowup} = {x.nbytes * blowup:,}")
+    return {"data": np.concatenate([x + np.random.rand(DATA_SIZE * i * i) for _ in range(blowup)])}
 
 
-def memory_blowup_flat(row, *, blowup: int):
-    x = row["data"]
-    return [{"data": x + np.random.rand(DATA_SIZE)} for _ in range(blowup)]
-
-
-def run_experiment(*, blowup: int = 0, parallelism: int = -1, size: int = -1):
+def run_experiment(*, blowup: int = 0, parallelism: int = -1, size: int = -1, random_shuffle: bool = False):
     start = time.perf_counter()
 
     ds = ray.data.range(size, parallelism=parallelism)
+    if random_shuffle:
+        ds = ds.random_shuffle()
     ds = ds.map(gen_data)
     if blowup > 0:
         ds = ds.map(memory_blowup, fn_kwargs={"blowup": blowup})
@@ -45,8 +48,8 @@ def main():
     ray.init("auto")
     ray.data.DataContext.get_current().execution_options.verbose_progress = True
 
-    # run_experiment(parallelism=-1, size=10000, blowup=20)
-    run_experiment(parallelism=2, size=100, blowup=20)
+    # run_experiment(parallelism=4, size=100, blowup=0)
+    run_experiment(parallelism=4, size=100, blowup=0, random_shuffle=True)
 
 
 if __name__ == "__main__":
