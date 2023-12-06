@@ -3,7 +3,7 @@ Testing Ray Data's streaming execution.
 
 Ray cluster setting:
 
-ray stop -f && ray start --head --system-config='{"automatic_object_spilling_enabled":false}' --resources='{"tpu":16}' --object-store-memory=1048576000
+ray stop -f && ray start --head --num-gpus=8 --object-store-memory=1048576000
 """
 
 import time
@@ -15,7 +15,7 @@ import ray
 DATA_SIZE = 1000 * 1000 * 1  # 1 MB
 
 
-def memory_blowup(row, *, blowup: int, slow: bool = False):
+def memory_blowup(row, *, slow: bool = False):
     """
     For task i, this task will:
     - Return i MB of data
@@ -40,8 +40,8 @@ def run_experiment(*, parallelism: int = -1, size: int = 100, blowup: int = 20):
     items = list(range(size))
     ds = ray.data.from_items(items, parallelism=parallelism)
 
-    ds = ds.map(memory_blowup, fn_kwargs={"blowup": blowup})
-    ds = ds.map(memory_shrink)
+    ds = ds.map(memory_blowup)
+    ds = ds.map(memory_shrink, num_gpus=1)
 
     ret = 0
     for row in ds.iter_rows():
@@ -52,6 +52,8 @@ def run_experiment(*, parallelism: int = -1, size: int = 100, blowup: int = 20):
     end = time.perf_counter()
     print(f"\n{ret:,}")
     print(f"Time: {end - start:.4f}s")
+    print(ds.stats())
+    print(ray._private.internal_api.memory_summary(stats_only=True))
     return ret
 
 
