@@ -12,7 +12,7 @@ import numpy as np
 import ray
 
 
-DATA_SIZE = 1000 * 1000 * 1  # 1 MB
+DATA_SIZE = 1000 * 1000 * 1 // 8  # 1 MB of floats
 
 
 def memory_blowup(row, *, slow: bool = False):
