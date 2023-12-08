@@ -5,3 +5,4 @@ logs
 target
 __pycache__
 *.log
+wandb/
