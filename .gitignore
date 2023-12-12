@@ -3,5 +3,6 @@ bin
 data
 logs
 target
+wandb
 __pycache__
 *.log
