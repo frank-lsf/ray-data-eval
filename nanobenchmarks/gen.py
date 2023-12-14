@@ -41,11 +41,10 @@ def run_experiment(*, blowup: int = 0, parallelism: int = -1, size: int = -1):
     print(f"Time: {end - start:.4f}s")
     wandb.log({
         "Execution Time": end - start, 
-        "Data Size": DATA_SIZE, 
+        "Input Size": DATA_SIZE, 
         "Blowup Factor": blowup, 
         "Parallelism": parallelism, 
-        "Dataset Size": size, 
-        "Memory Used": ret
+        "Array Size": ret
         })
     return ret
 
@@ -53,7 +52,7 @@ def run_experiment(*, blowup: int = 0, parallelism: int = -1, size: int = -1):
 def main():
     ray.data.DataContext.get_current().execution_options.verbose_progress = True
 
-    wandb.init(project='gen.py', entity='ronyw') # raysort 
+    wandb.init(project='gen_spark', entity='ronyw') # entity='raysort'
 
     # run_experiment(parallelism=-1, size=10000, blowup=20)
     run_experiment(parallelism=2, size=100, blowup=20)
