@@ -32,8 +32,7 @@ def run_experiment(env, blowup: int = -1, parallelism: int = -1, size: int = -1)
 
 def main():
     env = StreamExecutionEnvironment.get_execution_environment()
-    # env.set_parallelism(50)
-    env.set_parallelism(2)
+    env.set_parallelism(50)
 
     run_experiment(env, size=10000)
 

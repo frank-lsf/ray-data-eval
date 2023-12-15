@@ -52,7 +52,7 @@ def run_experiment(*, blowup: int = 0, parallelism: int = -1, size: int = -1):
 def main():
     ray.data.DataContext.get_current().execution_options.verbose_progress = True
 
-    wandb.init(project='gen_spark', entity='ronyw') # entity='raysort'
+    wandb.init(project='gen_spark', entity='ronyw') # change to entity='raysort'
 
     # run_experiment(parallelism=-1, size=10000, blowup=20)
     run_experiment(parallelism=2, size=100, blowup=20)

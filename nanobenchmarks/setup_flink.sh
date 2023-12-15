@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Latest stable release 
+# Latest stable release
 FLINK_VERSION="1.18.0"
 
+# Create new conda env to install PyFlink
 conda create -n raydata-flink pip python=3.10
 eval "$(conda shell.bash hook)"
 conda activate raydata-flink
