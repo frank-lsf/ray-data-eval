@@ -1,12 +1,18 @@
 #!/bin/bash
 
 # Latest stable release
-FLINK_VERSION="1.18.0"
+FLINK_VERSION=1.18.0
 
 # Create new conda env to install PyFlink
-conda create -n raydata-flink pip python=3.10
+echo Activating conda environment "raydata"...
 eval "$(conda shell.bash hook)"
-conda activate raydata-flink
+conda activate raydata
+
+if [ "$CONDA_DEFAULT_ENV" == "raydata" ]; then
+    echo Conda environment "raydata" is activated.
+else
+    echo Failed to activate conda environment "raydata". Did you initialize?
+fi
 
 # -- PyFlink already comes with Flink runtime so we don't need to install Flink separately --
 # FLINK_DOWNLOAD_URL="https://dlcdn.apache.org/flink/flink-1.18.0/flink-1.18.0-bin-scala_2.12.tgz"
@@ -20,10 +26,9 @@ conda activate raydata-flink
 # echo "Unzipping Flink..."
 # tar -xzf "flink-$FLINK_VERSION.tgz" # -x extract; -z decompress with gzip; -f filename
 
-echo "Installing PyFlink..."
+echo Installing PyFlink...
 pip install apache-flink==$FLINK_VERSION
 
-echo "Flink setup completed."
-echo "To start running flink, switch to the new conda environment:"
-echo " conda activate raydata-flink"
-
+echo Flink setup completed.
+echo To start running flink, switch to the conda environment "raydata":
+echo conda activate raydata
