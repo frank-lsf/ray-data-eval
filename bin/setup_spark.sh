@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Latest stable release 
-SPARK_VERSION="3.5.0"
+SPARK_VERSION=3.5.0
 
 # Download URL
 SPARK_URL="https://dlcdn.apache.org/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop3.tgz"
