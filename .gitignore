@@ -6,3 +6,4 @@ target
 wandb
 __pycache__
 *.log
+wandb/

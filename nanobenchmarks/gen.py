@@ -2,6 +2,7 @@ import time
 
 import numpy as np
 import ray
+import wandb
 
 
 DATA_SIZE = 1000 * 100
@@ -38,12 +39,21 @@ def run_experiment(*, blowup: int = 0, parallelism: int = -1, size: int = -1):
     end = time.perf_counter()
     print(f"\n{ret:,}")
     print(f"Time: {end - start:.4f}s")
+    wandb.log({
+        "Execution Time": end - start, 
+        "Input Size": DATA_SIZE, 
+        "Blowup Factor": blowup, 
+        "Parallelism": parallelism, 
+        "Array Size": ret
+        })
     return ret
 
 
 def main():
     ray.init("auto")
     ray.data.DataContext.get_current().execution_options.verbose_progress = True
+
+    wandb.init(project="gen_spark", entity="raysort")
 
     # run_experiment(parallelism=-1, size=10000, blowup=20)
     run_experiment(parallelism=2, size=100, blowup=20)
