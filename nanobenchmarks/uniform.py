@@ -6,10 +6,15 @@ Ray cluster setting:
 ray stop -f && ray start --head --num-gpus=200
 """
 
+import datetime
 import time
 
 import numpy as np
 import ray
+from ray.data._internal.execution.backpressure_policy import (
+    StreamingOutputBackpressurePolicy,
+    ConcurrencyCapBackpressurePolicy,
+)
 import wandb
 
 
@@ -28,6 +33,13 @@ def memory_shrink(row, *, time_factor: int = 1):
     data = row["data"]
     time.sleep(TIME_BASIS * time_factor)
     return {"result": data.sum()}
+
+
+def save_ray_timeline():
+    timestr = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    filename = f"/tmp/ray-timeline-{timestr}.json"
+    ray.timeline(filename=filename)
+    wandb.save(filename)
 
 
 def run_experiment(
@@ -55,6 +67,7 @@ def run_experiment(
     print(f"\n{ret:,}")
     print(ds.stats())
     print(ray._private.internal_api.memory_summary(stats_only=True))
+    save_ray_timeline()
     wandb.log({"run_time": run_time})
     return ret
 
@@ -77,7 +90,8 @@ def main():
         "producer_time": 1,
         "consumer_time": 9,
         "ray_data_config": {
-            "backpressure_policies.enabled": [],
+            # "backpressure_policies.enabled": [],
+            "backpressure_policies.enabled": [StreamingOutputBackpressurePolicy],
         },
     }
     config["total_data_size"] = config["total_data_size_gb"] * 10**9
