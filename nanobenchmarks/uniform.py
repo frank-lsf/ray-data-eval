@@ -13,24 +13,20 @@ import ray
 import wandb
 
 
-DATA_SIZE_BYTES = 1000 * 1000 * 10  # 10 MB
-DATA_SIZE = DATA_SIZE_BYTES // 8  # 8 bytes per float64
-NUM_LOOPS = 1  # How many loops per time_factor
+DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
+TIME_BASIS = 0.1  # How many seconds should time_factor=1 take
 
 
 def memory_blowup(row, *, time_factor: int = 1):
     i = row["item"]
-    data = np.random.rand(DATA_SIZE)
-    for _ in range(time_factor * NUM_LOOPS - 1):
-        data += np.random.rand(DATA_SIZE)
+    data = np.full(DATA_SIZE_BYTES, 1, dtype=np.uint8)
+    time.sleep(TIME_BASIS * time_factor)
     return {"data": data, "idx": i}
 
 
 def memory_shrink(row, *, time_factor: int = 1):
-    size = row["data"].size
-    data = np.random.rand(size)
-    for _ in range(time_factor * NUM_LOOPS - 1):
-        data += np.random.rand(size)
+    data = row["data"]
+    time.sleep(TIME_BASIS * time_factor)
     return {"result": data.sum()}
 
 
@@ -63,6 +59,12 @@ def run_experiment(
     return ret
 
 
+def config_ray_data(config):
+    ctx = ray.data.DataContext.get_current()
+    for k, v in config.items():
+        ctx.set_config(k, v)
+
+
 def main():
     ray.init("auto")
 
@@ -70,17 +72,21 @@ def main():
 
     config = {
         "kind": "uniform",  # Each task runs for the same amount of time
-        "parallelism": -1,
-        "num_parts": 10000,
+        "parallelism": 100,
+        "total_data_size_gb": 100,
         "producer_time": 1,
-        "consumer_time": 11,
+        "consumer_time": 9,
+        "ray_data_config": {
+            "backpressure_policies.enabled": [],
+        },
     }
-    config["data_size"] = DATA_SIZE_BYTES * config["num_parts"]
-    config["data_size_gb"] = config["data_size"] / 10**9
+    config["total_data_size"] = config["total_data_size_gb"] * 10**9
+    config["num_parts"] = config["total_data_size"] // DATA_SIZE_BYTES
     config["producer_consumer_ratio"] = (
         config["producer_time"] / config["consumer_time"]
     )
     wandb.config.update(config)
+    config_ray_data(config.get("ray_data_config", {}))
 
     run_experiment(
         parallelism=config["parallelism"],
