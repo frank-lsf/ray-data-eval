@@ -1,6 +1,7 @@
 import time
 
 import numpy as np
+from pyflink.common import Configuration
 from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
 
@@ -31,11 +32,14 @@ def run_experiment(env, blowup: int = -1, parallelism: int = -1, size: int = -1)
 
 
 def main():
-    env = StreamExecutionEnvironment.get_execution_environment()
-    env.set_parallelism(50)
+    config = Configuration()
 
+    # Specify `THREAD` mode
+    config.set_string("python.execution-mode", "thread")
+
+    env = StreamExecutionEnvironment.get_execution_environment(config)
+    env.set_parallelism(15)
     run_experiment(env, size=10000)
-
 
 if __name__ == "__main__":
     main()
