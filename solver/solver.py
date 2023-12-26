@@ -4,20 +4,31 @@ import pulp as pl
 def solve(
     *,
     problem_title: str = "TaskScheduling",
-    num_producers: int = 2,
-    num_consumers: int = 2,
-    producer_time: int = 1,
-    consumer_time: int = 1,
+    num_producers: int = 1,
+    num_consumers: int = 1,
+    producer_time: int | list[int] = 1,
+    consumer_time: int | list[int] = 1,
+    producer_output_size: int | list[int] = 1,
+    consumer_input_size: int | list[int] = 1,
     num_execution_slots: int = 1,
-    time_limit: int = 10,
-    buffer_size_limit: int = 5,
-):
+    time_limit: int = 2,
+    buffer_size_limit: int = 1,
+) -> int:
+    producer_time = [producer_time] * num_producers if isinstance(producer_time, int) else producer_time
+    consumer_time = [consumer_time] * num_consumers if isinstance(consumer_time, int) else consumer_time
+    producer_output_size = (
+        [producer_output_size] * num_producers if isinstance(producer_output_size, int) else producer_output_size
+    )
+    consumer_input_size = (
+        [consumer_input_size] * num_consumers if isinstance(consumer_input_size, int) else consumer_input_size
+    )
+    assert len(producer_time) == num_producers, (producer_time, num_producers)
+    assert len(consumer_time) == num_consumers, (consumer_time, num_consumers)
+    assert len(producer_output_size) == num_producers, (producer_output_size, num_producers)
+    assert len(consumer_input_size) == num_consumers, (consumer_input_size, num_consumers)
+
     num_total_tasks = num_producers + num_consumers
-    producer_time = [producer_time] * num_producers
-    consumer_time = [consumer_time] * num_consumers
     task_time = producer_time + consumer_time
-    producer_output_size = [1] * num_producers
-    consumer_input_size = [1] * num_consumers
 
     model = pl.LpProblem(problem_title, pl.LpMinimize)
 
@@ -85,7 +96,7 @@ def solve(
     for i in range(num_total_tasks):
         for j in range(num_execution_slots):
             for t in range(time_limit):
-                model += latest_finish_time >= t + task_time[i] * schedule[(i, j, t)]
+                model += latest_finish_time >= t * schedule[(i, j, t)] + 1
 
     model += latest_finish_time
 
@@ -128,6 +139,8 @@ def solve(
         print(f"{t: 2} | ", end="")
     print()
     print("+" + "-" * (time_limit * 5 + 5) + "+")
+
+    return pl.value(model.objective)
 
 
 def main():
