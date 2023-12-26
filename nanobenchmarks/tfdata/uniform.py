@@ -3,8 +3,23 @@ import numpy as np
 import time
 import wandb
 
+TF_PROFILER_LOGS = "logs/tf"
+
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
 TIME_BASIS = 0.1  # How many seconds should time_factor=1 take
+
+
+def benchmark(
+    dataset,
+    num_epochs: int = 1,
+    time_factor: float = TIME_BASIS,
+):
+    ret = 0
+    for _ in range(num_epochs):
+        for sample in dataset:
+            time.sleep(TIME_BASIS * time_factor)
+            ret += len(sample)
+    print(ret)
 
 
 def memory_blowup(_item, time_factor):
@@ -13,51 +28,46 @@ def memory_blowup(_item, time_factor):
     return data
 
 
-def memory_shrink(data, time_factor):
-    time.sleep(TIME_BASIS * time_factor)
-    return np.sum(data)
-
-
 def run_experiment(
+    *,
     num_parts: int,
-    producer_time: int,
-    consumer_time: int,
+    parallelism: int,
+    preprocessing_time: int,
+    training_time: int,
 ):
-    items = tf.data.Dataset.from_tensor_slices(np.arange(num_parts))
-    ds = items.map(
+    if parallelism < 0:
+        parallelism = tf.data.experimental.AUTOTUNE
+
+    start = time.perf_counter()
+    ds = tf.data.Dataset.from_tensor_slices(np.arange(num_parts))
+    ds = ds.map(
         lambda item: tf.numpy_function(
             memory_blowup,
-            [item, producer_time],
+            [item, preprocessing_time],
             Tout=tf.uint8,
-        )
+        ),
+        num_parallel_calls=parallelism,
     )
-    ds = ds.map(
-        lambda data: tf.numpy_function(
-            memory_shrink,
-            [data, consumer_time],
-            Tout=tf.uint64,
-        )
+    benchmark(
+        ds,
+        time_factor=training_time,
     )
 
-    ret = 0
-    for row in ds.as_numpy_iterator():
-        print(row)
-        ret += row
-
-    print(f"\n{ret:,}")
-    return ret
+    run_time = time.perf_counter() - start
+    wandb.log({"run_time": run_time})
 
 
 def main():
-    # Initialize wandb
     wandb.init(project="tf-data-eval", entity="raysort")
+    tf.profiler.experimental.start(TF_PROFILER_LOGS)
 
     config = {
         "kind": "uniform",  # Each task runs for the same amount of time
-        "parallelism": 100,
-        "total_data_size_gb": 100,
+        "parallelism": -1,
+        "total_data_size_gb": 10,
         "producer_time": 1,
         "consumer_time": 9,
+        "memory_limit": 10**9 * 20,
     }
     config["total_data_size"] = config["total_data_size_gb"] * 10**9
     config["num_parts"] = config["total_data_size"] // DATA_SIZE_BYTES
@@ -69,9 +79,11 @@ def main():
     # Run the experiment
     run_experiment(
         num_parts=config["num_parts"],
-        producer_time=config["producer_time"],
-        consumer_time=config["consumer_time"],
+        parallelism=config["parallelism"],
+        preprocessing_time=config["producer_time"],
+        training_time=config["consumer_time"],
     )
+    tf.profiler.experimental.stop()
 
 
 if __name__ == "__main__":
