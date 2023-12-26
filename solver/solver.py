@@ -82,29 +82,19 @@ def solve(
 
     # Constraint: All tasks are assigned to exactly one CPU slot and complete
     for i in range(num_total_tasks):
-        model += (
-            pl.lpSum([schedule[(i, j, t)] for j in range(num_execution_slots) for t in range(time_limit)])
-            == task_time[i]
-        )
+        model += pl.lpSum([schedule_flat[(i, t)] for t in range(time_limit)]) == task_time[i]
 
-    # Constraint: All tasks must run contiguously
-    for i in range(num_total_tasks):
-        for j in range(num_execution_slots):
-            for t in range(time_limit - task_time[i] + 1):
-                model += (
-                    pl.lpSum([schedule[(i, j, t + k)] for k in range(task_time[i])])
-                    <= task_time[i] * schedule[(i, j, t)]
-                )
+    # TODO: Constraint: All tasks must run contiguously and for their entire duration
 
     # Constraint: Buffer size is the total size of producer output not yet consumed
-    # for t in range(time_limit):
-    #     buffer_increase = pl.lpSum(
-    #         [producer_output_size[i] * finish_time[(i, t)] for i in range(num_producers)],
-    #     )
-    #     buffer_decrease = pl.lpSum(
-    #         [consumer_input_size[i] * start_time[(i + num_producers, t)] for i in range(num_consumers)],
-    #     )
-    #     model += buffer[t + 1] == buffer[t] + buffer_increase - buffer_decrease
+    for t in range(time_limit):
+        buffer_increase = pl.lpSum(
+            [producer_output_size[i] * finish_time[(i, t)] for i in range(num_producers)],
+        )
+        buffer_decrease = pl.lpSum(
+            [consumer_input_size[i] * start_time[(i + num_producers, t)] for i in range(num_consumers)],
+        )
+        model += buffer[t + 1] == buffer[t] + buffer_increase - buffer_decrease
 
     # Constraint: Buffer size is bounded
     for t in range(time_limit):
@@ -134,7 +124,6 @@ def solve(
 
     # Output results
     print("Status:", pl.LpStatus[model.status])
-    print("Latest Finish Time =", pl.value(model.objective))
 
     print("Schedule:")
     for i in range(num_producers):
@@ -166,20 +155,23 @@ def solve(
     print("+" + "-" * (time_limit * 5 + 5) + "+")
     print("|| t || ", end="")
     for t in range(time_limit):
-        print(f"{t: 2} | ", end="")
+        print(f"{t:2} | ", end="")
     print()
     print("+" + "-" * (time_limit * 5 + 5) + "+")
+    print("Latest Finish Time =", pl.value(model.objective))
+    print("Total Run Time =", pl.value(model.objective) + 1)
 
-    return pl.value(model.objective)
+    return pl.value(model.objective) + 1
 
 
 def main():
     solve(
-        num_producers=1,
-        num_consumers=1,
+        num_producers=4,
+        num_consumers=4,
+        producer_time=1,
         consumer_time=2,
-        time_limit=4,
-        # num_execution_slots=2,
+        time_limit=12,
+        num_execution_slots=2,
     )
 
 
