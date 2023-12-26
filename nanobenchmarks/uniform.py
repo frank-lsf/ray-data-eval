@@ -7,6 +7,7 @@ ray stop -f && ray start --head --num-gpus=200
 """
 
 import datetime
+import subprocess
 import time
 
 import numpy as np
@@ -24,7 +25,7 @@ TIME_BASIS = 0.1  # How many seconds should time_factor=1 take
 
 def memory_blowup(row, *, time_factor: int = 1):
     i = row["item"]
-    data = np.full(DATA_SIZE_BYTES, 1, dtype=np.uint8)
+    data = b"1" * DATA_SIZE_BYTES
     time.sleep(TIME_BASIS * time_factor)
     return {"data": data, "idx": i}
 
@@ -32,7 +33,7 @@ def memory_blowup(row, *, time_factor: int = 1):
 def memory_shrink(row, *, time_factor: int = 1):
     data = row["data"]
     time.sleep(TIME_BASIS * time_factor)
-    return {"result": data.sum()}
+    return {"result": len(data)}
 
 
 def save_ray_timeline():
@@ -72,6 +73,14 @@ def run_experiment(
     return ret
 
 
+def start_ray(config):
+    subprocess.run("ray stop -f", shell=True, check=True)
+    ray.init(
+        num_gpus=1000,
+        object_store_memory=config.get("object_store_memory"),
+    )
+
+
 def config_ray_data(config):
     ctx = ray.data.DataContext.get_current()
     for k, v in config.items():
@@ -79,8 +88,6 @@ def config_ray_data(config):
 
 
 def main():
-    ray.init("auto")
-
     wandb.init(project="ray-data-eval", entity="raysort")
 
     config = {
@@ -89,6 +96,9 @@ def main():
         "total_data_size_gb": 100,
         "producer_time": 1,
         "consumer_time": 9,
+        "ray_config": {
+            "object_store_memory": 10**9 * 20,
+        },
         "ray_data_config": {
             # "backpressure_policies.enabled": [],
             "backpressure_policies.enabled": [StreamingOutputBackpressurePolicy],
@@ -100,6 +110,7 @@ def main():
         config["producer_time"] / config["consumer_time"]
     )
     wandb.config.update(config)
+    start_ray(config.get("ray_config", {}))
     config_ray_data(config.get("ray_data_config", {}))
 
     run_experiment(
