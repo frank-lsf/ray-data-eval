@@ -33,11 +33,47 @@ def solve(
     model = pl.LpProblem(problem_title, pl.LpMinimize)
 
     schedule = pl.LpVariable.dicts(
-        "s",
+        "x",
         [(i, j, t) for i in range(num_total_tasks) for j in range(num_execution_slots) for t in range(time_limit)],
         cat="Binary",
     )
+    schedule_flat = pl.LpVariable.dicts(
+        "xf",
+        [(i, t) for i in range(num_total_tasks) for t in range(time_limit)],
+        cat="Binary",
+    )
+    start_time = pl.LpVariable.dicts(
+        "s",
+        [(i, t) for i in range(num_total_tasks) for t in range(time_limit)],
+        cat="Binary",
+    )
+    finish_time = pl.LpVariable.dicts(
+        "f",
+        [(i, t) for i in range(num_total_tasks) for t in range(time_limit)],
+        cat="Binary",
+    )
     buffer = pl.LpVariable.dicts("b", range(time_limit + 1), lowBound=0, cat="Integer")
+
+    # Constraints for the flat schedule
+    for i in range(num_total_tasks):
+        for t in range(time_limit):
+            model += schedule_flat[(i, t)] == pl.lpSum([schedule[(i, j, t)] for j in range(num_execution_slots)])
+
+    # Constraints for task start time
+    for i in range(num_total_tasks):
+        model += start_time[(i, 0)] == schedule_flat[(i, 0)]
+        for t in range(1, time_limit):
+            model += start_time[(i, t)] >= schedule_flat[(i, t)] - schedule_flat[(i, t - 1)]
+            model += start_time[(i, t)] <= schedule_flat[(i, t)]
+        model += pl.lpSum([start_time[(i, t)] for t in range(time_limit)]) == 1
+
+    # Constraints for task finish time
+    for i in range(num_total_tasks):
+        model += finish_time[(i, time_limit - 1)] == schedule_flat[(i, time_limit - 1)]
+        for t in range(time_limit - 1):
+            model += finish_time[(i, t)] >= schedule_flat[(i, t)] - schedule_flat[(i, t + 1)]
+            model += finish_time[(i, t)] <= schedule_flat[(i, t)]
+        model += pl.lpSum([finish_time[(i, t)] for t in range(time_limit)]) == 1
 
     # Constraint: One CPU slot can run only one task at a time
     for j in range(num_execution_slots):
@@ -61,51 +97,45 @@ def solve(
                 )
 
     # Constraint: Buffer size is the total size of producer output not yet consumed
-    for t in range(time_limit):
-        buffer_increase = pl.lpSum(
-            [
-                producer_output_size[i]
-                * pl.lpSum([schedule[(i, j, t - k)] for k in range(producer_time[i])])
-                / producer_time[i]
-                for i in range(num_producers)
-                for j in range(num_execution_slots)
-                if t >= producer_time[i]
-            ]
-        )
-        buffer_decrease = pl.lpSum(
-            [
-                consumer_input_size[i]
-                * pl.lpSum([schedule[(i + num_producers, j, t - k)] for k in range(consumer_time[i])])
-                / consumer_time[i]
-                for i in range(num_consumers)
-                for j in range(num_execution_slots)
-                if t >= consumer_time[i]
-            ]
-        )
-        model += buffer[t + 1] == buffer[t] + buffer_increase - buffer_decrease
+    # for t in range(time_limit):
+    #     buffer_increase = pl.lpSum(
+    #         [producer_output_size[i] * finish_time[(i, t)] for i in range(num_producers)],
+    #     )
+    #     buffer_decrease = pl.lpSum(
+    #         [consumer_input_size[i] * start_time[(i + num_producers, t)] for i in range(num_consumers)],
+    #     )
+    #     model += buffer[t + 1] == buffer[t] + buffer_increase - buffer_decrease
 
     # Constraint: Buffer size is bounded
     for t in range(time_limit):
         model += buffer[t] <= buffer_size_limit
 
-    # Constraint: Buffer must be empty at the end of the time limit
+    # Constraint: Buffer must be empty at the beginning and end of the schedule
+    model += buffer[0] == 0
     model += buffer[time_limit] == 0
 
     # Objective function: Minimize the latest finish time
-    latest_finish_time = pl.LpVariable("latest_finish_time", lowBound=0, cat="Integer")
+    latest_finish_time = pl.LpVariable("lf", lowBound=0, cat="Integer")
     for i in range(num_total_tasks):
-        for j in range(num_execution_slots):
-            for t in range(time_limit):
-                model += latest_finish_time >= t * schedule[(i, j, t)] + 1
+        for t in range(time_limit):
+            model += latest_finish_time >= finish_time[(i, t)] * t
 
     model += latest_finish_time
+
+    # Write down the problem
+    model.writeLP(f"{problem_title}.lp")
 
     # Solve the problem
     model.solve()
 
+    # Print all variables
+    for v in model.variables():
+        print(v.name, "=", v.varValue)
+
     # Output results
     print("Status:", pl.LpStatus[model.status])
     print("Latest Finish Time =", pl.value(model.objective))
+
     print("Schedule:")
     for i in range(num_producers):
         for j in range(num_execution_slots):
@@ -144,7 +174,13 @@ def solve(
 
 
 def main():
-    solve()
+    solve(
+        num_producers=1,
+        num_consumers=1,
+        consumer_time=2,
+        time_limit=4,
+        # num_execution_slots=2,
+    )
 
 
 if __name__ == "__main__":
