@@ -60,11 +60,47 @@ def test_simple_3_cpu():
 
 def test_long_case_1_cpu():
     result = solve(
-        num_producers=4,
-        num_consumers=4,
+        num_producers=5,
+        num_consumers=5,
         producer_time=1,
         consumer_time=2,
-        time_limit=12,
+        time_limit=15,
         num_execution_slots=1,
     )
-    assert result == 12
+    assert result == 15
+
+
+def test_long_case_2_cpu():
+    result = solve(
+        num_producers=5,
+        num_consumers=5,
+        producer_time=1,
+        consumer_time=2,
+        time_limit=15,
+        num_execution_slots=1,
+    )
+    assert result == 8
+
+
+def test_long_case_3_cpu():
+    result = solve(
+        num_producers=5,
+        num_consumers=5,
+        producer_time=1,
+        consumer_time=2,
+        time_limit=15,
+        num_execution_slots=3,
+    )
+    assert result == 6
+
+
+def test_long_case_4_cpu():
+    result = solve(
+        num_producers=5,
+        num_consumers=5,
+        producer_time=1,
+        consumer_time=2,
+        time_limit=15,
+        num_execution_slots=4,
+    )
+    assert result == 5
