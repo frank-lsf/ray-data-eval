@@ -11,7 +11,7 @@ def solve(
     producer_output_size: int | list[int] = 1,
     consumer_input_size: int | list[int] = 1,
     num_execution_slots: int = 1,
-    time_limit: int = 2,
+    time_limit: int = 4,
     buffer_size_limit: int = 1,
 ) -> int:
     producer_time = [producer_time] * num_producers if isinstance(producer_time, int) else producer_time
@@ -59,7 +59,7 @@ def solve(
         for j in range(num_execution_slots):
             model += start[(i, j, 0)] == schedule[(i, j, 0)]
             for t in range(1, time_limit):
-                model += start[(i, j, t)] >= schedule[(i, j, t)] - start[(i, j, t - 1)]
+                model += start[(i, j, t)] >= schedule[(i, j, t)] - schedule[(i, j, t - 1)]
                 model += start[(i, j, t)] <= schedule[(i, j, t)]
         # Ensure that each task starts at most once
         model += pl.lpSum([start[(i, j, t)] for j in range(num_execution_slots) for t in range(time_limit)]) == 1
@@ -74,7 +74,7 @@ def solve(
         for j in range(num_execution_slots):
             model += finish[(i, j, time_limit - 1)] == schedule[(i, j, time_limit - 1)]
             for t in range(time_limit - 1):
-                model += finish[(i, j, t)] >= schedule[(i, j, t)] - finish[(i, j, t + 1)]
+                model += finish[(i, j, t)] >= schedule[(i, j, t)] - schedule[(i, j, t + 1)]
                 model += finish[(i, j, t)] <= schedule[(i, j, t)]
         # Ensure that each task finishes at most once
         model += pl.lpSum([finish[(i, j, t)] for j in range(num_execution_slots) for t in range(time_limit)]) == 1
@@ -88,7 +88,7 @@ def solve(
     for i in range(num_total_tasks):
         model += pl.lpSum([schedule_flat[(i, t)] for t in range(time_limit)]) == task_time[i]
 
-    # Constraint: All tasks must run contiguously and for their entire duration
+    # Constraint: All tasks must run contiguously for their entire duration
     for i in range(num_total_tasks):
         for j in range(num_execution_slots):
             # Ensure that the task either starts and runs for its entire duration or doesn't start
@@ -97,10 +97,6 @@ def solve(
                 model += (
                     pl.lpSum([schedule[(i, j, t + k)] for k in range(task_time[i])]) >= task_time[i] * start[i, j, t]
                 )
-
-    # Ensure that the tasks do not exceed the time limit
-    for i in range(num_total_tasks):
-        model += pl.lpSum([schedule_flat[(i, t)] for t in range(time_limit)]) <= task_time[i]
 
     # Constraint: Buffer size is the total size of producer output not yet consumed
     for t in range(time_limit):
@@ -147,41 +143,32 @@ def solve(
         print(v.name, "=", v.varValue)
 
     # Output results
-    print("Status:", pl.LpStatus[model.status])
+    print(">>> Status:", pl.LpStatus[model.status])
 
-    print("Schedule:")
-    for i in range(num_producers):
-        for j in range(num_execution_slots):
-            for t in range(time_limit):
-                if pl.value(schedule[(i, j, t)]) == 1:
-                    print(f"Producer {i}: {t} - {t + producer_time[i]}")
-    for i in range(num_consumers):
-        for j in range(num_execution_slots):
-            for t in range(time_limit):
-                if pl.value(schedule[(i + num_producers, j, t)]) == 1:
-                    print(f"Consumer {i}: {t} - {t + consumer_time[i]}")
-
-    # Draw ASCII art of the schedule where each row is a CPU slot and each column is a time step
-    # Draw the table borders and timesteps
-    print("+" + "-" * (time_limit * 5 + 5) + "+")
+    separator_line = "++" + "-" * (time_limit * 6 + 7) + "++"
+    print(separator_line)
     for j in range(num_execution_slots):
-        print(f"|| {j} || ", end="")
+        print(f"|| {j:4} ||", end="")
         for t in range(time_limit):
             idle = True
             for i in range(num_total_tasks):
                 if pl.value(schedule[(i, j, t)]) == 1:
                     label = f"P{i}" if i < num_producers else f"C{i - num_producers}"
-                    print(f"{label} | ", end="")
+                    print(f" {label:<3} |", end="")
                     idle = False
             if idle:
-                print("   | ", end="")
-        print()
-    print("+" + "-" * (time_limit * 5 + 5) + "+")
-    print("|| t || ", end="")
+                print("     |", end="")
+        print("|")
+    print("||  buf ||", end="")
     for t in range(time_limit):
-        print(f"{t:2} | ", end="")
-    print()
-    print("+" + "-" * (time_limit * 5 + 5) + "+")
+        print(f" {int(pl.value(buffer[t])):<3} |", end="")
+    print(f"| ({int(pl.value(buffer[time_limit]))})")
+    print(separator_line)
+    print("|| time ||", end="")
+    for t in range(time_limit):
+        print(f" {t:<3} |", end="")
+    print("|")
+    print(separator_line)
     print("Latest Finish Time =", pl.value(model.objective))
     print("Total Run Time =", pl.value(model.objective) + 1)
 
@@ -190,14 +177,19 @@ def solve(
 
 def main():
     solve(
-        num_producers=5,
-        num_consumers=5,
-        producer_time=1,
-        consumer_time=2,
-        time_limit=15,
-        num_execution_slots=4,
+        # num_producers=2,
+        # num_consumers=2,
+        # producer_time=3,
+        # consumer_time=3,
+        # producer_output_size=2,
+        # consumer_input_size=2,
+        # time_limit=5,
+        # num_execution_slots=1,
+        # buffer_size_limit=2,
     )
 
 
 if __name__ == "__main__":
     main()
+
+# TODO: doesn't work for any task that runs for >= 3

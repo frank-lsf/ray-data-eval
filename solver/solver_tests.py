@@ -32,10 +32,16 @@ def test_long_producers():
     result = solve(producer_time=2, time_limit=4)
     assert result == 3
 
+    result = solve(producer_time=3, time_limit=4)
+    assert result == 4
+
 
 def test_long_consumers():
     result = solve(consumer_time=2, time_limit=4)
     assert result == 3
+
+    result = solve(consumer_time=3, time_limit=4)
+    assert result == 4
 
 
 def test_long_tasks():
@@ -58,6 +64,26 @@ def test_simple_3_cpu():
     assert result == 3
 
 
+def test_producer_output_size():
+    result = solve(
+        num_producers=1,
+        num_consumers=2,
+        producer_output_size=2,
+        buffer_size_limit=2,
+    )
+    assert result == 3
+
+
+def test_consumer_input_size():
+    result = solve(
+        num_producers=2,
+        num_consumers=1,
+        consumer_input_size=2,
+        buffer_size_limit=2,
+    )
+    assert result == 3
+
+
 def test_long_case_1_cpu():
     result = solve(
         num_producers=5,
@@ -77,7 +103,7 @@ def test_long_case_2_cpu():
         producer_time=1,
         consumer_time=2,
         time_limit=15,
-        num_execution_slots=1,
+        num_execution_slots=2,
     )
     assert result == 8
 
