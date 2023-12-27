@@ -20,7 +20,7 @@ def test_big_buffer():
 
 def test_2_cpu():
     result = solve(num_execution_slots=2)
-    assert result == 1
+    assert result == 2
 
 
 def test_long_schedule():
@@ -56,12 +56,12 @@ def test_simple_1_cpu():
 
 def test_simple_2_cpu():
     result = solve(num_producers=4, num_consumers=4, time_limit=10, num_execution_slots=2)
-    assert result == 4
+    assert result == 5
 
 
-def test_simple_3_cpu():
+def test_simple_4_cpu():
     result = solve(num_producers=4, num_consumers=4, time_limit=10, num_execution_slots=3)
-    assert result == 3
+    assert result == 5
 
 
 def test_producer_output_size():
@@ -105,7 +105,7 @@ def test_long_case_2_cpu():
         time_limit=15,
         num_execution_slots=2,
     )
-    assert result == 8
+    assert result == 9
 
 
 def test_long_case_3_cpu():
@@ -117,7 +117,7 @@ def test_long_case_3_cpu():
         time_limit=15,
         num_execution_slots=3,
     )
-    assert result == 6
+    assert result == 7
 
 
 def test_long_case_4_cpu():
@@ -128,5 +128,18 @@ def test_long_case_4_cpu():
         consumer_time=2,
         time_limit=15,
         num_execution_slots=4,
+    )
+    assert result == 7
+
+
+def test_long_case_4_cpu_4_mem():
+    result = solve(
+        num_producers=5,
+        num_consumers=5,
+        producer_time=1,
+        consumer_time=2,
+        time_limit=15,
+        num_execution_slots=4,
+        buffer_size_limit=4,
     )
     assert result == 5

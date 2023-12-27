@@ -101,6 +101,7 @@ def solve(
                 )
 
     # Constraint: Buffer size is the total size of producer output not yet consumed
+    # TODO: should a consumer release the buffer at start or finish? currently it's at start
     for t in range(time_limit):
         buffer_increase = pl.lpSum(
             [
@@ -115,6 +116,7 @@ def solve(
                 for i in range(num_consumers)
             ],
         )
+        model += buffer[t] >= buffer_decrease
         model += buffer[t + 1] == buffer[t] + buffer_increase - buffer_decrease
 
     # Constraint: Buffer size is bounded
@@ -142,8 +144,8 @@ def solve(
     model.solve(solver=pl.CPLEX_CMD(threads=os.cpu_count()))
 
     # Print all variables
-    for v in model.variables():
-        print(v.name, "=", v.varValue)
+    # for v in model.variables():
+    #     print(v.name, "=", v.varValue)
 
     # Output results
     print(">>> Status:", pl.LpStatus[model.status])
@@ -179,20 +181,29 @@ def solve(
 
 
 def main():
+    # solve(
+    #     # num_producers=2,
+    #     # num_consumers=2,
+    #     # producer_time=3,
+    #     # consumer_time=3,
+    #     # producer_output_size=2,
+    #     # consumer_input_size=2,
+    #     # time_limit=5,
+    #     # num_execution_slots=1,
+    #     # buffer_size_limit=2,
+    # )
     solve(
-        # num_producers=2,
-        # num_consumers=2,
-        # producer_time=3,
-        # consumer_time=3,
-        # producer_output_size=2,
-        # consumer_input_size=2,
-        # time_limit=5,
-        # num_execution_slots=1,
-        # buffer_size_limit=2,
+        num_producers=5,
+        num_consumers=5,
+        producer_time=1,
+        consumer_time=2,
+        time_limit=10,
+        num_execution_slots=4,
+        buffer_size_limit=4,
     )
 
 
 if __name__ == "__main__":
     main()
 
-# TODO: doesn't work for any task that runs for >= 3
+# TODO: schedule looks wrong for p=1, c=2
