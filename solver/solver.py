@@ -138,7 +138,8 @@ def solve(
     model.writeLP(f"{problem_title}.lp")
 
     # Solve the problem
-    model.solve(solver=pl.PULP_CBC_CMD(threads=os.cpu_count()))
+    # model.solve(solver=pl.PULP_CBC_CMD(threads=os.cpu_count()))
+    model.solve(solver=pl.CPLEX_CMD(threads=os.cpu_count()))
 
     # Print all variables
     for v in model.variables():
