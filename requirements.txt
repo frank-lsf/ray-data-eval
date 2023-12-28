@@ -1,7 +1,9 @@
 apache-flink>=1.18.0
 datasets>=2.14.5
 mosaicml-streaming>=0.5.2
+pulp
 pyspark>=3.5.0
+pytest
 ray>=2.7
 tensorboard
 tensorboard_plugin_profile
