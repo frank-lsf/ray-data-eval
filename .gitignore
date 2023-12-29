@@ -5,5 +5,7 @@ logs
 target
 wandb
 __pycache__
+*.egg-info
 *.log
-wandb/
+*.lp
+wandb
