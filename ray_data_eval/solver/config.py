@@ -29,6 +29,10 @@ class SchedulingProblem:
         assert len(self.consumer_time) == self.num_consumers, (self.consumer_time, self.num_consumers)
         assert len(self.producer_output_size) == self.num_producers, (self.producer_output_size, self.num_producers)
         assert len(self.consumer_input_size) == self.num_consumers, (self.consumer_input_size, self.num_consumers)
+        assert sum(self.producer_output_size) == sum(self.consumer_input_size), (
+            producer_output_size,
+            consumer_input_size,
+        )
 
         self.num_total_tasks = self.num_producers + self.num_consumers
         self.task_time = self.producer_time + self.consumer_time

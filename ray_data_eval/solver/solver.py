@@ -179,20 +179,18 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
 def main():
     solve(
         SchedulingProblem(
-            num_producers=20,
-            num_consumers=20,
+            num_producers=4,
+            num_consumers=4,
             # producer_time=3,
-            consumer_time=3,
+            consumer_time=2,
             # producer_output_size=2,
             # consumer_input_size=2,
             time_limit=22,
-            num_execution_slots=4,
-            buffer_size_limit=10,
+            num_execution_slots=2,
+            buffer_size_limit=100,
         ),
     )
 
 
 if __name__ == "__main__":
     main()
-
-# TODO: schedule looks wrong for p=1, c=2
