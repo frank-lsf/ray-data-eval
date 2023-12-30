@@ -7,10 +7,12 @@ from pyflink.common import Configuration
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
 TIME_BASIS = 0.1  # How many seconds should time_factor=1 take
 
+
 def memory_blowup(x, time_factor):
     data = b"1" * DATA_SIZE_BYTES
     time.sleep(TIME_BASIS * time_factor)
     return (data, x)
+
 
 def memory_shrink(item, time_factor):
     data, x = item
@@ -57,11 +59,12 @@ def main():
 
     config = {
         "parallelism": 20,
-        "num_parts": 100,  
-        "producer_time": 1,  
-        "consumer_time": 9, 
+        "total_data_size_gb": 100,
+        "num_parts": 100,
+        "producer_time": 1,
+        "consumer_time": 9,
     }
-    env.set_parallelism(config["parallelism"])  
+    env.set_parallelism(config["parallelism"])
 
     run_experiment(
         env,
@@ -69,6 +72,12 @@ def main():
         config["num_parts"],
         config["producer_time"],
         config["consumer_time"],
+    )
+
+    config["total_data_size"] = config["total_data_size_gb"] * 10**9
+    config["num_parts"] = config["total_data_size"] // DATA_SIZE_BYTES
+    config["producer_consumer_ratio"] = (
+        config["producer_time"] / config["consumer_time"]
     )
 
 
