@@ -7,7 +7,7 @@ from pyflink.datastream import StreamExecutionEnvironment
 
 DATA_SIZE = 1000 * 100
 
-# env = StreamExecutionEnvironment.get_execution_environment()
+env = StreamExecutionEnvironment.get_execution_environment()
 
 
 def memory_blowup(x, blowup: int):
