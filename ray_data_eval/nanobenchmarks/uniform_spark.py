@@ -28,9 +28,7 @@ def memory_shrink(row, time_factor=1):
     return (int(np_data.sum()),)
 
 
-def run_experiment(
-    spark, parallelism=-1, num_parts=100, producer_time=1, consumer_time=1
-):
+def run_experiment(spark, parallelism=-1, num_parts=100, producer_time=1, consumer_time=1):
     start = time.perf_counter()
 
     items = [(item,) for item in range(num_parts)]
@@ -44,14 +42,10 @@ def run_experiment(
             StructField("idx", IntegerType(), True),
         ]
     )
-    df = df.rdd.map(lambda row: memory_blowup(row, time_factor=producer_time)).toDF(
-        blowup_schema
-    )
+    df = df.rdd.map(lambda row: memory_blowup(row, time_factor=producer_time)).toDF(blowup_schema)
 
     result_schema = StructType([StructField("result", IntegerType(), True)])
-    df = df.rdd.map(lambda row: memory_shrink(row, time_factor=consumer_time)).toDF(
-        result_schema
-    )
+    df = df.rdd.map(lambda row: memory_shrink(row, time_factor=consumer_time)).toDF(result_schema)
 
     ret = df.agg({"result": "sum"}).collect()[0][0]
 
@@ -80,9 +74,7 @@ def main():
     }
     config["total_data_size"] = config["total_data_size_gb"] * 10**9
     config["num_parts"] = config["total_data_size"] // DATA_SIZE_BYTES
-    config["producer_consumer_ratio"] = (
-        config["producer_time"] / config["consumer_time"]
-    )
+    config["producer_consumer_ratio"] = config["producer_time"] / config["consumer_time"]
 
     run_experiment(
         spark,
