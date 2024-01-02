@@ -91,3 +91,14 @@ class SchedulingProblem:
             self.producer_output_size,
             self.consumer_input_size,
         )
+
+
+test_problem = SchedulingProblem(
+    num_producers=5,
+    num_consumers=5,
+    producer_time=1,
+    consumer_time=2,
+    time_limit=15,
+    num_execution_slots=2,
+    buffer_size_limit=2,
+)

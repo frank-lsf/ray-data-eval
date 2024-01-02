@@ -1,6 +1,6 @@
 import logging
 
-from ray_data_eval.common.types import SchedulingProblem
+from ray_data_eval.common.types import SchedulingProblem, test_problem
 from ray_data_eval.simulator.environment import ExecutionEnvironment
 from ray_data_eval.simulator.policies import GreedyWithBufferSchedulingPolicy, SchedulingPolicy
 
@@ -29,14 +29,7 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 
 def main():
-    problem = SchedulingProblem(
-        num_producers=5,
-        num_consumers=5,
-        producer_time=1,
-        consumer_time=2,
-        time_limit=10,
-        num_execution_slots=2,
-    )
+    problem = test_problem
     policy = GreedyWithBufferSchedulingPolicy(problem)
     test_scheduling_policy(problem, policy)
 

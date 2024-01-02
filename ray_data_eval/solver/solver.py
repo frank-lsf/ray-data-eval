@@ -2,7 +2,7 @@ import os
 
 import pulp as pl
 
-from ray_data_eval.common.types import SchedulingProblem
+from ray_data_eval.common.types import SchedulingProblem, test_problem
 
 
 def solve(cfg: SchedulingProblem, *, solver=None) -> int:
@@ -199,15 +199,7 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
 
 
 def main():
-    problem = SchedulingProblem(
-        num_producers=5,
-        num_consumers=5,
-        producer_time=1,
-        consumer_time=2,
-        time_limit=15,
-        num_execution_slots=2,
-    )
-    solve(problem)
+    solve(test_problem)
 
 
 if __name__ == "__main__":

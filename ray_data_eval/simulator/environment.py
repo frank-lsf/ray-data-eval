@@ -65,9 +65,11 @@ class Buffer:
             return []
         return self._items[:size]
 
-    def print_timeline(self):
+    def print_timeline(self, max_time: int):
         print("|| buf  ||", end="")
-        for item in self._timeline:
+        for i, item in enumerate(self._timeline):
+            if i >= max_time + 1:
+                break
             print(f" {item:<3} |", end="")
         print("|")
 
@@ -204,9 +206,11 @@ class Executor:
     def cancel_task(self):
         self.running_task = None
 
-    def print_timeline(self):
+    def print_timeline(self, max_time: int):
         print(f"|| {self.id:4} ||", end="")
-        for item in self._timeline:
+        for i, item in enumerate(self._timeline):
+            if i >= max_time:
+                break
             print(f" {item:<3} |", end="")
         print("|")
 
@@ -274,19 +278,20 @@ class ExecutionEnvironment:
         raise NotImplementedError
 
     def print_timeline(self):
-        max_time = self._current_tick
+        max_time = max(t.finished_at for t in self.task_states.values())
         separator_line = "++" + "-" * (max_time * 6 + 7) + "++"
         print(separator_line)
         for executor in self._executors:
-            executor.print_timeline()
+            executor.print_timeline(max_time)
         print(separator_line)
-        self.buffer.print_timeline()
+        self.buffer.print_timeline(max_time)
         print(separator_line)
         print("|| time ||", end="")
         for t in range(max_time):
             print(f" {t:<3} |", end="")
         print("|")
         print(separator_line)
+        print("Total Run Time =", max_time)
 
     def check_all_tasks_finished(self):
         all_finished = True
@@ -304,5 +309,5 @@ class SchedulingPolicy:
     def tick(self, _env: ExecutionEnvironment):
         logging.debug(f"[{self}] Tick")
 
-    def on_task_state_change(self, task: TaskSpec, state: TaskState):
+    def on_task_state_change(self, _task: TaskSpec, _state: TaskState):
         pass
