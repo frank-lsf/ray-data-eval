@@ -41,5 +41,6 @@ def main():
     env.set_parallelism(15)
     run_experiment(env, size=10000)
 
+
 if __name__ == "__main__":
     main()

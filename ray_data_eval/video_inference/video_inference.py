@@ -44,9 +44,7 @@ class FrameClassifier:
 
 
 # Create a datastream from in-memory dummy base data.
-ds = ray.data.from_items(
-    [dummy_video_file(i) for i in range(NUM_VIDEOS)], parallelism=NUM_VIDEOS
-)
+ds = ray.data.from_items([dummy_video_file(i) for i in range(NUM_VIDEOS)], parallelism=NUM_VIDEOS)
 
 # Apply the decode step. We can customize the resources per
 # task. Here each decode task requests 4 CPUs.
@@ -58,9 +56,7 @@ ds = ds.map_batches(FrameAnnotator, compute=ActorPoolStrategy(size=5))
 
 # Apply the classification step, using an actor pool of size 2
 # on GPUs.
-ds = ds.map_batches(
-    FrameClassifier, num_gpus=1, compute=ActorPoolStrategy(size=2), batch_size=64
-)
+ds = ds.map_batches(FrameClassifier, num_gpus=1, compute=ActorPoolStrategy(size=2), batch_size=64)
 
 # Trigger execution and write output to json.
 ds.write_json("/tmp/output")

@@ -5,7 +5,7 @@ import time
 import ray
 import wandb
 
-from ray_data_eval.solver.config import SchedulingProblem
+from ray_data_eval.common.types import SchedulingProblem
 
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
 TIME_UNIT = 1  # seconds
@@ -16,6 +16,12 @@ def start_ray(cfg: SchedulingProblem):
     ray.init(
         num_cpus=cfg.num_execution_slots,
         num_gpus=cfg.num_execution_slots,
+    )
+    ctx = ray.data.DataContext.get_current()
+    ctx.execution_options.resource_limits.cpu = cfg.num_execution_slots
+    ctx.execution_options.resource_limits.gpu = cfg.num_execution_slots
+    ctx.execution_options.resource_limits.object_store_memory = (
+        cfg.buffer_size_limit * DATA_SIZE_BYTES
     )
 
 
@@ -74,15 +80,15 @@ def run_experiment(cfg: SchedulingProblem):
 def main():
     run_experiment(
         SchedulingProblem(
-            num_producers=20,
-            num_consumers=20,
+            num_producers=5,
+            num_consumers=5,
             # producer_time=3,
-            consumer_time=3,
+            consumer_time=2,
             # producer_output_size=2,
             # consumer_input_size=2,
-            time_limit=22,
-            num_execution_slots=4,
-            buffer_size_limit=10,
+            time_limit=20,
+            num_execution_slots=1,
+            buffer_size_limit=1,
         ),
     )
 

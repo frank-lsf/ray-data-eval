@@ -106,9 +106,7 @@ def main():
     }
     config["total_data_size"] = config["total_data_size_gb"] * 10**9
     config["num_parts"] = config["total_data_size"] // DATA_SIZE_BYTES
-    config["producer_consumer_ratio"] = (
-        config["producer_time"] / config["consumer_time"]
-    )
+    config["producer_consumer_ratio"] = config["producer_time"] / config["consumer_time"]
     wandb.config.update(config)
     start_ray(config.get("ray_config", {}))
     config_ray_data(config.get("ray_data_config", {}))

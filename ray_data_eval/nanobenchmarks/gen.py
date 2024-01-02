@@ -39,13 +39,15 @@ def run_experiment(*, blowup: int = 0, parallelism: int = -1, size: int = -1):
     end = time.perf_counter()
     print(f"\n{ret:,}")
     print(f"Time: {end - start:.4f}s")
-    wandb.log({
-        "Execution Time": end - start, 
-        "Input Size": DATA_SIZE, 
-        "Blowup Factor": blowup, 
-        "Parallelism": parallelism, 
-        "Array Size": ret
-        })
+    wandb.log(
+        {
+            "Execution Time": end - start,
+            "Input Size": DATA_SIZE,
+            "Blowup Factor": blowup,
+            "Parallelism": parallelism,
+            "Array Size": ret,
+        }
+    )
     return ret
 
 

@@ -19,11 +19,7 @@ def memory_blowup(row, *, blowup: int):
     i = row["id"]
     x = row["data"]
     print(f"memory_blowup {i}: {x.nbytes:,} * {blowup} = {x.nbytes * blowup:,}")
-    return {
-        "data": np.concatenate(
-            [x + np.random.rand(DATA_SIZE * i * i) for _ in range(blowup)]
-        )
-    }
+    return {"data": np.concatenate([x + np.random.rand(DATA_SIZE * i * i) for _ in range(blowup)])}
 
 
 def run_experiment(

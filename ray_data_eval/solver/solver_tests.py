@@ -1,7 +1,7 @@
 import pytest  # noqa: F401
 
 from ray_data_eval.solver.solver import solve
-from ray_data_eval.solver.config import SchedulingProblem
+from ray_data_eval.common.types import SchedulingProblem
 
 
 def _solve(**kwargs):

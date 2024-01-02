@@ -14,9 +14,7 @@ class TimeMeasuredDataset(tf.data.Dataset):
     OUTPUT_SHAPES = ((2, 1), (2, 2), (2, 3))
 
     _INSTANCES_COUNTER = itertools.count()  # Number of datasets generated
-    _EPOCHS_COUNTER = defaultdict(
-        itertools.count
-    )  # Number of epochs done for each dataset
+    _EPOCHS_COUNTER = defaultdict(itertools.count)  # Number of epochs done for each dataset
 
     def _generator(instance_idx, num_samples):
         epoch_idx = next(TimeMeasuredDataset._EPOCHS_COUNTER[instance_idx])
@@ -122,9 +120,7 @@ def draw_timeline(timeline, title, width=0.5, annotate=False, save=False):
         serie = np.unique(times[entries_mask], axis=0)
         annotations = values[entries_mask]
 
-        ax.broken_barh(
-            serie, (0, 1), color=cmap(i / len(step_ids)), linewidth=1, alpha=0.66
-        )
+        ax.broken_barh(serie, (0, 1), color=cmap(i / len(step_ids)), linewidth=1, alpha=0.66)
         if annotate:
             for j, (start, width) in enumerate(serie):
                 annotation = "\n".join(
@@ -197,9 +193,7 @@ def time_consuming_map(steps, times, values):
             (times, tf.tile([[[map_enter, map_elapsed]]], [times.shape[0], 1, 1])),
             axis=1,
         ),
-        tf.concat(
-            (values, tf.tile([[values[:][-1][0]]], [values.shape[0], 1, 1])), axis=1
-        ),
+        tf.concat((values, tf.tile([[values[:][-1][0]]], [values.shape[0], 1, 1])), axis=1),
     )
 
 
@@ -216,9 +210,7 @@ def memory_consuming_map(steps, times, values):
             (times, tf.tile([[[map_enter, map_elapsed]]], [times.shape[0], 1, 1])),
             axis=1,
         ),
-        tf.concat(
-            (values, tf.tile([[values[:][-1][0]]], [values.shape[0], 1, 1])), axis=1
-        ),
+        tf.concat((values, tf.tile([[values[:][-1][0]]], [values.shape[0], 1, 1])), axis=1),
     )
 
 
@@ -228,13 +220,9 @@ optimized_timeline = timelined_benchmark(
         dataset_generator_fun, num_parallel_calls=tf.data.AUTOTUNE
     )
     .batch(_batch_map_num_items, drop_remainder=True)  # Vectorize your mapped function
-    .map(  # Parallelize map transformation
-        time_consuming_map, num_parallel_calls=tf.data.AUTOTUNE
-    )
+    .map(time_consuming_map, num_parallel_calls=tf.data.AUTOTUNE)  # Parallelize map transformation
     .cache()  # Cache data
-    .map(  # Reduce memory usage
-        memory_consuming_map, num_parallel_calls=tf.data.AUTOTUNE
-    )
+    .map(memory_consuming_map, num_parallel_calls=tf.data.AUTOTUNE)  # Reduce memory usage
     .prefetch(tf.data.AUTOTUNE)  # Overlap producer and consumer works
     .unbatch(),
     5,

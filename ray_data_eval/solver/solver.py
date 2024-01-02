@@ -2,7 +2,7 @@ import os
 
 import pulp as pl
 
-from ray_data_eval.solver.config import SchedulingProblem
+from ray_data_eval.common.types import SchedulingProblem
 
 
 def solve(cfg: SchedulingProblem, *, solver=None) -> int:
@@ -31,7 +31,9 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
     )
     for i in range(cfg.num_total_tasks):
         for t in range(cfg.time_limit):
-            model += schedule_flat[(i, t)] == pl.lpSum([schedule[(i, j, t)] for j in range(cfg.num_execution_slots)])
+            model += schedule_flat[(i, t)] == pl.lpSum(
+                [schedule[(i, j, t)] for j in range(cfg.num_execution_slots)]
+            )
 
     # start[i, j, t] = 1 if task i starts at time t on CPU slot j
     start = pl.LpVariable.dicts(
@@ -52,7 +54,14 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
                 model += start[(i, j, t)] <= schedule[(i, j, t)]
         # Ensure that each task starts at most once
         model += (
-            pl.lpSum([start[(i, j, t)] for j in range(cfg.num_execution_slots) for t in range(cfg.time_limit)]) == 1
+            pl.lpSum(
+                [
+                    start[(i, j, t)]
+                    for j in range(cfg.num_execution_slots)
+                    for t in range(cfg.time_limit)
+                ]
+            )
+            == 1
         )
 
     # finish[i, j, t] = 1 if task i finishes at time t on CPU slot j
@@ -74,7 +83,14 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
                 model += finish[(i, j, t)] <= schedule[(i, j, t)]
         # Ensure that each task finishes at most once
         model += (
-            pl.lpSum([finish[(i, j, t)] for j in range(cfg.num_execution_slots) for t in range(cfg.time_limit)]) == 1
+            pl.lpSum(
+                [
+                    finish[(i, j, t)]
+                    for j in range(cfg.num_execution_slots)
+                    for t in range(cfg.time_limit)
+                ]
+            )
+            == 1
         )
 
     # Constraint: One CPU slot can run only one task at a time
@@ -84,7 +100,9 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
 
     # Constraint: All tasks are assigned to exactly one CPU slot and complete
     for i in range(cfg.num_total_tasks):
-        model += pl.lpSum([schedule_flat[(i, t)] for t in range(cfg.time_limit)]) == cfg.task_time[i]
+        model += (
+            pl.lpSum([schedule_flat[(i, t)] for t in range(cfg.time_limit)]) == cfg.task_time[i]
+        )
 
     # Constraint: All tasks must run contiguously for their entire duration
     for i in range(cfg.num_total_tasks):
@@ -102,14 +120,17 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
     for t in range(cfg.time_limit):
         buffer_increase = pl.lpSum(
             [
-                cfg.producer_output_size[i] * pl.lpSum([finish[(i, j, t)] for j in range(cfg.num_execution_slots)])
+                cfg.producer_output_size[i]
+                * pl.lpSum([finish[(i, j, t)] for j in range(cfg.num_execution_slots)])
                 for i in range(cfg.num_producers)
             ],
         )
         buffer_decrease = pl.lpSum(
             [
                 cfg.consumer_input_size[i]
-                * pl.lpSum([start[(i + cfg.num_producers, j, t)] for j in range(cfg.num_execution_slots)])
+                * pl.lpSum(
+                    [start[(i + cfg.num_producers, j, t)] for j in range(cfg.num_execution_slots)]
+                )
                 for i in range(cfg.num_consumers)
             ],
         )
@@ -179,15 +200,15 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
 def main():
     solve(
         SchedulingProblem(
-            num_producers=4,
-            num_consumers=4,
+            num_producers=10,
+            num_consumers=10,
             # producer_time=3,
             consumer_time=2,
             # producer_output_size=2,
             # consumer_input_size=2,
-            time_limit=22,
-            num_execution_slots=2,
-            buffer_size_limit=100,
+            time_limit=20,
+            num_execution_slots=4,
+            buffer_size_limit=1,
         ),
     )
 
