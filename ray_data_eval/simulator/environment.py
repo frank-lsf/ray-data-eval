@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 import logging
 
-from ray_data_eval.common.types import TaskSpec
+from ray_data_eval.common.types import SchedulingProblem, TaskSpec
 
 Tick = int
 
@@ -57,7 +57,7 @@ class Buffer:
             item.consumer = item.producer
             item.consumed_at = at_tick
             ret.append(item)
-        logging.info(f"[{self}] Popped {size} items")
+        logging.debug(f"[{self}] Popped {size} items")
         return ret
 
     def peek(self, size: int) -> list[DataItem]:
@@ -212,10 +212,18 @@ class Executor:
 
 
 class ExecutionEnvironment:
-    def __init__(self, *, num_executors: int, buffer_size: int, tasks: list[TaskSpec]):
+    def __init__(
+        self,
+        *,
+        num_executors: int,
+        buffer_size: int,
+        tasks: list[TaskSpec],
+        scheduling_policy: "SchedulingPolicy" = None,
+    ):
         self.task_specs = {t.id: t for t in tasks}
         self.task_states = {t.id: TaskState() for t in tasks}
         self.buffer = Buffer(capacity=buffer_size)
+        self.scheduling_policy = scheduling_policy
         self._executors = [Executor(i, self) for i in range(num_executors)]
         self._current_tick = 0
 
@@ -230,8 +238,12 @@ class ExecutionEnvironment:
             self.task_states[tid].execution_finished_at = self._current_tick
         elif state == TaskStateType.FINISHED:
             self.task_states[tid].finished_at = self._current_tick
+        if self.scheduling_policy is not None:
+            self.scheduling_policy.on_task_state_change(self.task_specs[tid], self.task_states[tid])
 
     def tick(self):
+        if self.scheduling_policy is not None:
+            self.scheduling_policy.tick(self)
         logging.debug(f"[{self}] Tick")
         self._current_tick += 1
         for executor in self._executors:
@@ -283,3 +295,14 @@ class ExecutionEnvironment:
             if state.state != TaskStateType.FINISHED:
                 all_finished = False
         return all_finished
+
+
+class SchedulingPolicy:
+    def __init__(self, problem: SchedulingProblem):
+        self.problem = problem
+
+    def tick(self, _env: ExecutionEnvironment):
+        logging.debug(f"[{self}] Tick")
+
+    def on_task_state_change(self, task: TaskSpec, state: TaskState):
+        pass
