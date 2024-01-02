@@ -1,6 +1,5 @@
 import time
 
-import numpy as np
 import ray
 
 from data_utils import load_index

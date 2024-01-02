@@ -10,11 +10,9 @@ import datetime
 import subprocess
 import time
 
-import numpy as np
 import ray
 from ray.data._internal.execution.backpressure_policy import (
     StreamingOutputBackpressurePolicy,
-    ConcurrencyCapBackpressurePolicy,
 )
 import wandb
 

@@ -2,7 +2,6 @@ import os
 import time
 
 from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
 import numpy as np
 
 DATA_SIZE = 1000 * 100  # 100 KB

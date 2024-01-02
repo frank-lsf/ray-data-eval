@@ -1,5 +1,4 @@
 import time
-import numpy as np
 from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.common import Configuration
