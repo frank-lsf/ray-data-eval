@@ -43,6 +43,8 @@ def run_experiment(spark, parallelism=-1, num_parts=100, producer_time=1, consum
     )
     df = df.rdd.map(lambda row: memory_blowup(row, time_factor=producer_time)).toDF(blowup_schema)
 
+    df = df.repartition(parallelism)
+
     result_schema = StructType([StructField("result", IntegerType(), True)])
     df = df.rdd.map(lambda row: memory_shrink(row, time_factor=consumer_time)).toDF(result_schema)
 
