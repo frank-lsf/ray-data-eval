@@ -16,16 +16,15 @@ TIME_BASIS = 0.1  # How many seconds should time_factor=1 take
 
 def memory_blowup(row, time_factor=1):
     i = row["item"]
-    data = bytearray(np.full(DATA_SIZE_BYTES, 1, dtype=np.uint8))
+    data = b"1" * DATA_SIZE_BYTES
     time.sleep(TIME_BASIS * time_factor)
     return {"data": data, "idx": i}
 
 
 def memory_shrink(row, time_factor=1):
     data = row["data"]
-    np_data = np.frombuffer(data, dtype=np.uint8)
     time.sleep(TIME_BASIS * time_factor)
-    return (int(np_data.sum()),)
+    return (int(len(data)),)
 
 
 def run_experiment(spark, parallelism=-1, num_parts=100, producer_time=1, consumer_time=1):
