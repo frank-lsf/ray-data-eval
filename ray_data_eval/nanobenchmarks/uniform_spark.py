@@ -5,7 +5,6 @@ Testing Spark structured streaming execution
 import os
 import time
 
-import numpy as np
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, IntegerType, BinaryType
 
