@@ -1,9 +1,10 @@
+import time
 import datetime
 import subprocess
-import time
 
-import ray
-import wandb
+from pyflink.common.typeinfo import Types
+from pyflink.datastream import StreamExecutionEnvironment
+from pyflink.common import Configuration
 
 from ray_data_eval.common.types import SchedulingProblem
 
@@ -11,70 +12,69 @@ DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
 TIME_UNIT = 1  # seconds
 
 
-def start_ray(cfg: SchedulingProblem):
-    subprocess.run("ray stop -f", shell=True, check=True)
-    ray.init(
-        num_cpus=cfg.num_execution_slots,
-        num_gpus=cfg.num_execution_slots,
-    )
-    ctx = ray.data.DataContext.get_current()
-    ctx.execution_options.resource_limits.cpu = cfg.num_execution_slots
-    ctx.execution_options.resource_limits.gpu = cfg.num_execution_slots
-    ctx.execution_options.resource_limits.object_store_memory = (
-        cfg.buffer_size_limit * DATA_SIZE_BYTES
-    )
+def start_flink(cfg: SchedulingProblem):
+    start_flink_cluster()
+    start_task_managers(cfg.num_producers)
 
 
-def producer(row, *, cfg: SchedulingProblem):
-    i = row["item"]
-    data = b"1" * (DATA_SIZE_BYTES * cfg.producer_output_size[i])
-    time.sleep(TIME_UNIT * cfg.producer_time[i])
-    return {"data": data, "idx": i}
+def start_flink_cluster():
+    # Shutdown all existing taskmanagers
+    subprocess.run(["./bin/taskmanager.sh", "stop-all"], check=True)
+    subprocess.run("./bin/stop-cluster.sh", check=True)
+    subprocess.run(["./bin/flink/historysever.sh", "stop"], check=True)
+
+    subprocess.run("./bin/flink/start-cluster.sh", check=True)
+    subprocess.run(["./bin/flink/historysever.sh", "start"], check=True)
 
 
-def consumer(row, *, cfg: SchedulingProblem):
-    data = row["data"]
-    time.sleep(TIME_UNIT * cfg.consumer_time[row["idx"]])
-    return {"result": len(data)}
+def start_task_managers(num_task_managers: int = 0):
+    # We need (cfg.num_execution_slots - 1) additional taskmanagers, because start-cluster already spawns one taskmanager.
+    for _ in range(num_task_managers - 1):
+        subprocess.run(["./bin/taskmanager.sh", "start"], check=True)
 
 
-def save_ray_timeline():
-    timestr = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    filename = f"/tmp/ray-timeline-{timestr}.json"
-    ray.timeline(filename=filename)
-    wandb.save(filename)
+def producer(item, cfg: SchedulingProblem):
+    data = b"1" * (DATA_SIZE_BYTES * cfg.producer_output_size[item])
+    time.sleep(TIME_UNIT * cfg.producer_time[item])
+    return (data, item)
 
 
-def run_ray_data(cfg: SchedulingProblem):
+def consumer(item, cfg: SchedulingProblem):
+    data, i = item
+    time.sleep(TIME_UNIT * cfg.consumer_time[i])
+    return len(data)
+
+
+def run_flink(env, cfg: SchedulingProblem):
     if cfg.num_producers != cfg.num_consumers:
         raise NotImplementedError(f"num_producers != num_consumers: {cfg}")
+
     start = time.perf_counter()
 
     items = list(range(cfg.num_producers))
-    ds = ray.data.from_items(items, parallelism=cfg.num_producers)
+    ds = env.from_collection(items, type_info=Types.INT())
 
-    ds = ds.map(producer, fn_kwargs={"cfg": cfg})
-    ds = ds.map(consumer, fn_kwargs={"cfg": cfg}, num_gpus=1)
+    ds = ds.map(
+        lambda x: producer(x, cfg),
+        output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
+    ).disable_chaining()
 
-    ret = 0
-    for row in ds.iter_rows():
-        ret += row["result"]
+    ds = ds.map(lambda x: consumer(x, cfg), output_type=Types.LONG())
 
-    run_time = time.perf_counter() - start
-    print(f"\n{ret:,}")
-    print(ds.stats())
-    print(ray._private.internal_api.memory_summary(stats_only=True))
-    save_ray_timeline()
-    wandb.log({"run_time": run_time})
-    return ret
+    result = ds.execute_and_collect()
+    total_length = sum(result)
+
+    end = time.perf_counter()
+    print(f"\nTotal data length: {total_length:,}")
+    print(f"Time: {end - start:.4f}s")
 
 
 def run_experiment(cfg: SchedulingProblem):
-    wandb.init(project="ray-data-eval", entity="raysort")
-    wandb.config.update(cfg)
+    # wandb.init(project="ray-data-eval-flink", entity="raysort")
+    # wandb.config.update(cfg)
 
-    start_ray(cfg)
-    run_ray_data(cfg)
+    start_flink(cfg)
+    run_flink(cfg)
 
 
 def main():
