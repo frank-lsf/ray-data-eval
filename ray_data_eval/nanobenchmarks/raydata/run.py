@@ -5,7 +5,7 @@ import time
 import ray
 import wandb
 
-from ray_data_eval.common.types import SchedulingProblem
+from ray_data_eval.common.types import SchedulingProblem, test_problem
 
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
 TIME_UNIT = 1  # seconds
@@ -78,19 +78,7 @@ def run_experiment(cfg: SchedulingProblem):
 
 
 def main():
-    run_experiment(
-        SchedulingProblem(
-            num_producers=5,
-            num_consumers=5,
-            # producer_time=3,
-            consumer_time=2,
-            # producer_output_size=2,
-            # consumer_input_size=2,
-            time_limit=20,
-            num_execution_slots=1,
-            buffer_size_limit=1,
-        ),
-    )
+    run_experiment(test_problem)
 
 
 if __name__ == "__main__":
