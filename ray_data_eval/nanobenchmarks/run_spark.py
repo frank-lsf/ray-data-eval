@@ -21,11 +21,12 @@ def start_spark(cfg):
 
     spark = (
         SparkSession.builder.appName("Spark")
+        .config("spark.master", "spark://ec2-35-85-195-144.us-west-2.compute.amazonaws.com:7077")
         .config("spark.eventLog.enabled", "true")
         .config("spark.eventLog.dir", os.getenv("SPARK_EVENTS_FILEURL"))
         .config("spark.executor.memory", memory_limit)
         .config("spark.driver.memory", memory_limit)
-        .config("spark.executor.instances", cfg.num_execution_slots)
+        .config("spark.cores.max", cfg.num_execution_slots)
         .getOrCreate()
     )
     return spark
