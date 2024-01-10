@@ -71,7 +71,7 @@ def run_flink(env, cfg: SchedulingProblem):
 
 def run_experiment(cfg: SchedulingProblem):
     # wandb.init(project="ray-data-eval-flink", entity="raysort")
-    # wandb.config.update(cfg)
+    # wandb.config.update(cfg)M
 
     start_flink(cfg)
     run_flink(cfg)
