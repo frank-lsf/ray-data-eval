@@ -66,9 +66,9 @@ def main():
     env = StreamExecutionEnvironment.get_execution_environment()
 
     config = {
-        "parallelism": 20,
+        "parallelism": 5,
         "total_data_size_gb": 100,
-        "num_parts": 100,
+        "num_parts": 5,
         "producer_time": 1,
         "consumer_time": 9,
     }
