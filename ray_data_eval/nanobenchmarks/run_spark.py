@@ -1,14 +1,10 @@
 import time
 import os
-import sys
 
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, IntegerType
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(current_dir, "../../"))
-sys.path.append(project_root)
-from ray_data_eval.common.types import SchedulingProblem
+from ray_data_eval.common.types import test_problem
 
 MB = 1000 * 1000
 DATA_SIZE_BYTES = 100 * MB  # 100 MB
@@ -53,9 +49,7 @@ def run_spark_data(spark, cfg):
 
     items = [(item,) for item in range(cfg.num_producers)]
     input_schema = ["item"]
-    df = spark.createDataFrame(data=items, schema=input_schema)
-    df = df.repartition(cfg.num_producers)
-
+    df = spark.sparkContext.parallelize(items, cfg.num_producers).toDF(input_schema)
     df = df.rdd.map(lambda row: producer_udf(row, cfg)).toDF()
 
     df = df.repartition(cfg.num_producers)
@@ -78,19 +72,7 @@ def run_experiment(cfg):
 
 
 def main():
-    run_experiment(
-        SchedulingProblem(
-            num_producers=5,
-            num_consumers=5,
-            # producer_time=3,
-            consumer_time=2,
-            # producer_output_size=2,
-            # consumer_input_size=2,
-            time_limit=20,
-            num_execution_slots=1,
-            buffer_size_limit=2,
-        ),
-    )
+    run_experiment(test_problem)
 
 
 if __name__ == "__main__":
