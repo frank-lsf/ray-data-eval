@@ -1,67 +1,63 @@
-import time
-import datetime
 import subprocess
 import yaml
+import time
 
-from pyflink.common.typeinfo import Types
-from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.common import Configuration
+NUM_TASK_MANAGERS = 5
+NUM_TASK_SLOTS = 1  # modify `taskmanager.numberOfTaskSlots` manually in flink-conf.yaml
+FLINK_PATH = "../flink-1.18.0/"
 
 
-DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
-TIME_UNIT = 1  # seconds
+def modify_workers_file(num_task_managers: int = 1):
+    with open(FLINK_PATH + "conf/workers", "w") as file:
+        file.writelines(["localhost\n"] * num_task_managers)
+
+
+def read_flink_conf_file():
+    flink_conf_path = FLINK_PATH + "conf/flink-conf.yaml"
+    with open(flink_conf_path) as file:
+        data = yaml.safe_load(file)
+    return data
 
 
 def start_flink(num_task_managers: int = 1):
-    start_flink_cluster()
-    start_task_managers(num_task_managers)
-
-
-def start_flink_cluster():
-    # First shut down all existing taskmanagers
+    # First shut downt the existing cluster and taskmanagers
     print(" [Shutting down all existing taskmanagers.]")
-    subprocess.run("./flink-1.18.0/bin/stop-cluster.sh", check=True)
-    subprocess.run(["./flink-1.18.0/bin/taskmanager.sh", "stop-all"], check=True)
-    subprocess.run(["./flink-1.18.0/bin/historyserver.sh", "stop"], check=True)
+    subprocess.run([FLINK_PATH + "bin/taskmanager.sh", "stop-all"], check=True)
+    subprocess.run([FLINK_PATH + "bin/stop-cluster.sh"], check=True)
+    subprocess.run([FLINK_PATH + "bin/historyserver.sh", "stop"], check=True)
+    time.sleep(1)
 
     # Initialize the standalone cluster
+    # By modifying the workers file, we initialize the correct number of taskmanagers
     print(" [Starting a standalone Flink cluster.]")
-    subprocess.run("./flink-1.18.0/bin/start-cluster.sh", check=True)
-    subprocess.run(["./flink-1.18.0/bin/historyserver.sh", "start"], check=True)
+    modify_workers_file(num_task_managers)
+    time.sleep(1)
 
-
-def start_task_managers(num_task_managers: int = 1):
-    # We need (num_task_managers - 1) additional taskmanagers, because start-cluster already spawns one taskmanager.
-    print(" [Starting task managers.]")
-    for _ in range(num_task_managers - 1):
-        subprocess.run(["./flink-1.18.0/bin/taskmanager.sh", "start"], check=True)
-
-
-def read_flink_conf(file_path="./flink-1.18.0/conf/flink-conf.yaml"):
-    with open(file_path, "r") as file:
-        conf = yaml.safe_load(file)
-        return conf
+    subprocess.run([FLINK_PATH + "bin/start-cluster.sh"], check=True)
+    subprocess.run([FLINK_PATH + "bin/historyserver.sh", "start"], check=True)
+    time.sleep(1)
 
 
 def run_experiment(num_task_managers: int = 1):
     start_flink(num_task_managers)
 
-    conf = read_flink_conf()
+    conf = read_flink_conf_file()
     print(f"Initialized {num_task_managers} TaskManagers.")
     print(f"Each TaskManager has {conf['taskmanager.numberOfTaskSlots']} task slots.")
     print(
         f"Total number of task slots: {num_task_managers * conf['taskmanager.numberOfTaskSlots']}"
     )
     # Submit the flink job
-    print("[Submitting the flink job.]")
+    print(" [Submitting the flink job.]")
+    time.sleep(1)
     subprocess.run(
-        ["./flink-1.18.0/bin/flink", "run", "-py", "code.py"],
+        [FLINK_PATH + "bin/flink", "run", "-py", "./code.py"],
         check=True,
     )
 
 
 def main():
-    run_experiment()
+    run_experiment(num_task_managers=NUM_TASK_MANAGERS)
 
 
 if __name__ == "__main__":

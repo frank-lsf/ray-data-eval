@@ -8,6 +8,7 @@ from pyflink.common import Configuration
 from ray_data_eval.common.types import SchedulingProblem, test_problem
 
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
+# DATA_SIZE_BYTES = 1000 * 1000 * 10  # 10 MB
 TIME_UNIT = 1  # seconds
 
 
@@ -48,7 +49,12 @@ def run_flink(env, cfg: SchedulingProblem):
 
 
 def run_experiment(cfg: SchedulingProblem):
-    env = StreamExecutionEnvironment.get_execution_environment()
+    # env = StreamExecutionEnvironment.get_execution_environment()
+
+    config = Configuration()
+    config.set_string("python.execution-mode", "thread")
+    env = StreamExecutionEnvironment.get_execution_environment(config)
+    
     env.set_parallelism(cfg.num_producers)
 
     run_flink(env, cfg)
