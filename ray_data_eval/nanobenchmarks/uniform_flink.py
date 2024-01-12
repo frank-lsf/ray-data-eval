@@ -1,7 +1,6 @@
 import time
 from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.common import Configuration
 
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
 # DATA_SIZE_BYTES = 1000 * 1000 * 10  # 10 MB

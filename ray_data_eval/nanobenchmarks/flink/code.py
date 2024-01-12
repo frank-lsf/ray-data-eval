@@ -1,5 +1,4 @@
 import time
-import sys
 
 from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
@@ -54,7 +53,7 @@ def run_experiment(cfg: SchedulingProblem):
     config = Configuration()
     config.set_string("python.execution-mode", "thread")
     env = StreamExecutionEnvironment.get_execution_environment(config)
-    
+
     env.set_parallelism(cfg.num_producers)
 
     run_flink(env, cfg)
