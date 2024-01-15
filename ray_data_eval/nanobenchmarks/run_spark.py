@@ -20,8 +20,8 @@ def start_spark(cfg):
         .config("spark.master", "spark://ec2-35-85-195-144.us-west-2.compute.amazonaws.com:7077")
         .config("spark.eventLog.enabled", "true")
         .config("spark.eventLog.dir", os.getenv("SPARK_EVENTS_FILEURL"))
-        .config("spark.executor.memory", memory_limit)
-        .config("spark.driver.memory", memory_limit)
+        .config("spark.executor.memory", "3g")
+        .config("spark.driver.memory", "3g")
         .config("spark.cores.max", cfg.num_execution_slots)
         .getOrCreate()
     )
@@ -52,7 +52,7 @@ def run_spark_data(spark, cfg):
     df = spark.sparkContext.parallelize(items, cfg.num_producers).toDF(input_schema)
     df = df.rdd.map(lambda row: producer_udf(row, cfg)).toDF()
 
-    df = df.repartition(cfg.num_producers)
+    df.count()
 
     result_schema = StructType([StructField("result", IntegerType(), True)])
     df = df.rdd.map(lambda row: consumer_udf(row, cfg)).toDF(result_schema)
