@@ -18,13 +18,17 @@ class DataItem:
 
 
 class Buffer:
-    def __init__(self, capacity: int):
+    def __init__(self, capacity: int, name: str = "buf"):
         self.capacity = capacity
+        self.name = name
         self._items: list[DataItem] = []
         self._timeline: list[int] = [0]
 
+    def __str__(self) -> str:
+        return self.name
+
     def __repr__(self):
-        return f"Buffer({len(self._items)}/{self.capacity})"
+        return f"{self}({len(self._items)}/{self.capacity})"
 
     def tick(self):
         logging.info(f"[{self}] Tick")
@@ -48,25 +52,22 @@ class Buffer:
         logging.debug(f"[{self}] Pushed {task.id}")
         return item
 
-    def pop(self, at_tick: Tick, size: int) -> list[DataItem]:
-        if len(self._items) < size:
-            raise ValueError(f"Cannot pop {size} items: only {len(self._items)} in buffer")
-        ret = []
-        for _ in range(size):
-            item = self._items.pop(0)
-            item.consumer = item.producer
-            item.consumed_at = at_tick
-            ret.append(item)
-        logging.debug(f"[{self}] Popped {size} items")
-        return ret
+    def remove(self, items: list[DataItem]):
+        for item in items:
+            self._items.remove(item)
 
     def peek(self, size: int) -> list[DataItem]:
-        if len(self._items) < size:
+        """
+        Returns the first `size` items in the buffer without consumers.
+        If there are fewer than `size` items, returns an empty list.
+        """
+        items = [item for item in self._items if item.consumer is None]
+        if len(items) < size:
             return []
-        return self._items[:size]
+        return items[:size]
 
     def print_timeline(self, max_time: int):
-        print("|| buf  ||", end="")
+        print("|| {self}  ||", end="")
         for i, item in enumerate(self._timeline):
             if i >= max_time + 1:
                 break
@@ -95,6 +96,7 @@ TaskStateMap = dict[TaskSpec, TaskState]
 @dataclass
 class RunningTask:
     spec: TaskSpec
+    inputs: list[DataItem]
     started_at: Tick
     remaining_ticks: int
 
@@ -137,6 +139,7 @@ class Executor:
             if item is None:
                 logging.debug(f"[{self}] Cannot finish {self.running_task.spec.id}: buffer is full")
                 return False
+        self._env.buffer.remove(self.running_task.inputs)
         return True
 
     def _finish_running_task(self) -> RunningTask:
@@ -178,7 +181,7 @@ class Executor:
                 self._env.update_task_state(self.running_task.spec.id, TaskStateType.PENDING_OUTPUT)
                 return None
 
-    def start_task(self, task: TaskSpec, at_tick: Tick) -> bool:
+    def start_task(self, task: TaskSpec, at_tick: Tick, inputs: list[DataItem]) -> bool:
         """
         Tries to start a task on this executor.
         Returns true if the task was started, false if it was not.
@@ -190,9 +193,13 @@ class Executor:
             return False
         self.running_task = RunningTask(
             spec=task,
+            inputs=inputs,
             started_at=at_tick,
             remaining_ticks=task.duration,
         )
+        for item in inputs:
+            item.consumer = task
+            item.consumed_at = at_tick
         logging.info(f"[{self}] Started {task}")
         self._events.append(
             HistoryEvent(
@@ -255,14 +262,14 @@ class ExecutionEnvironment:
         self.buffer.tick()
 
     def start_task(self, task: TaskSpec, executor_id: int) -> bool:
+        inp = []
         if task.input_size > 0:
             inp = self.buffer.peek(task.input_size)
             if len(inp) < task.input_size:
                 logging.info(f"[{self}] Cannot start {task.id}: input requirement not satisfied")
                 return False
-        started = self._executors[executor_id].start_task(task, self._current_tick)
+        started = self._executors[executor_id].start_task(task, self._current_tick, inp)
         if started:
-            self.buffer.pop(self._current_tick, task.input_size)
             self.update_task_state(task.id, TaskStateType.RUNNING)
         return started
 
