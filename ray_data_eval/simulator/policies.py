@@ -67,5 +67,8 @@ class GreedyWithBufferSchedulingPolicy(SchedulingPolicy):
 
     def on_task_state_change(self, task: TaskSpec, task_state: TaskState):
         super().on_task_state_change(task, task_state)
+        logging.info(f"{task.id} changed state to {task_state.state}")
         if task_state.state == TaskStateType.RUNNING:
-            self.cumulative_output_size += task.output_size - task.input_size
+            self.cumulative_output_size += task.output_size
+        elif task_state.state == TaskStateType.FINISHED:
+            self.cumulative_output_size -= task.input_size

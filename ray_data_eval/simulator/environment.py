@@ -67,7 +67,7 @@ class Buffer:
         return items[:size]
 
     def print_timeline(self, max_time: int):
-        print("|| {self}  ||", end="")
+        print(f"|| {self}  ||", end="")
         for i, item in enumerate(self._timeline):
             if i >= max_time + 1:
                 break
@@ -314,7 +314,7 @@ class SchedulingPolicy:
         self.problem = problem
 
     def tick(self, _env: ExecutionEnvironment):
-        logging.debug(f"[{self}] Tick")
+        logging.info(f"[{self}] Tick")
 
     def on_task_state_change(self, _task: TaskSpec, _state: TaskState):
         pass
