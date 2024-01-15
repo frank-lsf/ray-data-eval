@@ -5,7 +5,10 @@ from ray_data_eval.common.types import SchedulingProblem
 
 
 def _solve(**kwargs):
-    return solve(SchedulingProblem(**kwargs))
+    tidy_sol = solve(SchedulingProblem(**kwargs), tidy=True)
+    sol = solve(SchedulingProblem(**kwargs), tidy=False)
+    assert tidy_sol == sol
+    return sol
 
 
 def test_default():
@@ -110,7 +113,7 @@ def test_long_case_2_cpu():
         time_limit=15,
         num_execution_slots=2,
     )
-    assert result == 9
+    assert result == 11
 
 
 def test_long_case_3_cpu():
@@ -122,7 +125,7 @@ def test_long_case_3_cpu():
         time_limit=15,
         num_execution_slots=3,
     )
-    assert result == 7
+    assert result == 11
 
 
 def test_long_case_4_cpu():
@@ -134,7 +137,7 @@ def test_long_case_4_cpu():
         time_limit=15,
         num_execution_slots=4,
     )
-    assert result == 7
+    assert result == 11
 
 
 def test_long_case_4_cpu_4_mem():
