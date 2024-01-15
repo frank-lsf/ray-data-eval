@@ -64,6 +64,20 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
             == 1
         )
 
+    def _task_started_on_or_before(tid, tick):
+        """Returns 1 if task tid starts at or before time tick, 0 otherwise."""
+        return pl.lpSum(
+            [start[(tid, j, t)] for j in range(cfg.num_execution_slots) for t in range(tick)]
+        )
+
+    # Tasks with lower index should start no later than tasks with higher index
+    for i in range(cfg.num_total_tasks - 1):
+        if i == cfg.num_producers - 1:
+            # C0 should not need to start before Pn starts
+            continue
+        for t in range(cfg.time_limit):
+            model += _task_started_on_or_before(i, t) >= _task_started_on_or_before(i + 1, t)
+
     # finish[i, j, t] = 1 if task i finishes at time t on CPU slot j
     finish = pl.LpVariable.dicts(
         "f",
@@ -116,8 +130,10 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
                 )
 
     # Constraint: Buffer size is the total size of producer output not yet consumed
-    # TODO: should a consumer release the buffer at start or finish? currently it's at start
+    # TODO: Consumer should hold the buffered data during execution, and decrease the buffer size
+    # when it finishes. Currently it decreases the buffer size when it starts.
     for t in range(cfg.time_limit):
+        # Increase buffer when a producer finishes
         buffer_increase = pl.lpSum(
             [
                 cfg.producer_output_size[i]
@@ -125,6 +141,7 @@ def solve(cfg: SchedulingProblem, *, solver=None) -> int:
                 for i in range(cfg.num_producers)
             ],
         )
+        # Decrease buffer when a consumer starts
         buffer_decrease = pl.lpSum(
             [
                 cfg.consumer_input_size[i]
