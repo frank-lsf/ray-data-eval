@@ -3,7 +3,7 @@ import yaml
 import time
 
 NUM_TASK_MANAGERS = 5
-NUM_TASK_SLOTS = 1  # modify `taskmanager.numberOfTaskSlots` manually in flink-conf.yaml
+NUM_TASK_SLOTS_EACH = 1  # modify `taskmanager.numberOfTaskSlots` manually in flink-conf.yaml
 FLINK_PATH = "../flink-1.18.0/"
 
 
@@ -25,17 +25,14 @@ def start_flink(num_task_managers: int = 1):
     subprocess.run([FLINK_PATH + "bin/taskmanager.sh", "stop-all"], check=True)
     subprocess.run([FLINK_PATH + "bin/stop-cluster.sh"], check=True)
     subprocess.run([FLINK_PATH + "bin/historyserver.sh", "stop"], check=True)
-    time.sleep(1)
 
     # Initialize the standalone cluster
     # By modifying the workers file, we initialize the correct number of taskmanagers
     print(" [Starting a standalone Flink cluster.]")
     modify_workers_file(num_task_managers)
-    time.sleep(1)
 
     subprocess.run([FLINK_PATH + "bin/start-cluster.sh"], check=True)
     subprocess.run([FLINK_PATH + "bin/historyserver.sh", "start"], check=True)
-    time.sleep(1)
 
 
 def run_experiment(num_task_managers: int = 1):
@@ -49,7 +46,6 @@ def run_experiment(num_task_managers: int = 1):
     )
     # Submit the flink job
     print(" [Submitting the flink job.]")
-    time.sleep(1)
     subprocess.run(
         [FLINK_PATH + "bin/flink", "run", "-py", "./code.py"],
         check=True,

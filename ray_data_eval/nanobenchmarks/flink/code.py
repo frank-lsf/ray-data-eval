@@ -8,6 +8,7 @@ from ray_data_eval.common.types import SchedulingProblem, test_problem
 
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
 # DATA_SIZE_BYTES = 1000 * 1000 * 10  # 10 MB
+# DATA_SIZE_BYTES = 1
 TIME_UNIT = 1  # seconds
 
 
@@ -32,12 +33,17 @@ def run_flink(env, cfg: SchedulingProblem):
     items = list(range(cfg.num_producers))
     ds = env.from_collection(items, type_info=Types.INT())
 
+    # ds = ds.map(
+    #     lambda x: producer(x, cfg),
+    #     output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
+    # ).disable_chaining()
+
     ds = ds.map(
         lambda x: producer(x, cfg),
         output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
-    ).disable_chaining()
+    ).slot_sharing_group('1').set_parallelism(2).disable_chaining()
 
-    ds = ds.map(lambda x: consumer(x, cfg), output_type=Types.LONG())
+    ds = ds.map(lambda x: consumer(x, cfg), output_type=Types.LONG()).slot_sharing_group('2').set_parallelism(4).disable_chaining()
 
     result = ds.execute_and_collect()
     total_length = sum(result)
@@ -54,7 +60,8 @@ def run_experiment(cfg: SchedulingProblem):
     config.set_string("python.execution-mode", "thread")
     env = StreamExecutionEnvironment.get_execution_environment(config)
 
-    env.set_parallelism(cfg.num_producers)
+    # env.set_parallelism(cfg.num_producers)
+    # env.set_parallelism(2)
 
     run_flink(env, cfg)
 
