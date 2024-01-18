@@ -12,9 +12,6 @@ TIME_UNIT = 1  # seconds
 
 
 def start_spark(cfg):
-    memory_limit_mb = (cfg.buffer_size_limit * DATA_SIZE_BYTES * 9) // MB
-    memory_limit = str(memory_limit_mb) + "m"
-
     spark = (
         SparkSession.builder.appName("Spark")
         .config("spark.master", "spark://ec2-35-85-195-144.us-west-2.compute.amazonaws.com:7077")
