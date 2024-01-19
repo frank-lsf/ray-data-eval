@@ -38,12 +38,20 @@ def run_flink(env, cfg: SchedulingProblem):
     #     output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
     # ).disable_chaining()
 
-    ds = ds.map(
-        lambda x: producer(x, cfg),
-        output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
-    ).slot_sharing_group('1').set_parallelism(2).disable_chaining()
+    ds = (
+        ds.map(
+            lambda x: producer(x, cfg),
+            output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
+        )
+        .set_parallelism(1)
+        .disable_chaining()
+    )
 
-    ds = ds.map(lambda x: consumer(x, cfg), output_type=Types.LONG()).slot_sharing_group('2').set_parallelism(4).disable_chaining()
+    ds = (
+        ds.map(lambda x: consumer(x, cfg), output_type=Types.LONG())
+        .set_parallelism(1)
+        .disable_chaining()
+    )
 
     result = ds.execute_and_collect()
     total_length = sum(result)
