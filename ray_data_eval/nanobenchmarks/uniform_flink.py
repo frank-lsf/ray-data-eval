@@ -1,9 +1,9 @@
 import time
 from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.common import Configuration
 
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
+# DATA_SIZE_BYTES = 1000 * 1000 * 10  # 10 MB
 TIME_BASIS = 0.1  # How many seconds should time_factor=1 take
 
 
@@ -31,10 +31,18 @@ def run_experiment(
     items = list(range(num_parts))
     ds = env.from_collection(items, type_info=Types.INT())
 
+    # Ways to disable chaining of two map operators
+    # 1. append .disable_chaining()
     ds = ds.map(
         lambda x: memory_blowup(x, producer_time),
         output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
     ).disable_chaining()
+
+    # Default, with chaining
+    # ds = ds.map(
+    #     lambda x: memory_blowup(x, producer_time),
+    #     output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
+    # )
 
     ds = ds.map(lambda x: memory_shrink(x, consumer_time), output_type=Types.LONG())
 
@@ -49,17 +57,17 @@ def run_experiment(
 
 def main():
     # Using `THREAD` mode
-    config = Configuration()
-    config.set_string("python.execution-mode", "thread")
-    env = StreamExecutionEnvironment.get_execution_environment(config)
+    # config = Configuration()
+    # config.set_string("python.execution-mode", "thread")
+    # env = StreamExecutionEnvironment.get_execution_environment(config)
 
     # Using default `PROCESS` mode
-    # env = StreamExecutionEnvironment.get_execution_environment()
+    env = StreamExecutionEnvironment.get_execution_environment()
 
     config = {
-        "parallelism": 20,
+        "parallelism": 5,
         "total_data_size_gb": 100,
-        "num_parts": 100,
+        "num_parts": 5,
         "producer_time": 1,
         "consumer_time": 9,
     }
@@ -75,7 +83,9 @@ def main():
 
     config["total_data_size"] = config["total_data_size_gb"] * 10**9
     config["num_parts"] = config["total_data_size"] // DATA_SIZE_BYTES
-    config["producer_consumer_ratio"] = config["producer_time"] / config["consumer_time"]
+    config["producer_consumer_ratio"] = (
+        config["producer_time"] / config["consumer_time"]
+    )
 
 
 if __name__ == "__main__":
