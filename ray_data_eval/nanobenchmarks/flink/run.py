@@ -1,6 +1,5 @@
 import subprocess
 import yaml
-import time
 
 NUM_TASK_MANAGERS = 5
 NUM_TASK_SLOTS_EACH = 1  # modify `taskmanager.numberOfTaskSlots` manually in flink-conf.yaml
