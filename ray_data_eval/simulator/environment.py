@@ -150,7 +150,7 @@ class Executor:
         self._events.append(
             HistoryEvent(
                 tick=self.running_task.started_at,
-                type=HistoryEventType.TASK_STARTED,
+                type=HistoryEventType.TASK_FINISHED,
                 task=self.running_task.spec,
             )
         )
