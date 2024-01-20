@@ -94,11 +94,11 @@ class SchedulingProblem:
 
 
 test_problem = SchedulingProblem(
-    num_producers=5,
-    num_consumers=5,
+    num_producers=8,
+    num_consumers=8,
     producer_time=1,
     consumer_time=2,
-    time_limit=15,
-    num_execution_slots=2,
+    time_limit=12,
+    num_execution_slots=4,
     buffer_size_limit=2,
 )
