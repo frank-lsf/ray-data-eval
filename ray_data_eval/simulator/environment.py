@@ -304,7 +304,7 @@ class ExecutionEnvironment:
             print(f" {t:<3} |", end="")
         print("|")
         print(separator_line)
-        print("Total Run Time =", max_time)
+        print("Total Run Time =", max([s.finished_at for s in self.task_states.values()]))
 
     def check_all_tasks_finished(self):
         all_finished = True
