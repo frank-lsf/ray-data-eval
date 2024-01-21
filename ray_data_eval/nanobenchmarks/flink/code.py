@@ -8,8 +8,6 @@ from pyflink.common import Configuration
 
 from ray_data_eval.common.types import SchedulingProblem, test_problem
 
-from parse import logging_helper
-
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
 # DATA_SIZE_BYTES = 1000 * 1000 * 100  # 10 MB
 # DATA_SIZE_BYTES = 1
@@ -95,20 +93,6 @@ def run_flink(env, cfg: SchedulingProblem):
     ds = (
         ds.map(consumer, output_type=Types.LONG()).set_parallelism(4).disable_chaining()
     )
-    # ds = (
-    #     ds.map(
-    #         lambda x: producer(x, cfg),
-    #         output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
-    #     )
-    #     .set_parallelism(2)
-    #     .disable_chaining()
-    # )
-
-    # ds = (
-    #     ds.map(lambda x: consumer(x, cfg), output_type=Types.LONG())
-    #     .set_parallelism(2)
-    #     .disable_chaining()
-    # )
 
     result = ds.execute_and_collect()
     total_length = sum(result)
