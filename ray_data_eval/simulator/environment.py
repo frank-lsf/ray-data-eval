@@ -62,6 +62,7 @@ class Buffer:
         If there are fewer than `size` items, returns an empty list.
         """
         items = [item for item in self._items if item.consumer is None]
+        logging.debug(f"[{self}] Peeked {size} items: {items[:size]}")
         if len(items) < size:
             return []
         return items[:size]
@@ -150,7 +151,7 @@ class Executor:
         self._events.append(
             HistoryEvent(
                 tick=self.running_task.started_at,
-                type=HistoryEventType.TASK_STARTED,
+                type=HistoryEventType.TASK_FINISHED,
                 task=self.running_task.spec,
             )
         )
@@ -261,23 +262,28 @@ class ExecutionEnvironment:
             executor.tick()
         self.buffer.tick()
 
+    def _get_task_inputs(self, task: TaskSpec) -> list[DataItem]:
+        if task.input_size == 0:
+            return True, []
+        inp = self.buffer.peek(task.input_size)
+        if len(inp) < task.input_size:
+            logging.debug(f"[{self}] Cannot start {task.id}: input requirement not satisfied")
+            return False, []
+        return True, inp
+
     def start_task(self, task: TaskSpec, executor_id: int) -> bool:
-        inp = []
-        if task.input_size > 0:
-            inp = self.buffer.peek(task.input_size)
-            if len(inp) < task.input_size:
-                logging.info(f"[{self}] Cannot start {task.id}: input requirement not satisfied")
-                return False
-        started = self._executors[executor_id].start_task(task, self._current_tick, inp)
-        if started:
+        can_start, inp = self._get_task_inputs(task)
+        if can_start and self._executors[executor_id].start_task(task, self._current_tick, inp):
             self.update_task_state(task.id, TaskStateType.RUNNING)
-        return started
+            return True
+        return False
 
     def start_task_on_any_executor(self, task: TaskSpec) -> bool:
+        can_start, _ = self._get_task_inputs(task)
+        if not can_start:
+            return False
         for exec_id in range(len(self._executors)):
             if self.start_task(task, exec_id):
-                self.task_states[task.id].state = TaskStateType.RUNNING
-                self.task_states[task.id].started_at = self._current_tick
                 return True
         return False
 
@@ -285,7 +291,7 @@ class ExecutionEnvironment:
         raise NotImplementedError
 
     def print_timeline(self):
-        max_time = max(t.finished_at for t in self.task_states.values())
+        max_time = self._current_tick
         separator_line = "++" + "-" * (max_time * 6 + 7) + "++"
         print(separator_line)
         for executor in self._executors:
@@ -298,7 +304,7 @@ class ExecutionEnvironment:
             print(f" {t:<3} |", end="")
         print("|")
         print(separator_line)
-        print("Total Run Time =", max_time)
+        print("Total Run Time =", max([s.finished_at for s in self.task_states.values()]))
 
     def check_all_tasks_finished(self):
         all_finished = True

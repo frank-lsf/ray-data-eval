@@ -2,10 +2,15 @@ import logging
 
 from ray_data_eval.common.types import SchedulingProblem, test_problem
 from ray_data_eval.simulator.environment import ExecutionEnvironment
-from ray_data_eval.simulator.policies import GreedyWithBufferSchedulingPolicy, SchedulingPolicy
+from ray_data_eval.simulator.policies import (  # noqa F401
+    GreedySchedulingPolicy,
+    GreedyWithBufferSchedulingPolicy,
+    GreedyAndAnticipatingSchedulingPolicy,
+    SchedulingPolicy,
+)
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(levelname).1s %(filename)s:%(lineno)d] %(message)s",
     handlers=[logging.StreamHandler()],
 )
@@ -20,6 +25,7 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
     )
 
     for tick in range(problem.time_limit):
+        logging.info("-" * 60)
         logging.info(f"Tick {tick}")
         env.tick()
 
@@ -30,7 +36,9 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 def main():
     problem = test_problem
-    policy = GreedyWithBufferSchedulingPolicy(problem)
+    # policy = GreedySchedulingPolicy(problem)
+    # policy = GreedyWithBufferSchedulingPolicy(problem)
+    policy = GreedyAndAnticipatingSchedulingPolicy(problem)
     test_scheduling_policy(problem, policy)
 
 

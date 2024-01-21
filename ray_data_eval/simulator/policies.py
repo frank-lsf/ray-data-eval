@@ -1,5 +1,7 @@
 import logging
 
+import numpy as np
+
 from ray_data_eval.common.types import SchedulingProblem, TaskSpec
 from ray_data_eval.simulator.environment import (
     ExecutionEnvironment,
@@ -41,7 +43,7 @@ class GreedyWithBufferSchedulingPolicy(SchedulingPolicy):
     def __init__(self, problem: SchedulingProblem):
         super().__init__(problem)
         self.buffer_size_limit = problem.buffer_size_limit
-        self.cumulative_output_size = 0  # Tracks the total output size of all tasks scheduled
+        self._cumulative_output_size = 0  # Tracks the total output size of all tasks scheduled
 
     def __repr__(self):
         return "GreedyWithBufferSchedulingPolicy"
@@ -50,16 +52,16 @@ class GreedyWithBufferSchedulingPolicy(SchedulingPolicy):
         super().tick(env)
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.PENDING:
-                output_size = env.task_specs[tid].output_size
+                net_output_size = env.task_specs[tid].output_size - env.task_specs[tid].input_size
                 logging.debug(
-                    f"output_size={output_size}, cumulative_output_size={self.cumulative_output_size}, limit={self.buffer_size_limit}"
+                    f"net_output_size={net_output_size}, "
+                    f"cumulative_output_size={self._cumulative_output_size}, "
+                    f"limit={self.buffer_size_limit}"
                 )
-                if (
-                    output_size > 0
-                    and self.cumulative_output_size + output_size > self.buffer_size_limit
-                ):
-                    logging.info(f"[{self}] Not starting {tid} to avoid buffer overflow")
-                    continue
+                if net_output_size > 0:
+                    if self._cumulative_output_size + net_output_size > self.buffer_size_limit:
+                        logging.info(f"[{self}] Not starting {tid} to avoid buffer overflow")
+                        continue
                 logging.debug(f"[{self}] Trying to start {tid}")
                 task = env.task_specs[tid]
                 if not env.start_task_on_any_executor(task):
@@ -69,6 +71,56 @@ class GreedyWithBufferSchedulingPolicy(SchedulingPolicy):
         super().on_task_state_change(task, task_state)
         logging.info(f"{task.id} changed state to {task_state.state}")
         if task_state.state == TaskStateType.RUNNING:
-            self.cumulative_output_size += task.output_size
+            self._cumulative_output_size += task.output_size
         elif task_state.state == TaskStateType.FINISHED:
-            self.cumulative_output_size -= task.input_size
+            self._cumulative_output_size -= task.input_size
+
+
+class GreedyAndAnticipatingSchedulingPolicy(SchedulingPolicy):
+    """
+    The perfect policy that knows when a consumer is about to finish, and times the next producer
+    so that they finish at the same time.
+    """
+
+    def __init__(self, problem: SchedulingProblem):
+        super().__init__(problem)
+        self.buffer_size_limit = problem.buffer_size_limit
+        self._buffer_diff = np.zeros(problem.time_limit + 1)
+        self._current_tick = 0
+
+    def __repr__(self):
+        return "GreedyAndAnticipatingSchedulingPolicy"
+
+    def _buffer_size_at(self, tick: int):
+        return np.sum(self._buffer_diff[: tick + 1])
+
+    def tick(self, env: ExecutionEnvironment):
+        super().tick(env)
+        for tid, task_state in env.task_states.items():
+            if task_state.state == TaskStateType.PENDING:
+                net_output_size = env.task_specs[tid].output_size - env.task_specs[tid].input_size
+                logging.debug(
+                    f"net_output_size={net_output_size}, "
+                    f"buffer_diff={self._buffer_diff}, "
+                    f"limit={self.buffer_size_limit}"
+                )
+                if net_output_size > 0:
+                    finish_at = self._current_tick + env.task_specs[tid].duration
+                    if self._buffer_size_at(finish_at) + net_output_size > self.buffer_size_limit:
+                        logging.info(
+                            f"[{self}] Not starting {tid} to due to anticipated buffer overflow at {finish_at}"
+                        )
+                        continue
+                logging.debug(f"[{self}] Trying to start {tid}")
+                task = env.task_specs[tid]
+                if not env.start_task_on_any_executor(task):
+                    logging.debug(f"[{self}] Cannot not start {tid}")
+        self._current_tick += 1
+
+    def on_task_state_change(self, task: TaskSpec, task_state: TaskState):
+        super().on_task_state_change(task, task_state)
+        logging.info(f"{task.id} changed state to {task_state.state}")
+        if task_state.state == TaskStateType.RUNNING:
+            self._buffer_diff[self._current_tick + task.duration] += (
+                task.output_size - task.input_size
+            )

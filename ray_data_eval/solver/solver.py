@@ -264,8 +264,7 @@ def solve(cfg: SchedulingProblem, *, solver=None, tidy=True) -> int:
 
 
 def main():
-    # solve(test_problem)
-    solve(SchedulingProblem(num_producers=4, num_consumers=4, time_limit=10), tidy=True)
+    solve(test_problem)
 
 
 if __name__ == "__main__":
