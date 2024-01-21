@@ -1,7 +1,7 @@
 import subprocess
 import yaml
 
-NUM_TASK_MANAGERS = 5
+NUM_TASK_MANAGERS = 4
 NUM_TASK_SLOTS_EACH = 1  # modify `taskmanager.numberOfTaskSlots` manually in flink-conf.yaml
 FLINK_PATH = "../flink-1.18.0/"
 
