@@ -9,9 +9,9 @@ from pyflink.common import Configuration
 from ray_data_eval.common.types import SchedulingProblem, test_problem
 
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
-# DATA_SIZE_BYTES = 1000 * 1000 * 100  # 10 MB
-# DATA_SIZE_BYTES = 1
 TIME_UNIT = 1  # seconds
+PRODUCER_PARALLELISM = 2
+CONSUMER_PARALLELISM = 4
 
 
 class Producer(MapFunction):
@@ -86,12 +86,14 @@ def run_flink(env, cfg: SchedulingProblem):
         ds.map(
             producer, output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()])
         )
-        .set_parallelism(4)
+        .set_parallelism(PRODUCER_PARALLELISM)
         .disable_chaining()
     )
 
     ds = (
-        ds.map(consumer, output_type=Types.LONG()).set_parallelism(4).disable_chaining()
+        ds.map(consumer, output_type=Types.LONG())
+        .set_parallelism(CONSUMER_PARALLELISM)
+        .disable_chaining()
     )
 
     result = ds.execute_and_collect()
