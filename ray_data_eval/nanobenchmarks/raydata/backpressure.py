@@ -61,7 +61,7 @@ def consume(batch):
 def save_ray_timeline():
     timestr = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     filename = f"/tmp/ray-timeline-{timestr}.json"
-    print(f'Save Ray timeline to {filename}')
+    print(f"Save Ray timeline to {filename}")
     ray.timeline(filename=filename)
     wandb.save(filename)
 
@@ -91,12 +91,11 @@ def run_experiment(cfg: SchedulingProblem):
 
 
 def main():
-
     backpressure_problem = SchedulingProblem(
         num_producers=20,
-        num_consumers=20, # Unused. 
+        num_consumers=20,  # Unused.
         num_execution_slots=6,
-        buffer_size_limit=1, # 100MB
+        buffer_size_limit=1,  # 100MB
     )
 
     run_experiment(backpressure_problem)
