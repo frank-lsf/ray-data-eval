@@ -21,6 +21,7 @@ class Producer(MapFunction):
 
     def open(self, runtime_context: RuntimeContext):
         self.task_info = runtime_context.get_task_name_with_subtasks()
+        self.task_index = runtime_context.get_index_of_this_subtask()
 
     def map(self, item):
         producer_start = time.time()
@@ -29,8 +30,8 @@ class Producer(MapFunction):
         producer_end = time.time()
 
         log = {
-            "cat": "producer:" + str(self.task_info),
-            "name": "producer:" + str(self.task_info),
+            "cat": "producer:" + str(self.task_index),
+            "name": "producer:" + str(self.task_index),
             "pid": "",
             "tid": "",
             "ts": f"{producer_start * 1e6:.0f}",  # time is in microseconds
@@ -49,6 +50,7 @@ class Consumer(MapFunction):
 
     def open(self, runtime_context: RuntimeContext):
         self.task_info = runtime_context.get_task_name_with_subtasks()
+        self.task_index = runtime_context.get_index_of_this_subtask()
 
     def map(self, item):
         consumer_start = time.time()
@@ -57,8 +59,8 @@ class Consumer(MapFunction):
         consumer_end = time.time()
 
         log = {
-            "cat": "consumer:" + str(self.task_info),
-            "name": "consumer:" + str(self.task_info),
+            "cat": "consumer:" + str(self.task_index),
+            "name": "consumer:" + str(self.task_index),
             "pid": "",
             "tid": "",
             "ts": f"{consumer_start * 1e6:.0f}",  # time is in microseconds
