@@ -85,7 +85,7 @@ class GreedyAndAnticipatingSchedulingPolicy(SchedulingPolicy):
     def __init__(self, problem: SchedulingProblem):
         super().__init__(problem)
         self.buffer_size_limit = problem.buffer_size_limit
-        self._buffer_diff = np.zeros(problem.time_limit + 1)
+        self._buffer_diff = np.zeros(problem.time_limit * 2)
         self._current_tick = 0
 
     def __repr__(self):

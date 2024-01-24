@@ -5,7 +5,7 @@ import pulp as pl
 from ray_data_eval.common.types import SchedulingProblem, test_problem
 
 
-def solve(cfg: SchedulingProblem, *, solver=None, tidy=True) -> int:
+def solve(cfg: SchedulingProblem, *, solver=None, tidy=False) -> int:
     """
     Solve the scheduling problem using integer linear programming.
 

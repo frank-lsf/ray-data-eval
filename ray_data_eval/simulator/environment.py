@@ -242,6 +242,21 @@ class ExecutionEnvironment:
     def __repr__(self):
         return f"ExecutionEnvironment@{self._current_tick}"
 
+    def _get_executors_sorted(self):
+        """
+        Returns first the executors with tasks that are finishing and will
+        decrease buffer usage.
+        """
+
+        def _sort_key(executor: Executor) -> int:
+            if executor.running_task is None:
+                return 1000 * 1000
+            ret = executor.running_task.remaining_ticks * 1000
+            ret += executor.running_task.spec.output_size - executor.running_task.spec.input_size
+            return ret
+
+        return sorted(self._executors, key=_sort_key)
+
     def update_task_state(self, tid: str, state: TaskStateType):
         self.task_states[tid].state = state
         if state == TaskStateType.RUNNING:
@@ -258,7 +273,7 @@ class ExecutionEnvironment:
             self.scheduling_policy.tick(self)
         logging.debug(f"[{self}] Tick")
         self._current_tick += 1
-        for executor in self._executors:
+        for executor in self._get_executors_sorted():
             executor.tick()
         self.buffer.tick()
 
