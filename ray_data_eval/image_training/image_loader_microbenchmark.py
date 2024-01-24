@@ -352,7 +352,7 @@ def build_hf_dataloader(data_root, batch_size, from_images, num_workers=None, tr
 
     if from_images:
         dataset = load_dataset(
-            "imagefolder", data_dir=data_root, split="train", num_proc=num_workers
+            "imagefolder", data_dir=os.path.join(data_root, "train"), split="train", num_proc=num_workers
         )
     else:
         dataset = load_dataset("parquet", data_dir=data_root, split="train")
@@ -426,7 +426,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--num-epochs",
-        default=3,
+        default=1,
         type=int,
         help="Number of epochs to run. The throughput for the last epoch will be kept.",
     )
@@ -561,6 +561,8 @@ if __name__ == "__main__":
                 metrics,
                 args.output_file,
             )
+        # Harmess Error on deletion. Known issue: 
+        # https://github.com/ray-project/ray/issues/42382
 
     if args.tf_data_root is not None:
         # TFRecords dataset.
@@ -635,7 +637,7 @@ if __name__ == "__main__":
         for i in range(args.num_epochs):
             iterate(mosaic_dl, "mosaicml_mds", args.batch_size, metrics, args.output_file)
 
-    metrics_dict = {}
-    with open("output.csv", "w+") as f:
-        for label, tput in metrics.items():
-            f.write(f"{label},{tput}\n")
+    # metrics_dict = {}
+    # with open("output.csv", "w+") as f:
+    #     for label, tput in metrics.items():
+    #         f.write(f"{label},{tput}\n")
