@@ -1,12 +1,22 @@
+import os
 import time
 
 import numpy as np
-import tensorflow as tf
-import wandb
+
+# import wandb
 
 from ray_data_eval.common.types import SchedulingProblem, test_problem
 
-DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
+# os.environ["TF_CPP_MAX_VLOG_LEVEL"] = "2"
+
+import tensorflow as tf  # noqa: E402
+
+tf.get_logger().setLevel("DEBUG")
+
+DATA_SIZE_MB = 100
+DATA_SIZE_BYTES = DATA_SIZE_MB * 1000 * 1000
 TIME_UNIT = 1  # seconds
 TF_PROFILER_LOGS = "logs/tf"
 
@@ -31,34 +41,37 @@ def consumer_factory(cfg: SchedulingProblem):
 
 def get_options(cfg: SchedulingProblem):
     options = tf.data.Options()
-    options.autotune.cpu_budget = 1
-    # TODO(@lsf): memory budget
-    # options.experimental_optimization.map_and_batch_fusion = False
-    options.threading.max_intra_op_parallelism = 1
+    options.autotune.autotune_algorithm = tf.data.experimental.AutotuneAlgorithm.GRADIENT_DESCENT
+    options.autotune.cpu_budget = cfg.num_execution_slots
+    options.autotune.ram_budget = int(DATA_SIZE_BYTES * cfg.buffer_size_limit * 1.1)
     return options
 
 
 def run_tf_data(cfg: SchedulingProblem):
     if cfg.num_producers != cfg.num_consumers:
         raise NotImplementedError(f"num_producers != num_consumers: {cfg}")
+
+    options = get_options(cfg)
     start = time.perf_counter()
 
     items = list(range(cfg.num_producers))
-    ds = tf.data.Dataset.from_tensor_slices(items).with_options(get_options(cfg))
-    ds = ds.map(
+    ds = tf.data.Dataset.from_tensor_slices(items)
+    ds = ds.with_options(options).map(
         lambda item: tf.numpy_function(
             producer_factory(cfg),
             [item],
             Tout=tf.uint8,
         ),
+        # num_parallel_calls=4,
         num_parallel_calls=tf.data.experimental.AUTOTUNE,
     )
-    ds = ds.map(
+    ds = ds.with_options(options).map(
         lambda item: tf.numpy_function(
             consumer_factory(cfg),
             [item],
             Tout=tf.int64,
         ),
+        # num_parallel_calls=4,
         num_parallel_calls=tf.data.experimental.AUTOTUNE,
     )
 
@@ -69,15 +82,17 @@ def run_tf_data(cfg: SchedulingProblem):
 
     run_time = time.perf_counter() - start
     print(f"\n{ret:,}")
-    wandb.log({"run_time": run_time})
+    print(f"Run time: {run_time:.2f} seconds")
+    # wandb.log({"run_time": run_time})
     return ret
 
 
 def run_experiment(cfg: SchedulingProblem):
-    wandb.init(project="tf-data-eval", entity="raysort", sync_tensorboard=True)
-    wandb.config.update(cfg)
+    # wandb.init(project="tf-data-eval", entity="raysort", sync_tensorboard=True)
+    # wandb.config.update(cfg)
     tf.profiler.experimental.start(TF_PROFILER_LOGS)
     run_tf_data(cfg)
+    tf.profiler.experimental.stop()
 
 
 def main():
