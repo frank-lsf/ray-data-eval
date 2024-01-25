@@ -467,7 +467,6 @@ if __name__ == "__main__":
                 tf_dataset,
                 "tf_data+transform",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
 
@@ -553,7 +552,6 @@ if __name__ == "__main__":
                 ray_dataset.iter_batches(batch_size=args.batch_size),
                 "ray_data+map_transform",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
         # Harmess Error on deletion. Known issue:
