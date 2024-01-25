@@ -34,7 +34,7 @@ DEFAULT_IMAGE_SIZE = 224
 FULL_IMAGE_SIZE = (1213, 1546)
 
 
-def iterate(dataset, label, batch_size, metrics, output_file=None):
+def iterate(dataset, label, batch_size, output_file=None):
     start = time.time()
     it = iter(dataset)
     num_rows = 0
@@ -53,13 +53,11 @@ def iterate(dataset, label, batch_size, metrics, output_file=None):
 
     tput = num_rows / (end - start)
     print(label, "tput", tput, "epoch", i)
-    metrics[label] = tput
 
     if output_file is None:
         output_file = "output.csv"
     with open(output_file, "a+") as f:
-        for label, tput in metrics.items():
-            f.write(f"{label},{tput}\n")
+        f.write(f"{label},{tput}\n")
 
 
 def build_torch_dataset(root_dir, batch_size, shuffle=False, num_workers=None, transform=None):
@@ -352,7 +350,10 @@ def build_hf_dataloader(data_root, batch_size, from_images, num_workers=None, tr
 
     if from_images:
         dataset = load_dataset(
-            "imagefolder", data_dir=os.path.join(data_root, "train"), split="train", num_proc=num_workers
+            "imagefolder",
+            data_dir=os.path.join(data_root, "train"),
+            split="train",
+            num_proc=num_workers,
         )
     else:
         dataset = load_dataset("parquet", data_dir=data_root, split="train")
@@ -447,8 +448,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    metrics = {}
-
     if args.data_root is not None:
         # tf.data, load images.
         tf_dataset = tf.keras.preprocessing.image_dataset_from_directory(
@@ -457,7 +456,7 @@ if __name__ == "__main__":
             image_size=(DEFAULT_IMAGE_SIZE, DEFAULT_IMAGE_SIZE),
         )
         for i in range(args.num_epochs):
-            iterate(tf_dataset, "tf_data", args.batch_size, metrics, args.output_file)
+            iterate(tf_dataset, "tf_data", args.batch_size, args.output_file)
 
         # tf.data, with transform.
         tf_dataset = tf.keras.preprocessing.image_dataset_from_directory(args.data_root)
@@ -486,7 +485,7 @@ if __name__ == "__main__":
             transform=torch_resize_transform,
         )
         for i in range(args.num_epochs):
-            iterate(torch_dataset, "torch", args.batch_size, metrics, args.output_file)
+            iterate(torch_dataset, "torch", args.batch_size, args.output_file)
 
         # torch, with transform.
         torch_dataset = build_torch_dataset(
@@ -500,7 +499,6 @@ if __name__ == "__main__":
                 torch_dataset,
                 "torch+transform",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
 
@@ -517,7 +515,6 @@ if __name__ == "__main__":
                 hf_dataset,
                 "HF",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
 
@@ -534,7 +531,6 @@ if __name__ == "__main__":
                 hf_dataset,
                 "HF+transform",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
 
@@ -547,7 +543,6 @@ if __name__ == "__main__":
                 ray_dataset.iter_torch_batches(batch_size=args.batch_size),
                 "ray_data",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
 
@@ -561,7 +556,7 @@ if __name__ == "__main__":
                 metrics,
                 args.output_file,
             )
-        # Harmess Error on deletion. Known issue: 
+        # Harmess Error on deletion. Known issue:
         # https://github.com/ray-project/ray/issues/42382
 
     if args.tf_data_root is not None:
@@ -572,7 +567,6 @@ if __name__ == "__main__":
                 tf_dataset,
                 "tf_data_tfrecords+transform",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
 
@@ -592,7 +586,6 @@ if __name__ == "__main__":
                 ),
                 "ray_data_tfrecords+transform",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
 
@@ -610,7 +603,6 @@ if __name__ == "__main__":
                 hf_dataset,
                 "HF_parquet+transform",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
 
@@ -622,7 +614,6 @@ if __name__ == "__main__":
                 ray_dataset.iter_torch_batches(batch_size=args.batch_size),
                 "ray_data_parquet+map_transform",
                 args.batch_size,
-                metrics,
                 args.output_file,
             )
 
@@ -635,9 +626,4 @@ if __name__ == "__main__":
             transform=get_transform(True),
         )
         for i in range(args.num_epochs):
-            iterate(mosaic_dl, "mosaicml_mds", args.batch_size, metrics, args.output_file)
-
-    # metrics_dict = {}
-    # with open("output.csv", "w+") as f:
-    #     for label, tput in metrics.items():
-    #         f.write(f"{label},{tput}\n")
+            iterate(mosaic_dl, "mosaicml_mds", args.batch_size, args.output_file)
