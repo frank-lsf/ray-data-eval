@@ -1,27 +1,75 @@
 import time
+import logging
+import json
 
 from pyflink.common.typeinfo import Types
-from pyflink.datastream import StreamExecutionEnvironment
+from pyflink.datastream import StreamExecutionEnvironment, MapFunction, RuntimeContext
 from pyflink.common import Configuration
 
 from ray_data_eval.common.types import SchedulingProblem, test_problem
 
 DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
-# DATA_SIZE_BYTES = 1000 * 1000 * 10  # 10 MB
-# DATA_SIZE_BYTES = 1
 TIME_UNIT = 1  # seconds
+PRODUCER_PARALLELISM = 2
+CONSUMER_PARALLELISM = 4
 
 
-def producer(item, cfg: SchedulingProblem):
-    data = b"1" * (DATA_SIZE_BYTES * cfg.producer_output_size[item])
-    time.sleep(TIME_UNIT * cfg.producer_time[item])
-    return (data, item)
+class Producer(MapFunction):
+    def __init__(self, cfg):
+        self.cfg = cfg
+        self.task_info = None
+
+    def open(self, runtime_context: RuntimeContext):
+        self.task_info = runtime_context.get_task_name_with_subtasks()
+        self.task_index = runtime_context.get_index_of_this_subtask()
+
+    def map(self, item):
+        producer_start = time.time()
+        data = b"1" * (DATA_SIZE_BYTES * self.cfg.producer_output_size[item])
+        time.sleep(TIME_UNIT * self.cfg.producer_time[item])
+        producer_end = time.time()
+
+        log = {
+            "cat": "producer:" + str(self.task_index),
+            "name": "producer:" + str(self.task_index),
+            "pid": "",
+            "tid": "",
+            "ts": f"{producer_start * 1e6:.0f}",  # time is in microseconds
+            "dur": f"{producer_end * 1e6 - producer_start * 1e6:.0f}",
+            "ph": "X",
+            "args": {},
+        }
+        logging.warning(json.dumps(log))
+        return (data, item)
 
 
-def consumer(item, cfg: SchedulingProblem):
-    data, i = item
-    time.sleep(TIME_UNIT * cfg.consumer_time[i])
-    return len(data)
+class Consumer(MapFunction):
+    def __init__(self, cfg):
+        self.cfg = cfg
+        self.task_info = None
+
+    def open(self, runtime_context: RuntimeContext):
+        self.task_info = runtime_context.get_task_name_with_subtasks()
+        self.task_index = runtime_context.get_index_of_this_subtask()
+
+    def map(self, item):
+        consumer_start = time.time()
+        data, i = item
+        time.sleep(TIME_UNIT * self.cfg.consumer_time[i])
+        consumer_end = time.time()
+
+        log = {
+            "cat": "consumer:" + str(self.task_index),
+            "name": "consumer:" + str(self.task_index),
+            "pid": "",
+            "tid": "",
+            "ts": f"{consumer_start * 1e6:.0f}",  # time is in microseconds
+            "dur": f"{consumer_end * 1e6 - consumer_start * 1e6:.0f}",
+            "ph": "X",
+            "args": {},
+        }
+        logging.warning(json.dumps(log))
+        return len(data)
 
 
 def run_flink(env, cfg: SchedulingProblem):
@@ -33,23 +81,20 @@ def run_flink(env, cfg: SchedulingProblem):
     items = list(range(cfg.num_producers))
     ds = env.from_collection(items, type_info=Types.INT())
 
-    # ds = ds.map(
-    #     lambda x: producer(x, cfg),
-    #     output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
-    # ).disable_chaining()
+    producer = Producer(cfg)
+    consumer = Consumer(cfg)
 
     ds = (
         ds.map(
-            lambda x: producer(x, cfg),
-            output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]),
+            producer, output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()])
         )
-        .set_parallelism(1)
+        .set_parallelism(PRODUCER_PARALLELISM)
         .disable_chaining()
     )
 
     ds = (
-        ds.map(lambda x: consumer(x, cfg), output_type=Types.LONG())
-        .set_parallelism(1)
+        ds.map(consumer, output_type=Types.LONG())
+        .set_parallelism(CONSUMER_PARALLELISM)
         .disable_chaining()
     )
 
