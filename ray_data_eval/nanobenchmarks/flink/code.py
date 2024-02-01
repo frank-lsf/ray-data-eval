@@ -85,9 +85,7 @@ def run_flink(env, cfg: SchedulingProblem):
     consumer = Consumer(cfg)
 
     ds = (
-        ds.map(
-            producer, output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()])
-        )
+        ds.map(producer, output_type=Types.TUPLE([Types.PICKLED_BYTE_ARRAY(), Types.INT()]))
         .set_parallelism(PRODUCER_PARALLELISM)
         .disable_chaining()
     )

@@ -126,9 +126,9 @@ class GreedyAndAnticipatingSchedulingPolicy(SchedulingPolicy):
             )
 
 
-class EqualInputOutputRateSchedulingPolicy(SchedulingPolicy):
+class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
     """
-    A policy that schedules consumer to be the same rate as the producer
+    A policy where consumer's rate of consuming input data to be the same as the producer's rate of producing output data.
     """
 
     def __init__(self, problem: SchedulingProblem):
@@ -141,26 +141,30 @@ class EqualInputOutputRateSchedulingPolicy(SchedulingPolicy):
         self.producer_consumer_ratio = producer_rate / consumer_rate
 
     def __repr__(self):
-        return "EqualInputOutputRateSchedulingPolicy"
+        return "RatesEqualizingSchedulingPolicy"
 
-    def is_producer_task(self, env: ExecutionEnvironment, tid: int):
+    def _is_producer_task(self, env: ExecutionEnvironment, tid: int):
         return env.task_specs[tid].output_size > 0
 
-    def tick(self, env: ExecutionEnvironment):
-        super().tick(env)
-        num_producer = 0
-        num_consumer = 0
+    def _count_scheduled_tasks(self, env: ExecutionEnvironment):
+        num_producers = 0
+        num_consumers = 0
 
         for tid, task_state in env.task_states.items():
             if (
                 task_state.state == TaskStateType.RUNNING
                 or task_state.state == TaskStateType.FINISHED
             ):
-                if not self.is_producer_task(env, tid):
-                    num_consumer += 1
-                if self.is_producer_task(env, tid):
-                    num_producer += 1
+                if not self._is_producer_task(env, tid):
+                    num_consumers += 1
+                else:
+                    num_producers += 1
+        return num_producers, num_consumers
 
+    def tick(self, env: ExecutionEnvironment):
+        super().tick(env)
+
+        num_producers, num_consumers = self._count_scheduled_tasks(env)
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.PENDING:
                 net_output_size = env.task_specs[tid].output_size - env.task_specs[tid].input_size
@@ -169,14 +173,13 @@ class EqualInputOutputRateSchedulingPolicy(SchedulingPolicy):
                         logging.info(f"[{self}] Not starting {tid} to avoid buffer overflow")
                         continue
 
-                is_producer = self.is_producer_task(env, tid)
                 if (
-                    is_producer
-                    and num_consumer > 0
-                    and (num_producer + 1) / num_consumer > self.producer_consumer_ratio
+                    self._is_producer_task(env, tid)
+                    and num_consumers > 0
+                    and (num_producers + 1) / num_consumers > self.producer_consumer_ratio
                 ):
                     logging.info(
-                        f"[{self}] Not starting producer {tid} to keep ratio. num_producer: {num_producer}, num_consumer: {num_consumer}, ratio: {self.producer_consumer_ratio}"
+                        f"[{self}] Not starting producer {tid} to keep ratio. num_producers: {num_producers}, num_consumers: {num_consumers}, ratio: {self.producer_consumer_ratio}"
                     )
                     continue
 
