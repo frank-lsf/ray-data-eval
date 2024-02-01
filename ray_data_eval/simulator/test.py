@@ -7,6 +7,7 @@ from ray_data_eval.simulator.policies import (  # noqa F401
     GreedyWithBufferSchedulingPolicy,
     GreedyAndAnticipatingSchedulingPolicy,
     SchedulingPolicy,
+    EqualInputOutputRateSchedulingPolicy,
 )
 
 logging.basicConfig(
@@ -38,7 +39,8 @@ def main():
     problem = test_problem
     # policy = GreedySchedulingPolicy(problem)
     # policy = GreedyWithBufferSchedulingPolicy(problem)
-    policy = GreedyAndAnticipatingSchedulingPolicy(problem)
+    # policy = GreedyAndAnticipatingSchedulingPolicy(problem)
+    policy = EqualInputOutputRateSchedulingPolicy(problem)
     test_scheduling_policy(problem, policy)
 
 
