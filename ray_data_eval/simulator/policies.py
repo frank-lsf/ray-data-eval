@@ -165,14 +165,10 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
         super().tick(env)
 
         num_producers, num_consumers = self._count_scheduled_tasks(env)
+        # Iterate consumer first.
+        # env.task_states by default stores consumers first.
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.PENDING:
-                net_output_size = env.task_specs[tid].output_size - env.task_specs[tid].input_size
-                if net_output_size > 0:
-                    if self._cumulative_output_size + net_output_size > self.buffer_size_limit:
-                        logging.info(f"[{self}] Not starting {tid} to avoid buffer overflow")
-                        continue
-
                 if (
                     self._is_producer_task(env, tid)
                     and num_consumers > 0
