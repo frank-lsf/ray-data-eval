@@ -1,4 +1,4 @@
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass
@@ -14,6 +14,7 @@ class TaskSpec:
 @dataclass
 class OperatorSpec:
     name: str
+    operator_idx: int
     num_tasks: int
     duration: int
     input_size: int = 0
@@ -29,7 +30,7 @@ def _get_tasks(operator_list: list[OperatorSpec]):
             [
                 TaskSpec(
                     f"{operator.name}{i}",
-                    idx,
+                    operator.operator_idx,
                     operator.duration,
                     operator.input_size,
                     operator.output_size,
@@ -54,8 +55,8 @@ class SchedulingProblem:
 
 test_problem = SchedulingProblem(
     [
-        OperatorSpec(name="P", num_tasks=8, duration=1, output_size=1, num_cpus=1),
-        OperatorSpec(name="C", num_tasks=8, duration=2, input_size=1, num_cpus=1),
+        OperatorSpec(name="P", operator_idx=1, num_tasks=8, duration=1, output_size=1, num_cpus=1),
+        OperatorSpec(name="C", operator_idx=2, num_tasks=8, duration=2, input_size=1, num_cpus=1),
     ],
     time_limit=12,
     num_execution_slots=4,
@@ -64,9 +65,17 @@ test_problem = SchedulingProblem(
 
 multi_stage_problem = SchedulingProblem(
     [
-        OperatorSpec(name="A", num_tasks=8, duration=1, output_size=1, num_cpus=1),
-        OperatorSpec(name="B", num_tasks=8, duration=2, input_size=1, output_size=2, num_cpus=1),
-        OperatorSpec(name='C', num_tasks=4, duration=1, input_size=4, num_cpus=1),
+        OperatorSpec(name="A", operator_idx=1, num_tasks=8, duration=1, output_size=1, num_cpus=1),
+        OperatorSpec(
+            name="B",
+            operator_idx=2,
+            num_tasks=8,
+            duration=2,
+            input_size=1,
+            output_size=2,
+            num_cpus=1,
+        ),
+        OperatorSpec(name="C", operator_idx=3, num_tasks=4, duration=1, input_size=4, num_cpus=1),
     ],
     time_limit=12,
     num_execution_slots=4,

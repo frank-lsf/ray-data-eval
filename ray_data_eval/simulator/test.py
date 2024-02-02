@@ -1,6 +1,6 @@
 import logging
 
-from ray_data_eval.common.pipeline import SchedulingProblem, test_problem, multi_stage_problem
+from ray_data_eval.common.pipeline import SchedulingProblem, multi_stage_problem
 from ray_data_eval.simulator.environment import ExecutionEnvironment
 from ray_data_eval.simulator.policies import (  # noqa F401
     GreedySchedulingPolicy,
