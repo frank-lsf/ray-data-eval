@@ -65,7 +65,15 @@ test_problem = SchedulingProblem(
 
 multi_stage_problem = SchedulingProblem(
     [
-        OperatorSpec(name="A", operator_idx=1, num_tasks=8, duration=1, output_size=1, num_cpus=1),
+        OperatorSpec(
+            name="A",
+            operator_idx=1,
+            num_tasks=8,
+            duration=1,
+            input_size=0,
+            output_size=1,
+            num_cpus=1,
+        ),
         OperatorSpec(
             name="B",
             operator_idx=2,
@@ -75,9 +83,26 @@ multi_stage_problem = SchedulingProblem(
             output_size=2,
             num_cpus=1,
         ),
-        OperatorSpec(name="C", operator_idx=3, num_tasks=4, duration=1, input_size=4, num_cpus=1),
+        OperatorSpec(
+            name="C",
+            operator_idx=3,
+            num_tasks=4,
+            duration=1,
+            input_size=4,
+            output_size=10,
+            num_cpus=1,
+        ),
+        OperatorSpec(
+            name="D",
+            operator_idx=4,
+            num_tasks=2,
+            duration=2,
+            input_size=20,
+            output_size=0,
+            num_cpus=1,
+        ),
     ],
-    time_limit=12,
+    time_limit=15,
     num_execution_slots=4,
     buffer_size_limit=100,
 )

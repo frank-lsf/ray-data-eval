@@ -143,7 +143,10 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
                     problem.operator_list[idx - 1].output_size
                     / problem.operator_list[idx - 1].duration
                 )
-                self.operator_ratios.append(output_rate / input_rate)
+                self.operator_ratios.append(
+                    output_rate / input_rate * self.operator_ratios[idx - 1]
+                )
+        logging.info(f"[{self}] Operator ratios: {self.operator_ratios}")
 
     def __repr__(self):
         return "RatesEqualizingSchedulingPolicy"
@@ -159,8 +162,7 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
     def tick(self, env: ExecutionEnvironment):
         super().tick(env)
 
-        # Iterate consumer first.
-        # env.task_states by default stores consumers first.
+        # env.task_states by default stores later operators first.
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.PENDING:
                 operator_idx = env.task_specs[tid].operator_idx
