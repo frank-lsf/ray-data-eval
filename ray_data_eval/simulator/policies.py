@@ -151,10 +151,7 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
         num_consumers = 0
 
         for tid, task_state in env.task_states.items():
-            if (
-                task_state.state == TaskStateType.RUNNING
-                or task_state.state == TaskStateType.FINISHED
-            ):
+            if task_state.state == TaskStateType.RUNNING:
                 if not self._is_producer_task(env, tid):
                     num_consumers += 1
                 else:
