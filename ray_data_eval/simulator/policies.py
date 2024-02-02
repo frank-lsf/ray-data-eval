@@ -124,3 +124,67 @@ class GreedyAndAnticipatingSchedulingPolicy(SchedulingPolicy):
             self._buffer_diff[self._current_tick + task.duration] += (
                 task.output_size - task.input_size
             )
+
+
+class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
+    """
+    A policy where consumer's rate of consuming input data to be the same as the producer's rate of producing output data.
+    """
+
+    def __init__(self, problem: SchedulingProblem):
+        super().__init__(problem)
+        self.buffer_size_limit = problem.buffer_size_limit
+        self._current_tick = 0
+        self._cumulative_output_size = 0
+        producer_rate = problem.producer_output_size[0] / problem.producer_time[0]
+        consumer_rate = problem.consumer_input_size[0] / problem.consumer_time[0]
+        self.producer_consumer_ratio = producer_rate / consumer_rate
+
+    def __repr__(self):
+        return "RatesEqualizingSchedulingPolicy"
+
+    def _is_producer_task(self, env: ExecutionEnvironment, tid: int):
+        return env.task_specs[tid].output_size > 0
+
+    def _count_scheduled_tasks(self, env: ExecutionEnvironment):
+        num_producers = 0
+        num_consumers = 0
+
+        for tid, task_state in env.task_states.items():
+            if task_state.state == TaskStateType.RUNNING:
+                if not self._is_producer_task(env, tid):
+                    num_consumers += 1
+                else:
+                    num_producers += 1
+        return num_producers, num_consumers
+
+    def tick(self, env: ExecutionEnvironment):
+        super().tick(env)
+
+        num_producers, num_consumers = self._count_scheduled_tasks(env)
+        # Iterate consumer first.
+        # env.task_states by default stores consumers first.
+        for tid, task_state in env.task_states.items():
+            if task_state.state == TaskStateType.PENDING:
+                if (
+                    self._is_producer_task(env, tid)
+                    and num_consumers > 0
+                    and (num_producers + 1) / num_consumers > self.producer_consumer_ratio
+                ):
+                    logging.info(
+                        f"[{self}] Not starting producer {tid} to keep ratio. num_producers: {num_producers}, num_consumers: {num_consumers}, ratio: {self.producer_consumer_ratio}"
+                    )
+                    continue
+
+                logging.debug(f"[{self}] Trying to start {tid}")
+                task = env.task_specs[tid]
+                if not env.start_task_on_any_executor(task):
+                    logging.debug(f"[{self}] Cannot not start {tid}")
+
+    def on_task_state_change(self, task: TaskSpec, task_state: TaskState):
+        super().on_task_state_change(task, task_state)
+        logging.info(f"{task.id} changed state to {task_state.state}")
+        if task_state.state == TaskStateType.RUNNING:
+            self._cumulative_output_size += task.output_size
+        elif task_state.state == TaskStateType.FINISHED:
+            self._cumulative_output_size -= task.input_size

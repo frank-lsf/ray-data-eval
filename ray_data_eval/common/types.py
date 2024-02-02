@@ -17,10 +17,11 @@ def _get_tasks(
     consumer_input_size: list[int],
 ):
     tasks = []
-    for i, (time, size) in enumerate(zip(producer_time, producer_output_size)):
-        tasks.append(TaskSpec(f"P{i}", time, output_size=size))
+    # Consumer tasks first.
     for i, (time, size) in enumerate(zip(consumer_time, consumer_input_size)):
         tasks.append(TaskSpec(f"C{i}", time, input_size=size))
+    for i, (time, size) in enumerate(zip(producer_time, producer_output_size)):
+        tasks.append(TaskSpec(f"P{i}", time, output_size=size))
     return tasks
 
 
@@ -100,5 +101,5 @@ test_problem = SchedulingProblem(
     consumer_time=2,
     time_limit=12,
     num_execution_slots=4,
-    buffer_size_limit=2,
+    buffer_size_limit=100,
 )
