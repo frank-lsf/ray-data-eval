@@ -1,6 +1,6 @@
 import logging
 
-from ray_data_eval.common.pipeline import SchedulingProblem, test_problem
+from ray_data_eval.common.pipeline import SchedulingProblem, test_problem, multi_stage_problem
 from ray_data_eval.simulator.environment import ExecutionEnvironment
 from ray_data_eval.simulator.policies import (  # noqa F401
     GreedySchedulingPolicy,
@@ -36,7 +36,7 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 
 def main():
-    problem = test_problem
+    problem = multi_stage_problem
     # policy = GreedySchedulingPolicy(problem)
     # policy = GreedyWithBufferSchedulingPolicy(problem)
     # policy = GreedyAndAnticipatingSchedulingPolicy(problem)
