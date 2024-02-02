@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-from ray_data_eval.common.types import SchedulingProblem, TaskSpec
+from ray_data_eval.common.pipeline import SchedulingProblem, TaskSpec
 from ray_data_eval.simulator.environment import (
     ExecutionEnvironment,
     SchedulingPolicy,
@@ -133,46 +133,46 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
 
     def __init__(self, problem: SchedulingProblem):
         super().__init__(problem)
-        self.buffer_size_limit = problem.buffer_size_limit
-        self._current_tick = 0
-        self._cumulative_output_size = 0
-        producer_rate = problem.producer_output_size[0] / problem.producer_time[0]
-        consumer_rate = problem.consumer_input_size[0] / problem.consumer_time[0]
-        self.producer_consumer_ratio = producer_rate / consumer_rate
+        self.operator_ratios = []
+        for idx, operator in enumerate(problem.operator_list):
+            if idx == 0:
+                self.operator_ratios.append(1)
+            else:
+                input_rate = operator.input_size / operator.duration
+                output_rate = (
+                    problem.operator_list[idx - 1].output_size
+                    / problem.operator_list[idx - 1].duration
+                )
+                self.operator_ratios.append(output_rate / input_rate)
 
     def __repr__(self):
         return "RatesEqualizingSchedulingPolicy"
 
-    def _is_producer_task(self, env: ExecutionEnvironment, tid: int):
-        return env.task_specs[tid].output_size > 0
-
-    def _count_scheduled_tasks(self, env: ExecutionEnvironment):
-        num_producers = 0
-        num_consumers = 0
-
+    def _count_num_tasks(self, env: ExecutionEnvironment, operator_idx: int):
+        num_tasks = 0
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.RUNNING:
-                if not self._is_producer_task(env, tid):
-                    num_consumers += 1
-                else:
-                    num_producers += 1
-        return num_producers, num_consumers
+                if env.task_specs[tid].operator_idx == operator_idx:
+                    num_tasks += 1
+        return num_tasks
 
     def tick(self, env: ExecutionEnvironment):
         super().tick(env)
 
-        num_producers, num_consumers = self._count_scheduled_tasks(env)
         # Iterate consumer first.
         # env.task_states by default stores consumers first.
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.PENDING:
+                operator_idx = env.task_specs[tid].operator_idx
+                current_operator_num = self._count_num_tasks(env, operator_idx)
+                next_operator_num = self._count_num_tasks(env, operator_idx + 1)
                 if (
-                    self._is_producer_task(env, tid)
-                    and num_consumers > 0
-                    and (num_producers + 1) / num_consumers > self.producer_consumer_ratio
+                    next_operator_num > 0
+                    and (current_operator_num + 1) / next_operator_num
+                    > self.operator_ratios[operator_idx]
                 ):
                     logging.info(
-                        f"[{self}] Not starting producer {tid} to keep ratio. num_producers: {num_producers}, num_consumers: {num_consumers}, ratio: {self.producer_consumer_ratio}"
+                        f"[{self}] Not starting producer {tid} to keep ratio. num_producers: {current_operator_num}, num_consumers: {next_operator_num}, ratio: {self.operator_ratios[operator_idx]}"
                     )
                     continue
 
@@ -180,11 +180,3 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
                 task = env.task_specs[tid]
                 if not env.start_task_on_any_executor(task):
                     logging.debug(f"[{self}] Cannot not start {tid}")
-
-    def on_task_state_change(self, task: TaskSpec, task_state: TaskState):
-        super().on_task_state_change(task, task_state)
-        logging.info(f"{task.id} changed state to {task_state.state}")
-        if task_state.state == TaskStateType.RUNNING:
-            self._cumulative_output_size += task.output_size
-        elif task_state.state == TaskStateType.FINISHED:
-            self._cumulative_output_size -= task.input_size
