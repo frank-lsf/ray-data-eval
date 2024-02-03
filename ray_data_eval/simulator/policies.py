@@ -185,7 +185,7 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
                 next_operator_num = self._count_num_tasks(env, operator_idx + 1)
 
                 # Liveness condition
-                if operator_idx == 0 and started_task == False:
+                if operator_idx == 0 and not started_task:
                     started_task = self._start_task(env, tid)
 
                 # If the operator has pending intput
