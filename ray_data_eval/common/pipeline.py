@@ -45,9 +45,9 @@ def _get_tasks(operator_list: list[OperatorSpec]):
 @dataclass
 class SchedulingProblem:
     operator_list: list[OperatorSpec]
-    num_execution_slots: int = 1
-    time_limit: int = 4
-    buffer_size_limit: int = 1
+    num_execution_slots: int
+    time_limit: int
+    buffer_size_limit: int
 
     def __post_init__(self):
         self.tasks = _get_tasks(self.operator_list)
