@@ -6,9 +6,9 @@ class TaskSpec:
     id: str
     operator_idx: int
     duration: int
-    input_size: int = 0
-    output_size: int = 0
-    num_cpus: int = 1
+    input_size: int
+    output_size: int
+    num_cpus: int
 
 
 @dataclass
@@ -17,9 +17,9 @@ class OperatorSpec:
     operator_idx: int
     num_tasks: int
     duration: int
-    input_size: int = 0
-    output_size: int = 0
-    num_cpus: int = 1
+    input_size: int
+    output_size: int
+    num_cpus: int
 
 
 def _get_tasks(operator_list: list[OperatorSpec]):
@@ -55,8 +55,24 @@ class SchedulingProblem:
 
 test_problem = SchedulingProblem(
     [
-        OperatorSpec(name="P", operator_idx=1, num_tasks=8, duration=1, output_size=1, num_cpus=1),
-        OperatorSpec(name="C", operator_idx=2, num_tasks=8, duration=2, input_size=1, num_cpus=1),
+        OperatorSpec(
+            name="P",
+            operator_idx=0,
+            num_tasks=8,
+            duration=1,
+            input_size=0,
+            output_size=1,
+            num_cpus=1,
+        ),
+        OperatorSpec(
+            name="C",
+            operator_idx=1,
+            num_tasks=8,
+            duration=2,
+            input_size=1,
+            output_size=0,
+            num_cpus=1,
+        ),
     ],
     time_limit=12,
     num_execution_slots=4,
@@ -67,7 +83,7 @@ multi_stage_problem = SchedulingProblem(
     [
         OperatorSpec(
             name="A",
-            operator_idx=1,
+            operator_idx=0,
             num_tasks=8,
             duration=1,
             input_size=0,
@@ -76,7 +92,7 @@ multi_stage_problem = SchedulingProblem(
         ),
         OperatorSpec(
             name="B",
-            operator_idx=2,
+            operator_idx=1,
             num_tasks=8,
             duration=2,
             input_size=1,
@@ -85,7 +101,7 @@ multi_stage_problem = SchedulingProblem(
         ),
         OperatorSpec(
             name="C",
-            operator_idx=3,
+            operator_idx=2,
             num_tasks=4,
             duration=1,
             input_size=4,
@@ -94,7 +110,7 @@ multi_stage_problem = SchedulingProblem(
         ),
         OperatorSpec(
             name="D",
-            operator_idx=4,
+            operator_idx=3,
             num_tasks=2,
             duration=2,
             input_size=20,
