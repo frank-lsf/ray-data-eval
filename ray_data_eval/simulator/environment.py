@@ -291,6 +291,10 @@ class ExecutionEnvironment:
             return False, []
         return True, inp
 
+    def can_get_task_input(self, task: TaskSpec) -> bool:
+        can_start, _ = self._get_task_inputs(task)
+        return can_start
+
     def start_task(self, task: TaskSpec, executor_id: int) -> bool:
         can_start, inp = self._get_task_inputs(task)
         if can_start and self._executors[executor_id].start_task(task, self._current_tick, inp):
