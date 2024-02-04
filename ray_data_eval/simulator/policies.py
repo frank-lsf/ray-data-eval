@@ -151,7 +151,7 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
     def __repr__(self):
         return "RatesEqualizingSchedulingPolicy"
 
-    def _count_num_tasks(self, env: ExecutionEnvironment, operator_idx: int):
+    def _count_num_tasks_per_operator(self, env: ExecutionEnvironment, operator_idx: int):
         num_tasks = 0
         for tid, task_state in env.task_states.items():
             if (
@@ -162,7 +162,7 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
                     num_tasks += 1
         return num_tasks
 
-    def _start_task(self, env: ExecutionEnvironment, tid: int):
+    def _try_start_task(self, env: ExecutionEnvironment, tid: int):
         task = env.task_specs[tid]
         logging.debug(f"[{self}] Trying to start {tid}")
         if not env.start_task_on_any_executor(task):
@@ -175,22 +175,22 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
 
         # env.task_states by default stores later operators first.
         logging.info(
-            f"[{self}] {[self._count_num_tasks(env, operator_idx) for operator_idx in range(4)]} {self.operator_ratios}"
+            f"[{self}] {[self._count_num_tasks_per_operator(env, operator_idx) for operator_idx in range(4)]} {self.operator_ratios}"
         )
-        started_task = False
+        task_started = False
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.PENDING:
                 operator_idx = env.task_specs[tid].operator_idx
-                current_operator_num = self._count_num_tasks(env, operator_idx)
-                next_operator_num = self._count_num_tasks(env, operator_idx + 1)
+                current_operator_num = self._count_num_tasks_per_operator(env, operator_idx)
+                next_operator_num = self._count_num_tasks_per_operator(env, operator_idx + 1)
 
                 # Liveness condition
-                if operator_idx == 0 and not started_task:
-                    started_task = self._start_task(env, tid)
+                if operator_idx == 0 and not task_started:
+                    task_started = self._try_start_task(env, tid)
 
                 # If the operator has pending intput
                 elif env.can_get_task_input(env.task_specs[tid]):
-                    started_task = self._start_task(env, tid)
+                    task_started = self._try_start_task(env, tid)
 
                 # Maintain ratio.
                 elif (
@@ -206,4 +206,4 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
                         f"[{self}] Not starting producer {tid} to keep ratio. num_producers: {current_operator_num}, num_consumers: {next_operator_num}, ratio: {self.operator_ratios[operator_idx - 1]}"
                     )
                 else:
-                    started_task = self._start_task(env, tid)
+                    task_started = self._try_start_task(env, tid)
