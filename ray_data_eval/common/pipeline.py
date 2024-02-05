@@ -45,6 +45,7 @@ def _get_tasks(operator_list: list[OperatorSpec]):
 @dataclass
 class SchedulingProblem:
     operator_list: list[OperatorSpec]
+    name: str
     num_execution_slots: int
     time_limit: int
     buffer_size_limit: int
@@ -74,6 +75,7 @@ test_problem = SchedulingProblem(
             num_cpus=1,
         ),
     ],
+    name='test_problem',
     time_limit=12,
     num_execution_slots=4,
     buffer_size_limit=2,
@@ -118,6 +120,7 @@ multi_stage_problem = SchedulingProblem(
             num_cpus=1,
         ),
     ],
+    name='multi_stage_problem',
     time_limit=15,
     num_execution_slots=4,
     buffer_size_limit=100,
@@ -144,6 +147,7 @@ producer_consumer_problem = SchedulingProblem(
             num_cpus=1,
         ),
     ],
+    name='producer_consumer_problem',
     time_limit=15,
     buffer_size_limit=2,
     num_execution_slots=3,
