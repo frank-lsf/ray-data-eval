@@ -32,7 +32,7 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 def main():
     for problem in problems:
-        print('Problem:', problem.name)
+        print("Problem:", problem.name)
         for policy in [
             GreedySchedulingPolicy(problem),
             GreedyWithBufferSchedulingPolicy(problem),
@@ -56,7 +56,7 @@ def main():
                     break
 
             print(str(policy), "Finished" if is_finished else "Not finished", used_time)
-        print('---')
+        print("---")
 
 
 if __name__ == "__main__":
