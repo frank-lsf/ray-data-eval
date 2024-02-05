@@ -76,7 +76,7 @@ test_problem = SchedulingProblem(
     ],
     time_limit=12,
     num_execution_slots=4,
-    buffer_size_limit=100,
+    buffer_size_limit=2,
 )
 
 multi_stage_problem = SchedulingProblem(
@@ -122,3 +122,31 @@ multi_stage_problem = SchedulingProblem(
     num_execution_slots=4,
     buffer_size_limit=100,
 )
+
+producer_consumer_problem = SchedulingProblem(
+    [
+        OperatorSpec(
+            name="P",
+            operator_idx=0,
+            num_tasks=10,
+            duration=1,
+            input_size=0,
+            output_size=1,
+            num_cpus=1,
+        ),
+        OperatorSpec(
+            name="C",
+            operator_idx=1,
+            num_tasks=10,
+            duration=2,
+            input_size=1,
+            output_size=0,
+            num_cpus=1,
+        ),
+    ],
+    time_limit=15,
+    buffer_size_limit=2,
+    num_execution_slots=3,
+)
+
+problems = [test_problem, multi_stage_problem, producer_consumer_problem]
