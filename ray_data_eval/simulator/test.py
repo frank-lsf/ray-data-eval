@@ -1,6 +1,6 @@
 import logging
 
-from ray_data_eval.common.pipeline import (
+from ray_data_eval.common.pipeline import ( # noqa F401
     SchedulingProblem,
     producer_consumer_problem,
     multi_stage_problem,
