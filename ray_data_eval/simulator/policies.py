@@ -183,6 +183,7 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
                 operator_idx = env.task_specs[tid].operator_idx
                 current_operator_num = self._count_num_tasks_per_operator(env, operator_idx)
                 next_operator_num = self._count_num_tasks_per_operator(env, operator_idx + 1)
+                perv_operator_num = self._count_num_tasks_per_operator(env, operator_idx - 1)
 
                 # Liveness condition
                 if operator_idx == 0 and not task_started:
@@ -201,6 +202,14 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
                     # Exceed the ratio.
                     and (current_operator_num + 1) / next_operator_num
                     > self.operator_ratios[operator_idx] / self.operator_ratios[operator_idx + 1]
+                ):
+                    logging.debug(
+                        f"[{self}] Not starting producer {tid} to keep ratio. num_producers: {current_operator_num}, num_consumers: {next_operator_num}, ratio: {self.operator_ratios[operator_idx - 1]}"
+                    )
+                elif (
+                    operator_idx >= 1
+                    and perv_operator_num / (current_operator_num + 1)
+                    > self.operator_ratios[operator_idx - 1] / self.operator_ratios[operator_idx]
                 ):
                     logging.debug(
                         f"[{self}] Not starting producer {tid} to keep ratio. num_producers: {current_operator_num}, num_consumers: {next_operator_num}, ratio: {self.operator_ratios[operator_idx - 1]}"

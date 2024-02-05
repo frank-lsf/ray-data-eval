@@ -24,8 +24,9 @@ class OperatorSpec:
 
 def _get_tasks(operator_list: list[OperatorSpec]):
     tasks = []
-    # Reversed so that consumer first.
-    for idx, operator in enumerate(reversed(operator_list)):
+    # Reversed so that downstream tasks are prioritized when
+    # there are items in the buffer.
+    for _, operator in enumerate(reversed(operator_list)):
         tasks.extend(
             [
                 TaskSpec(
@@ -153,4 +154,40 @@ producer_consumer_problem = SchedulingProblem(
     num_execution_slots=3,
 )
 
-problems = [test_problem, multi_stage_problem, producer_consumer_problem]
+long_problem = SchedulingProblem(
+    [
+        OperatorSpec(
+            name="A",
+            operator_idx=0,
+            num_tasks=50,
+            duration=1,
+            input_size=0,
+            output_size=1,
+            num_cpus=1,
+        ),
+        OperatorSpec(
+            name="B",
+            operator_idx=1,
+            num_tasks=50,
+            duration=2,
+            input_size=1,
+            output_size=2,
+            num_cpus=1,
+        ),
+        OperatorSpec(
+            name="C",
+            operator_idx=2,
+            num_tasks=25,
+            duration=1,
+            input_size=4,
+            output_size=0,
+            num_cpus=1,
+        ),
+    ],
+    name="long_problem",
+    time_limit=300,
+    buffer_size_limit=50,
+    num_execution_slots=3,
+)
+
+problems = [test_problem, multi_stage_problem, producer_consumer_problem, long_problem]
