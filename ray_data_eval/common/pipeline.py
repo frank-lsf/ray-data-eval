@@ -2,9 +2,10 @@ from dataclasses import dataclass
 
 
 @dataclass
-class TaskSpec:
-    id: str
+class OperatorSpec:
+    name: str
     operator_idx: int
+    num_tasks: int
     duration: int
     input_size: int
     output_size: int
@@ -12,10 +13,9 @@ class TaskSpec:
 
 
 @dataclass
-class OperatorSpec:
-    name: str
+class TaskSpec:
+    id: str
     operator_idx: int
-    num_tasks: int
     duration: int
     input_size: int
     output_size: int
@@ -186,7 +186,7 @@ long_problem = SchedulingProblem(
     ],
     name="long_problem",
     time_limit=300,
-    buffer_size_limit=50,
+    buffer_size_limit=5000,
     num_execution_slots=3,
 )
 

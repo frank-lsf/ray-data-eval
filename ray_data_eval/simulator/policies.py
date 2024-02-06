@@ -134,6 +134,7 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
     def __init__(self, problem: SchedulingProblem):
         super().__init__(problem)
         self.operator_ratios = []
+        self.operator_running_duration = []
         for idx, operator in enumerate(problem.operator_list):
             if idx == 0:
                 self.operator_ratios.append(1)
@@ -146,21 +147,22 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
                 self.operator_ratios.append(
                     output_rate / input_rate * self.operator_ratios[idx - 1]
                 )
+            self.operator_running_duration.append(0)
+        self.task_finished = dict()
         logging.info(f"[{self}] Operator ratios: {self.operator_ratios}")
 
     def __repr__(self):
         return "RatesEqualizingSchedulingPolicy"
 
-    def _count_num_tasks_per_operator(self, env: ExecutionEnvironment, operator_idx: int):
-        num_tasks = 0
+    def _update_operator_running_duration(self, env: ExecutionEnvironment):
         for tid, task_state in env.task_states.items():
-            if (
-                task_state.state == TaskStateType.RUNNING
-                or task_state.state == TaskStateType.FINISHED
-            ):
-                if env.task_specs[tid].operator_idx == operator_idx:
-                    num_tasks += 1
-        return num_tasks
+            if task_state.state == TaskStateType.RUNNING:
+                operator_idx = env.task_specs[tid].operator_idx
+                self.operator_running_duration[operator_idx] += 1
+            if task_state.state == TaskStateType.FINISHED and tid not in self.task_finished:
+                operator_idx = env.task_specs[tid].operator_idx
+                self.operator_running_duration[operator_idx] += 1
+                self.task_finished[tid] = True
 
     def _try_start_task(self, env: ExecutionEnvironment, tid: int):
         task = env.task_specs[tid]
@@ -170,49 +172,64 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
             return False
         return True
 
-    def tick(self, env: ExecutionEnvironment):
-        super().tick(env)
-
-        # env.task_states by default stores later operators first.
-        logging.info(
-            f"[{self}] {[self._count_num_tasks_per_operator(env, operator_idx) for operator_idx in range(4)]} {self.operator_ratios}"
-        )
-        task_started = False
+    def _get_largest_operator_idx_still_pending(self, env: ExecutionEnvironment):
+        largest_operator_idx_still_pending = len(self.operator_ratios)
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.PENDING:
-                operator_idx = env.task_specs[tid].operator_idx
-                current_operator_num = self._count_num_tasks_per_operator(env, operator_idx)
-                next_operator_num = self._count_num_tasks_per_operator(env, operator_idx + 1)
-                perv_operator_num = self._count_num_tasks_per_operator(env, operator_idx - 1)
+                largest_operator_idx_still_pending = min(
+                    largest_operator_idx_still_pending, env.task_specs[tid].operator_idx
+                )
+        return largest_operator_idx_still_pending
 
-                # Liveness condition
-                if operator_idx == 0 and not task_started:
-                    task_started = self._try_start_task(env, tid)
+    def tick(self, env: ExecutionEnvironment):
+        super().tick(env)
+        self._update_operator_running_duration(env)
+        largest_operator_idx_still_pending = self._get_largest_operator_idx_still_pending(env)
+        logging.info(
+            f"[{self}] {[self.operator_running_duration[operator_idx] for operator_idx in range(len(self.operator_ratios))]} {self.operator_ratios}. "
+            f"largest_operator_idx_still_pending: {largest_operator_idx_still_pending}"
+        )
+        makes_progress = True
+        while makes_progress:
+            makes_progress = False
+            for tid, task_state in env.task_states.items():
+                if task_state.state == TaskStateType.PENDING:
+                    operator_idx = env.task_specs[tid].operator_idx
+                    current_operator_num = self.operator_running_duration[operator_idx]
 
-                # If the operator has pending intput
-                elif env.can_get_task_input(env.task_specs[tid]):
-                    task_started = self._try_start_task(env, tid)
+                    # Liveness condition
+                    # Tasks are sorted in descending order of operator index.
+                    if operator_idx == largest_operator_idx_still_pending:
+                        task_started = self._try_start_task(env, tid)
+                        if task_started:
+                            makes_progress = True
+                    # Maintain ratio with the successor
+                    elif (
+                        # Not the last operator
+                        operator_idx + 1 < len(self.operator_ratios)
+                        # Next operator has already launched tasks
+                        and self.operator_running_duration[operator_idx + 1] > 0
+                        # Exceed the ratio.
+                        and (current_operator_num + 1)
+                        / self.operator_running_duration[operator_idx + 1]
+                        > self.operator_ratios[operator_idx]
+                        / self.operator_ratios[operator_idx + 1]
+                    ):
+                        logging.info(f"[{self}] Not starting task {tid} to keep ratio.")
+                    # Maintain ratio with the predecessor
+                    elif (
+                        operator_idx >= 1
+                        and self.operator_running_duration[operator_idx - 1]
+                        / (current_operator_num + 1)
+                        < self.operator_ratios[operator_idx - 1]
+                        / self.operator_ratios[operator_idx]
+                    ):
+                        logging.info(f"[{self}] Not starting task {tid} to keep ratio.")
+                    else:
+                        task_started = self._try_start_task(env, tid)
+                        if task_started:
+                            makes_progress = True
+                        else:
+                            logging.info(f"[{self}] Cannot not start {tid}")
 
-                # Maintain ratio.
-                elif (
-                    # Not the last operator
-                    operator_idx + 1 < len(self.operator_ratios)
-                    # Next operator has already launched tasks
-                    and next_operator_num > 0
-                    # Exceed the ratio.
-                    and (current_operator_num + 1) / next_operator_num
-                    > self.operator_ratios[operator_idx] / self.operator_ratios[operator_idx + 1]
-                ):
-                    logging.debug(
-                        f"[{self}] Not starting producer {tid} to keep ratio. num_producers: {current_operator_num}, num_consumers: {next_operator_num}, ratio: {self.operator_ratios[operator_idx - 1]}"
-                    )
-                elif (
-                    operator_idx >= 1
-                    and perv_operator_num / (current_operator_num + 1)
-                    > self.operator_ratios[operator_idx - 1] / self.operator_ratios[operator_idx]
-                ):
-                    logging.debug(
-                        f"[{self}] Not starting producer {tid} to keep ratio. num_producers: {current_operator_num}, num_consumers: {next_operator_num}, ratio: {self.operator_ratios[operator_idx - 1]}"
-                    )
-                else:
-                    task_started = self._try_start_task(env, tid)
+            largest_operator_idx_still_pending = self._get_largest_operator_idx_still_pending(env)
