@@ -159,6 +159,7 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
             if task_state.state == TaskStateType.RUNNING:
                 operator_idx = env.task_specs[tid].operator_idx
                 self.operator_running_duration[operator_idx] += 1
+            # Add the last time tick to running_duration.
             if task_state.state == TaskStateType.FINISHED and tid not in self.task_finished:
                 operator_idx = env.task_specs[tid].operator_idx
                 self.operator_running_duration[operator_idx] += 1

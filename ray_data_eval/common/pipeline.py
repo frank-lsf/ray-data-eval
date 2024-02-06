@@ -150,7 +150,7 @@ producer_consumer_problem = SchedulingProblem(
     ],
     name="producer_consumer_problem",
     time_limit=15,
-    buffer_size_limit=2,
+    buffer_size_limit=20,
     num_execution_slots=3,
 )
 
