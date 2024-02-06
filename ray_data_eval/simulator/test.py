@@ -40,7 +40,7 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 
 def main():
-    problem = producer_consumer_problem
+    problem = multi_stage_problem
     # policy = GreedySchedulingPolicy(problem)
     # policy = GreedyWithBufferSchedulingPolicy(problem)
     # policy = GreedyAndAnticipatingSchedulingPolicy(problem)
