@@ -173,22 +173,22 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
             return False
         return True
 
-    def _get_largest_operator_idx_still_pending(self, env: ExecutionEnvironment):
-        largest_operator_idx_still_pending = len(self.operator_ratios)
+    def _get_largest_pending_operator(self, env: ExecutionEnvironment):
+        largest_pending_operator = len(self.operator_ratios)
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.PENDING:
-                largest_operator_idx_still_pending = min(
-                    largest_operator_idx_still_pending, env.task_specs[tid].operator_idx
+                largest_pending_operator = min(
+                    largest_pending_operator, env.task_specs[tid].operator_idx
                 )
-        return largest_operator_idx_still_pending
+        return largest_pending_operator
 
     def tick(self, env: ExecutionEnvironment):
         super().tick(env)
         self._update_operator_running_duration(env)
-        largest_operator_idx_still_pending = self._get_largest_operator_idx_still_pending(env)
+        largest_pending_operator = self._get_largest_pending_operator(env)
         logging.info(
             f"[{self}] {[self.operator_running_duration[operator_idx] for operator_idx in range(len(self.operator_ratios))]} {self.operator_ratios}. "
-            f"largest_operator_idx_still_pending: {largest_operator_idx_still_pending}"
+            f"largest_pending_operator: {largest_pending_operator}"
         )
         makes_progress = True
         while makes_progress:
@@ -200,7 +200,7 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
 
                     # Liveness condition
                     # Tasks are sorted in descending order of operator index.
-                    if operator_idx == largest_operator_idx_still_pending:
+                    if operator_idx == largest_pending_operator:
                         task_started = self._try_start_task(env, tid)
                         if task_started:
                             makes_progress = True
@@ -233,4 +233,4 @@ class RatesEqualizingSchedulingPolicy(SchedulingPolicy):
                         else:
                             logging.info(f"[{self}] Cannot not start {tid}")
 
-            largest_operator_idx_still_pending = self._get_largest_operator_idx_still_pending(env)
+            largest_pending_operator = self._get_largest_pending_operator(env)
