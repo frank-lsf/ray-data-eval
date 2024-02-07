@@ -24,8 +24,7 @@ class TaskSpec:
 
 def _get_tasks(operator_list: list[OperatorSpec]):
     tasks = []
-    # Reversed so that downstream tasks are prioritized when
-    # there are items in the buffer.
+    # Reversed so that downstream tasks are prioritized.
     for _, operator in enumerate(reversed(operator_list)):
         tasks.extend(
             [
@@ -79,7 +78,7 @@ test_problem = SchedulingProblem(
     name="test_problem",
     time_limit=12,
     num_execution_slots=4,
-    buffer_size_limit=2,
+    buffer_size_limit=4,
 )
 
 multi_stage_problem = SchedulingProblem(
