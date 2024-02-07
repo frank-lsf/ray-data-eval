@@ -7,11 +7,12 @@ Runbook:
     ./bin/spark-submit path/to/file/spark_streaming_wordcount.py localhost 1234
 3. run gen_streaming_data to send data
 """
+
 import time
 import os
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf
+from pyspark.sql.functions import udf, col
 from pyspark.sql.types import StructType, StringType, StructField, IntegerType
 
 from ray_data_eval.common.types import SchedulingProblem
@@ -29,6 +30,7 @@ def start_spark(cfg):
         .config("spark.eventLog.dir", os.getenv("SPARK_EVENTS_FILEURL"))
         .config("spark.executor.memory", "20g")
         .config("spark.driver.memory", "2g")
+        # .config("spark.driver.maxResultSize", "25g")
         .config("spark.cores.max", cfg.num_execution_slots)
         .config("spark.default.parallelism", cfg.num_producers)
         .getOrCreate()
@@ -38,14 +40,16 @@ def start_spark(cfg):
 
 def producer_udf(item, producer_output_size):
     i = item
-    data = "1" * (DATA_SIZE_BYTES * producer_output_size[i])
+    # data = "1" * (DATA_SIZE_BYTES * producer_output_size[i])
+    data = "1" * (DATA_SIZE_BYTES)
     time.sleep(TIME_UNIT)
     return data, i
 
 
 def consumer_udf(item, consumer_time):
     data, i = item
-    time.sleep(TIME_UNIT * consumer_time[i])
+    # time.sleep(TIME_UNIT * consumer_time[i])
+    time.sleep(TIME_UNIT)
     return len(data)
 
 
@@ -53,12 +57,21 @@ def run_spark_data(spark, cfg):
     if cfg.num_producers != cfg.num_consumers:
         raise NotImplementedError(f"num_producers != num_consumers: {cfg}")
 
-    # Create a streaming DataFrame
+    # # Create a streaming DataFrame (from socket source)
+    # streaming_df = (
+    #     spark.readStream.format("socket").option("host", "localhost").option("port", 1234).load()
+    # )
+    # # Rename column
+    # streaming_df = streaming_df.withColumn("item", streaming_df["value"].cast(IntegerType()))
+
+    # Create a streaming DataFrame (from rate source: each output row contains a timestamp and value)
     streaming_df = (
-        spark.readStream.format("socket").option("host", "localhost").option("port", 1234).load()
+        spark.readStream.format("rate").option("rowsPerSecond", 1)
+        # .option("numPartitions", cfg.num_producers)
+        .load()
     )
-    # Rename column
-    streaming_df = streaming_df.withColumn("item", streaming_df["value"].cast(IntegerType()))
+    df1 = streaming_df.withColumn("item", streaming_df["value"].cast(IntegerType()))
+    df1.printSchema()
 
     # Define UDFs
     producer_output_schema = StructType(
@@ -78,11 +91,13 @@ def run_spark_data(spark, cfg):
     )
 
     # Apply UDFs
-    streaming_df = streaming_df.withColumn("producer_result", producer_udf_spark("item"))
-    streaming_df = streaming_df.withColumn("data_length", consumer_udf_spark("producer_result"))
+    df2 = df1.withColumn("producer_result", producer_udf_spark(col("item")))
+    df3 = df2.withColumn("data_length", consumer_udf_spark(col("producer_result")))
+
+    df3.printSchema()
 
     # Start the streaming query
-    query = streaming_df.writeStream.outputMode("update").format("console").start()
+    query = df3.writeStream.outputMode("append").format("console").start()
 
     query.awaitTermination()
     spark.stop()
