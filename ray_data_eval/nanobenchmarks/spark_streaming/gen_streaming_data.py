@@ -6,14 +6,13 @@ import subprocess
 def send_data_to_netcat(host, port, items):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
-        # s.sendall(b"Hello, Spark Streaming!")
         for item in items:
             data = f"{item[0]}\n"
-            command = f"echo '{data}' | nc {host} {port}"
-            subprocess.Popen(
-                command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-            )
-            # s.sendall(data.encode("utf-8"))
+            # command = f"echo '{data}' | nc {host} {port}"
+            # subprocess.Popen(
+            #     command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+            # )
+            s.sendall(data.encode("utf-8"))
             time.sleep(1)
     print("Finished sending data")
 
