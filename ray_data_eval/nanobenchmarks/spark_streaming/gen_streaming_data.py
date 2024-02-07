@@ -1,6 +1,5 @@
 import socket
 import time
-import subprocess
 
 
 def send_data_to_netcat(host, port, items):
