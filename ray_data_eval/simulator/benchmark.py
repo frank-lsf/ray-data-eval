@@ -1,0 +1,42 @@
+from ray_data_eval.common.pipeline import problems
+from ray_data_eval.simulator.environment import ExecutionEnvironment
+from ray_data_eval.simulator.policies import (  # noqa F401
+    GreedySchedulingPolicy,
+    GreedyWithBufferSchedulingPolicy,
+    GreedyAndAnticipatingSchedulingPolicy,
+    SchedulingPolicy,
+    RatesEqualizingSchedulingPolicy,
+)
+
+
+def main():
+    for problem in problems:
+        print("Problem:", problem.name)
+        for policy in [
+            GreedySchedulingPolicy(problem),
+            GreedyWithBufferSchedulingPolicy(problem),
+            GreedyAndAnticipatingSchedulingPolicy(problem),
+            RatesEqualizingSchedulingPolicy(problem),
+        ]:
+            env = ExecutionEnvironment(
+                num_executors=problem.num_execution_slots,
+                buffer_size=problem.buffer_size_limit,
+                tasks=problem.tasks,
+                scheduling_policy=policy,
+            )
+
+            used_time = 0
+            is_finished = False
+            for _ in range(problem.time_limit):
+                env.tick()
+                used_time += 1
+                if env.check_all_tasks_finished():
+                    is_finished = True
+                    break
+
+            print(str(policy), "Finished" if is_finished else "Not finished", used_time)
+        print("---")
+
+
+if __name__ == "__main__":
+    main()

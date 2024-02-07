@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 import logging
 
-from ray_data_eval.common.types import SchedulingProblem, TaskSpec
+from ray_data_eval.common.pipeline import SchedulingProblem, TaskSpec
 
 Tick = int
 
@@ -10,6 +10,7 @@ Tick = int
 @dataclass
 class DataItem:
     id: str
+    operator_idx: int
     block_id: int = 0
     producer: TaskSpec | None = None
     produced_at: Tick = -1
@@ -42,6 +43,7 @@ class Buffer:
         for i in range(size):
             item = DataItem(
                 id=task.id,
+                operator_idx=task.operator_idx,
                 block_id=i,
                 producer=task,
                 produced_at=at_tick,
@@ -56,12 +58,16 @@ class Buffer:
         for item in items:
             self._items.remove(item)
 
-    def peek(self, size: int) -> list[DataItem]:
+    def peek(self, size: int, operator_idx: int) -> list[DataItem]:
         """
         Returns the first `size` items in the buffer without consumers.
         If there are fewer than `size` items, returns an empty list.
         """
-        items = [item for item in self._items if item.consumer is None]
+        items = [
+            item
+            for item in self._items
+            if item.consumer is None and item.operator_idx == operator_idx
+        ]
         logging.debug(f"[{self}] Peeked {size} items: {items[:size]}")
         if len(items) < size:
             return []
@@ -280,11 +286,14 @@ class ExecutionEnvironment:
     def _get_task_inputs(self, task: TaskSpec) -> list[DataItem]:
         if task.input_size == 0:
             return True, []
-        inp = self.buffer.peek(task.input_size)
+        inp = self.buffer.peek(task.input_size, task.operator_idx - 1)
         if len(inp) < task.input_size:
-            logging.debug(f"[{self}] Cannot start {task.id}: input requirement not satisfied")
             return False, []
         return True, inp
+
+    def can_get_task_input(self, task: TaskSpec) -> bool:
+        can_start, _ = self._get_task_inputs(task)
+        return can_start
 
     def start_task(self, task: TaskSpec, executor_id: int) -> bool:
         can_start, inp = self._get_task_inputs(task)
