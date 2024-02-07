@@ -2,6 +2,7 @@ import logging
 
 from ray_data_eval.common.pipeline import (  # noqa F401
     SchedulingProblem,
+    test_problem,
     producer_consumer_problem,
     multi_stage_problem,
 )
@@ -15,7 +16,7 @@ from ray_data_eval.simulator.policies import (  # noqa F401
 )
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(levelname).1s %(filename)s:%(lineno)d] %(message)s",
     handlers=[logging.StreamHandler()],
 )
@@ -40,7 +41,7 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 
 def main():
-    problem = multi_stage_problem
+    problem = test_problem
     # policy = GreedySchedulingPolicy(problem)
     # policy = GreedyWithBufferSchedulingPolicy(problem)
     # policy = GreedyAndAnticipatingSchedulingPolicy(problem)
