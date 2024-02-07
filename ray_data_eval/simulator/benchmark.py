@@ -9,8 +9,6 @@ from ray_data_eval.simulator.policies import (  # noqa F401
     RatesEqualizingSchedulingPolicy,
 )
 
-logging.disable(logging.CRITICAL)
-
 
 def main():
     for problem in problems:
