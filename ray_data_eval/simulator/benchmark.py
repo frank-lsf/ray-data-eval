@@ -1,5 +1,5 @@
 import logging
-from ray_data_eval.common.pipeline import SchedulingProblem, problems
+from ray_data_eval.common.pipeline import problems
 from ray_data_eval.simulator.environment import ExecutionEnvironment
 from ray_data_eval.simulator.policies import (  # noqa F401
     GreedySchedulingPolicy,
@@ -33,8 +33,8 @@ def main():
             for _ in range(problem.time_limit):
                 env.tick()
                 used_time += 1
-                is_finished = env.check_all_tasks_finished()
-                if is_finished:
+                if env.check_all_tasks_finished():
+                    is_finished = True
                     break
 
             print(str(policy), "Finished" if is_finished else "Not finished", used_time)
