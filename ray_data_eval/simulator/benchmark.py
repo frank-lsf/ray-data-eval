@@ -1,4 +1,3 @@
-import logging
 from ray_data_eval.common.pipeline import problems
 from ray_data_eval.simulator.environment import ExecutionEnvironment
 from ray_data_eval.simulator.policies import (  # noqa F401
@@ -8,8 +7,6 @@ from ray_data_eval.simulator.policies import (  # noqa F401
     SchedulingPolicy,
     RatesEqualizingSchedulingPolicy,
 )
-
-logging.disable(logging.CRITICAL)
 
 
 def main():

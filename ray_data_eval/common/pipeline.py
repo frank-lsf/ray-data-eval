@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -25,6 +25,7 @@ class TaskSpec:
 def _get_tasks(operator_list: list[OperatorSpec]):
     tasks = []
     # Reversed so that downstream tasks are prioritized.
+    # TODO(MaoZiming): Sort in the policy.
     for _, operator in enumerate(reversed(operator_list)):
         tasks.extend(
             [
@@ -49,6 +50,7 @@ class SchedulingProblem:
     num_execution_slots: int
     time_limit: int
     buffer_size_limit: int
+    tasks: list = field(init=False)
 
     def __post_init__(self):
         self.tasks = _get_tasks(self.operator_list)
