@@ -5,6 +5,7 @@ from ray_data_eval.common.pipeline import (  # noqa F401
     test_problem,
     producer_consumer_problem,
     multi_stage_problem,
+    training_problem,
 )
 from ray_data_eval.simulator.environment import ExecutionEnvironment
 from ray_data_eval.simulator.policies import (  # noqa F401
@@ -24,7 +25,7 @@ logging.basicConfig(
 
 def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy) -> bool:
     env = ExecutionEnvironment(
-        num_executors=problem.num_execution_slots,
+        resources=problem.resources,
         buffer_size=problem.buffer_size_limit,
         tasks=problem.tasks,
         scheduling_policy=policy,
@@ -41,7 +42,7 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 
 def main():
-    problem = test_problem
+    problem = training_problem
     # policy = GreedyPolicy(problem)
     # policy = GreedyWithBufferPolicy(problem)
     # policy = GreedyOracleProducerFirstPolicy(problem)

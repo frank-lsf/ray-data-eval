@@ -6,7 +6,6 @@ from ray_data_eval.common.pipeline import (
     ResourcesSpec,
     TaskSpec,
     SchedulingProblem,
-    test_problem,
     training_problem,
 )
 

@@ -270,9 +270,9 @@ training_problem = SchedulingProblem(
         OperatorSpec(
             name="T",
             operator_idx=2,
-            num_tasks=8,
+            num_tasks=4,
             duration=1,
-            input_size=1,
+            input_size=2,
             output_size=0,
             resources=ResourcesSpec(gpu=1),
         ),

@@ -23,7 +23,7 @@ def main():
             RatesEqualizingPolicy(problem),
         ]:
             env = ExecutionEnvironment(
-                num_executors=problem.num_execution_slots,
+                resources=problem.resources,
                 buffer_size=problem.buffer_size_limit,
                 tasks=problem.tasks,
                 scheduling_policy=policy,

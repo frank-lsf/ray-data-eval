@@ -2,9 +2,13 @@ from dataclasses import dataclass
 from enum import Enum
 import logging
 
-from ray_data_eval.common.pipeline import SchedulingProblem, TaskSpec
+from ray_data_eval.common.pipeline import ResourcesSpec, SchedulingProblem, TaskSpec
 
+Resource = str
 Tick = int
+
+CPU: Resource = "CPU"
+GPU: Resource = "GPU"
 
 
 @dataclass
@@ -35,6 +39,9 @@ class Buffer:
         logging.info(f"[{self}] Tick")
         self._timeline.append(len(self._items))
 
+    def get_available_space(self) -> int:
+        return self.capacity - len(self._items)
+
     def push(self, at_tick: Tick, task: TaskSpec, size: int) -> DataItem | None:
         assert size > 0, (task, size)
         if len(self._items) + size > self.capacity:
@@ -54,9 +61,10 @@ class Buffer:
         logging.debug(f"[{self}] Pushed {task.id}")
         return item
 
-    def remove(self, items: list[DataItem]):
+    def remove(self, items: list[DataItem]) -> list[DataItem]:
         for item in items:
             self._items.remove(item)
+        return items
 
     def peek(self, size: int, operator_idx: int) -> list[DataItem]:
         """
@@ -121,8 +129,9 @@ class HistoryEvent:
 
 
 class Executor:
-    def __init__(self, id: int, env: "ExecutionEnvironment"):
+    def __init__(self, id: str, resource: Resource, env: "ExecutionEnvironment"):
         self.id = id
+        self.resource = resource
         self.running_task: RunningTask | None = None
         self._env = env
         self._events: list[HistoryEvent] = []
@@ -133,10 +142,21 @@ class Executor:
 
     def _try_finishing_running_task(self) -> bool:
         """
-        Tries to add the running task's output to the buffer.
+        Tries to add the running task's output to the buffer and remove its inputs.
+
+        NOTE(lsf): One big difference between the simulator and the real execution in Ray is that
+        we remove the inputs from the buffer first before adding the outputs. In Ray, we would
+        add the outputs first and then remove the inputs, therefore needing more buffer space.
         """
         if self.running_task is None:
             return True
+        if self.running_task.spec.output_size > 0 and (
+            self._env.buffer.get_available_space()
+            < self.running_task.spec.output_size - self.running_task.spec.input_size
+        ):
+            logging.debug(f"[{self}] Cannot finish {self.running_task.spec.id}: buffer is full")
+            return False
+        self._env.buffer.remove(self.running_task.inputs)
         if self.running_task.spec.output_size > 0:
             item = self._env.buffer.push(
                 at_tick=self.running_task.started_at,
@@ -146,7 +166,6 @@ class Executor:
             if item is None:
                 logging.debug(f"[{self}] Cannot finish {self.running_task.spec.id}: buffer is full")
                 return False
-        self._env.buffer.remove(self.running_task.inputs)
         return True
 
     def _finish_running_task(self) -> RunningTask:
@@ -193,6 +212,13 @@ class Executor:
         Tries to start a task on this executor.
         Returns true if the task was started, false if it was not.
         """
+        if (
+            task.resources.cpu > 0
+            and self.resource != CPU
+            or task.resources.gpu > 0
+            and self.resource != GPU
+        ):
+            return False
         if self.running_task is not None:
             logging.debug(
                 f"[{self}] Cannot start {task.id}: {self.running_task.spec.id} is running"
@@ -233,7 +259,7 @@ class ExecutionEnvironment:
     def __init__(
         self,
         *,
-        num_executors: int,
+        resources: ResourcesSpec,
         buffer_size: int,
         tasks: list[TaskSpec],
         scheduling_policy: "SchedulingPolicy" = None,
@@ -242,13 +268,15 @@ class ExecutionEnvironment:
         self.task_states = {t.id: TaskState() for t in tasks}
         self.buffer = Buffer(capacity=buffer_size)
         self.scheduling_policy = scheduling_policy
-        self._executors = [Executor(i, self) for i in range(num_executors)]
         self._current_tick = 0
+        self._executors = [Executor(f"CPU{i}", CPU, self) for i in range(resources.cpu)] + [
+            Executor(f"GPU{i}", GPU, self) for i in range(resources.gpu)
+        ]
 
     def __repr__(self):
         return f"ExecutionEnvironment@{self._current_tick}"
 
-    def _get_executors_sorted(self):
+    def _get_executors_sorted(self) -> list[Executor]:
         """
         Returns first the executors with tasks that are finishing and will
         decrease buffer usage.
