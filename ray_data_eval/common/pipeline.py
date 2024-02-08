@@ -2,13 +2,23 @@ from dataclasses import dataclass, field
 
 
 @dataclass
+class ResourcesSpec:
+    cpu: int = 0
+    gpu: int = 0
+    num_executors: int = field(init=False)
+
+    def __post_init__(self):
+        self.num_executors = self.cpu + self.gpu
+
+
+@dataclass
 class TaskSpec:
     id: str
     operator_idx: int
     duration: int
     input_size: int
     output_size: int
-    num_cpus: int
+    resources: ResourcesSpec
 
 
 @dataclass
@@ -19,7 +29,7 @@ class OperatorSpec:
     duration: int
     input_size: int
     output_size: int
-    num_cpus: int
+    resources: ResourcesSpec
     tasks: list[TaskSpec] = field(init=False)
 
     def __post_init__(self):
@@ -30,7 +40,7 @@ class OperatorSpec:
                 self.duration,
                 self.input_size,
                 self.output_size,
-                self.num_cpus,
+                self.resources,
             )
             for i in range(self.num_tasks)
         ]
@@ -49,11 +59,11 @@ def _get_tasks(operators: list[OperatorSpec]):
 class SchedulingProblem:
     operators: list[OperatorSpec]
     name: str
-    num_execution_slots: int
+    resources: ResourcesSpec
     time_limit: int
     buffer_size_limit: int
     num_operators: int = field(init=False)
-    tasks: list = field(init=False)
+    tasks: list[TaskSpec] = field(init=False)
     num_total_tasks: int = field(init=False)
 
     def __post_init__(self):
@@ -83,7 +93,7 @@ def make_producer_consumer_problem(
                 duration=producer_time,
                 input_size=0,
                 output_size=producer_output_size,
-                num_cpus=1,
+                resources=ResourcesSpec(cpu=1),
             ),
             OperatorSpec(
                 name="C",
@@ -92,11 +102,11 @@ def make_producer_consumer_problem(
                 duration=consumer_time,
                 input_size=consumer_input_size,
                 output_size=0,
-                num_cpus=1,
+                resources=ResourcesSpec(cpu=1),
             ),
         ],
         name,
-        num_execution_slots,
+        ResourcesSpec(cpu=num_execution_slots),
         time_limit,
         buffer_size_limit,
     )
@@ -111,7 +121,7 @@ test_problem = SchedulingProblem(
             duration=1,
             input_size=0,
             output_size=1,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
         OperatorSpec(
             name="C",
@@ -120,12 +130,12 @@ test_problem = SchedulingProblem(
             duration=2,
             input_size=1,
             output_size=0,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
     ],
     name="test_problem",
+    resources=ResourcesSpec(cpu=2),
     time_limit=12,
-    num_execution_slots=4,
     buffer_size_limit=4,
 )
 
@@ -138,7 +148,7 @@ multi_stage_problem = SchedulingProblem(
             duration=1,
             input_size=0,
             output_size=1,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
         OperatorSpec(
             name="B",
@@ -147,7 +157,7 @@ multi_stage_problem = SchedulingProblem(
             duration=2,
             input_size=1,
             output_size=2,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
         OperatorSpec(
             name="C",
@@ -156,7 +166,7 @@ multi_stage_problem = SchedulingProblem(
             duration=1,
             input_size=4,
             output_size=10,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
         OperatorSpec(
             name="D",
@@ -165,12 +175,12 @@ multi_stage_problem = SchedulingProblem(
             duration=2,
             input_size=20,
             output_size=0,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
     ],
     name="multi_stage_problem",
+    resources=ResourcesSpec(cpu=4),
     time_limit=15,
-    num_execution_slots=4,
     buffer_size_limit=100,
 )
 
@@ -183,7 +193,7 @@ producer_consumer_problem = SchedulingProblem(
             duration=1,
             input_size=0,
             output_size=1,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
         OperatorSpec(
             name="C",
@@ -192,13 +202,13 @@ producer_consumer_problem = SchedulingProblem(
             duration=2,
             input_size=1,
             output_size=0,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
     ],
     name="producer_consumer_problem",
     time_limit=15,
     buffer_size_limit=20,
-    num_execution_slots=3,
+    resources=ResourcesSpec(cpu=3),
 )
 
 long_problem = SchedulingProblem(
@@ -210,7 +220,7 @@ long_problem = SchedulingProblem(
             duration=1,
             input_size=0,
             output_size=1,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
         OperatorSpec(
             name="B",
@@ -219,7 +229,7 @@ long_problem = SchedulingProblem(
             duration=2,
             input_size=1,
             output_size=2,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
         OperatorSpec(
             name="C",
@@ -228,13 +238,13 @@ long_problem = SchedulingProblem(
             duration=1,
             input_size=4,
             output_size=0,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
     ],
     name="long_problem",
     time_limit=300,
     buffer_size_limit=5000,
-    num_execution_slots=3,
+    resources=ResourcesSpec(cpu=3),
 )
 
 training_problem = SchedulingProblem(
@@ -242,34 +252,34 @@ training_problem = SchedulingProblem(
         OperatorSpec(
             name="P",
             operator_idx=0,
-            num_tasks=5,
+            num_tasks=8,
             duration=1,
             input_size=0,
             output_size=1,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
         OperatorSpec(
             name="C",
             operator_idx=1,
-            num_tasks=5,
+            num_tasks=8,
             duration=2,
             input_size=1,
             output_size=1,
-            num_cpus=1,
+            resources=ResourcesSpec(cpu=1),
         ),
         OperatorSpec(
             name="T",
             operator_idx=2,
-            num_tasks=5,
-            duration=2,
+            num_tasks=8,
+            duration=1,
             input_size=1,
             output_size=0,
-            num_cpus=1,
+            resources=ResourcesSpec(gpu=1),
         ),
     ],
     name="training_problem",
+    resources=ResourcesSpec(cpu=3, gpu=1),
     time_limit=12,
-    num_execution_slots=4,
     buffer_size_limit=4,
 )
 
