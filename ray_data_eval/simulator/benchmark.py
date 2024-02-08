@@ -1,22 +1,26 @@
+import logging
+
 from ray_data_eval.common.pipeline import problems
 from ray_data_eval.simulator.environment import ExecutionEnvironment
-from ray_data_eval.simulator.policies import (  # noqa F401
-    GreedySchedulingPolicy,
-    GreedyWithBufferSchedulingPolicy,
-    GreedyAndAnticipatingSchedulingPolicy,
-    SchedulingPolicy,
-    RatesEqualizingSchedulingPolicy,
+from ray_data_eval.simulator.policies import (
+    GreedyPolicy,
+    GreedyWithBufferPolicy,
+    GreedyOracleProducerFirstPolicy,
+    GreedyOracleConsumerFirstPolicy,
+    RatesEqualizingPolicy,
 )
 
 
 def main():
+    logging.disable(logging.CRITICAL)
     for problem in problems:
         print("Problem:", problem.name)
         for policy in [
-            GreedySchedulingPolicy(problem),
-            GreedyWithBufferSchedulingPolicy(problem),
-            GreedyAndAnticipatingSchedulingPolicy(problem),
-            RatesEqualizingSchedulingPolicy(problem),
+            GreedyPolicy(problem),
+            GreedyWithBufferPolicy(problem),
+            GreedyOracleProducerFirstPolicy(problem),
+            GreedyOracleConsumerFirstPolicy(problem),
+            RatesEqualizingPolicy(problem),
         ]:
             env = ExecutionEnvironment(
                 num_executors=problem.num_execution_slots,

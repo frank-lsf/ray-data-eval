@@ -8,11 +8,11 @@ from ray_data_eval.common.pipeline import (  # noqa F401
 )
 from ray_data_eval.simulator.environment import ExecutionEnvironment
 from ray_data_eval.simulator.policies import (  # noqa F401
-    GreedySchedulingPolicy,
-    GreedyWithBufferSchedulingPolicy,
-    GreedyAndAnticipatingSchedulingPolicy,
+    GreedyPolicy,
+    GreedyWithBufferPolicy,
+    GreedyOracleProducerFirstPolicy,
     SchedulingPolicy,
-    RatesEqualizingSchedulingPolicy,
+    RatesEqualizingPolicy,
 )
 
 logging.basicConfig(
@@ -42,10 +42,10 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 def main():
     problem = test_problem
-    # policy = GreedySchedulingPolicy(problem)
-    # policy = GreedyWithBufferSchedulingPolicy(problem)
-    # policy = GreedyAndAnticipatingSchedulingPolicy(problem)
-    policy = RatesEqualizingSchedulingPolicy(problem)
+    # policy = GreedyPolicy(problem)
+    # policy = GreedyWithBufferPolicy(problem)
+    # policy = GreedyOracleProducerFirstPolicy(problem)
+    policy = RatesEqualizingPolicy(problem)
     test_scheduling_policy(problem, policy)
 
 
