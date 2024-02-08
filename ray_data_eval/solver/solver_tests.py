@@ -1,12 +1,12 @@
 import pytest  # noqa: F401
 
 from ray_data_eval.solver.solver import solve
-from ray_data_eval.common.types import SchedulingProblem
+from ray_data_eval.common.pipeline import make_producer_consumer_problem
 
 
 def _solve(**kwargs):
-    tidy_sol = solve(SchedulingProblem(**kwargs), tidy=True)
-    sol = solve(SchedulingProblem(**kwargs), tidy=False)
+    tidy_sol = solve(make_producer_consumer_problem(**kwargs), tidy=True)
+    sol = solve(make_producer_consumer_problem(**kwargs), tidy=False)
     assert tidy_sol == sol
     return sol
 

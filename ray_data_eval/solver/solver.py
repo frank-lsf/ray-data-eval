@@ -2,7 +2,7 @@ import os
 
 import pulp as pl
 
-from ray_data_eval.common.types import SchedulingProblem, test_problem
+from ray_data_eval.common.pipeline import SchedulingProblem, training_problem
 
 
 def solve(cfg: SchedulingProblem, *, solver=None, tidy=False) -> int:
@@ -32,9 +32,17 @@ def solve(cfg: SchedulingProblem, *, solver=None, tidy=False) -> int:
         ],
         cat="Binary",
     )
-    buffer = pl.LpVariable.dicts("b", range(cfg.time_limit + 1), lowBound=0, cat="Integer")
+    buffer = pl.LpVariable.dicts(
+        "b",
+        [(op, t) for op in range(cfg.num_operators - 1) for t in range(cfg.time_limit + 1)],
+        lowBound=0,
+        cat="Integer",
+    )
     buffer_to_consume = pl.LpVariable.dicts(
-        "bc", range(cfg.time_limit + 1), lowBound=0, cat="Integer"
+        "bc",
+        [(op, t) for op in range(cfg.num_operators - 1) for t in range(cfg.time_limit + 1)],
+        lowBound=0,
+        cat="Integer",
     )
 
     # schedule_flat[i, t] = 1 if task i is running at time t on any CPU slot
@@ -84,16 +92,6 @@ def solve(cfg: SchedulingProblem, *, solver=None, tidy=False) -> int:
             [start[(tid, j, t)] for j in range(cfg.num_execution_slots) for t in range(tick)]
         )
 
-    # Tidiness Constraint: Tasks with lower index should start no later than tasks with higher index
-    # NOTE: This seems to be buggy for CPLEX.
-    if tidy and not isinstance(solver, pl.CPLEX_CMD):
-        for i in range(cfg.num_total_tasks - 1):
-            if i == cfg.num_producers - 1:
-                # C0 should not need to start before Pn starts
-                continue
-            for t in range(cfg.time_limit):
-                model += _task_started_at_or_before(i, t) >= _task_started_at_or_before(i + 1, t)
-
     # finish[i, j, t] = 1 if task i finishes at time t on CPU slot j
     finish = pl.LpVariable.dicts(
         "f",
@@ -139,18 +137,19 @@ def solve(cfg: SchedulingProblem, *, solver=None, tidy=False) -> int:
     # Constraint: All tasks are assigned to exactly one CPU slot and complete
     for i in range(cfg.num_total_tasks):
         model += (
-            pl.lpSum([schedule_flat[(i, t)] for t in range(cfg.time_limit)]) == cfg.task_time[i]
+            pl.lpSum([schedule_flat[(i, t)] for t in range(cfg.time_limit)])
+            == cfg.tasks[i].duration
         )
 
     # Constraint: All tasks must run contiguously for their entire duration
     for i in range(cfg.num_total_tasks):
         for j in range(cfg.num_execution_slots):
             # Ensure that the task either starts and runs for its entire duration or doesn't start
-            for t in range(cfg.time_limit - cfg.task_time[i] + 1):
+            for t in range(cfg.time_limit - cfg.tasks[i].duration + 1):
                 # Task starts at time 't' and runs for 'task_time[i]' time units
                 model += (
-                    pl.lpSum([schedule[(i, j, t + k)] for k in range(cfg.task_time[i])])
-                    >= cfg.task_time[i] * start[i, j, t]
+                    pl.lpSum([schedule[(i, j, t + k)] for k in range(cfg.tasks[i].duration)])
+                    >= cfg.tasks[i].duration * start[i, j, t]
                 )
 
     def _task_started_at(tid, tick):
@@ -165,49 +164,48 @@ def solve(cfg: SchedulingProblem, *, solver=None, tidy=False) -> int:
     # When a consumer starts, it decreases the buffer to consume size.
     # When a consumer finishes, it decreases the buffer size.
     for t in range(cfg.time_limit):
-        # Increase buffer when a producer finishes
-        buffer_increase = pl.lpSum(
-            [
-                cfg.producer_output_size[i] * _task_finished_at(i, t)
-                for i in range(cfg.num_producers)
-            ],
-        )
-        # Decrease buffer to consume in use when a consumer starts
-        buffer_to_consume_decrease = pl.lpSum(
-            [
-                cfg.consumer_input_size[i] * _task_started_at(i + cfg.num_producers, t)
-                for i in range(cfg.num_consumers)
-            ],
-        )
-        # Decrease buffer when a consumer finishes
-        buffer_decrease = pl.lpSum(
-            [
-                cfg.consumer_input_size[i] * _task_finished_at(i + cfg.num_producers, t)
-                for i in range(cfg.num_consumers)
-            ],
-        )
-
-        model += buffer[t] >= buffer_decrease
-        model += buffer[t + 1] == buffer[t] + buffer_increase - buffer_decrease
-        model += buffer_to_consume[t] >= buffer_to_consume_decrease
-        model += (
-            buffer_to_consume[t + 1]
-            == buffer_to_consume[t] + buffer_increase - buffer_to_consume_decrease
-        )
+        buffer_increase = [[]] * (cfg.num_operators - 1)
+        buffer_to_consume_decrease = [[]] * (cfg.num_operators - 1)
+        buffer_decrease = [[]] * (cfg.num_operators - 1)
+        for tid, task in enumerate(cfg.tasks):
+            op = task.operator_idx
+            if task.output_size > 0:
+                buffer_increase[op].append(task.output_size * _task_finished_at(tid, t))
+            if task.input_size > 0 and op > 0:
+                buffer_to_consume_decrease[op - 1].append(
+                    task.input_size * _task_started_at(tid, t)
+                )
+                buffer_decrease[op - 1].append(task.input_size * _task_finished_at(tid, t))
+        for op in range(cfg.num_operators - 1):
+            model += buffer[(op, t)] >= pl.lpSum(buffer_decrease[op])
+            model += buffer[(op, t + 1)] == buffer[(op, t)] + pl.lpSum(
+                buffer_increase[op]
+            ) - pl.lpSum(buffer_decrease[op])
+            model += buffer_to_consume[(op, t)] >= pl.lpSum(buffer_to_consume_decrease[op])
+            model += buffer_to_consume[(op, t + 1)] == buffer_to_consume[(op, t)] + pl.lpSum(
+                buffer_increase[op]
+            ) - pl.lpSum(buffer_to_consume_decrease[op])
 
     # Constraint: Buffer size is bounded
     for t in range(cfg.time_limit):
-        model += buffer[t] <= cfg.buffer_size_limit
-        model += buffer_to_consume[t] <= cfg.buffer_size_limit
+        model += (
+            pl.lpSum([buffer[(op, t)] for op in range(cfg.num_operators - 1)])
+            <= cfg.buffer_size_limit
+        )
+        model += (
+            pl.lpSum([buffer_to_consume[(op, t)] for op in range(cfg.num_operators - 1)])
+            <= cfg.buffer_size_limit
+        )
 
     # Constraint: Buffer must be empty at the beginning and end of the schedule
-    model += buffer[0] == 0
-    model += buffer[cfg.time_limit] == 0
-    model += buffer_to_consume[0] == 0
-    model += buffer_to_consume[cfg.time_limit] == 0
+    for op in range(cfg.num_operators - 1):
+        model += buffer[(op, 0)] == 0
+        model += buffer[(op, cfg.time_limit)] == 0
+        model += buffer_to_consume[(op, 0)] == 0
+        model += buffer_to_consume[(op, cfg.time_limit)] == 0
 
     # Objective function: Minimize the latest finish time
-    latest_finish_time = pl.LpVariable("lf", lowBound=0, cat="Integer")
+    latest_finish_time = pl.LpVariable("lf", cat="Integer")
     for i in range(cfg.num_total_tasks):
         for j in range(cfg.num_execution_slots):
             for t in range(cfg.time_limit):
@@ -237,21 +235,23 @@ def solve(cfg: SchedulingProblem, *, solver=None, tidy=False) -> int:
             idle = True
             for i in range(cfg.num_total_tasks):
                 if pl.value(schedule[(i, j, t)]) == 1:
-                    label = f"P{i}" if i < cfg.num_producers else f"C{i - cfg.num_producers}"
+                    label = cfg.tasks[i].id
                     print(f" {label:<3} |", end="")
                     idle = False
             if idle:
                 print("     |", end="")
         print("|")
     print(separator_line)
-    print("||  buf ||", end="")
-    for t in range(max_time + 1):
-        print(f" {int(pl.value(buffer[t])):<3} |", end="")
-    print()
-    print("||  btc ||", end="")
-    for t in range(max_time + 1):
-        print(f" {int(pl.value(buffer_to_consume[t])):<3} |", end="")
-    print()
+    for op in range(cfg.num_operators - 1):
+        print(f"|| buf{op} ||", end="")
+        for t in range(max_time + 1):
+            print(f" {int(pl.value(buffer[(op, t)])):<3} |", end="")
+        print()
+    for op in range(cfg.num_operators - 1):
+        print(f"|| btc{op} ||", end="")
+        for t in range(max_time + 1):
+            print(f" {int(pl.value(buffer_to_consume[(op, t)])):<3} |", end="")
+        print()
     print(separator_line)
     print("|| time ||", end="")
     for t in range(max_time):
@@ -264,7 +264,7 @@ def solve(cfg: SchedulingProblem, *, solver=None, tidy=False) -> int:
 
 
 def main():
-    solve(test_problem)
+    solve(training_problem)
 
 
 if __name__ == "__main__":
