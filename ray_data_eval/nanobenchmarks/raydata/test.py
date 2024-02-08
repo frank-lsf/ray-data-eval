@@ -12,7 +12,7 @@ from ray.data._internal.execution.backpressure_policy import (
 )
 
 # DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
-DATA_SIZE_BYTES = 100 * 1000 * 1000 # 1 MB
+DATA_SIZE_BYTES = 100 * 1000 * 1000  # 1 MB
 TIME_UNIT = 1  # seconds
 
 
@@ -82,7 +82,6 @@ def run_ray_data(cfg: SchedulingProblem):
 
 
 def run_experiment(cfg: SchedulingProblem):
-
     start_ray(cfg)
     run_ray_data(cfg)
 
