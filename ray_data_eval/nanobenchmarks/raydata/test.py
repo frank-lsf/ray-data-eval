@@ -1,15 +1,15 @@
 import datetime
 import subprocess
 import time
-import math
+# import math
 
 import ray
 
 from ray_data_eval.common.types import SchedulingProblem, test_problem
-from ray.data._internal.execution.backpressure_policy import (
-    ENABLED_BACKPRESSURE_POLICIES_CONFIG_KEY,
-    ConcurrencyCapBackpressurePolicy,
-)
+# from ray.data._internal.execution.backpressure_policy import (
+#     ENABLED_BACKPRESSURE_POLICIES_CONFIG_KEY,
+#     ConcurrencyCapBackpressurePolicy,
+# )
 
 # DATA_SIZE_BYTES = 1000 * 1000 * 100  # 100 MB
 DATA_SIZE_BYTES = 1 * 1000 * 1000  # 1 MB
@@ -28,10 +28,10 @@ def start_ray(cfg: SchedulingProblem):
     ctx.execution_options.resource_limits.object_store_memory = (
         cfg.buffer_size_limit * DATA_SIZE_BYTES
     )
-    ctx.set_config(
-        ENABLED_BACKPRESSURE_POLICIES_CONFIG_KEY,
-        [ConcurrencyCapBackpressurePolicy],
-    )
+    # ctx.set_config(
+    #     ENABLED_BACKPRESSURE_POLICIES_CONFIG_KEY,
+    #     [ConcurrencyCapBackpressurePolicy],
+    # )
 
 
 def producer(row, *, cfg: SchedulingProblem):
@@ -62,8 +62,8 @@ def run_ray_data(cfg: SchedulingProblem):
     ds = ray.data.from_items(items, parallelism=cfg.num_producers)
 
     # ConcurrencyCapBackpressurePolicy
-    num_operators = 2
-    concurrency_limit = int(math.ceil(cfg.num_execution_slots / num_operators))
+    # num_operators = 2
+    # concurrency_limit = int(math.ceil(cfg.num_execution_slots / num_operators))
     # ds = ds.map(producer, fn_kwargs={"cfg": cfg}, concurrency=concurrency_limit)
     ds = ds.map(producer, fn_kwargs={"cfg": cfg})
 
