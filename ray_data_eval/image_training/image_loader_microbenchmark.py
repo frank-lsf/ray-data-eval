@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING, Iterator, Callable, Any
 import pandas as pd
 import datetime
 import wandb
+import shutil
 
 # HF Dataset.
 from datasets import load_dataset
@@ -32,6 +33,7 @@ if TYPE_CHECKING:
 
 DEFAULT_IMAGE_SIZE = 224
 DEFAULT_FILE_NUMBER = 1
+TF_PROFILER_LOGS = "logs/tf"
 
 # tf.data needs to resize all images to the same size when loading.
 # This is the size of dog.jpg in s3://air-cuj-imagenet-1gb.
@@ -246,6 +248,24 @@ def save_ray_timeline():
     filename = f"logs/ray/ray-timeline-{timestr}.json"
     ray.timeline(filename=filename)
     wandb.save(filename)
+
+
+def test_limit_raydata_num_files(data_root):
+    filenames = [os.path.join(data_root, pathname) for pathname in os.listdir(data_root)]
+    filenames = filenames[:DEFAULT_FILE_NUMBER]
+    return filenames
+
+
+def test_limit_tfdata_num_files(data_root, temp_dir):
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+        file_list = [os.path.join(data_root, pathname) for pathname in os.listdir(data_root)]
+        limited_files = file_list[:DEFAULT_FILE_NUMBER]
+        for item in limited_files:
+            if os.path.isfile(item):
+                shutil.copy(item, temp_dir)
+            elif os.path.isdir(item):
+                shutil.copytree(item, os.path.join(temp_dir, os.path.basename(item)))
 
 
 class MdsDatasource(ray.data.datasource.FileBasedDatasource):
