@@ -485,6 +485,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.data_root is not None:
         # tf.data, load images.
+        tf.profiler.experimental.start(TF_PROFILER_LOGS)
         tf_dataset = tf.keras.preprocessing.image_dataset_from_directory(
             args.data_root,
             batch_size=args.batch_size,
@@ -492,8 +493,10 @@ if __name__ == "__main__":
         )
         for i in range(args.num_epochs):
             iterate(tf_dataset, "tf_data", args.batch_size, args.output_file)
+        tf.profiler.experimental.stop()
 
         # tf.data, with transform.
+        tf.profiler.experimental.start(TF_PROFILER_LOGS)
         tf_dataset = tf.keras.preprocessing.image_dataset_from_directory(args.data_root)
         tf_dataset = tf_dataset.map(lambda img, label: (tf_crop_and_flip(img), label))
         tf_dataset.unbatch().batch(args.batch_size)
@@ -504,6 +507,7 @@ if __name__ == "__main__":
                 args.batch_size,
                 args.output_file,
             )
+        tf.profiler.experimental.stop()
 
         # torch, load images.
         torch_resize_transform = torchvision.transforms.Compose(
@@ -594,6 +598,7 @@ if __name__ == "__main__":
 
     if args.tf_data_root is not None:
         # TFRecords dataset.
+        tf.profiler.experimental.start(TF_PROFILER_LOGS)
         tf_dataset = build_tfrecords_tf_dataset(args.tf_data_root, args.batch_size)
         for i in range(args.num_epochs):
             iterate(
@@ -602,8 +607,10 @@ if __name__ == "__main__":
                 args.batch_size,
                 args.output_file,
             )
+        tf.profiler.experimental.stop()
 
         # TFRecords dataset with Ray Data.
+        tf.profiler.experimental.start(TF_PROFILER_LOGS)
         ray_dataset = ray.data.read_tfrecords(args.tf_data_root)
         ray_dataset = ray_dataset.map_batches(
             decode_crop_and_flip_tf_record_batch,
@@ -621,6 +628,7 @@ if __name__ == "__main__":
                 args.batch_size,
                 args.output_file,
             )
+        tf.profiler.experimental.stop()
 
     if args.parquet_data_root is not None:
         # HuggingFace Dataset, reading from parquet.
