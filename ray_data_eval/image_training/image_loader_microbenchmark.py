@@ -4,6 +4,7 @@ from local disk and (for supported data loaders) cloud storage. Pass a --data-ro
 --parquet-data-root, --tf-data-root, and/or --mosaic-data-root pointing to the
 dataset directory. Throughputs are written to `output.csv` in total images/s.
 """
+
 import ray
 import torch
 import torchvision
@@ -14,6 +15,8 @@ import numpy as np
 from PIL import Image
 from typing import TYPE_CHECKING, Iterator, Callable, Any
 import pandas as pd
+import datetime
+import wandb
 
 # HF Dataset.
 from datasets import load_dataset
@@ -28,6 +31,7 @@ if TYPE_CHECKING:
     import pyarrow
 
 DEFAULT_IMAGE_SIZE = 224
+DEFAULT_FILE_NUMBER = 1
 
 # tf.data needs to resize all images to the same size when loading.
 # This is the size of dog.jpg in s3://air-cuj-imagenet-1gb.
@@ -58,6 +62,11 @@ def iterate(dataset, label, batch_size, output_file=None):
         output_file = "output.csv"
     with open(output_file, "a+") as f:
         f.write(f"{label},{tput}\n")
+
+    if label.startswith("ray_data"):
+        save_ray_timeline()
+        wandb.log({f"{label},runtime": end - start})
+        wandb.log({f"{label},tput": tput})
 
 
 def build_torch_dataset(root_dir, batch_size, shuffle=False, num_workers=None, transform=None):
@@ -230,6 +239,13 @@ def decode_image_crop_and_flip(row):
     row["image"] = Image.frombytes("RGB", (row["height"], row["width"]), row["image"])
     # Convert back np to avoid storing a np.object array.
     return {"image": np.array(transform(row["image"]))}
+
+
+def save_ray_timeline():
+    timestr = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    filename = f"logs/ray/ray-timeline-{timestr}.json"
+    ray.timeline(filename=filename)
+    wandb.save(filename)
 
 
 class MdsDatasource(ray.data.datasource.FileBasedDatasource):
@@ -447,7 +463,6 @@ if __name__ == "__main__":
         ),
     )
     args = parser.parse_args()
-
     if args.data_root is not None:
         # tf.data, load images.
         tf_dataset = tf.keras.preprocessing.image_dataset_from_directory(
