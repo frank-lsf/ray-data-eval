@@ -188,23 +188,9 @@ class RatesEqualizingPolicy(SchedulingPolicy):
             return False
         return True
 
-    def _get_most_upstream_pending_operator(self, env: ExecutionEnvironment):
-        most_upstream_pending_operator = len(self.operator_ratios)
-        for tid, task_state in env.task_states.items():
-            if task_state.state == TaskStateType.PENDING:
-                most_upstream_pending_operator = min(
-                    most_upstream_pending_operator, env.task_specs[tid].operator_idx
-                )
-        return most_upstream_pending_operator
-
     def tick(self, env: ExecutionEnvironment):
         super().tick(env)
         self._update_operator_running_duration(env)
-        most_upstream_pending_operator = self._get_most_upstream_pending_operator(env)
-        logging.info(
-            f"[{self}] {[self.operator_running_duration[operator_idx] for operator_idx in range(len(self.operator_ratios))]}, {self.operator_ratios}, "
-            f"most_upstream_pending_operator: {most_upstream_pending_operator}"
-        )
         makes_progress = True
         while makes_progress:
             makes_progress = False
@@ -246,5 +232,3 @@ class RatesEqualizingPolicy(SchedulingPolicy):
                         makes_progress = makes_progress or self._try_start_task(env, tid)
                         if makes_progress:
                             break
-
-            most_upstream_pending_operator = self._get_most_upstream_pending_operator(env)
