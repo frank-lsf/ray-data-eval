@@ -283,4 +283,10 @@ training_problem = SchedulingProblem(
     buffer_size_limit=4,
 )
 
-problems = [test_problem, multi_stage_problem, producer_consumer_problem, long_problem]
+problems = [
+    test_problem,
+    multi_stage_problem,
+    producer_consumer_problem,
+    long_problem,
+    training_problem,
+]
