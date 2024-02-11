@@ -17,7 +17,7 @@ from ray_data_eval.simulator.policies import (  # noqa F401
 )
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(levelname).1s %(filename)s:%(lineno)d] %(message)s",
     handlers=[logging.StreamHandler()],
 )
