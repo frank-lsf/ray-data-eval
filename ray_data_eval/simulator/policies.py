@@ -212,13 +212,8 @@ class RatesEqualizingPolicy(SchedulingPolicy):
                 if task_state.state == TaskStateType.PENDING:
                     operator_idx = env.task_specs[tid].operator_idx
 
-                    # Liveness condition.
-                    # Tasks are sorted in descending order of operator index.
-                    # Prioritized downstreaming tasks.
-                    if operator_idx == most_upstream_pending_operator:
-                        makes_progress = makes_progress or self._try_start_task(env, tid)
                     # Maintain ratio with the successor.
-                    elif (
+                    if (
                         # Not the last operator.
                         operator_idx + 1 < len(self.operator_ratios)
                         # Next operator has already launched tasks.
@@ -242,5 +237,14 @@ class RatesEqualizingPolicy(SchedulingPolicy):
                         logging.info(f"[{self}] Not starting task {tid} to keep ratio.")
                     else:
                         makes_progress = makes_progress or self._try_start_task(env, tid)
+            if not makes_progress:
+                # Liveness condition.
+                # Tasks are sorted in descending order of operator index.
+                # Prioritized downstreaming tasks.
+                for tid, task_state in env.task_states.items():
+                    if task_state.state == TaskStateType.PENDING:
+                        makes_progress = makes_progress or self._try_start_task(env, tid)
+                        if makes_progress:
+                            break
 
             most_upstream_pending_operator = self._get_most_upstream_pending_operator(env)
