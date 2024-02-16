@@ -13,6 +13,7 @@ pub fn solve(problem: &SchedulingProblem) {
         &problem.operators,
         &problem.tasks,
         problem.time_limit,
+        problem.buffer_size_limit,
     ));
     let mut visited = std::collections::HashSet::new();
     while let Some(state) = heap.pop() {
@@ -22,7 +23,6 @@ pub fn solve(problem: &SchedulingProblem) {
         }
         visited.insert(fingerprint);
         // state.print();
-        // info!("");
         let solution_lower_bound = state.get_solution_lower_bound();
         if let Some(best) = &best_solution {
             if best.total_time < solution_lower_bound {

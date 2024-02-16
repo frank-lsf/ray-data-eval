@@ -1,5 +1,5 @@
 import libsolver
 
-from ray_data_eval.common.pipeline import problems
+from ray_data_eval.common.pipeline import training_problem
 
-libsolver.solve(problems[0])
+libsolver.solve(training_problem)

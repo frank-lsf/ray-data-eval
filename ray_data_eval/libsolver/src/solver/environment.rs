@@ -15,11 +15,57 @@ pub struct Solution {
     pub state: Environment,
 }
 
+#[derive(Debug, Clone, Hash)]
+pub struct Buffer {
+    size: usize,
+    consumable_size: usize,
+    timeline: Vec<usize>,
+    consumable_timeline: Vec<usize>,
+}
+
+impl Buffer {
+    pub fn new() -> Self {
+        Self {
+            size: 0,
+            consumable_size: 0,
+            timeline: Vec::new(),
+            consumable_timeline: Vec::new(),
+        }
+    }
+
+    pub fn tick(&mut self, _tick: Tick) {
+        self.timeline.push(self.size);
+    }
+
+    pub fn push(&mut self, size: usize) -> bool {
+        self.size += size;
+        self.consumable_size += size;
+        true
+    }
+
+    pub fn consume(&mut self, size: usize) -> bool {
+        if self.consumable_size >= size {
+            self.consumable_size -= size;
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn pop(&mut self, size: usize) -> bool {
+        if self.size >= size {
+            self.size -= size;
+            true
+        } else {
+            false
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum TaskStateType {
     Pending,
     Running,
-    PendingOutput,
     Finished,
 }
 
@@ -27,8 +73,6 @@ enum TaskStateType {
 struct TaskState {
     pub state: TaskStateType,
     pub started_at: Option<Tick>,
-    pub execution_started_at: Option<Tick>,
-    pub execution_finished_at: Option<Tick>,
     pub finished_at: Option<Tick>,
 }
 
@@ -37,8 +81,6 @@ impl TaskState {
         Self {
             state: TaskStateType::Pending,
             started_at: None,
-            execution_started_at: None,
-            execution_finished_at: None,
             finished_at: None,
         }
     }
@@ -106,6 +148,24 @@ impl Hash for Executor {
     }
 }
 
+fn try_finishing_running_task(
+    task: &RunningTask,
+    input_buffer: Option<&mut Buffer>,
+    output_buffer: Option<&mut Buffer>,
+) -> bool {
+    if let Some(input_buffer) = input_buffer {
+        if !input_buffer.pop(task.spec.input_size) {
+            return false;
+        }
+    }
+    if let Some(output_buffer) = output_buffer {
+        if !output_buffer.push(task.spec.output_size) {
+            return false;
+        }
+    }
+    true
+}
+
 impl Executor {
     pub fn new(name: String, resource: Resource) -> Self {
         Self {
@@ -116,49 +176,70 @@ impl Executor {
         }
     }
 
-    pub fn tick(&mut self, tick: Tick, task_states: &mut HashMap<String, TaskState>) {
+    pub fn tick(
+        &mut self,
+        tick: Tick,
+        task_states: &mut HashMap<String, TaskState>,
+        buffers: &mut Vec<Buffer>,
+    ) -> bool {
         self.timeline.push(self.get_timeline_item());
         if let Some(task) = &mut self.running_task {
             task.remaining_ticks -= 1;
             if task.remaining_ticks <= 0 {
-                // TODO: check for buffer
-                let can_finish = true; // self.try_finishing_running_task();
+                let operator_idx = task.spec.operator_idx;
+                let (input_buffer, output_buffer) = {
+                    let (left, right) = buffers.split_at_mut(operator_idx);
+                    (left.last_mut(), right.first_mut())
+                };
+                let can_finish = try_finishing_running_task(task, input_buffer, output_buffer);
                 if can_finish {
                     update_task_state(tick, task_states, &task.spec.id, TaskStateType::Finished);
-                    self.finish_running_task();
+                    self.running_task = None;
+                    true
                 } else {
-                    update_task_state(
-                        tick,
-                        task_states,
-                        &task.spec.id,
-                        TaskStateType::PendingOutput,
-                    );
+                    false
                 }
+            } else {
+                true
             }
+        } else {
+            true
         }
     }
 
-    pub fn can_start_task(&self, task: &TaskSpec) -> bool {
+    pub fn can_start_task(&self, task: &TaskSpec, input_buffer: &Option<&mut Buffer>) -> bool {
         if task.resources.cpu > 0 && self.resource != Resource::CPU {
             false
         } else if task.resources.gpu > 0 && self.resource != Resource::GPU {
             false
         } else if let Some(_) = &self.running_task {
             false
+        } else if let Some(input_buffer) = input_buffer {
+            input_buffer.consumable_size >= task.input_size
         } else {
-            true
+            task.input_size == 0
         }
     }
 
-    pub fn start_task(&mut self, task: &TaskSpec, tick: Tick) -> bool {
-        if !self.can_start_task(task) {
+    pub fn start_task(
+        &mut self,
+        task: &TaskSpec,
+        tick: Tick,
+        input_buffer: Option<&mut Buffer>,
+    ) -> bool {
+        if !self.can_start_task(task, &input_buffer) {
             false
         } else {
             self.running_task = Some(RunningTask {
                 spec: task.clone(),
                 started_at: tick,
-                remaining_ticks: task.duration,
+                remaining_ticks: task.duration as i32,
             });
+            if let Some(input_buffer) = input_buffer {
+                if !input_buffer.consume(task.input_size) {
+                    return false;
+                }
+            }
             true
         }
     }
@@ -174,20 +255,18 @@ impl Executor {
             "  ".to_string()
         }
     }
-
-    fn finish_running_task(&mut self) -> RunningTask {
-        self.running_task.take().unwrap()
-    }
 }
 
 #[derive(Debug, Clone)]
 pub struct Environment {
     executors: Vec<Executor>,
+    buffers: Vec<Buffer>,
     operator_specs: Arc<Vec<OperatorSpec>>,
     operator_states: Vec<OperatorState>,
     task_states: HashMap<String, TaskState>,
     tick: Tick,
     time_limit: Tick,
+    buffer_size_limit: usize,
 }
 
 impl Ord for Environment {
@@ -219,6 +298,7 @@ impl Eq for Environment {}
 impl Hash for Environment {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.executors.hash(state);
+        self.buffers.hash(state);
         self.operator_states.hash(state);
     }
 }
@@ -234,9 +314,6 @@ fn update_task_state(
     match task_state.state {
         TaskStateType::Running => {
             task_state.started_at = Some(tick);
-        }
-        TaskStateType::PendingOutput => {
-            task_state.execution_finished_at = Some(tick);
         }
         TaskStateType::Finished => {
             task_state.finished_at = Some(tick);
@@ -289,6 +366,7 @@ impl Environment {
         operators: &Vec<OperatorSpec>,
         tasks: &Vec<TaskSpec>,
         time_limit: Tick,
+        buffer_size_limit: usize,
     ) -> Self {
         Self {
             executors: (0..resources.cpu)
@@ -297,6 +375,7 @@ impl Environment {
                     (0..resources.gpu).map(|i| Executor::new(format!("GPU{}", i), Resource::GPU)),
                 )
                 .collect(),
+            buffers: operators.iter().map(|_| Buffer::new()).collect(),
             operator_specs: Arc::new(operators.clone()),
             operator_states: operators
                 .iter()
@@ -308,6 +387,7 @@ impl Environment {
                 .collect(),
             tick: 0,
             time_limit,
+            buffer_size_limit,
         }
     }
 
@@ -395,6 +475,10 @@ impl Environment {
         }
     }
 
+    fn buffer_size_under_limit(&self) -> bool {
+        self.buffers.iter().map(|buffer| buffer.size).sum::<usize>() <= self.buffer_size_limit
+    }
+
     fn tick_with_actions(&mut self, action_set: &ActionSet) -> bool {
         for action in action_set {
             if !self.perform_action(&action) {
@@ -402,8 +486,16 @@ impl Environment {
             }
         }
         self.tick += 1;
-        for executor in self.executors.iter_mut() {
-            executor.tick(self.tick, &mut self.task_states);
+        for i in 0..self.executors.len() {
+            if !self.executors[i].tick(self.tick, &mut self.task_states, &mut self.buffers) {
+                return false;
+            }
+        }
+        if !self.buffer_size_under_limit() {
+            return false;
+        }
+        for buffer in self.buffers.iter_mut() {
+            buffer.tick(self.tick);
         }
         true
     }
@@ -427,7 +519,12 @@ impl Environment {
 
     fn start_task_on_executor(&mut self, task: &TaskSpec, executor_idx: usize) -> bool {
         let executor = &mut self.executors[executor_idx];
-        let started = executor.start_task(task, self.tick);
+        let input_buffer = if task.operator_idx == 0 {
+            None
+        } else {
+            Some(&mut self.buffers[task.operator_idx - 1])
+        };
+        let started = executor.start_task(task, self.tick, input_buffer);
         if started {
             update_task_state(
                 self.tick,
@@ -441,7 +538,19 @@ impl Environment {
         }
     }
 
+    fn check_task_input(&self, task: &TaskSpec) -> bool {
+        if task.input_size == 0 || task.operator_idx == 0 {
+            true
+        } else {
+            let buffer = &self.buffers[task.operator_idx - 1];
+            buffer.consumable_size >= task.input_size
+        }
+    }
+
     fn start_task_on_any_executor(&mut self, task: &TaskSpec) -> bool {
+        if !self.check_task_input(task) {
+            return false;
+        }
         for i in 0..self.executors.len() {
             if self.start_task_on_executor(task, i) {
                 return true;
@@ -454,6 +563,10 @@ impl Environment {
         for executor in self.executors.iter() {
             info!("{:?}", executor.timeline);
         }
+        for buffer in self.buffers.iter() {
+            info!("{:?}", buffer.timeline);
+        }
+        info!("");
     }
 
     pub fn get_fingerprint(&self) -> u64 {

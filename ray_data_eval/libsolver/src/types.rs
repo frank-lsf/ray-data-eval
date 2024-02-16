@@ -19,9 +19,9 @@ pub struct ResourcesSpec {
 pub struct TaskSpec {
     pub id: String,
     pub operator_idx: usize,
-    pub duration: i32,
-    pub input_size: i32,
-    pub output_size: i32,
+    pub duration: usize,
+    pub input_size: usize,
+    pub output_size: usize,
     pub resources: ResourcesSpec,
 }
 
@@ -43,7 +43,7 @@ pub struct SchedulingProblem {
     pub name: String,
     pub resources: ResourcesSpec,
     pub time_limit: u32,
-    pub buffer_size_limit: u32,
+    pub buffer_size_limit: usize,
     pub num_operators: i32,
     pub tasks: Vec<TaskSpec>,
     pub num_total_tasks: i32,
