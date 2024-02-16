@@ -3,10 +3,16 @@ mod types;
 
 use pyo3::prelude::*;
 
+fn init_logging() {
+    env_logger::Builder::from_default_env()
+        .format_timestamp(Some(env_logger::fmt::TimestampPrecision::Millis))
+        .init();
+}
+
 #[pyfunction]
 fn solve(problem: types::SchedulingProblem) -> PyResult<()> {
-    println!("Solving problem: {}", problem.name);
-    solver::solve();
+    init_logging();
+    solver::solve(&problem);
     Ok(())
 }
 
