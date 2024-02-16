@@ -353,11 +353,11 @@ fn get_action_sets_by_resource(
         })
         .map(|(spec, _)| spec.operator_idx)
         .collect::<Vec<_>>();
-    let filtered_executors = executors
+    let num_executors = executors
         .iter()
         .filter(|executor| executor.resource == resource && executor.running_task.is_none())
-        .collect_vec();
-    get_action_set_combinations(filtered_executors.len(), filtered_operators)
+        .count();
+    get_action_set_combinations(num_executors, filtered_operators)
 }
 
 impl Environment {
@@ -415,18 +415,34 @@ impl Environment {
         }
     }
 
-    pub fn get_solution_lower_bound(&self) -> Tick {
-        // TODO(@lsf): group by resources; find max duration for each resource
-        // will be an even better lower bound.
-        let total_duration = self
-            .operator_specs
+    fn get_total_duration_of_pending_tasks_by_resource(&self, resource: &Resource) -> usize {
+        self.operator_specs
             .iter()
             .zip(self.operator_states.iter())
+            .filter(|(spec, _)| {
+                spec.resources.cpu > 0 && *resource == Resource::CPU
+                    || spec.resources.gpu > 0 && *resource == Resource::GPU
+            })
             .map(|(spec, state)| state.num_tasks_remaining() * spec.duration)
-            .sum::<usize>();
-        let total_ticks_remaining =
-            (total_duration as f32 / self.executors.len() as f32).ceil() as u32;
-        self.tick + total_ticks_remaining
+            .sum()
+    }
+
+    fn get_total_ticks_remaining_by_resource(&self, resource: &Resource) -> u32 {
+        let total_duration = self.get_total_duration_of_pending_tasks_by_resource(resource);
+        let num_executors = self
+            .executors
+            .iter()
+            .filter(|executor| executor.resource == *resource)
+            .count();
+        (total_duration as f32 / num_executors as f32).ceil() as u32
+    }
+
+    pub fn get_solution_lower_bound(&self) -> Tick {
+        let ticks_remaining = [Resource::CPU, Resource::GPU]
+            .map(|res| self.get_total_ticks_remaining_by_resource(&res))
+            .iter()
+            .fold(0, |a, &b| a.max(b));
+        self.tick + ticks_remaining
     }
 
     fn get_action_sets(&self) -> Vec<ActionSet> {
