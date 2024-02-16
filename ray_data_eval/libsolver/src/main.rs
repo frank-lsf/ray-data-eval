@@ -1,3 +1,4 @@
+use std::time::Instant;
 mod solver;
 mod types;
 
@@ -100,6 +101,10 @@ fn main() {
             ),
         ],
     );
+    let start = Instant::now();
     // solver::solve(&test_problem);
     solver::solve(&training_problem);
+    let duration = start.elapsed();
+
+    println!("Time elapsed: {:?}", duration);
 }

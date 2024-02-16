@@ -12,6 +12,7 @@ name = "main"
 path = "src/main.rs"
 
 [dependencies]
+arrayvec = "0.7.4"
 env_logger = "0.11.2"
 itertools = "0.12.1"
 log = "0.4.20"

@@ -14,7 +14,7 @@ pub struct Solution {
     pub state: Environment,
 }
 
-#[derive(Debug, Clone, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Buffer {
     size: usize,
     consumable_size: usize,
@@ -258,9 +258,10 @@ impl PartialOrd for Environment {
 
 impl PartialEq for Environment {
     fn eq(&self, other: &Self) -> bool {
-        self.executors == other.executors
+        self.tick == other.tick
+            && self.executors == other.executors
+            && self.buffers == other.buffers
             && self.operator_states == other.operator_states
-            && self.tick == other.tick
     }
 }
 
