@@ -58,8 +58,12 @@ impl OperatorState {
         }
     }
 
+    pub fn num_tasks_remaining(&self) -> usize {
+        self.num_tasks - self.next_task_idx
+    }
+
     pub fn is_finished(&self) -> bool {
-        self.next_task_idx >= self.num_tasks
+        self.num_tasks_remaining() == 0
     }
 }
 
@@ -87,12 +91,19 @@ struct RunningTask {
     remaining_ticks: i32,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 struct Executor {
     pub name: String,
     pub resource: Resource,
     running_task: Option<RunningTask>,
     timeline: Vec<String>,
+}
+
+impl Hash for Executor {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.running_task.hash(state);
+        self.timeline.hash(state);
+    }
 }
 
 impl Executor {
@@ -209,7 +220,6 @@ impl Hash for Environment {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.executors.hash(state);
         self.operator_states.hash(state);
-        self.tick.hash(state);
     }
 }
 
@@ -326,11 +336,21 @@ impl Environment {
     }
 
     pub fn get_solution_lower_bound(&self) -> Tick {
-        self.tick
+        // TODO(@lsf): group by resources; find max duration for each resource
+        // will be an even better lower bound.
+        let total_duration = self
+            .operator_specs
+            .iter()
+            .zip(self.operator_states.iter())
+            .map(|(spec, state)| state.num_tasks_remaining() * spec.duration)
+            .sum::<usize>();
+        let total_ticks_remaining =
+            (total_duration as f32 / self.executors.len() as f32).ceil() as u32;
+        self.tick + total_ticks_remaining
     }
 
     fn get_action_sets(&self) -> Vec<ActionSet> {
-        let action_sets_list = [Resource::CPU, Resource::CPU].map(|res| {
+        let action_sets_list = [Resource::CPU, Resource::GPU].map(|res| {
             get_action_sets_by_resource(
                 res,
                 &self.executors,
@@ -346,13 +366,12 @@ impl Environment {
                 .map(|(a, b)| a.iter().chain(b.iter()).cloned().collect_vec())
                 .collect_vec();
         }
-        // debug!("tick {:?}, combinations: {:?}", self.tick, combinations);
         combinations
     }
 
-    fn perform_action(&mut self, action: &Action) {
+    fn perform_action(&mut self, action: &Action) -> bool {
         match action {
-            Action::Noop => {}
+            Action::Noop => true,
             Action::StartTask { operator_idx } => {
                 let task = {
                     if let Some(operator_state) = self.operator_states.get_mut(*operator_idx) {
@@ -368,20 +387,25 @@ impl Environment {
                     }
                 };
                 if let Some(task) = task {
-                    self.start_task_on_any_executor(&task);
+                    self.start_task_on_any_executor(&task)
+                } else {
+                    false
                 }
             }
         }
     }
 
-    fn tick_with_actions(&mut self, action_set: ActionSet) {
+    fn tick_with_actions(&mut self, action_set: &ActionSet) -> bool {
         for action in action_set {
-            self.perform_action(&action);
+            if !self.perform_action(&action) {
+                return false;
+            }
         }
         self.tick += 1;
         for executor in self.executors.iter_mut() {
             executor.tick(self.tick, &mut self.task_states);
         }
+        true
     }
 
     pub fn get_next_states(&self) -> Vec<Self> {
@@ -392,8 +416,10 @@ impl Environment {
             let action_sets = self.get_action_sets();
             for action_set in action_sets {
                 let mut state_ = self.clone();
-                state_.tick_with_actions(action_set);
-                ret.push(state_);
+                if state_.tick_with_actions(&action_set) {
+                    debug!("Tick: {}, actions: {:?}", self.tick, action_set);
+                    ret.push(state_);
+                }
             }
             ret
         }

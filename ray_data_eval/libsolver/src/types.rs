@@ -29,10 +29,10 @@ pub struct TaskSpec {
 pub struct OperatorSpec {
     pub name: String,
     pub operator_idx: usize,
-    pub num_tasks: i32,
-    pub duration: i32,
-    pub input_size: i32,
-    pub output_size: i32,
+    pub num_tasks: usize,
+    pub duration: usize,
+    pub input_size: usize,
+    pub output_size: usize,
     pub resources: ResourcesSpec,
     pub tasks: Vec<TaskSpec>,
 }

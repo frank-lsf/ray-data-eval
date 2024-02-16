@@ -21,6 +21,8 @@ pub fn solve(problem: &SchedulingProblem) {
             continue;
         }
         visited.insert(fingerprint);
+        // state.print();
+        // info!("");
         let solution_lower_bound = state.get_solution_lower_bound();
         if let Some(best) = &best_solution {
             if best.total_time < solution_lower_bound {
