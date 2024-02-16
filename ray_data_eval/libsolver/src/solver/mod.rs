@@ -2,7 +2,7 @@ mod environment;
 
 use crate::solver::environment::*;
 use crate::types::*;
-use log::{debug, info};
+use log::info;
 
 pub fn solve(problem: &SchedulingProblem) {
     info!("Solving problem: {}", problem.name);

@@ -11,7 +11,7 @@ fn init_logging() {
 
 fn main() {
     init_logging();
-    let test_problem = SchedulingProblem::new(
+    let _test_problem = SchedulingProblem::new(
         "test_problem".to_string(),
         ResourcesSpec {
             cpu: 3,
@@ -54,7 +54,7 @@ fn main() {
         ResourcesSpec {
             cpu: 3,
             gpu: 1,
-            num_executors: 3,
+            num_executors: 4,
         },
         15,
         4,

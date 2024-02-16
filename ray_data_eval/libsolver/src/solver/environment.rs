@@ -1,4 +1,4 @@
-use std::{collections::HashMap, hash::Hash, sync::Arc};
+use std::{hash::Hash, sync::Arc};
 
 use crate::types::*;
 use itertools::Itertools;
@@ -6,7 +6,6 @@ use log::{debug, info};
 use std::hash::Hasher;
 
 type OperatorIndex = usize;
-type TaskID = String;
 type Tick = u32;
 
 #[derive(Debug)]
@@ -58,30 +57,6 @@ impl Buffer {
             true
         } else {
             false
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-enum TaskStateType {
-    Pending,
-    Running,
-    Finished,
-}
-
-#[derive(Debug, Clone)]
-struct TaskState {
-    pub state: TaskStateType,
-    pub started_at: Option<Tick>,
-    pub finished_at: Option<Tick>,
-}
-
-impl TaskState {
-    pub fn new() -> Self {
-        Self {
-            state: TaskStateType::Pending,
-            started_at: None,
-            finished_at: None,
         }
     }
 }
@@ -176,12 +151,7 @@ impl Executor {
         }
     }
 
-    pub fn tick(
-        &mut self,
-        tick: Tick,
-        task_states: &mut HashMap<String, TaskState>,
-        buffers: &mut Vec<Buffer>,
-    ) -> bool {
+    pub fn tick(&mut self, _tick: Tick, buffers: &mut Vec<Buffer>) -> i32 {
         self.timeline.push(self.get_timeline_item());
         if let Some(task) = &mut self.running_task {
             task.remaining_ticks -= 1;
@@ -193,17 +163,16 @@ impl Executor {
                 };
                 let can_finish = try_finishing_running_task(task, input_buffer, output_buffer);
                 if can_finish {
-                    update_task_state(tick, task_states, &task.spec.id, TaskStateType::Finished);
                     self.running_task = None;
-                    true
+                    1
                 } else {
-                    false
+                    -1
                 }
             } else {
-                true
+                0
             }
         } else {
-            true
+            0
         }
     }
 
@@ -263,18 +232,19 @@ pub struct Environment {
     buffers: Vec<Buffer>,
     operator_specs: Arc<Vec<OperatorSpec>>,
     operator_states: Vec<OperatorState>,
-    task_states: HashMap<String, TaskState>,
     tick: Tick,
     time_limit: Tick,
     buffer_size_limit: usize,
+    num_tasks: usize,
+    num_tasks_finished: usize,
 }
 
 impl Ord for Environment {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        if self.tick == other.tick {
-            self.num_tasks_finished().cmp(&other.num_tasks_finished())
-        } else {
+        if self.num_tasks_finished == other.num_tasks_finished {
             self.tick.cmp(&other.tick)
+        } else {
+            self.num_tasks_finished.cmp(&other.num_tasks_finished)
         }
     }
 }
@@ -300,25 +270,6 @@ impl Hash for Environment {
         self.executors.hash(state);
         self.buffers.hash(state);
         self.operator_states.hash(state);
-    }
-}
-
-fn update_task_state(
-    tick: Tick,
-    task_states: &mut HashMap<String, TaskState>,
-    tid: &TaskID,
-    state: TaskStateType,
-) {
-    let task_state = task_states.get_mut(tid).unwrap();
-    task_state.state = state;
-    match task_state.state {
-        TaskStateType::Running => {
-            task_state.started_at = Some(tick);
-        }
-        TaskStateType::Finished => {
-            task_state.finished_at = Some(tick);
-        }
-        _ => {}
     }
 }
 
@@ -381,27 +332,16 @@ impl Environment {
                 .iter()
                 .map(|op| OperatorState::new(op.tasks.len()))
                 .collect(),
-            task_states: tasks
-                .iter()
-                .map(|t| (t.id.clone(), TaskState::new()))
-                .collect(),
             tick: 0,
             time_limit,
             buffer_size_limit,
+            num_tasks: tasks.len(),
+            num_tasks_finished: 0,
         }
     }
 
-    fn num_tasks_finished(&self) -> usize {
-        self.task_states
-            .values()
-            .filter(|state| state.state == TaskStateType::Finished)
-            .count()
-    }
-
     fn is_finished(&self) -> bool {
-        self.task_states
-            .values()
-            .all(|state| state.state == TaskStateType::Finished)
+        self.num_tasks_finished == self.num_tasks
     }
 
     pub fn get_solution(&self) -> Option<Solution> {
@@ -503,7 +443,10 @@ impl Environment {
         }
         self.tick += 1;
         for i in 0..self.executors.len() {
-            if !self.executors[i].tick(self.tick, &mut self.task_states, &mut self.buffers) {
+            let result = self.executors[i].tick(self.tick, &mut self.buffers);
+            if result > 0 {
+                self.num_tasks_finished += 1;
+            } else if result < 0 {
                 return false;
             }
         }
@@ -540,18 +483,7 @@ impl Environment {
         } else {
             Some(&mut self.buffers[task.operator_idx - 1])
         };
-        let started = executor.start_task(task, self.tick, input_buffer);
-        if started {
-            update_task_state(
-                self.tick,
-                &mut self.task_states,
-                &task.id,
-                TaskStateType::Running,
-            );
-            true
-        } else {
-            false
-        }
+        executor.start_task(task, self.tick, input_buffer)
     }
 
     fn check_task_input(&self, task: &TaskSpec) -> bool {
