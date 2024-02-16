@@ -113,7 +113,7 @@ struct Executor {
     pub name: String,
     pub resource: Resource,
     running_task: Option<RunningTask>,
-    timeline: Vec<String>,
+    timeline: String,
 }
 
 impl Hash for Executor {
@@ -147,12 +147,12 @@ impl Executor {
             name,
             resource,
             running_task: None,
-            timeline: Vec::new(),
+            timeline: String::new(),
         }
     }
 
     pub fn tick(&mut self, _tick: Tick, buffers: &mut Vec<Buffer>) -> i32 {
-        self.timeline.push(self.get_timeline_item());
+        self.push_timeline_item();
         if let Some(task) = &mut self.running_task {
             task.remaining_ticks -= 1;
             if task.remaining_ticks <= 0 {
@@ -213,15 +213,16 @@ impl Executor {
         }
     }
 
-    fn get_timeline_item(&self) -> String {
+    fn push_timeline_item(&mut self) {
         if let Some(task) = &self.running_task {
             if task.remaining_ticks > 0 {
-                task.spec.id.clone()
+                self.timeline.push_str(&task.spec.id);
+                self.timeline.push(' ');
             } else {
-                "! ".to_string()
+                self.timeline.push_str("!  ");
             }
         } else {
-            "  ".to_string()
+            self.timeline.push_str("   ");
         }
     }
 }
