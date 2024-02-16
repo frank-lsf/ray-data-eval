@@ -37,6 +37,39 @@ pub struct OperatorSpec {
     pub tasks: Vec<TaskSpec>,
 }
 
+impl OperatorSpec {
+    pub fn new(
+        name: String,
+        operator_idx: usize,
+        num_tasks: usize,
+        duration: usize,
+        input_size: usize,
+        output_size: usize,
+        resources: ResourcesSpec,
+    ) -> Self {
+        let tasks = (0..num_tasks)
+            .map(|i| TaskSpec {
+                id: format!("{}{}", name, i),
+                operator_idx,
+                duration,
+                input_size,
+                output_size,
+                resources: resources.clone(),
+            })
+            .collect();
+        OperatorSpec {
+            name,
+            operator_idx,
+            num_tasks,
+            duration,
+            input_size,
+            output_size,
+            resources,
+            tasks,
+        }
+    }
+}
+
 #[derive(Debug, Clone, FromPyObject)]
 pub struct SchedulingProblem {
     pub operators: Vec<OperatorSpec>,
@@ -47,6 +80,30 @@ pub struct SchedulingProblem {
     pub num_operators: i32,
     pub tasks: Vec<TaskSpec>,
     pub num_total_tasks: i32,
+}
+
+impl SchedulingProblem {
+    pub fn new(
+        name: String,
+        resources: ResourcesSpec,
+        time_limit: u32,
+        buffer_size_limit: usize,
+        operators: Vec<OperatorSpec>,
+    ) -> Self {
+        let num_operators = operators.len() as i32;
+        let num_total_tasks = operators.iter().map(|o| o.num_tasks as i32).sum();
+        let tasks = operators.iter().flat_map(|o| o.tasks.clone()).collect();
+        SchedulingProblem {
+            name,
+            resources,
+            time_limit,
+            buffer_size_limit,
+            operators,
+            num_operators,
+            tasks,
+            num_total_tasks,
+        }
+    }
 }
 
 // --- Solution definitions ---
