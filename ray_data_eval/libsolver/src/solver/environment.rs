@@ -8,18 +8,33 @@ use std::hash::Hasher;
 type OperatorIndex = usize;
 type Tick = u32;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Solution {
     pub total_time: u32,
     pub state: Environment,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone)]
 pub struct Buffer {
     size: usize,
     consumable_size: usize,
     timeline: Vec<usize>,
     consumable_timeline: Vec<usize>,
+}
+
+impl PartialEq for Buffer {
+    fn eq(&self, other: &Self) -> bool {
+        self.size == other.size && self.consumable_size == other.consumable_size
+    }
+}
+
+impl Eq for Buffer {}
+
+impl Hash for Buffer {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.size.hash(state);
+        self.consumable_size.hash(state);
+    }
 }
 
 impl Buffer {
@@ -34,6 +49,7 @@ impl Buffer {
 
     pub fn tick(&mut self, _tick: Tick) {
         self.timeline.push(self.size);
+        self.consumable_timeline.push(self.consumable_size);
     }
 
     pub fn push(&mut self, size: usize) -> bool {
@@ -61,10 +77,24 @@ impl Buffer {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone)]
 struct OperatorState {
     num_tasks: usize,
     pub next_task_idx: usize,
+}
+
+impl PartialEq for OperatorState {
+    fn eq(&self, other: &Self) -> bool {
+        self.next_task_idx == other.next_task_idx
+    }
+}
+
+impl Eq for OperatorState {}
+
+impl Hash for OperatorState {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.next_task_idx.hash(state);
+    }
 }
 
 impl OperatorState {
@@ -101,14 +131,29 @@ impl std::fmt::Debug for Action {
 
 type ActionSet = Vec<Action>;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone)]
 struct RunningTask {
     spec: TaskSpec,
     started_at: Tick,
     remaining_ticks: i32,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+impl PartialEq for RunningTask {
+    fn eq(&self, other: &Self) -> bool {
+        self.spec.id == other.spec.id && self.started_at == other.started_at
+    }
+}
+
+impl Eq for RunningTask {}
+
+impl Hash for RunningTask {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.spec.id.hash(state);
+        self.started_at.hash(state);
+    }
+}
+
+#[derive(Debug, Clone)]
 struct Executor {
     pub name: String,
     pub resource: Resource,
@@ -116,10 +161,17 @@ struct Executor {
     timeline: String,
 }
 
+impl PartialEq for Executor {
+    fn eq(&self, other: &Self) -> bool {
+        self.running_task == other.running_task
+    }
+}
+
+impl Eq for Executor {}
+
 impl Hash for Executor {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.running_task.hash(state);
-        self.timeline.hash(state);
     }
 }
 
@@ -217,7 +269,7 @@ impl Executor {
         if let Some(task) = &self.running_task {
             if task.remaining_ticks > 0 {
                 self.timeline.push_str(&task.spec.id);
-                self.timeline.push(' ');
+                self.timeline.push_str("  ");
             } else {
                 self.timeline.push_str("!  ");
             }
@@ -269,6 +321,7 @@ impl Eq for Environment {}
 
 impl Hash for Environment {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.tick.hash(state);
         self.executors.hash(state);
         self.buffers.hash(state);
         self.operator_states.hash(state);
@@ -515,6 +568,7 @@ impl Environment {
         }
         for buffer in self.buffers.iter() {
             info!("{:?}", buffer.timeline);
+            info!("{:?}", buffer.consumable_timeline);
         }
         info!("");
     }

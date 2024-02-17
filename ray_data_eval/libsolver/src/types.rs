@@ -49,7 +49,7 @@ impl OperatorSpec {
     ) -> Self {
         let tasks = (0..num_tasks)
             .map(|i| TaskSpec {
-                id: format!("{}{}", name, i),
+                id: name.clone(),
                 operator_idx,
                 duration,
                 input_size,
