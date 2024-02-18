@@ -128,7 +128,7 @@ def solve(cfg: SchedulingProblem, *, solver=None, tidy=False) -> int:
     # Tidiness Constraint: Lower-indexed executors should be used first
     if tidy:
         for t in range(cfg.time_limit):
-            for j in range(cfg.resources.num_executors - 1):
+            for j in range(cfg.resources.cpu - 1):
                 model += pl.lpSum(
                     [schedule[(i, j, t)] for i in range(cfg.num_total_tasks)]
                 ) >= pl.lpSum([schedule[(i, j + 1, t)] for i in range(cfg.num_total_tasks)])
