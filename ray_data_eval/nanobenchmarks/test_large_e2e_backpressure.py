@@ -4,7 +4,6 @@ import numpy as np
 import ray
 from ray.data._internal.execution.backpressure_policy import (
     ENABLED_BACKPRESSURE_POLICIES_CONFIG_KEY,
-    ConcurrencyCapBackpressurePolicy,
     StreamingOutputBackpressurePolicy,
 )
 from ray.data.tests.conftest import (
