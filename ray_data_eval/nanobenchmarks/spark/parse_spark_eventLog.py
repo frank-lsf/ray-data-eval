@@ -4,7 +4,7 @@ import json
 
 def make_trace_event_spark():
     # logs/spark-events/app-20240109133439-0022
-    app_id = "app-20240119050536-0174"
+    app_id = "app-20240127211827-0054"
 
     log_directory = os.getenv("SPARK_EVENTS_PATH")
     output_directory = os.getenv("SPARK_TRACE_EVENT_PATH")
@@ -15,8 +15,12 @@ def make_trace_event_spark():
 
     file = os.path.join(log_directory, app_id)
     with open(file, "r") as f:
+        job_id = None
         for line in f:
             event = json.loads(line)
+
+            if event["Event"] == "SparkListenerJobStart":
+                job_id = event["Job ID"]
 
             if event["Event"] == "SparkListenerTaskEnd":
                 start_time = event["Task Info"]["Launch Time"]
@@ -26,7 +30,7 @@ def make_trace_event_spark():
                 host = event["Task Info"]["Host"]
 
                 event = {
-                    "cat": f"task:{task_id}",
+                    "cat": f"job:{job_id}",
                     "name": f"task:{task_id}",
                     "pid": host,
                     "tid": f"worker:{executor_id}",
@@ -35,6 +39,11 @@ def make_trace_event_spark():
                     "ph": "X",
                     "args": {},
                 }
+
+                # if job_id == 2:  # producer
+                #     event["cname"] = "generic_work"
+                # elif job_id == 4:  # consumer
+                #     event["cname"] = "rail_animation"
 
                 events.append(event)
 
