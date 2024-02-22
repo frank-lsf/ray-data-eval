@@ -105,5 +105,3 @@ impl SchedulingProblem {
         }
     }
 }
-
-// --- Solution definitions ---
