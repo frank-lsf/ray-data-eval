@@ -35,7 +35,7 @@ class OperatorSpec:
     def __post_init__(self):
         self.tasks = [
             TaskSpec(
-                f"{self.name}{i}",
+                self.name,
                 self.operator_idx,
                 self.duration,
                 self.input_size,
@@ -283,10 +283,48 @@ training_problem = SchedulingProblem(
     buffer_size_limit=4,
 )
 
+
+e2e_problem = SchedulingProblem(
+    [
+        OperatorSpec(
+            name="P",
+            operator_idx=0,
+            num_tasks=8,
+            duration=10,
+            input_size=0,
+            output_size=10,
+            resources=ResourcesSpec(cpu=1),
+        ),
+        OperatorSpec(
+            name="C",
+            operator_idx=1,
+            num_tasks=80,
+            duration=1,
+            input_size=1,
+            output_size=1,
+            resources=ResourcesSpec(cpu=1),
+        ),
+        OperatorSpec(
+            name="T",
+            operator_idx=2,
+            num_tasks=80,
+            duration=1,
+            input_size=1,
+            output_size=0,
+            resources=ResourcesSpec(gpu=1),
+        ),
+    ],
+    name="e2e_problem",
+    resources=ResourcesSpec(cpu=8, gpu=8),
+    time_limit=100,
+    buffer_size_limit=20,
+)
+
 problems = [
     test_problem,
     multi_stage_problem,
     producer_consumer_problem,
     long_problem,
     training_problem,
+    e2e_problem,
 ]
