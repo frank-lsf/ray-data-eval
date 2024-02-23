@@ -289,7 +289,7 @@ e2e_problem = SchedulingProblem(
         OperatorSpec(
             name="P",
             operator_idx=0,
-            num_tasks=8,
+            num_tasks=16,
             duration=10,
             input_size=0,
             output_size=10,
@@ -298,7 +298,7 @@ e2e_problem = SchedulingProblem(
         OperatorSpec(
             name="C",
             operator_idx=1,
-            num_tasks=80,
+            num_tasks=160,
             duration=1,
             input_size=1,
             output_size=1,
@@ -307,7 +307,7 @@ e2e_problem = SchedulingProblem(
         OperatorSpec(
             name="T",
             operator_idx=2,
-            num_tasks=80,
+            num_tasks=160,
             duration=1,
             input_size=1,
             output_size=0,
@@ -315,7 +315,7 @@ e2e_problem = SchedulingProblem(
         ),
     ],
     name="e2e_problem",
-    resources=ResourcesSpec(cpu=8, gpu=8),
+    resources=ResourcesSpec(cpu=8, gpu=1),
     time_limit=100,
     buffer_size_limit=20,
 )
