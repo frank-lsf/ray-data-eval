@@ -6,6 +6,7 @@ from ray_data_eval.common.pipeline import (  # noqa F401
     producer_consumer_problem,
     multi_stage_problem,
     training_problem,
+    e2e_problem,
 )
 from ray_data_eval.simulator.environment import ExecutionEnvironment
 from ray_data_eval.simulator.policies import (  # noqa F401
@@ -42,7 +43,7 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 
 def main():
-    problem = training_problem
+    problem = e2e_problem
     # policy = GreedyPolicy(problem)
     # policy = GreedyWithBufferPolicy(problem)
     # policy = GreedyOracleProducerFirstPolicy(problem)

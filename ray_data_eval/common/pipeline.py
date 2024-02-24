@@ -35,7 +35,7 @@ class OperatorSpec:
     def __post_init__(self):
         self.tasks = [
             TaskSpec(
-                self.name,
+                self.name + "_" + str(i),
                 self.operator_idx,
                 self.duration,
                 self.input_size,
@@ -316,7 +316,7 @@ e2e_problem = SchedulingProblem(
     ],
     name="e2e_problem",
     resources=ResourcesSpec(cpu=8, gpu=1),
-    time_limit=100,
+    time_limit=500, # To make tasks finish.
     buffer_size_limit=20,
 )
 
