@@ -249,6 +249,8 @@ class Executor:
     def print_timeline(self, max_time: int):
         print(f"|| {self.id:4} ||", end="")
         for i, item in enumerate(self._timeline):
+            if "_" in item:
+                item = item.split("_")[0]
             if i >= max_time:
                 break
             print(f" {item:<3} |", end="")
