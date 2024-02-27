@@ -8,6 +8,7 @@ from ray_data_eval.simulator.policies import (
     GreedyOracleProducerFirstPolicy,
     GreedyOracleConsumerFirstPolicy,
     RatesEqualizingPolicy,
+    ConcurrencyCapPolicy,
     DelayPolicy,
 )
 
@@ -19,9 +20,10 @@ def main():
         for policy in [
             GreedyPolicy(problem),
             GreedyWithBufferPolicy(problem),
-            # GreedyOracleProducerFirstPolicy(problem),
-            # GreedyOracleConsumerFirstPolicy(problem),
+            GreedyOracleProducerFirstPolicy(problem),
+            GreedyOracleConsumerFirstPolicy(problem),
             RatesEqualizingPolicy(problem),
+            ConcurrencyCapPolicy(problem),
             DelayPolicy(problem),
         ]:
             env = ExecutionEnvironment(

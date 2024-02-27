@@ -234,6 +234,37 @@ class RatesEqualizingPolicy(SchedulingPolicy):
                             break
 
 
+class ConcurrencyCapPolicy(SchedulingPolicy):
+    def __init__(self, problem: SchedulingProblem):
+        super().__init__(problem)
+        self.concurrency_caps = {}
+        self.max_first_op_num_tasks = problem.buffer_size_limit / problem.operators[0].output_size
+
+    def __repr__(self):
+        return "ConcurrencyCapPolicy"
+
+    def _get_num_running_tasks(self, env: ExecutionEnvironment, operator_idx: int):
+        num_running_tasks = 0
+        for tid, task_state in env.task_states.items():
+            if task_state.state == TaskStateType.RUNNING:
+                if env.task_specs[tid].operator_idx == operator_idx:
+                    num_running_tasks += 1
+        return num_running_tasks
+
+    def tick(self, env: ExecutionEnvironment):
+        super().tick(env)
+        for tid, task_state in env.task_states.items():
+            if task_state.state == TaskStateType.PENDING:
+                if env.task_specs[tid].operator_idx == 0:
+                    if self._get_num_running_tasks(env, 0) >= self.max_first_op_num_tasks:
+                        continue
+
+                logging.debug(f"[{self}] Trying to start {tid}")
+                task = env.task_specs[tid]
+                if not env.start_task_on_any_executor(task):
+                    logging.debug(f"[{self}] Cannot not start {tid}")
+
+
 class DelayPolicy(SchedulingPolicy):
     def __init__(self, problem: SchedulingProblem):
         super().__init__(problem)
