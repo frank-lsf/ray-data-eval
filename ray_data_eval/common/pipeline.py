@@ -347,6 +347,33 @@ e2e_problem2 = SchedulingProblem(
     buffer_size_limit=3,
 )
 
+e2e_problem3 = SchedulingProblem(
+    [
+        OperatorSpec(
+            name="P",
+            operator_idx=0,
+            num_tasks=20,
+            duration=10,
+            input_size=0,
+            output_size=10,
+            resources=ResourcesSpec(cpu=1),
+        ),
+        OperatorSpec(
+            name="C",
+            operator_idx=1,
+            num_tasks=200,
+            duration=1,
+            input_size=1,
+            output_size=0,
+            resources=ResourcesSpec(cpu=1),
+        ),
+    ],
+    name="e2e_problem3",
+    resources=ResourcesSpec(cpu=10),
+    time_limit=500,  # To make tasks finish.
+    buffer_size_limit=20,
+)
+
 problems = [
     test_problem,
     multi_stage_problem,
@@ -355,4 +382,5 @@ problems = [
     training_problem,
     e2e_problem,
     e2e_problem2,
+    e2e_problem3,
 ]

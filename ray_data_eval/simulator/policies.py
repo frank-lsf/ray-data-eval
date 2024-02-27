@@ -238,10 +238,10 @@ class DelayPolicy(SchedulingPolicy):
     def __init__(self, problem: SchedulingProblem):
         super().__init__(problem)
         self.concurrency_caps = {}
-        max_first_op_num_tasks = problem.buffer_size_limit / problem.operators[0].output_size
+        self.max_first_op_num_tasks = problem.buffer_size_limit / problem.operators[0].output_size
         self.executor_slots_delays = []
         for i in range(problem.resources.num_executors):
-            self.executor_slots_delays.append(i % max_first_op_num_tasks)
+            self.executor_slots_delays.append(i % self.max_first_op_num_tasks)
         self.executor_slots_delays.sort()
 
     def __repr__(self):

@@ -19,8 +19,8 @@ def main():
         for policy in [
             GreedyPolicy(problem),
             GreedyWithBufferPolicy(problem),
-            GreedyOracleProducerFirstPolicy(problem),
-            GreedyOracleConsumerFirstPolicy(problem),
+            # GreedyOracleProducerFirstPolicy(problem),
+            # GreedyOracleConsumerFirstPolicy(problem),
             RatesEqualizingPolicy(problem),
             DelayPolicy(problem),
         ]:
