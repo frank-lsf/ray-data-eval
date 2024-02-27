@@ -8,6 +8,7 @@ from ray_data_eval.simulator.policies import (
     GreedyOracleProducerFirstPolicy,
     GreedyOracleConsumerFirstPolicy,
     RatesEqualizingPolicy,
+    DelayPolicy,
 )
 
 
@@ -21,6 +22,7 @@ def main():
             GreedyOracleProducerFirstPolicy(problem),
             GreedyOracleConsumerFirstPolicy(problem),
             RatesEqualizingPolicy(problem),
+            DelayPolicy(problem),
         ]:
             env = ExecutionEnvironment(
                 resources=problem.resources,

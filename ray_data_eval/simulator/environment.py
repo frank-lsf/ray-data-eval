@@ -251,7 +251,7 @@ class Executor:
         for i, item in enumerate(self._timeline):
             if "_" in item:
                 item = item.split("_")[0]
-            if i >= max_time:
+            if i >= 30:
                 break
             print(f" {item:<3} |", end="")
         print("|")
@@ -363,7 +363,7 @@ class ExecutionEnvironment:
     def check_all_tasks_finished(self):
         all_finished = True
         for tid, state in self.task_states.items():
-            logging.info(f"{tid}: {state.state}")
+            logging.info(f"{tid}: {state.state} - {state.finished_at}")
             if state.state != TaskStateType.FINISHED:
                 all_finished = False
         return all_finished

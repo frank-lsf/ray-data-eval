@@ -2,6 +2,7 @@ import os
 import shutil
 import random
 
+
 def copy_random_folders(source_dir, target_dir, percentage=0.05, copy_dir=True):
     """
     Copies a percentage of folders from the source directory to the target directory.
@@ -11,11 +12,7 @@ def copy_random_folders(source_dir, target_dir, percentage=0.05, copy_dir=True):
         os.makedirs(target_dir)
 
     if copy_dir:
-        subdirs = [
-            d
-            for d in os.listdir(source_dir)
-            if os.path.isdir(os.path.join(source_dir, d))
-        ]
+        subdirs = [d for d in os.listdir(source_dir) if os.path.isdir(os.path.join(source_dir, d))]
     else:
         subdirs = [d for d in os.listdir(source_dir)]
 
