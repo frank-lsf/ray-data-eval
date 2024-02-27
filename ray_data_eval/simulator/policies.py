@@ -238,11 +238,11 @@ class DelayPolicy(SchedulingPolicy):
     def __init__(self, problem: SchedulingProblem):
         super().__init__(problem)
         self.concurrency_caps = {}
-        factor = problem.buffer_size_limit / problem.operators[0].output_size
-        self.executor_slots_offset = []
+        max_first_op_num_tasks = problem.buffer_size_limit / problem.operators[0].output_size
+        self.executor_slots_delays = []
         for i in range(problem.resources.num_executors):
-            self.executor_slots_offset.append(i % factor)
-        self.executor_slots_offset.sort()
+            self.executor_slots_delays.append(i % max_first_op_num_tasks)
+        self.executor_slots_delays.sort()
 
     def __repr__(self):
         return "DelayPolicy"
@@ -259,10 +259,10 @@ class DelayPolicy(SchedulingPolicy):
         super().tick(env)
         for tid, task_state in env.task_states.items():
             if task_state.state == TaskStateType.PENDING:
-                if self.executor_slots_offset and env.task_specs[tid].operator_idx == 0:
-                    next_offset = self.executor_slots_offset[0]
+                if self.executor_slots_delays and env.task_specs[tid].operator_idx == 0:
+                    next_offset = self.executor_slots_delays[0]
                     if env._current_tick >= next_offset:
-                        self.executor_slots_offset.pop(0)
+                        self.executor_slots_delays.pop(0)
                         pass
                     else:
                         continue
