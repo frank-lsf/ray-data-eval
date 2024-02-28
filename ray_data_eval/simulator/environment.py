@@ -206,7 +206,7 @@ class Executor:
             else:
                 self._env.update_task_state(self.running_task.spec.id, TaskStateType.PENDING_OUTPUT)
                 return None
-            
+
     def about_to_finish_and_has_output(self) -> bool:
         if self.running_task is None:
             return False
@@ -316,9 +316,11 @@ class ExecutionEnvironment:
         self._current_tick += 1
         executors_sorted = self._get_executors_sorted()
         executors_with_output = [e for e in executors_sorted if e.about_to_finish_and_has_output()]
-        executors_without_output = [e for e in executors_sorted if not e.about_to_finish_and_has_output()]
-        print('executors_with_output', executors_with_output)
-        print('executors_without_output', executors_without_output)
+        executors_without_output = [
+            e for e in executors_sorted if not e.about_to_finish_and_has_output()
+        ]
+        print("executors_with_output", executors_with_output)
+        print("executors_without_output", executors_without_output)
 
         for executor in executors_without_output:
             executor.tick()
