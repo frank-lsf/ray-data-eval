@@ -16,6 +16,7 @@ from ray_data_eval.simulator.policies import (  # noqa F401
     GreedyPolicy,
     GreedyWithBufferPolicy,
     GreedyOracleProducerFirstPolicy,
+    GreedyOracleConsumerFirstPolicy,
     SchedulingPolicy,
     RatesEqualizingPolicy,
     ConcurrencyCapPolicy,
@@ -49,9 +50,9 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 def main():
     problem = e2e_problem
-    policy = GreedyPolicy(problem)
+    # policy = GreedyPolicy(problem)
     # policy = GreedyWithBufferPolicy(problem)
-    # policy = GreedyOracleProducerFirstPolicy(problem)
+    policy = GreedyOracleConsumerFirstPolicy(problem)
     # policy = DelayPolicy(problem)
     test_scheduling_policy(problem, policy)
 

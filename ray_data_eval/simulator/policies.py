@@ -273,7 +273,6 @@ class DelayPolicy(SchedulingPolicy):
         for i in range(problem.resources.num_executors):
             self.executor_slots_delays.append(i % self.max_first_op_num_tasks)
         self.executor_slots_delays.sort()
-        # self.executor_slots_delays = [0,0,1,1]
 
     def __repr__(self):
         return "DelayPolicy"

@@ -207,7 +207,7 @@ class Executor:
                 self._env.update_task_state(self.running_task.spec.id, TaskStateType.PENDING_OUTPUT)
                 return None
 
-    def about_to_finish_and_has_output(self) -> bool:
+    def is_about_to_finish_and_has_output(self) -> bool:
         if self.running_task is None:
             return False
         return self.running_task.remaining_ticks <= 1 and self.running_task.spec.output_size > 0
@@ -291,10 +291,11 @@ class ExecutionEnvironment:
 
         def _sort_key(executor: Executor) -> int:
             if executor.running_task is None:
-                return 1000 * 1000
-            ret = executor.running_task.remaining_ticks * 1000
-            ret += executor.running_task.spec.output_size - executor.running_task.spec.input_size
-            return ret
+                return (100000, 100000) # Sorted last. 
+            remaining_ticks = executor.running_task.remaining_ticks
+            net_output_size = executor.running_task.spec.output_size - executor.running_task.spec.input_size
+            # Net_output_size first: decreasing buffer usage.
+            return (net_output_size, remaining_ticks)
 
         return sorted(self._executors, key=_sort_key)
 
@@ -314,17 +315,7 @@ class ExecutionEnvironment:
             self.scheduling_policy.tick(self)
         logging.debug(f"[{self}] Tick")
         self._current_tick += 1
-        executors_sorted = self._get_executors_sorted()
-        executors_with_output = [e for e in executors_sorted if e.about_to_finish_and_has_output()]
-        executors_without_output = [
-            e for e in executors_sorted if not e.about_to_finish_and_has_output()
-        ]
-        print("executors_with_output", executors_with_output)
-        print("executors_without_output", executors_without_output)
-
-        for executor in executors_without_output:
-            executor.tick()
-        for executor in executors_with_output:
+        for executor in self._get_executors_sorted():
             executor.tick()
         self.buffer.tick()
 
