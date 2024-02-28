@@ -207,11 +207,6 @@ class Executor:
                 self._env.update_task_state(self.running_task.spec.id, TaskStateType.PENDING_OUTPUT)
                 return None
 
-    def is_about_to_finish_and_has_output(self) -> bool:
-        if self.running_task is None:
-            return False
-        return self.running_task.remaining_ticks <= 1 and self.running_task.spec.output_size > 0
-
     def start_task(self, task: TaskSpec, at_tick: Tick, inputs: list[DataItem]) -> bool:
         """
         Tries to start a task on this executor.
