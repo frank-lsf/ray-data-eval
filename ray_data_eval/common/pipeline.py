@@ -325,7 +325,7 @@ e2e_problem2 = SchedulingProblem(
         OperatorSpec(
             name="P",
             operator_idx=0,
-            num_tasks=10,
+            num_tasks=100,
             duration=1,
             input_size=0,
             output_size=1,
@@ -334,7 +334,7 @@ e2e_problem2 = SchedulingProblem(
         OperatorSpec(
             name="C",
             operator_idx=1,
-            num_tasks=10,
+            num_tasks=100,
             duration=2,
             input_size=1,
             output_size=0,
