@@ -325,7 +325,7 @@ e2e_problem2 = SchedulingProblem(
         OperatorSpec(
             name="P",
             operator_idx=0,
-            num_tasks=10,
+            num_tasks=100,
             duration=1,
             input_size=0,
             output_size=1,
@@ -334,7 +334,7 @@ e2e_problem2 = SchedulingProblem(
         OperatorSpec(
             name="C",
             operator_idx=1,
-            num_tasks=10,
+            num_tasks=100,
             duration=2,
             input_size=1,
             output_size=0,
@@ -343,7 +343,7 @@ e2e_problem2 = SchedulingProblem(
     ],
     name="e2e_problem2",
     resources=ResourcesSpec(cpu=4),
-    time_limit=15,  # To make tasks finish.
+    time_limit=500,  # To make tasks finish.
     buffer_size_limit=3,
 )
 

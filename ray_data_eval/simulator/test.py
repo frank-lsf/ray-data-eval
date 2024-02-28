@@ -48,11 +48,11 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 
 def main():
-    problem = e2e_problem
+    problem = e2e_problem2
     # policy = GreedyPolicy(problem)
     # policy = GreedyWithBufferPolicy(problem)
     # policy = GreedyOracleProducerFirstPolicy(problem)
-    policy = DelayPolicy(problem)
+    policy = ConcurrencyCapPolicy(problem)
     test_scheduling_policy(problem, policy)
 
 
