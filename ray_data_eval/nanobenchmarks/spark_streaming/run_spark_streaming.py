@@ -66,7 +66,8 @@ def run_spark_data(spark, cfg):
 
     # Create a streaming DataFrame (from rate source: each output row contains a timestamp and value)
     streaming_df = (
-        spark.readStream.format("rate").option("rowsPerSecond", 1)
+        spark.readStream.format("rate")
+        .option("rowsPerSecond", 1)
         # .option("numPartitions", cfg.num_producers)
         .load()
     )

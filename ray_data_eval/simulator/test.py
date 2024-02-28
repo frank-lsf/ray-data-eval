@@ -8,6 +8,8 @@ from ray_data_eval.common.pipeline import (  # noqa F401
     long_problem,
     training_problem,
     e2e_problem,
+    e2e_problem2,
+    e2e_problem3,
 )
 from ray_data_eval.simulator.environment import ExecutionEnvironment
 from ray_data_eval.simulator.policies import (  # noqa F401
@@ -16,6 +18,8 @@ from ray_data_eval.simulator.policies import (  # noqa F401
     GreedyOracleProducerFirstPolicy,
     SchedulingPolicy,
     RatesEqualizingPolicy,
+    ConcurrencyCapPolicy,
+    DelayPolicy,
 )
 
 logging.basicConfig(
@@ -44,11 +48,11 @@ def test_scheduling_policy(problem: SchedulingProblem, policy: SchedulingPolicy)
 
 
 def main():
-    problem = long_problem
+    problem = e2e_problem2
     # policy = GreedyPolicy(problem)
     # policy = GreedyWithBufferPolicy(problem)
     # policy = GreedyOracleProducerFirstPolicy(problem)
-    policy = RatesEqualizingPolicy(problem)
+    policy = ConcurrencyCapPolicy(problem)
     test_scheduling_policy(problem, policy)
 
 
