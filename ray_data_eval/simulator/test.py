@@ -52,8 +52,8 @@ def main():
     problem = e2e_problem
     # policy = GreedyPolicy(problem)
     # policy = GreedyWithBufferPolicy(problem)
-    policy = GreedyOracleConsumerFirstPolicy(problem)
-    # policy = DelayPolicy(problem)
+    # policy = GreedyOracleConsumerFirstPolicy(problem)
+    policy = DelayPolicy(problem)
     test_scheduling_policy(problem, policy)
 
 

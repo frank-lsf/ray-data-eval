@@ -284,13 +284,13 @@ class ExecutionEnvironment:
         decrease buffer usage.
         """
 
-        def _sort_key(executor: Executor) -> int:
+        def _sort_key(executor: Executor) -> tuple[int, int]:
             if executor.running_task is None:
-                return (100000, 100000) # Sorted last. 
+                return 100000, 100000 # Sorted last. 
             remaining_ticks = executor.running_task.remaining_ticks
             net_output_size = executor.running_task.spec.output_size - executor.running_task.spec.input_size
             # Net_output_size first: decreasing buffer usage.
-            return (net_output_size, remaining_ticks)
+            return net_output_size, remaining_ticks
 
         return sorted(self._executors, key=_sort_key)
 
