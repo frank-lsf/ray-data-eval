@@ -1,7 +1,6 @@
 import logging
 
 import numpy as np
-
 from ray_data_eval.common.pipeline import SchedulingProblem, TaskSpec
 from ray_data_eval.simulator.environment import (
     ExecutionEnvironment,
