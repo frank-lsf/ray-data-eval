@@ -249,7 +249,9 @@ class Executor:
     def print_timeline(self, max_time: int):
         print(f"|| {self.id:4} ||", end="")
         for i, item in enumerate(self._timeline):
-            if i >= max_time:
+            if "_" in item:
+                item = item.split("_")[0]
+            if i >= 30:
                 break
             print(f" {item:<3} |", end="")
         print("|")
@@ -282,12 +284,13 @@ class ExecutionEnvironment:
         decrease buffer usage.
         """
 
-        def _sort_key(executor: Executor) -> int:
+        def _sort_key(executor: Executor) -> tuple[int, int]:
             if executor.running_task is None:
-                return 1000 * 1000
-            ret = executor.running_task.remaining_ticks * 1000
-            ret += executor.running_task.spec.output_size - executor.running_task.spec.input_size
-            return ret
+                return 100000, 100000 # Sorted last. 
+            remaining_ticks = executor.running_task.remaining_ticks
+            net_output_size = executor.running_task.spec.output_size - executor.running_task.spec.input_size
+            # Net_output_size first: decreasing buffer usage.
+            return net_output_size, remaining_ticks
 
         return sorted(self._executors, key=_sort_key)
 
@@ -361,7 +364,7 @@ class ExecutionEnvironment:
     def check_all_tasks_finished(self):
         all_finished = True
         for tid, state in self.task_states.items():
-            logging.info(f"{tid}: {state.state}")
+            logging.info(f"{tid}: {state.state} - {state.finished_at}")
             if state.state != TaskStateType.FINISHED:
                 all_finished = False
         return all_finished

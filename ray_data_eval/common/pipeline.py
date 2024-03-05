@@ -35,7 +35,7 @@ class OperatorSpec:
     def __post_init__(self):
         self.tasks = [
             TaskSpec(
-                f"{self.name}{i}",
+                self.name + "_" + str(i),
                 self.operator_idx,
                 self.duration,
                 self.input_size,
@@ -135,7 +135,7 @@ test_problem = SchedulingProblem(
     ],
     name="test_problem",
     resources=ResourcesSpec(cpu=2),
-    time_limit=12,
+    time_limit=20,
     buffer_size_limit=4,
 )
 
@@ -283,10 +283,104 @@ training_problem = SchedulingProblem(
     buffer_size_limit=4,
 )
 
+
+e2e_problem = SchedulingProblem(
+    [
+        OperatorSpec(
+            name="P",
+            operator_idx=0,
+            num_tasks=16,
+            duration=10,
+            input_size=0,
+            output_size=10,
+            resources=ResourcesSpec(cpu=1),
+        ),
+        OperatorSpec(
+            name="C",
+            operator_idx=1,
+            num_tasks=160,
+            duration=1,
+            input_size=1,
+            output_size=1,
+            resources=ResourcesSpec(cpu=1),
+        ),
+        OperatorSpec(
+            name="T",
+            operator_idx=2,
+            num_tasks=16,
+            duration=1,
+            input_size=10,
+            output_size=0,
+            resources=ResourcesSpec(gpu=1),
+        ),
+    ],
+    name="e2e_problem",
+    resources=ResourcesSpec(cpu=8, gpu=1),
+    time_limit=500,  # To make tasks finish.
+    buffer_size_limit=30,
+)
+
+e2e_problem2 = SchedulingProblem(
+    [
+        OperatorSpec(
+            name="P",
+            operator_idx=0,
+            num_tasks=100,
+            duration=1,
+            input_size=0,
+            output_size=1,
+            resources=ResourcesSpec(cpu=1),
+        ),
+        OperatorSpec(
+            name="C",
+            operator_idx=1,
+            num_tasks=100,
+            duration=2,
+            input_size=1,
+            output_size=0,
+            resources=ResourcesSpec(cpu=1),
+        ),
+    ],
+    name="e2e_problem2",
+    resources=ResourcesSpec(cpu=4),
+    time_limit=500,  # To make tasks finish.
+    buffer_size_limit=3,
+)
+
+e2e_problem3 = SchedulingProblem(
+    [
+        OperatorSpec(
+            name="P",
+            operator_idx=0,
+            num_tasks=20,
+            duration=10,
+            input_size=0,
+            output_size=10,
+            resources=ResourcesSpec(cpu=1),
+        ),
+        OperatorSpec(
+            name="C",
+            operator_idx=1,
+            num_tasks=200,
+            duration=1,
+            input_size=1,
+            output_size=0,
+            resources=ResourcesSpec(cpu=1),
+        ),
+    ],
+    name="e2e_problem3",
+    resources=ResourcesSpec(cpu=10),
+    time_limit=500,  # To make tasks finish.
+    buffer_size_limit=20,
+)
+
 problems = [
     test_problem,
     multi_stage_problem,
     producer_consumer_problem,
     long_problem,
     training_problem,
+    e2e_problem,
+    e2e_problem2,
+    e2e_problem3,
 ]
