@@ -1,3 +1,4 @@
+"""Create a subset of the ImageNet dataset by randomly sampling; useful for benchmark tests."""
 import os
 import shutil
 import random
