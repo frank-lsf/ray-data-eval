@@ -239,6 +239,16 @@ def decode_image_crop_and_flip(row):
     return {"image": np.array(transform(row["image"]))}
 
 
+def _collate_fn_arr_pil_images_to_tensor(batch: np.ndarray) -> torch.Tensor:
+    batch = batch["image"]
+
+    arrays = np.transpose(batch, axes=(0, 3, 1, 2))
+    tensor_batch = torch.from_numpy(arrays)
+
+    batch = {"image": tensor_batch}
+    return batch
+
+
 class MdsDatasource(ray.data.datasource.FileBasedDatasource):
     _FILE_EXTENSION = "mds"
 
@@ -562,12 +572,15 @@ if __name__ == "__main__":
             )
 
         # ray.data, with transform.
-        ray_dataset = ray.data.read_images(args.data_root, mode="RGB").map(
-            crop_and_flip_image
+        ray_dataset = ray.data.read_images(
+            args.data_root, mode="RGB", transform=get_transform(False)
         )
         for i in range(args.num_epochs):
             iterate(
-                ray_dataset.iter_batches(batch_size=args.batch_size),
+                ray_dataset.iter_torch_batches(
+                    batch_size=args.batch_size,
+                    collate_fn=_collate_fn_arr_pil_images_to_tensor,
+                ),
                 "ray_data+map_transform",
                 args.batch_size,
                 args.output_file,
