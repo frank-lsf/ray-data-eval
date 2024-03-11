@@ -4,6 +4,7 @@ from local disk and (for supported data loaders) cloud storage. Pass a --data-ro
 --parquet-data-root, --tf-data-root, and/or --mosaic-data-root pointing to the
 dataset directory. Throughputs are written to `output.csv` in total images/s.
 """
+
 import ray
 import torch
 import torchvision
@@ -230,6 +231,25 @@ def decode_image_crop_and_flip(row):
     row["image"] = Image.frombytes("RGB", (row["height"], row["width"]), row["image"])
     # Convert back np to avoid storing a np.object array.
     return {"image": np.array(transform(row["image"]))}
+
+
+def _collate_fn_arr_pil_images_to_tensor(batch: np.ndarray) -> torch.Tensor:
+    """
+    Custom collate function that converts a batch of numpy arrays representing PIL images to a tensor batch.
+
+    Args:
+        batch (np.ndarray): Batch of numpy arrays representing PIL images.
+
+    Returns:
+        torch.Tensor: Tensor batch of images.
+    """
+    batch = batch["image"]
+
+    arrays = np.transpose(batch, axes=(0, 3, 1, 2))
+    tensor_batch = torch.from_numpy(arrays)
+
+    batch = {"image": tensor_batch}
+    return batch
 
 
 class MdsDatasource(ray.data.datasource.FileBasedDatasource):
@@ -546,10 +566,18 @@ if __name__ == "__main__":
             )
 
         # ray.data, with transform.
-        ray_dataset = ray.data.read_images(args.data_root, mode="RGB").map(crop_and_flip_image)
+        ray_dataset = ray.data.read_images(
+            args.data_root,
+            mode="RGB",
+            # This `transform` argument works with the custom-built version of Ray available at https://github.com/franklsf95/ray
+            transform=get_transform(False),
+        )
         for i in range(args.num_epochs):
             iterate(
-                ray_dataset.iter_batches(batch_size=args.batch_size),
+                ray_dataset.iter_torch_batches(
+                    batch_size=args.batch_size,
+                    collate_fn=_collate_fn_arr_pil_images_to_tensor,
+                ),
                 "ray_data+map_transform",
                 args.batch_size,
                 args.output_file,
