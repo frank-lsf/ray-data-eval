@@ -234,6 +234,15 @@ def decode_image_crop_and_flip(row):
 
 
 def _collate_fn_arr_pil_images_to_tensor(batch: np.ndarray) -> torch.Tensor:
+    """
+    Custom collate function that converts a batch of numpy arrays representing PIL images to a tensor batch.
+
+    Args:
+        batch (np.ndarray): Batch of numpy arrays representing PIL images.
+
+    Returns:
+        torch.Tensor: Tensor batch of images.
+    """
     batch = batch["image"]
 
     arrays = np.transpose(batch, axes=(0, 3, 1, 2))
@@ -558,7 +567,10 @@ if __name__ == "__main__":
 
         # ray.data, with transform.
         ray_dataset = ray.data.read_images(
-            args.data_root, mode="RGB", transform=get_transform(False)
+            args.data_root,
+            mode="RGB",
+            # This `transform` argument works with the custom-built version of Ray available at https://github.com/franklsf95/ray
+            transform=get_transform(False),
         )
         for i in range(args.num_epochs):
             iterate(
