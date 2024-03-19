@@ -1,11 +1,11 @@
 import argparse
 import os
 import random
-import shutil
 import time
 import warnings
 from enum import Enum
 from ray.data.datasource.partitioning import PartitionStyle
+from util import IMAGENET_WNID_TO_ID
 
 import ray
 import torch
@@ -21,7 +21,6 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 import torchvision.transforms as transforms
 from torch.optim.lr_scheduler import StepLR
-from torch.utils.data import Subset
 from ray.data.datasource.partitioning import Partitioning
 
 model_names = sorted(name for name in models.__dict__
@@ -239,6 +238,12 @@ def main_worker(gpu, ngpus_per_node, args):
         normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
         
+        def wnid_to_index(row):
+            row["label"] = IMAGENET_WNID_TO_ID[row["category"]]
+            row.pop("category")
+            return row
+
+
         train_partitioning = Partitioning(PartitionStyle.DIRECTORY, field_names=["category"], base_dir=traindir)
         train_dataset = ray.data.read_images(
             traindir, 
@@ -266,17 +271,15 @@ def main_worker(gpu, ngpus_per_node, args):
                 normalize,
             ])
         )
+        
+        train_dataset = train_dataset.map(wnid_to_index)
+        val_dataset = val_dataset.map(wnid_to_index)
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
-        val_sampler = torch.utils.data.distributed.DistributedSampler(val_dataset, shuffle=False, drop_last=True)
     else:
         train_sampler = None
-        val_sampler = None
 
-    if args.evaluate:
-        validate(val_loader, model, criterion, args)
-        return
 
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
@@ -284,28 +287,8 @@ def main_worker(gpu, ngpus_per_node, args):
 
         # train for one epoch
         train(train_dataset, model, criterion, optimizer, epoch, device, args)
-        
-        return
 
-        # evaluate on validation set
-        acc1 = validate(val_dataset, model, criterion, args)
-        
         scheduler.step()
-        
-        # remember best acc@1 and save checkpoint
-        is_best = acc1 > best_acc1
-        best_acc1 = max(acc1, best_acc1)
-
-        if not args.multiprocessing_distributed or (args.multiprocessing_distributed
-                and args.rank % ngpus_per_node == 0):
-            save_checkpoint({
-                'epoch': epoch + 1,
-                'arch': args.arch,
-                'state_dict': model.state_dict(),
-                'best_acc1': best_acc1,
-                'optimizer' : optimizer.state_dict(),
-                'scheduler' : scheduler.state_dict()
-            }, is_best)
 
 
 def train(train_dataset, model, criterion, optimizer, epoch, device, args):
@@ -325,18 +308,16 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
     # switch to train mode
     model.train()
 
+    i = 0
     end = time.time()
     for batch in train_dataset.iter_torch_batches(batch_size=args.batch_size):
         
+        i += 1
         images = batch['image']
-        category = batch['category']
-        
-        # print(category)
-    
-        # images = torch.as_tensor(images)
-        # category = torch.as_tensor(category)
-        print(images, category)
-        return
+        target = batch['label']
+
+        print(images, target)
+
         # measure data loading time
         data_time.update(time.time() - end)
 
@@ -365,74 +346,6 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
 
         if i % args.print_freq == 0:
             progress.display(i + 1)
-
-
-def validate(val_loader, model, criterion, args):
-
-    def run_validate(loader, base_progress=0):
-        with torch.no_grad():
-            end = time.time()
-            for i, (images, target) in enumerate(loader):
-                i = base_progress + i
-                if args.gpu is not None and torch.cuda.is_available():
-                    images = images.cuda(args.gpu, non_blocking=True)
-                if torch.backends.mps.is_available():
-                    images = images.to('mps')
-                    target = target.to('mps')
-                if torch.cuda.is_available():
-                    target = target.cuda(args.gpu, non_blocking=True)
-
-                # compute output
-                output = model(images)
-                loss = criterion(output, target)
-
-                # measure accuracy and record loss
-                acc1, acc5 = accuracy(output, target, topk=(1, 5))
-                losses.update(loss.item(), images.size(0))
-                top1.update(acc1[0], images.size(0))
-                top5.update(acc5[0], images.size(0))
-
-                # measure elapsed time
-                batch_time.update(time.time() - end)
-                end = time.time()
-
-                if i % args.print_freq == 0:
-                    progress.display(i + 1)
-
-    batch_time = AverageMeter('Time', ':6.3f', Summary.NONE)
-    losses = AverageMeter('Loss', ':.4e', Summary.NONE)
-    top1 = AverageMeter('Acc@1', ':6.2f', Summary.AVERAGE)
-    top5 = AverageMeter('Acc@5', ':6.2f', Summary.AVERAGE)
-    progress = ProgressMeter(
-        len(val_loader) + (args.distributed and (len(val_loader.sampler) * args.world_size < len(val_loader.dataset))),
-        [batch_time, losses, top1, top5],
-        prefix='Test: ')
-
-    # switch to evaluate mode
-    model.eval()
-
-    run_validate(val_loader)
-    if args.distributed:
-        top1.all_reduce()
-        top5.all_reduce()
-
-    if args.distributed and (len(val_loader.sampler) * args.world_size < len(val_loader.dataset)):
-        aux_val_dataset = Subset(val_loader.dataset,
-                                 range(len(val_loader.sampler) * args.world_size, len(val_loader.dataset)))
-        aux_val_loader = torch.utils.data.DataLoader(
-            aux_val_dataset, batch_size=args.batch_size, shuffle=False,
-            num_workers=args.workers, pin_memory=True)
-        run_validate(aux_val_loader, len(val_loader))
-
-    progress.display_summary()
-
-    return top1.avg
-
-
-def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
-    torch.save(state, filename)
-    if is_best:
-        shutil.copyfile(filename, 'model_best.pth.tar')
 
 class Summary(Enum):
     NONE = 0
