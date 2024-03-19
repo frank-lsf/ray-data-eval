@@ -22,6 +22,7 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 from torch.optim.lr_scheduler import StepLR
 from ray.data.datasource.partitioning import Partitioning
+import numpy as np
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -242,38 +243,50 @@ def main_worker(gpu, ngpus_per_node, args):
             row["label"] = IMAGENET_WNID_TO_ID[row["category"]]
             row.pop("category")
             return row
+                
+        def train_transform(row):
+            transform = transforms.Compose([
+                transforms.RandomResizedCrop(224),
+                transforms.RandomHorizontalFlip(),
+                normalize,
+            ])
+            # Make sure to use torch.tensor here to avoid a copy from numpy.
+            row["image"] = transform(
+                torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
+            )
+            return row
 
+        def val_transform(row):
+            # Used to generate the validation set. The main difference between
+            # `crop_and_flip_image` and this method is that the validation set
+            # should avoid random cropping from the full image, but instead
+            # should resize and take the center crop to generate more consistent outputs.
+            transform = transforms.Compose([
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
+                normalize,
+            ])
+            # Make sure to use torch.tensor here to avoid a copy from numpy.
+            row["image"] = transform(
+                torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
+            )
+            return row
 
         train_partitioning = Partitioning(PartitionStyle.DIRECTORY, field_names=["category"], base_dir=traindir)
         train_dataset = ray.data.read_images(
             traindir, 
             partitioning=train_partitioning,
             mode="RGB",
-            # This requires Frank's fork.
-            transform = transforms.Compose([
-                transforms.RandomResizedCrop(224),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                normalize,
-            ])
         )
-        print(train_dataset)
 
         val_partitioning = Partitioning(PartitionStyle.DIRECTORY, field_names=["category"], base_dir=valdir)
         val_dataset = ray.data.read_images(
             valdir,
             partitioning=val_partitioning,
             mode="RGB",
-            transform = transforms.Compose([
-                transforms.Resize(256),
-                transforms.CenterCrop(224),
-                transforms.ToTensor(),
-                normalize,
-            ])
         )
-        
-        train_dataset = train_dataset.map(wnid_to_index)
-        val_dataset = val_dataset.map(wnid_to_index)
+        train_dataset = train_dataset.map(wnid_to_index).map(train_transform)
+        val_dataset = val_dataset.map(wnid_to_index).map(val_transform)
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -315,8 +328,6 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
         i += 1
         images = batch['image']
         target = batch['label']
-
-        print(images, target)
 
         # measure data loading time
         data_time.update(time.time() - end)

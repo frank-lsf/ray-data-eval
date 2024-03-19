@@ -42,3 +42,6 @@ python pytorch_e2e_training.py -a resnet50 -b 512 ~/ILSVRC/Data/CLS-LOC > traini
 
 # Worker num_workers * num_gpus.
 python pytorch_e2e_training.py -a resnet50 -b 512 --workers 16 --dist-backend 'nccl' --dist-url 'tcp://127.0.0.1:8080' --multiprocessing-distributed --world-size 1 --rank 0 ~/ILSVRC/Data/CLS-LOC > training_v100_4.out 2>&1 &
+
+# Ray Data
+python ray_data_e2e_training.py -a resnet50 -b 128 ~/ILSVRC/Data/CLS-LOC > ray_data_training_v100_1.out 2>&1 &
