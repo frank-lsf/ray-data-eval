@@ -278,6 +278,7 @@ def main_worker(gpu, ngpus_per_node, args):
             partitioning=train_partitioning,
             mode="RGB",
         )
+        print(train_dataset, flush=True)
 
         val_partitioning = Partitioning(PartitionStyle.DIRECTORY, field_names=["category"], base_dir=valdir)
         val_dataset = ray.data.read_images(
@@ -312,7 +313,8 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
     top5 = AverageMeter('Acc@5', ':6.2f')
     
     num_batches = train_dataset.count() / args.batch_size
-    print(num_batches)
+    print(num_batches, args.batch_size)
+    
     progress = ProgressMeter(
         int(num_batches),
         [batch_time, data_time, losses, top1, top5],
@@ -425,12 +427,12 @@ class ProgressMeter(object):
     def display(self, batch):
         entries = [self.prefix + self.batch_fmtstr.format(batch)]
         entries += [str(meter) for meter in self.meters]
-        print(time.time(), '\t'.join(entries))
+        print(time.time(), '\t'.join(entries), flush=True)
         
     def display_summary(self):
         entries = [" *"]
         entries += [meter.summary() for meter in self.meters]
-        print(time.time(), ' '.join(entries))
+        print(time.time(), ' '.join(entries), flush=True)
 
     def _get_batch_fmtstr(self, num_batches):
         num_digits = len(str(num_batches // 1))
