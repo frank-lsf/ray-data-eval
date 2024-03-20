@@ -313,7 +313,7 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
     top5 = AverageMeter('Acc@5', ':6.2f')
     
     num_batches = train_dataset.count() / args.batch_size
-    print(num_batches, args.batch_size)
+    print(f'Number of batches: {int(num_batches)}. Batch_size: {args.batch_size}')
     
     progress = ProgressMeter(
         int(num_batches),
