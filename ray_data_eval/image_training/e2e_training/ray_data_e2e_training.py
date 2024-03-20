@@ -1,12 +1,13 @@
 import argparse
 import os
 import random
-import shutil
 import time
 import warnings
 from enum import Enum
-import ray
+from ray.data.datasource.partitioning import PartitionStyle
+from util import IMAGENET_WNID_TO_ID
 
+import ray
 import torch
 import torch.backends.cudnn as cudnn
 import torch.distributed as dist
@@ -20,7 +21,8 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 import torchvision.transforms as transforms
 from torch.optim.lr_scheduler import StepLR
-from torch.utils.data import Subset
+from ray.data.datasource.partitioning import Partitioning
+import numpy as np
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -201,45 +203,97 @@ def main_worker(gpu, ngpus_per_node, args):
     
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
     scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
-
-    traindir = os.path.join(args.data, 'train')
-    valdir = os.path.join(args.data, 'val')
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                    std=[0.229, 0.224, 0.225])
-
-    # Need to use Frank's fork of Ray.
-    train_dataset = ray.data.read_images(
-        traindir, mode="RGB", include_paths=True)
     
-    print(train_dataset.schema())
-    return
-    
-    val_dataset = ray.data.read_images(
-        valdir, mode="RGB", transform=transforms.Compose([
-            transforms.Resize(256),
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-            normalize]), include_paths=True)#.map(extract_label)
-        # valdir).map(_transform_val)
+    # optionally resume from a checkpoint
+    if args.resume:
+        if os.path.isfile(args.resume):
+            print("=> loading checkpoint '{}'".format(args.resume))
+            if args.gpu is None:
+                checkpoint = torch.load(args.resume)
+            elif torch.cuda.is_available():
+                # Map model to be loaded to specified single gpu.
+                loc = 'cuda:{}'.format(args.gpu)
+                checkpoint = torch.load(args.resume, map_location=loc)
+            args.start_epoch = checkpoint['epoch']
+            best_acc1 = checkpoint['best_acc1']
+            if args.gpu is not None:
+                # best_acc1 may be from a checkpoint from a different GPU
+                best_acc1 = best_acc1.to(args.gpu)
+            model.load_state_dict(checkpoint['state_dict'])
+            optimizer.load_state_dict(checkpoint['optimizer'])
+            scheduler.load_state_dict(checkpoint['scheduler'])
+            print("=> loaded checkpoint '{}' (epoch {})"
+                  .format(args.resume, checkpoint['epoch']))
+        else:
+            print("=> no checkpoint found at '{}'".format(args.resume))
 
-    # if args.distributed:
-    #     train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
-    #     val_sampler = torch.utils.data.distributed.DistributedSampler(val_dataset, shuffle=False, drop_last=True)
-    # else:
-    #     train_sampler = None
-    #     val_sampler = None
 
-    # train_loader = torch.utils.data.DataLoader(
-    #     train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
-    #     num_workers=args.workers, pin_memory=True, sampler=train_sampler)
+    # Data loading code
+    if args.dummy:
+        print("=> Dummy data is used!")
+        train_dataset = datasets.FakeData(1281167, (3, 224, 224), 1000, transforms.ToTensor())
+        val_dataset = datasets.FakeData(50000, (3, 224, 224), 1000, transforms.ToTensor())
+    else:
+        traindir = os.path.join(args.data, 'train')
+        valdir = os.path.join(args.data, 'val')
+        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
+        
+        def wnid_to_index(row):
+            row["label"] = IMAGENET_WNID_TO_ID[row["category"]]
+            row.pop("category")
+            return row
+                
+        def train_transform(row):
+            transform = transforms.Compose([
+                transforms.RandomResizedCrop(224),
+                transforms.RandomHorizontalFlip(),
+                normalize,
+            ])
+            # Make sure to use torch.tensor here to avoid a copy from numpy.
+            row["image"] = transform(
+                torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
+            )
+            return row
 
-    # val_loader = torch.utils.data.DataLoader(
-    #     val_dataset, batch_size=args.batch_size, shuffle=False,
-    #     num_workers=args.workers, pin_memory=True, sampler=val_sampler)
+        def val_transform(row):
+            # Used to generate the validation set. The main difference between
+            # `crop_and_flip_image` and this method is that the validation set
+            # should avoid random cropping from the full image, but instead
+            # should resize and take the center crop to generate more consistent outputs.
+            transform = transforms.Compose([
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
+                normalize,
+            ])
+            # Make sure to use torch.tensor here to avoid a copy from numpy.
+            row["image"] = transform(
+                torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
+            )
+            return row
 
-    # if args.evaluate:
-    #     validate(val_loader, model, criterion, args)
-    #     return
+        train_partitioning = Partitioning(PartitionStyle.DIRECTORY, field_names=["category"], base_dir=traindir)
+        train_dataset = ray.data.read_images(
+            traindir, 
+            partitioning=train_partitioning,
+            mode="RGB",
+        )
+        print(train_dataset, flush=True)
+
+        val_partitioning = Partitioning(PartitionStyle.DIRECTORY, field_names=["category"], base_dir=valdir)
+        val_dataset = ray.data.read_images(
+            valdir,
+            partitioning=val_partitioning,
+            mode="RGB",
+        )
+        train_dataset = train_dataset.map(wnid_to_index).map(train_transform)
+        val_dataset = val_dataset.map(wnid_to_index).map(val_transform)
+
+    if args.distributed:
+        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
+    else:
+        train_sampler = None
+
 
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
@@ -248,25 +302,7 @@ def main_worker(gpu, ngpus_per_node, args):
         # train for one epoch
         train(train_dataset, model, criterion, optimizer, epoch, device, args)
 
-        # evaluate on validation set
-        acc1 = validate(val_loader, model, criterion, args)
-        
         scheduler.step()
-        
-        # remember best acc@1 and save checkpoint
-        is_best = acc1 > best_acc1
-        best_acc1 = max(acc1, best_acc1)
-
-        if not args.multiprocessing_distributed or (args.multiprocessing_distributed
-                and args.rank % ngpus_per_node == 0):
-            save_checkpoint({
-                'epoch': epoch + 1,
-                'arch': args.arch,
-                'state_dict': model.state_dict(),
-                'best_acc1': best_acc1,
-                'optimizer' : optimizer.state_dict(),
-                'scheduler' : scheduler.state_dict()
-            }, is_best)
 
 
 def train(train_dataset, model, criterion, optimizer, epoch, device, args):
@@ -276,9 +312,9 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
     top1 = AverageMeter('Acc@1', ':6.2f')
     top5 = AverageMeter('Acc@5', ':6.2f')
     
-    print(train_dataset.schema())
     num_batches = train_dataset.count() / args.batch_size
-    # print(num_batches)
+    print(f'Number of batches: {int(num_batches)}. Batch_size: {args.batch_size}')
+    
     progress = ProgressMeter(
         int(num_batches),
         [batch_time, data_time, losses, top1, top5],
@@ -287,15 +323,14 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
     # switch to train mode
     model.train()
 
+    i = 0
     end = time.time()
     for batch in train_dataset.iter_torch_batches(batch_size=args.batch_size):
-        # print(batch)
-        # images = batch['image']
-        # target= batch["label"]
-        # print(target)
-        print(batch["path"])
-        return
-    # for i, (images, target) in enumerate(train_loader):
+        
+        i += 1
+        images = batch['image']
+        target = batch['label']
+
         # measure data loading time
         data_time.update(time.time() - end)
 
@@ -324,74 +359,6 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
 
         if i % args.print_freq == 0:
             progress.display(i + 1)
-
-
-def validate(val_loader, model, criterion, args):
-
-    def run_validate(loader, base_progress=0):
-        with torch.no_grad():
-            end = time.time()
-            for i, (images, target) in enumerate(loader):
-                i = base_progress + i
-                if args.gpu is not None and torch.cuda.is_available():
-                    images = images.cuda(args.gpu, non_blocking=True)
-                if torch.backends.mps.is_available():
-                    images = images.to('mps')
-                    target = target.to('mps')
-                if torch.cuda.is_available():
-                    target = target.cuda(args.gpu, non_blocking=True)
-
-                # compute output
-                output = model(images)
-                loss = criterion(output, target)
-
-                # measure accuracy and record loss
-                acc1, acc5 = accuracy(output, target, topk=(1, 5))
-                losses.update(loss.item(), images.size(0))
-                top1.update(acc1[0], images.size(0))
-                top5.update(acc5[0], images.size(0))
-
-                # measure elapsed time
-                batch_time.update(time.time() - end)
-                end = time.time()
-
-                if i % args.print_freq == 0:
-                    progress.display(i + 1)
-
-    batch_time = AverageMeter('Time', ':6.3f', Summary.NONE)
-    losses = AverageMeter('Loss', ':.4e', Summary.NONE)
-    top1 = AverageMeter('Acc@1', ':6.2f', Summary.AVERAGE)
-    top5 = AverageMeter('Acc@5', ':6.2f', Summary.AVERAGE)
-    progress = ProgressMeter(
-        len(val_loader) + (args.distributed and (len(val_loader.sampler) * args.world_size < len(val_loader.dataset))),
-        [batch_time, losses, top1, top5],
-        prefix='Test: ')
-
-    # switch to evaluate mode
-    model.eval()
-
-    run_validate(val_loader)
-    if args.distributed:
-        top1.all_reduce()
-        top5.all_reduce()
-
-    if args.distributed and (len(val_loader.sampler) * args.world_size < len(val_loader.dataset)):
-        aux_val_dataset = Subset(val_loader.dataset,
-                                 range(len(val_loader.sampler) * args.world_size, len(val_loader.dataset)))
-        aux_val_loader = torch.utils.data.DataLoader(
-            aux_val_dataset, batch_size=args.batch_size, shuffle=False,
-            num_workers=args.workers, pin_memory=True)
-        run_validate(aux_val_loader, len(val_loader))
-
-    progress.display_summary()
-
-    return top1.avg
-
-
-def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
-    torch.save(state, filename)
-    if is_best:
-        shutil.copyfile(filename, 'model_best.pth.tar')
 
 class Summary(Enum):
     NONE = 0
@@ -460,12 +427,12 @@ class ProgressMeter(object):
     def display(self, batch):
         entries = [self.prefix + self.batch_fmtstr.format(batch)]
         entries += [str(meter) for meter in self.meters]
-        print(time.time(), '\t'.join(entries))
+        print(time.time(), '\t'.join(entries), flush=True)
         
     def display_summary(self):
         entries = [" *"]
         entries += [meter.summary() for meter in self.meters]
-        print(time.time(), ' '.join(entries))
+        print(time.time(), ' '.join(entries), flush=True)
 
     def _get_batch_fmtstr(self, num_batches):
         num_digits = len(str(num_batches // 1))
