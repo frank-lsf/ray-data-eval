@@ -8,10 +8,10 @@ from torchvision import transforms
 from torchvision import models
 from typing import Any, Dict
 
-s3_uri = "s3://anonymous@air-example-data-2/imagenette2/val/"
-local_dir_imagenette = "/home/ubuntu/imagenette2/val/"
-local_dir_imagenet = "/home/ubuntu/image-data/ILSVRC/Data/CLS-LOC/val/"
-OBJECT_STORE_MEMORY = 10e9
+IMAGENETTE_S3_URI = "s3://anonymous@air-example-data-2/imagenette2/val/"
+IMAGENETTE_LOCAL_DIR = "/home/ubuntu/imagenette2/val/"
+IMAGENET_LOCAL_DIR = "/home/ubuntu/image-data-5-percent/ILSVRC/Data/CLS-LOC/train/"
+OBJECT_STORE_MEMORY = 9e9
 BATCH_SIZE = 32
 FULL_DATASET_SIZE = 3925
 NUM_CPUS = 5
@@ -62,13 +62,13 @@ if __name__ == "__main__":
 
     start_time = time.time()
     # load imagenette from s3
-    # ds = ray.data.read_images(s3_uri, mode="RGB")
+    # ds = ray.data.read_images(IMAGENETTE_S3_URI, mode="RGB")
 
     # load imagenette from local
-    ds = ray.data.read_images(local_dir_imagenette, mode="RGB")  # override_num_blocks=
+    # ds = ray.data.read_images(IMAGENETTE_LOCAL_DIR, mode="RGB")  # override_num_blocks=
 
     # load imagenet from local
-    # ds = ray.data.read_images(local_dir_imagenet, mode="RGB")
+    ds = ray.data.read_images(IMAGENET_LOCAL_DIR, mode="RGB")
 
     transformed_ds = ds.map(preprocess_image)
 
