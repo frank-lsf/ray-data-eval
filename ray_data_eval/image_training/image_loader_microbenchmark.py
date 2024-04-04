@@ -61,9 +61,7 @@ def iterate(dataset, label, batch_size, output_file=None):
         f.write(f"{label},{tput}\n")
 
 
-def build_torch_dataset(
-    root_dir, batch_size, shuffle=False, num_workers=None, transform=None
-):
+def build_torch_dataset(root_dir, batch_size, shuffle=False, num_workers=None, transform=None):
     if num_workers is None:
         num_workers = os.cpu_count()
 
@@ -81,9 +79,7 @@ def build_torch_dataset(
 def parse_and_decode_tfrecord(example_serialized):
     feature_map = {
         "image/encoded": tf.io.FixedLenFeature([], dtype=tf.string, default_value=""),
-        "image/class/label": tf.io.FixedLenFeature(
-            [], dtype=tf.int64, default_value=-1
-        ),
+        "image/class/label": tf.io.FixedLenFeature([], dtype=tf.int64, default_value=-1),
     }
 
     features = tf.io.parse_single_example(example_serialized, feature_map)
@@ -161,9 +157,7 @@ def tf_crop_and_flip(image_buffer, num_channels=3):
 
 
 def build_tfrecords_tf_dataset(data_root, batch_size):
-    filenames = [
-        os.path.join(data_root, pathname) for pathname in os.listdir(data_root)
-    ]
+    filenames = [os.path.join(data_root, pathname) for pathname in os.listdir(data_root)]
     ds = tf.data.Dataset.from_tensor_slices(filenames)
     ds = ds.interleave(tf.data.TFRecordDataset).map(
         parse_and_decode_tfrecord, num_parallel_calls=tf.data.experimental.AUTOTUNE
@@ -322,9 +316,7 @@ class S3MosaicDataset(StreamingDataset):
         return self.transforms(image), label
 
 
-def build_mosaic_dataloader(
-    mosaic_data_root, batch_size, num_workers=None, tranform=None
-):
+def build_mosaic_dataloader(mosaic_data_root, batch_size, num_workers=None, tranform=None):
     # MosaicML StreamingDataset.
     use_s3 = mosaic_data_root.startswith("s3://")
 
@@ -358,9 +350,7 @@ def build_mosaic_dataloader(
     return mosaic_dl
 
 
-def build_hf_dataloader(
-    data_root, batch_size, from_images, num_workers=None, transform=None
-):
+def build_hf_dataloader(data_root, batch_size, from_images, num_workers=None, transform=None):
     if num_workers is None:
         num_workers = os.cpu_count()
 
@@ -368,9 +358,7 @@ def build_hf_dataloader(
 
     def transforms(examples):
         if from_images:
-            examples["image"] = [
-                transform(image.convert("RGB")) for image in examples["image"]
-            ]
+            examples["image"] = [transform(image.convert("RGB")) for image in examples["image"]]
         else:
             examples["image"] = [
                 transform(Image.frombytes("RGB", (height, width), image))
@@ -414,9 +402,7 @@ def build_hf_dataloader(
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Run single-node batch iteration benchmarks."
-    )
+    parser = argparse.ArgumentParser(description="Run single-node batch iteration benchmarks.")
 
     parser.add_argument(
         "--data-root",
@@ -441,8 +427,7 @@ if __name__ == "__main__":
         default=None,
         type=str,
         help=(
-            "Directory path with MDS files. Directory structure should be "
-            '"<data_root>/*.mds"'
+            "Directory path with MDS files. Directory structure should be " '"<data_root>/*.mds"'
         ),
     )
     parser.add_argument(
