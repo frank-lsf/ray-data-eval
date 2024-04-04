@@ -1,0 +1,113 @@
+import ray
+import numpy as np
+import datetime
+import time
+import torch
+from torchvision.models import ResNet152_Weights
+from torchvision import transforms
+from torchvision import models
+from typing import Any, Dict
+
+IMAGENETTE_S3_URI = "s3://anonymous@air-example-data-2/imagenette2/val/"
+IMAGENETTE_LOCAL_DIR = "/home/ubuntu/imagenette2/val/"
+IMAGENET_LOCAL_DIR = "/home/ubuntu/image-data-5-percent/ILSVRC/Data/CLS-LOC/train/"
+OBJECT_STORE_MEMORY = 9e9
+BATCH_SIZE = 32
+FULL_DATASET_SIZE = 3925
+NUM_CPUS = 5
+
+imagenet_transforms = ResNet152_Weights.IMAGENET1K_V1.transforms
+transform = transforms.Compose([transforms.ToTensor(), imagenet_transforms()])
+
+
+def save_ray_timeline():
+    timestr = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    filename = f"timeline_logs/resnet/ray-timeline-{timestr}.json"
+    ray.timeline(filename=filename)
+    print(f"Execution trace saved to {filename}")
+
+
+def preprocess_image(row: Dict[str, np.ndarray]):
+    return {
+        "original_image": row["image"],
+        "transformed_image": transform(row["image"]),
+    }
+
+
+class ResnetModel:
+    def __init__(self):
+        self.weights = ResNet152_Weights.IMAGENET1K_V1
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = models.resnet152(weights=self.weights).to(self.device)
+        self.model.eval()
+
+    def __call__(self, batch: Dict[str, np.ndarray]):
+        # Convert the numpy array of images into a PyTorch tensor.
+        # Move the tensor batch to GPU if available.
+        torch_batch = torch.from_numpy(batch["transformed_image"]).to(self.device)
+        with torch.inference_mode():
+            prediction = self.model(torch_batch)
+            predicted_classes = prediction.argmax(dim=1).detach().cpu()
+            predicted_labels = [
+                self.weights.meta["categories"][i] for i in predicted_classes
+            ]
+            return {
+                "predicted_label": predicted_labels,
+                "original_image": batch["original_image"],
+            }
+
+
+if __name__ == "__main__":
+    ray.init(num_cpus=NUM_CPUS, object_store_memory=int(OBJECT_STORE_MEMORY))
+
+    start_time = time.time()
+    # load imagenette from s3
+    # ds = ray.data.read_images(IMAGENETTE_S3_URI, mode="RGB")
+
+    # load imagenette from local
+    # ds = ray.data.read_images(IMAGENETTE_LOCAL_DIR, mode="RGB")  # override_num_blocks=
+
+    # load imagenet from local
+    ds = ray.data.read_images(IMAGENET_LOCAL_DIR, mode="RGB")
+
+    transformed_ds = ds.map(preprocess_image)
+
+    # inference with PyTorch ResNet model
+    predictions = transformed_ds.map_batches(
+        ResnetModel,
+        concurrency=1,  # Use 1 GPU (number of GPUs in your cluster)
+        num_gpus=1,  # number of GPUs needed for each ImageClassifier instance
+        batch_size=BATCH_SIZE,  # Use the largest batch size that can fit on our GPUs
+    )
+
+    num_images = 0
+    inf_start_time = time.time()
+
+    for batch in predictions.iter_batches(batch_size=BATCH_SIZE):
+        batch = batch["original_image"]
+        num_images += batch.shape[0]
+
+    end_time = time.time()
+    inf_total_time = end_time - inf_start_time
+    total_time = end_time - start_time
+    tput = num_images / inf_total_time
+    print("Inference time: ", inf_total_time)
+    print("Total images processed: ", num_images)
+    print("Inference tput: ", tput)
+
+    print("Total time: ", total_time)
+
+    print(predictions.stats())
+    print(
+        ray._private.internal_api.memory_summary(stats_only=True)
+    )  # check whether spilled
+
+    save_ray_timeline()
+
+    output_file = "output.csv"
+    with open(output_file, "a+") as f:
+        f.write(
+            f"Batch size: {BATCH_SIZE}, tput: {tput}, inference time {inf_total_time}\n"
+        )
+
+    ray.shutdown()
