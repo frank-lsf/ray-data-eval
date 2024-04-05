@@ -1,13 +1,11 @@
 import functools
 import io
-import json
 import os
 import time
 
 import humanize
 import numpy as np
 import torch
-import transformers
 from transformers import (
     VideoMAEImageProcessor,
     VideoMAEForVideoClassification,
@@ -59,11 +57,10 @@ class Classifier:
         model_output = self.model(pixel_values=model_input)
         logits = model_output.logits
         preds = logits.argmax(-1)
-        for pred in preds:
-            print("Predicted class:", self.model.config.id2label[pred.item()])
+        return [self.model.config.id2label[pred.item()] for pred in preds]
 
 
-def read_and_decode_video(file_path: str) -> np.ndarray:
+def read_and_decode_video(file_path: str) -> list[np.ndarray]:
     from decord import VideoReader
 
     vr = VideoReader(file_path, num_threads=1, width=IMAGE_SIZE, height=IMAGE_SIZE)
@@ -81,11 +78,10 @@ class SimpleIterator:
     def __iter__(self):
         return self
 
-    def _preprocess(self, video: np.ndarray) -> ModelInputType:
+    def _preprocess(self, video: list[np.ndarray]) -> ModelInputType:
         ret = self.processor(video, return_tensors="pt")
         return ret.data["pixel_values"]
 
-    @timeit
     def __next__(self) -> ModelInputType:
         if self.file_index >= len(self.file_paths):
             raise StopIteration
@@ -119,7 +115,7 @@ class BatchIterator:
 
 def main():
     n_batches = 0
-    batch_size = 4
+    batch_size = 64
     classifier = Classifier()
     iterator = BatchIterator(batch_size=batch_size)
     for batch in iterator:

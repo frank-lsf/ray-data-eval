@@ -1,6 +1,5 @@
 import numpy as np
 
-import transformers
 from transformers import (
     VideoMAEImageProcessor,
     VideoMAEForVideoClassification,
@@ -8,7 +7,7 @@ from transformers import (
 import torch
 
 DEVICE = "cuda"
-MODEL_ID = "MCG-NJU/videomae-base-finetuned-kinetics"
+MODEL_ID = "MCG-NJU/videomae-huge-finetuned-kinetics"
 DATA_DIR = "/mnt/data/ray-data-eval/kinetics"
 video_path = f"{DATA_DIR}/archery.mp4"
 
@@ -16,7 +15,7 @@ print(DEVICE)
 processor = VideoMAEImageProcessor.from_pretrained(MODEL_ID)
 model = VideoMAEForVideoClassification.from_pretrained(MODEL_ID)
 model = model.eval().to(DEVICE)
-print("model ok")
+print(f"Number of parameters: {model.num_parameters()}")
 
 from decord import VideoReader
 
