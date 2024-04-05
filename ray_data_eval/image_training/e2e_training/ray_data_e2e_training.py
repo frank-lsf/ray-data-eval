@@ -22,7 +22,7 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 from torch.optim.lr_scheduler import StepLR
 from ray.data.datasource.partitioning import Partitioning
-import numpy as np
+# import numpy as np
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -253,8 +253,9 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         traindir = os.path.join(args.data, 'train')
         valdir = os.path.join(args.data, 'val')
-        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                     std=[0.229, 0.224, 0.225])
+        # Moved to collate_fn:
+        # normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+        #                              std=[0.229, 0.224, 0.225])
         
         def wnid_to_index(row):
             row["label"] = IMAGENET_WNID_TO_ID[row["category"]]
