@@ -1,4 +1,5 @@
 """Create a subset of the ImageNet dataset by randomly sampling; useful for benchmark tests."""
+
 import os
 import shutil
 import random
@@ -23,11 +24,7 @@ def copy_random_folders(source_dir, target_dir, percentage, copy_dir=True):
         os.makedirs(target_dir)
 
     if copy_dir:
-        subdirs = [
-            d
-            for d in os.listdir(source_dir)
-            if os.path.isdir(os.path.join(source_dir, d))
-        ]
+        subdirs = [d for d in os.listdir(source_dir) if os.path.isdir(os.path.join(source_dir, d))]
     else:
         subdirs = [d for d in os.listdir(source_dir)]
 
@@ -75,11 +72,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     PERCENTAGE = args.percentage
-    USERNAME = 'azureuser'
+    USERNAME = "azureuser"
     SOURCE_DIR = f"/home/{USERNAME}/ILSVRC/Data/CLS-LOC/train/"
-    TARGET_DIR = (
-        f"/home/{USERNAME}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/train/"
-    )
+    TARGET_DIR = f"/home/{USERNAME}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/train/"
 
     if args.overwrite and os.path.exists(TARGET_DIR):
         shutil.rmtree(TARGET_DIR)
