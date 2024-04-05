@@ -91,16 +91,6 @@ def main():
         timeline_filename = f"gpu_profiling_a100_b_{args.batch_size}.json"
     else:
         timeline_filename = f"gpu_profiling_a100_s3_b_{args.batch_size}.json"
-    # local = True if args.data[0] == '/' else False
-    
-    # if local:
-    #     timeline_filename = f"ray_data_training_a100_b_{args.batch_size}.json"
-    # else:
-    #     timeline_filename = f"ray_data_training_a100_s3_b_{args.batch_size}.json"
-    # if local:
-    #     timeline_filename = f"gpu_profiling_a100_b_{args.batch_size}.json"
-    # else:
-    #     timeline_filename = f"gpu_profiling_a100_s3_b_{args.batch_size}.json"
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -253,9 +243,6 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         traindir = os.path.join(args.data, 'train')
         valdir = os.path.join(args.data, 'val')
-        # Moved to collate_fn:
-        # normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-        #                              std=[0.229, 0.224, 0.225])
         
         def wnid_to_index(row):
             row["label"] = IMAGENET_WNID_TO_ID[row["category"]]
@@ -263,15 +250,6 @@ def main_worker(gpu, ngpus_per_node, args):
             return row
                 
         def train_transform(row):
-            # transform = transforms.Compose([
-            #     transforms.RandomResizedCrop(224),
-            #     transforms.RandomHorizontalFlip(),
-            #     normalize,
-            # ])
-            # # Make sure to use torch.tensor here to avoid a copy from numpy.
-            # row["image"] = transform(
-            #     torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
-            # )
             transform = transforms.Compose(
                 [
                     transforms.RandomResizedCrop(224),
@@ -282,19 +260,6 @@ def main_worker(gpu, ngpus_per_node, args):
             return row
 
         def val_transform(row):
-            # Used to generate the validation set. The main difference between
-            # `crop_and_flip_image` and this method is that the validation set
-            # should avoid random cropping from the full image, but instead
-            # should resize and take the center crop to generate more consistent outputs.
-            # transform = transforms.Compose([
-            #     transforms.Resize(256),
-            #     transforms.CenterCrop(224),
-            #     normalize,
-            # ])
-            # # Make sure to use torch.tensor here to avoid a copy from numpy.
-            # row["image"] = transform(
-            #     torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
-            # )
             transform = transforms.Compose(
                 [
                     transforms.Resize(256),
@@ -321,8 +286,6 @@ def main_worker(gpu, ngpus_per_node, args):
             mode="RGB",
             transform=val_transform,
         )
-        # train_dataset = train_dataset.map(wnid_to_index).map(train_transform)
-        # val_dataset = val_dataset.map(wnid_to_index).map(val_transform)
         train_dataset = train_dataset.map(wnid_to_index)
         val_dataset = val_dataset.map(wnid_to_index)
 
@@ -337,7 +300,6 @@ def main_worker(gpu, ngpus_per_node, args):
             train_sampler.set_epoch(epoch)
 
         # train for one epoch
-        # with profiling.profile('Train', extra_data={'task_id': 1, 'job_id': 1, 'attempt_number' : 0, 'func_or_class_name' : 'train', 'actor_id' : 1}):
         train(train_dataset, model, criterion, optimizer, epoch, device, args)
 
         scheduler.step()
@@ -435,8 +397,7 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
             # measure data loading time
             data_time.update(time.time() - end)
 
-        # move data to the same device as model
-        # with profiling.profile('task:to_gpu', extra_data={'task_id': 1, 'job_id': 1, 'attempt_number' : 0, 'func_or_class_name' : 'to_GPU', 'actor_id' : 1, 'cname': 'rail_load'}):
+            # move data to the same device as model
             images = images.to(device, non_blocking=True)
             target = target.to(device, non_blocking=True)
 
