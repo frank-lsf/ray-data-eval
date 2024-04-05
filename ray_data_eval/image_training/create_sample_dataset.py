@@ -32,7 +32,7 @@ def copy_random_folders(source_dir, target_dir, percentage, copy_dir=True):
         subdirs = [d for d in os.listdir(source_dir)]
 
     num_to_copy = int(len(subdirs) * percentage)
-    print("Number of dir: ", num_to_copy)
+    print("Number of dir/files: ", num_to_copy)
 
     # returns num_to_copy *unique* elements, so no repetition
     selected_dirs = random.sample(subdirs, num_to_copy)
@@ -75,9 +75,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     PERCENTAGE = args.percentage
-    SOURCE_DIR = "/home/ubuntu/image-data/ILSVRC/Data/CLS-LOC/train/"
+    SYS = 'azureuser'
+    SOURCE_DIR = f"/home/{SYS}/ILSVRC/Data/CLS-LOC/train/"
     TARGET_DIR = (
-        f"/home/ubuntu/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/train/"
+        f"/home/{SYS}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/train/"
     )
 
     if args.overwrite and os.path.exists(TARGET_DIR):
@@ -86,10 +87,10 @@ if __name__ == "__main__":
 
     copy_random_folders(SOURCE_DIR, TARGET_DIR, percentage=PERCENTAGE / 100)
 
-    # make sure test, val directories contents ePERCENTAGEist so that the benchmark doesn't error, although these will not be used
-    source_test = "/home/ubuntu/image-data/ILSVRC/Data/CLS-LOC/test/"
-    source_val = "/home/ubuntu/image-data/ILSVRC/Data/CLS-LOC/val/"
-    test_dir = f"/home/ubuntu/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/test/"
-    val_dir = f"/home/ubuntu/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/val/"
+    # make sure test, val directories contents exist so that the benchmark doesn't error, although these will not be used
+    source_test = f"/home/{SYS}/ILSVRC/Data/CLS-LOC/test/"
+    source_val = f"/home/{SYS}/ILSVRC/Data/CLS-LOC/val/"
+    test_dir = f"/home/{SYS}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/test/"
+    val_dir = f"/home/{SYS}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/val/"
     copy_random_folders(source_test, test_dir, 0.01, copy_dir=False)
-    copy_random_folders(source_val, val_dir, 0.01, copy_dir=False)
+    copy_random_folders(source_val, val_dir, 0.01, copy_dir=True)
