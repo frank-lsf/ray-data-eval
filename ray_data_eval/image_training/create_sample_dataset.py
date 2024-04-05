@@ -75,10 +75,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     PERCENTAGE = args.percentage
-    SYS = 'azureuser'
-    SOURCE_DIR = f"/home/{SYS}/ILSVRC/Data/CLS-LOC/train/"
+    USERNAME = 'azureuser'
+    SOURCE_DIR = f"/home/{USERNAME}/ILSVRC/Data/CLS-LOC/train/"
     TARGET_DIR = (
-        f"/home/{SYS}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/train/"
+        f"/home/{USERNAME}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/train/"
     )
 
     if args.overwrite and os.path.exists(TARGET_DIR):
@@ -88,9 +88,9 @@ if __name__ == "__main__":
     copy_random_folders(SOURCE_DIR, TARGET_DIR, percentage=PERCENTAGE / 100)
 
     # make sure test, val directories contents exist so that the benchmark doesn't error, although these will not be used
-    source_test = f"/home/{SYS}/ILSVRC/Data/CLS-LOC/test/"
-    source_val = f"/home/{SYS}/ILSVRC/Data/CLS-LOC/val/"
-    test_dir = f"/home/{SYS}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/test/"
-    val_dir = f"/home/{SYS}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/val/"
+    source_test = f"/home/{USERNAME}/ILSVRC/Data/CLS-LOC/test/"
+    source_val = f"/home/{USERNAME}/ILSVRC/Data/CLS-LOC/val/"
+    test_dir = f"/home/{USERNAME}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/test/"
+    val_dir = f"/home/{USERNAME}/image-data-{PERCENTAGE}-percent/ILSVRC/Data/CLS-LOC/val/"
     copy_random_folders(source_test, test_dir, 0.01, copy_dir=False)
     copy_random_folders(source_val, val_dir, 0.01, copy_dir=True)
