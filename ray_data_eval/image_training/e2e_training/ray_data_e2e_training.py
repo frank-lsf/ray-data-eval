@@ -22,7 +22,6 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 from torch.optim.lr_scheduler import StepLR
 from ray.data.datasource.partitioning import Partitioning
-# import numpy as np
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -86,11 +85,15 @@ best_acc1 = 0
 
 def main():
     args = parser.parse_args()
-    local = True if (args.data[0] == '/' or args.data[0] == '~') else False
-    if local:
-        timeline_filename = f"gpu_profiling_a100_b_{args.batch_size}.json"
+    is_s3 = args.data.startswith("s3://")
+    global timeline_filename
+    global gpu_timeline_filename # for flushing the gpu event log
+    if is_s3:
+        timeline_filename = f"ray_data_training_a100_s3_b_{args.batch_size}.json"
+        gpu_timeline_filename = f"ray_data_training_a100_s3_b_{args.batch_size}_gpu.json"
     else:
-        timeline_filename = f"gpu_profiling_a100_s3_b_{args.batch_size}.json"
+        timeline_filename = f"ray_data_training_a100_b_{args.batch_size}.json"
+        gpu_timeline_filename = f"ray_data_training_a100_b_{args.batch_size}_gpu.json"
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -131,6 +134,25 @@ def main():
         main_worker(args.gpu, ngpus_per_node, args)
     
     ray.timeline(timeline_filename)
+    
+    # Append gpu event log to the main log
+    try:
+        import json
+        with open(timeline_filename, 'r') as file:
+            timeline = json.load(file)
+            assert isinstance(timeline, list)
+
+        with open(gpu_timeline_filename, 'r') as gpu_file:
+            gpu_timeline = json.load(gpu_file)
+            assert isinstance(gpu_timeline, list)
+
+        timeline += gpu_timeline
+
+        with open(timeline_filename, 'w') as file:
+            json.dump(timeline, file)
+    except Exception as e:
+        print(f"Error occurred when appending gpu timeline: {e}")
+
 
 
 def main_worker(gpu, ngpus_per_node, args):
@@ -385,9 +407,8 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
             with open(self.log_file, 'w') as f:
                 import json
                 json.dump(self.events, f)
-
-
-    chrome_tracer = ChromeTracer('gpu_profiling_new.json')
+    
+    chrome_tracer = ChromeTracer(gpu_timeline_filename)
     for batch in train_dataset.iter_torch_batches(batch_size=args.batch_size, collate_fn=_collate_fn_arr_pil_images_to_tensor):
         with chrome_tracer.profile('task:gpu_execution'):
             i += 1
