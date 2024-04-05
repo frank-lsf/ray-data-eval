@@ -86,6 +86,21 @@ best_acc1 = 0
 
 def main():
     args = parser.parse_args()
+    local = True if (args.data[0] == '/' or args.data[0] == '~') else False
+    if local:
+        timeline_filename = f"gpu_profiling_a100_b_{args.batch_size}.json"
+    else:
+        timeline_filename = f"gpu_profiling_a100_s3_b_{args.batch_size}.json"
+    # local = True if args.data[0] == '/' else False
+    
+    # if local:
+    #     timeline_filename = f"ray_data_training_a100_b_{args.batch_size}.json"
+    # else:
+    #     timeline_filename = f"ray_data_training_a100_s3_b_{args.batch_size}.json"
+    # if local:
+    #     timeline_filename = f"gpu_profiling_a100_b_{args.batch_size}.json"
+    # else:
+    #     timeline_filename = f"gpu_profiling_a100_s3_b_{args.batch_size}.json"
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -124,6 +139,8 @@ def main():
     else:
         # Simply call main_worker function
         main_worker(args.gpu, ngpus_per_node, args)
+    
+    ray.timeline(timeline_filename)
 
 
 def main_worker(gpu, ngpus_per_node, args):
@@ -245,15 +262,22 @@ def main_worker(gpu, ngpus_per_node, args):
             return row
                 
         def train_transform(row):
-            transform = transforms.Compose([
-                transforms.RandomResizedCrop(224),
-                transforms.RandomHorizontalFlip(),
-                normalize,
-            ])
-            # Make sure to use torch.tensor here to avoid a copy from numpy.
-            row["image"] = transform(
-                torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
+            # transform = transforms.Compose([
+            #     transforms.RandomResizedCrop(224),
+            #     transforms.RandomHorizontalFlip(),
+            #     normalize,
+            # ])
+            # # Make sure to use torch.tensor here to avoid a copy from numpy.
+            # row["image"] = transform(
+            #     torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
+            # )
+            transform = transforms.Compose(
+                [
+                    transforms.RandomResizedCrop(224),
+                    transforms.RandomHorizontalFlip(),
+                ]
             )
+            row = transform(row)
             return row
 
         def val_transform(row):
@@ -261,22 +285,31 @@ def main_worker(gpu, ngpus_per_node, args):
             # `crop_and_flip_image` and this method is that the validation set
             # should avoid random cropping from the full image, but instead
             # should resize and take the center crop to generate more consistent outputs.
-            transform = transforms.Compose([
-                transforms.Resize(256),
-                transforms.CenterCrop(224),
-                normalize,
-            ])
-            # Make sure to use torch.tensor here to avoid a copy from numpy.
-            row["image"] = transform(
-                torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
+            # transform = transforms.Compose([
+            #     transforms.Resize(256),
+            #     transforms.CenterCrop(224),
+            #     normalize,
+            # ])
+            # # Make sure to use torch.tensor here to avoid a copy from numpy.
+            # row["image"] = transform(
+            #     torch.tensor(np.transpose(row["image"], axes=(2, 0, 1))) / 255.0
+            # )
+            transform = transforms.Compose(
+                [
+                    transforms.Resize(256),
+                    transforms.CenterCrop(224),
+                ]
             )
+            row = transform(row)
             return row
+        
 
         train_partitioning = Partitioning(PartitionStyle.DIRECTORY, field_names=["category"], base_dir=traindir)
         train_dataset = ray.data.read_images(
             traindir, 
             partitioning=train_partitioning,
             mode="RGB",
+            transform=train_transform,
         )
         print(train_dataset, flush=True)
 
@@ -285,9 +318,12 @@ def main_worker(gpu, ngpus_per_node, args):
             valdir,
             partitioning=val_partitioning,
             mode="RGB",
+            transform=val_transform,
         )
-        train_dataset = train_dataset.map(wnid_to_index).map(train_transform)
-        val_dataset = val_dataset.map(wnid_to_index).map(val_transform)
+        # train_dataset = train_dataset.map(wnid_to_index).map(train_transform)
+        # val_dataset = val_dataset.map(wnid_to_index).map(val_transform)
+        train_dataset = train_dataset.map(wnid_to_index)
+        val_dataset = val_dataset.map(wnid_to_index)
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -300,9 +336,12 @@ def main_worker(gpu, ngpus_per_node, args):
             train_sampler.set_epoch(epoch)
 
         # train for one epoch
+        # with profiling.profile('Train', extra_data={'task_id': 1, 'job_id': 1, 'attempt_number' : 0, 'func_or_class_name' : 'train', 'actor_id' : 1}):
         train(train_dataset, model, criterion, optimizer, epoch, device, args)
 
         scheduler.step()
+
+    print(train_dataset.stats())
 
 
 def train(train_dataset, model, criterion, optimizer, epoch, device, args):
@@ -325,40 +364,104 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
 
     i = 0
     end = time.time()
-    for batch in train_dataset.iter_torch_batches(batch_size=args.batch_size):
-        
-        i += 1
-        images = batch['image']
-        target = batch['label']
 
-        # measure data loading time
-        data_time.update(time.time() - end)
+    def _collate_fn_arr_pil_images_to_tensor(batch:dict) -> dict:
+        """Each batch is a dict consisting two keys, image and label."""
+        batch_images = batch["image"]
+        normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                    std=[0.229, 0.224, 0.225])
+
+        tensor_batch = torch.from_numpy(batch_images).float() / 255.0
+        tensor_batch = tensor_batch.permute(0, 3, 1, 2)
+        tensor_batch = normalize(tensor_batch)
+
+        labels = torch.tensor(batch["label"], dtype=torch.long)
+        batch["image"] = tensor_batch
+        batch["label"] = labels
+
+        return batch
+
+    class ChromeTracer:
+        """
+        A simple custom profiler that records event start and end time, to replace Ray's profiler due to observed issues with profiling gpu workload.
+        https://github.com/ray-project/ray/blob/master/python/ray/_private/profiling.py#L84
+        
+        """
+
+        def __init__(self, log_file):   
+            self.log_file = log_file
+            self.events = []
+        
+        def _add_event(self, name, phase, timestamp, cname='rail_load', extra_data=None):
+            event = {
+                "name": name,
+                "ph": phase,
+                "ts": timestamp,
+                "pid": ray._private.services.get_node_ip_address(), 
+                "tid": "gpu:" + "NVIDIA_A100_80GB_PCIe",
+                "cname": cname,
+                "args": extra_data or {}
+            }
+            self.events.append(event)
+        
+        def __enter__(self):
+            self.start_time = time.time() * 1000000
+            return self
+        
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            self.end_time = time.time() * 1000000
+            self._add_event(self.name, "B", self.start_time, self.extra_data)
+            self._add_event(self.name, "E", self.end_time)
+        
+        def profile(self, name, extra_data=None):
+            self.name = name
+            self.extra_data = extra_data
+            return self
+        
+        def save(self):
+            with open(self.log_file, 'w') as f:
+                import json
+                json.dump(self.events, f)
+
+
+    chrome_tracer = ChromeTracer('gpu_profiling_new.json')
+    for batch in train_dataset.iter_torch_batches(batch_size=args.batch_size, collate_fn=_collate_fn_arr_pil_images_to_tensor):
+        with chrome_tracer.profile('task:gpu_execution'):
+            i += 1
+            images = batch['image']
+            target = batch['label']
+
+            # measure data loading time
+            data_time.update(time.time() - end)
 
         # move data to the same device as model
-        images = images.to(device, non_blocking=True)
-        target = target.to(device, non_blocking=True)
+        # with profiling.profile('task:to_gpu', extra_data={'task_id': 1, 'job_id': 1, 'attempt_number' : 0, 'func_or_class_name' : 'to_GPU', 'actor_id' : 1, 'cname': 'rail_load'}):
+            images = images.to(device, non_blocking=True)
+            target = target.to(device, non_blocking=True)
 
-        # compute output
-        output = model(images)
-        loss = criterion(output, target)
+            # compute output
+            output = model(images)
+            loss = criterion(output, target)
 
-        # measure accuracy and record loss
-        acc1, acc5 = accuracy(output, target, topk=(1, 5))
-        losses.update(loss.item(), images.size(0))
-        top1.update(acc1[0], images.size(0))
-        top5.update(acc5[0], images.size(0))
+            # measure accuracy and record loss
+            acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            losses.update(loss.item(), images.size(0))
+            top1.update(acc1[0], images.size(0))
+            top5.update(acc5[0], images.size(0))
 
-        # compute gradient and do SGD step
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+            # compute gradient and do SGD step
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-        # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
+            # measure elapsed time
+            batch_time.update(time.time() - end)
+            end = time.time()
 
-        if i % args.print_freq == 0:
-            progress.display(i + 1)
+            if i % args.print_freq == 0:
+                progress.display(i + 1)
+
+    chrome_tracer.save()
 
 class Summary(Enum):
     NONE = 0
