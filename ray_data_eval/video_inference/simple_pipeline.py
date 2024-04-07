@@ -12,7 +12,7 @@ from transformers import (
 )
 
 DEVICE = "cuda"
-MODEL_ID = "MCG-NJU/videomae-base-finetuned-kinetics"
+MODEL_ID = "MCG-NJU/videomae-huge-finetuned-kinetics"
 IMAGE_SIZE = 224
 NUM_FRAMES = 16
 
@@ -20,6 +20,11 @@ DATA_PATH = "/mnt/data/ray-data-eval/kinetics"
 INPUT_PATH = "/mnt/data/ray-data-eval/kinetics/Kinetics700-2020-test"
 
 ModelInputType = torch.Tensor
+
+def print_gpu_memory_usage():
+    print(f"Total GPU memory: {humanize.naturalsize(torch.cuda.get_device_properties(0).total_memory)}")
+    print(f"Allocated GPU memory: {humanize.naturalsize(torch.cuda.memory_allocated(0))}")
+    print(f"Reserved GPU memory: {humanize.naturalsize(torch.cuda.memory_reserved(0))}")
 
 
 def tensor_size(t: torch.Tensor) -> str:
@@ -57,6 +62,7 @@ class Classifier:
         model_output = self.model(pixel_values=model_input)
         logits = model_output.logits
         preds = logits.argmax(-1)
+        print_gpu_memory_usage()
         return [self.model.config.id2label[pred.item()] for pred in preds]
 
 
