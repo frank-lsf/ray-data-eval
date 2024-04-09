@@ -2,6 +2,7 @@ import argparse
 import os
 import random
 import time
+import json
 import warnings
 from enum import Enum
 from ray.data.datasource.partitioning import PartitionStyle
@@ -134,14 +135,79 @@ parser.add_argument("--dummy", action="store_true", help="use fake data to bench
 best_acc1 = 0
 
 
+# Helpers
+def append_gpu_timeline(timeline_filename, gpu_timeline_filename):
+    # Append gpu event log to the main log
+    try:
+        with open(timeline_filename, "r") as file:
+            timeline = json.load(file)
+            assert isinstance(timeline, list)
+
+        with open(gpu_timeline_filename, "r") as gpu_file:
+            gpu_timeline = json.load(gpu_file)
+            assert isinstance(gpu_timeline, list)
+
+        timeline += gpu_timeline
+
+        with open(timeline_filename, "w") as file:
+            json.dump(timeline, file)
+    except Exception as e:
+        print(f"Error occurred when appending gpu timeline: {e}")
+
+
+class ChromeTracer:
+    """
+    A simple custom profiler that records event start and end time, to replace Ray's profiler due to observed issues with profiling gpu workload.
+    https://github.com/ray-project/ray/blob/master/python/ray/_private/profiling.py#L84
+
+    """
+
+    def __init__(self, log_file):
+        self.log_file = log_file
+        self.events = []
+
+    def _add_event(self, name, phase, timestamp, cname="rail_load", extra_data=None):
+        event = {
+            "name": name,
+            "ph": phase,
+            "ts": timestamp,
+            "pid": ray._private.services.get_node_ip_address(),
+            "tid": "gpu:" + "NVIDIA_A100_80GB_PCIe",
+            "cname": cname,
+            "args": extra_data or {},
+        }
+        self.events.append(event)
+
+    def __enter__(self):
+        self.start_time = time.time() * 1000000
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.end_time = time.time() * 1000000
+        self._add_event(self.name, "B", self.start_time, self.extra_data)
+        self._add_event(self.name, "E", self.end_time)
+
+    def profile(self, name, extra_data=None):
+        self.name = name
+        self.extra_data = extra_data
+        return self
+
+    def save(self):
+        with open(self.log_file, "w") as f:
+            json.dump(self.events, f)
+
+
+# Training
 def main():
     args = parser.parse_args()
     is_s3 = args.data.startswith("s3://")
     global timeline_filename
     global gpu_timeline_filename  # for flushing the gpu event log
     if is_s3:
-        timeline_filename = f"ray_data_training_a100_s3_b_{args.batch_size}.json"
-        gpu_timeline_filename = f"ray_data_training_a100_s3_b_{args.batch_size}_gpu.json"
+        # timeline_filename = f"ray_data_training_a100_s3_b_{args.batch_size}.json"
+        # gpu_timeline_filename = f"ray_data_training_a100_s3_b_{args.batch_size}_gpu.json"
+        timeline_filename = f"ray_data_training_cluster_26_a100_s3_b_{args.batch_size}.json"
+        gpu_timeline_filename = f"ray_data_training_cluster_26_a100_s3_b_{args.batch_size}_gpu.json"
     else:
         timeline_filename = f"ray_data_training_a100_b_{args.batch_size}.json"
         gpu_timeline_filename = f"ray_data_training_a100_b_{args.batch_size}_gpu.json"
@@ -191,24 +257,7 @@ def main():
 
     ray.timeline(timeline_filename)
 
-    # Append gpu event log to the main log
-    try:
-        import json
-
-        with open(timeline_filename, "r") as file:
-            timeline = json.load(file)
-            assert isinstance(timeline, list)
-
-        with open(gpu_timeline_filename, "r") as gpu_file:
-            gpu_timeline = json.load(gpu_file)
-            assert isinstance(gpu_timeline, list)
-
-        timeline += gpu_timeline
-
-        with open(timeline_filename, "w") as file:
-            json.dump(timeline, file)
-    except Exception as e:
-        print(f"Error occurred when appending gpu timeline: {e}")
+    append_gpu_timeline(timeline_filename, gpu_timeline_filename)
 
 
 def main_worker(gpu, ngpus_per_node, args):
@@ -425,49 +474,6 @@ def train(train_dataset, model, criterion, optimizer, epoch, device, args):
         batch["label"] = labels
 
         return batch
-
-    class ChromeTracer:
-        """
-        A simple custom profiler that records event start and end time, to replace Ray's profiler due to observed issues with profiling gpu workload.
-        https://github.com/ray-project/ray/blob/master/python/ray/_private/profiling.py#L84
-
-        """
-
-        def __init__(self, log_file):
-            self.log_file = log_file
-            self.events = []
-
-        def _add_event(self, name, phase, timestamp, cname="rail_load", extra_data=None):
-            event = {
-                "name": name,
-                "ph": phase,
-                "ts": timestamp,
-                "pid": ray._private.services.get_node_ip_address(),
-                "tid": "gpu:" + "NVIDIA_A100_80GB_PCIe",
-                "cname": cname,
-                "args": extra_data or {},
-            }
-            self.events.append(event)
-
-        def __enter__(self):
-            self.start_time = time.time() * 1000000
-            return self
-
-        def __exit__(self, exc_type, exc_val, exc_tb):
-            self.end_time = time.time() * 1000000
-            self._add_event(self.name, "B", self.start_time, self.extra_data)
-            self._add_event(self.name, "E", self.end_time)
-
-        def profile(self, name, extra_data=None):
-            self.name = name
-            self.extra_data = extra_data
-            return self
-
-        def save(self):
-            with open(self.log_file, "w") as f:
-                import json
-
-                json.dump(self.events, f)
 
     chrome_tracer = ChromeTracer(gpu_timeline_filename)
     for batch in train_dataset.iter_torch_batches(
