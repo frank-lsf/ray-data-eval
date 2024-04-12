@@ -6,6 +6,8 @@ from transformers import (
 )
 import torch
 
+from decord import VideoReader
+
 DEVICE = "cuda"
 MODEL_ID = "MCG-NJU/videomae-huge-finetuned-kinetics"
 DATA_DIR = "/mnt/data/ray-data-eval/kinetics"
@@ -16,8 +18,6 @@ processor = VideoMAEImageProcessor.from_pretrained(MODEL_ID)
 model = VideoMAEForVideoClassification.from_pretrained(MODEL_ID)
 model = model.eval().to(DEVICE)
 print(f"Number of parameters: {model.num_parameters()}")
-
-from decord import VideoReader
 
 # video clip consists of 300 frames (10 seconds at 30 FPS)
 vr = VideoReader(video_path, num_threads=1)

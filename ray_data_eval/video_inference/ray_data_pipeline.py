@@ -18,11 +18,10 @@ MODEL_ID = "MCG-NJU/videomae-huge-finetuned-kinetics"
 IMAGE_SIZE = 224
 NUM_FRAMES = 16
 MODEL_INPUT_SHAPE = (NUM_FRAMES, 3, IMAGE_SIZE, IMAGE_SIZE)
-BATCH_SIZE = 64
+BATCH_SIZE = 32
 
 
-DATA_PATH = "/data/ray-data-eval/kinetics"
-INPUT_PATH = f"{DATA_PATH}/Kinetics700-2020-test"
+INPUT_PATH = "s3://ray-data-eval-us-west-2/kinetics/k700-2020/train/abseiling/"
 
 
 def timeit(name=None):

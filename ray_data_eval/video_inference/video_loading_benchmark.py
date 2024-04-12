@@ -1,10 +1,8 @@
 import io
 import time
 
-import torch
 from transformers import (
     VideoMAEImageProcessor,
-    VideoMAEForVideoClassification,
 )
 import ray
 

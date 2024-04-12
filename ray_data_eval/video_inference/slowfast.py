@@ -13,7 +13,6 @@ from pytorchvideo.transforms import (
     ApplyTransformToKey,
     ShortSideScale,
     UniformTemporalSubsample,
-    UniformCropVideo,
 )
 
 DATA_DIR = "/mnt/data/ray-data-eval/kinetics"
