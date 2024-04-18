@@ -72,27 +72,37 @@ class Classifier:
         return {"result": result}
 
 
-def preprocess_video(row: DataBatch) -> DataBatch:
-    from decord import VideoReader
+last_good_row = None
 
-    video_bytes = row["bytes"]
-    vr = VideoReader(
-        io.BytesIO(video_bytes),
-        num_threads=1,
-        width=IMAGE_SIZE,
-        height=IMAGE_SIZE,
-    )
-    frames = vr.get_batch(range(min(NUM_FRAMES, len(vr)))).asnumpy()
-    if frames.shape[0] < NUM_FRAMES:
-        last_frame = frames[-2:-1]
-        last_frame_repeated = np.repeat(last_frame, NUM_FRAMES - len(frames), axis=0)
-        frames = np.concatenate([frames, last_frame_repeated], axis=0)
+
+def preprocess_video(row: DataBatch) -> DataBatch:
+    from decord import VideoReader, DECORDError
+
+    global last_good_row
+    try:
+        video_bytes = row["bytes"]
+        vr = VideoReader(
+            io.BytesIO(video_bytes),
+            num_threads=1,
+            width=IMAGE_SIZE,
+            height=IMAGE_SIZE,
+        )
+        frames = vr.get_batch(range(min(NUM_FRAMES, len(vr)))).asnumpy()
+        if frames.shape[0] < NUM_FRAMES:
+            last_frame = frames[-2:-1]
+            last_frame_repeated = np.repeat(last_frame, NUM_FRAMES - len(frames), axis=0)
+            frames = np.concatenate([frames, last_frame_repeated], axis=0)
+    except DECORDError as e:
+        print(f"Failed to process video: {e}")
+        return last_good_row
 
     frames = list(frames)
     processor = VideoMAEImageProcessor.from_pretrained(MODEL_ID)
     ret = processor(frames, return_tensors="np")
     arr = ret.data["pixel_values"]
     # time.sleep(1)
+    if last_good_row is None:
+        last_good_row = {"video": arr}
     return {"video": arr}
 
 
