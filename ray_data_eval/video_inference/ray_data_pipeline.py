@@ -4,33 +4,29 @@ import functools
 import io
 import time
 
-# import json
-
 import humanize
 import numpy as np
 import ray
 from ray.data.block import DataBatch
 
-# from ray._private import profiling
 import torch
 from transformers import (
     VideoMAEImageProcessor,
     VideoMAEForVideoClassification,
 )
 
+
 from ray_data_pipeline_helpers import ChromeTracer, append_gpu_timeline, download_train_directories
 
-parser = argparse.ArgumentParser(description="PyTorch ImageNet Training")
+parser = argparse.ArgumentParser()
 parser.add_argument(
     "-s",
     "--source",
-    metavar="SOURCE",
     default="local",
     help="local or S3",
 )
 
 args = parser.parse_args()
-data_source = args.source
 
 DEVICE = "cuda"
 MODEL_ID = "MCG-NJU/videomae-base-finetuned-kinetics"
@@ -39,10 +35,11 @@ NUM_FRAMES = 16
 MODEL_INPUT_SHAPE = (NUM_FRAMES, 3, IMAGE_SIZE, IMAGE_SIZE)
 BATCH_SIZE = 32
 
-if data_source == "local":
+if args.source == "local":
     print("Using local data.")
     INPUT_PATH = "/home/ubuntu/kinetics/kinetics/k700-2020/train"
 else:
+    print("Using S3 data.")
     try:
         with open("kinetics-train-10-percent.txt", "r") as f:
             INPUT_PATH = eval(f.read())
@@ -147,11 +144,11 @@ def main():
     classifier = Classifier()
 
     ACCELERATOR = "NVIDIA_A10G"
-    TIMELINE_FILENAME = f"video_inference_{data_source}_{ACCELERATOR}_batch_{BATCH_SIZE}.json"
+    TIMELINE_FILENAME = f"video_inference_{args.source}_{ACCELERATOR}_batch_{BATCH_SIZE}.json"
     GPU_TIMELINE_FILENAME = (
-        f"video_inference_{data_source}_{ACCELERATOR}_batch_{BATCH_SIZE}_gpu.json"
+        f"video_inference_{args.source}_{ACCELERATOR}_batch_{BATCH_SIZE}_gpu.json"
     )
-    CSV_FILENAME = f"video_inference_{data_source}_{ACCELERATOR}_batch_{BATCH_SIZE}.csv"
+    CSV_FILENAME = f"video_inference_{args.source}_{ACCELERATOR}_batch_{BATCH_SIZE}.csv"
     start_time = time.time()
     rows_read = 0
 
