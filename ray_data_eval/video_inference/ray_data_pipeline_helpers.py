@@ -101,10 +101,11 @@ def download_train_directories(
 
     with open(output_file, "w") as f:
         f.write(repr(directories))
+    print(f"Downloaded {num_samples} directories to {output_file}")
     return directories
 
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
     bucket_name = "ray-data-eval-us-west-2"
     prefix = "kinetics/k700-2020/train/"
     print(download_train_directories(bucket_name, prefix)[0])
