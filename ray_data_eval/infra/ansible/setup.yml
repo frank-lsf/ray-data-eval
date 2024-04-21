@@ -1,0 +1,64 @@
+---
+- name: Setup Environment
+  hosts: all
+  gather_facts: false
+  vars:
+    fstype: xfs
+    mnt_prefix: /mnt/data
+    tmpfs_path: /mnt/tmpfs
+    awsdir: ~/.aws
+    workdir: ~/ray-data-eval
+    pythondir: ~/miniconda3/envs/raydata/bin
+  tasks:
+    - name: Create tmpfs mount point
+      become: true
+      ansible.builtin.file:
+        path: '{{ tmpfs_path }}'
+        state: directory
+        mode: '0777'
+
+    - name: Mount tmpfs
+      become: true
+      ansible.posix.mount:
+        path: '{{ tmpfs_path }}'
+        src: tmpfs
+        fstype: tmpfs
+        state: mounted
+
+    - name: Sync aws directory
+      ansible.posix.synchronize:
+        src: '{{ awsdir }}/'
+        dest: '{{ awsdir }}'
+        delete: true
+
+    - name: Sync workdir
+      ansible.posix.synchronize:
+        src: '{{ workdir }}/'
+        dest: '{{ workdir }}'
+        delete: true
+        rsync_opts:
+          - --exclude=.git
+          - --exclude=data
+          - --exclude=thirdparty
+          - --exclude=wandb
+
+    - name: Install Python dependencies
+      ansible.builtin.shell: |
+        {{ pythondir }}/pip install https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-3.0.0.dev0-cp310-cp310-manylinux2014_x86_64.whl
+      changed_when: true
+
+    - name: Install project packages
+      ansible.builtin.shell: |
+        cd {{ workdir }} && {{ pythondir }}/pip install -e .
+      changed_when: true
+
+    - name: Set soft and hard ulimit
+      become: true
+      community.general.pam_limits:
+        domain: '*'
+        limit_type: '{{ item }}'
+        limit_item: nofile
+        value: 65535
+      loop:
+        - hard
+        - soft

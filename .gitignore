@@ -8,5 +8,10 @@ __pycache__
 *.egg-info
 *.log
 *.lp
-wandb
 *.tar
+wandb
+
+.terraform
+.terraform.*
+terraform.*
+**/_*.yml
