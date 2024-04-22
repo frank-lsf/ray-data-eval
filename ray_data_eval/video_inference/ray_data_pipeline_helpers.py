@@ -2,6 +2,8 @@ import boto3
 import json
 import ray
 import time
+import csv
+import os
 
 
 class ChromeTracer:
@@ -89,11 +91,46 @@ def get_prefixes(bucket_name, prefix):
     return prefixes, len(prefixes)
 
 
+def postprocess(timeline_file, start_time, total_size, batch_size, csv_filename):
+    with open(timeline_file, "r") as f:
+        timeline = json.load(f)
+
+    batch_finish_times = []
+    for idx, event in enumerate(timeline):
+        if event["cat"].startswith("task::Classifier.__call__"):
+            event["cname"] = "rail_load"  # modify color
+            elapsed_time = (event["ts"] + event["dur"]) / 1e6 - start_time
+            batch_finish_times.append(elapsed_time)
+            timeline[idx] = event
+    json.dump(timeline, open(timeline_file, "w"))
+
+    batch_finish_times = sorted(batch_finish_times)
+
+    csv_ref = open(csv_filename, "w")
+    writer = csv.writer(csv_ref)
+    writer.writerow(["time_from_start", "number_of_rows_finished"])
+    writer.writerow([0, 0])
+    for i, finish_time in enumerate(batch_finish_times):
+        num_rows_read = (i + 1) * batch_size
+        if num_rows_read > total_size:
+            num_rows_read = total_size
+        writer.writerow([finish_time, num_rows_read])
+    csv_ref.close()
+    return
+
+
+def get_size(input_path):
+    count = 0
+    for path in input_path:
+        count += len(os.listdir(path))
+    return count
+
+
 def download_train_directories(
     bucket_name,
     prefix,
-    percentage=10,
-    output_file="kinetics-train-10-percent.txt",
+    percentage=1,
+    output_file="kinetics-train-1-percent.txt",
 ):
     directories, count = get_prefixes(bucket_name, prefix)
     num_samples = len(directories) * percentage // 100
@@ -106,6 +143,15 @@ def download_train_directories(
 
 
 if __name__ == "__main__":
-    bucket_name = "ray-data-eval-us-west-2"
-    prefix = "kinetics/k700-2020/train/"
-    print(download_train_directories(bucket_name, prefix)[0])
+    print(None)
+    # bucket_name = "ray-data-eval-us-west-2"
+    # prefix = "kinetics/k700-2020/train/"
+    # print(download_train_directories(bucket_name, prefix)[0])
+    # postprocess(
+    #     "/home/ubuntu/ray-data-eval/ray_data_eval/video_inference/video_inference_local_NVIDIA_A10G_batch_64.json",
+    #     1713767961,
+    #     640,
+    #     64,
+    #     "temp.csv",
+    # )
+    # print(get_size(["/home/ubuntu/kinetics/kinetics/k700-2020/train/abseiling"]))
