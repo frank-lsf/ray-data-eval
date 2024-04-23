@@ -136,27 +136,6 @@ def postprocess(logging_file):
     return
 
 
-def get_num_items(input_path):
-    is_local = not input_path[0].startswith("s3://")
-
-    if is_local:
-        count = 0
-        for path in input_path:
-            count += len(os.listdir(path))
-        return count
-    else:
-        s3 = boto3.client("s3")
-        paginator = s3.get_paginator("list_objects_v2")
-        count = 0
-        for path in input_path:
-            path = path.split("s3://")[1]
-            bucket_name, prefix = path.split("/")[0], "/".join(path.split("/")[1:])
-            page_iterator = paginator.paginate(Bucket=bucket_name, Prefix=prefix)
-            for page in page_iterator:
-                count += len(page["Contents"])
-        return count
-
-
 def download_train_directories(
     bucket_name,
     prefix,
