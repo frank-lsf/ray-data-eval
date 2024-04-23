@@ -168,7 +168,6 @@ def main():
     ds.take_all()
     print(ds.stats())
 
-    time.sleep(1)
     ray.timeline(TIMELINE_FILENAME)
 
     postprocess(OUTPUT_FILENAME)
