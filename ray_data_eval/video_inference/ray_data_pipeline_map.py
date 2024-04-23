@@ -16,7 +16,7 @@ from transformers import (
 )
 
 
-from ray_data_pipeline_helpers import get_size, postprocess, download_train_directories
+from ray_data_pipeline_helpers import postprocess, download_train_directories
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -33,7 +33,7 @@ MODEL_ID = "MCG-NJU/videomae-base-finetuned-kinetics"
 IMAGE_SIZE = 224
 NUM_FRAMES = 16
 MODEL_INPUT_SHAPE = (NUM_FRAMES, 3, IMAGE_SIZE, IMAGE_SIZE)
-BATCH_SIZE = 64
+BATCH_SIZE = 32
 
 if args.source == "local":
     print("Using local data.")
@@ -80,7 +80,6 @@ def print_gpu_memory_usage():
     print(f"Allocated GPU memory: {humanize.naturalsize(torch.cuda.memory_allocated(0))}")
 
 
-@ray.remote(num_gpus=1)
 class Classifier:
     def __init__(self):
         start_time = time.time()
@@ -90,6 +89,7 @@ class Classifier:
     @timeit("Inference")
     @torch.no_grad
     def __call__(self, batch: DataBatch) -> DataBatch:
+        batch = collate_video_frames(batch)
         model_input = torch.from_numpy(batch["video"]).to(DEVICE)
         print(f"Input tensor size: {tensor_size(model_input)}")
         model_output = self.model(model_input)
@@ -97,6 +97,7 @@ class Classifier:
         preds = logits.argmax(-1)
         result = [self.model.config.id2label[pred.item()] for pred in preds]
         print_gpu_memory_usage()
+        print("[Completed Batch]", time.time(), len(batch["video"]))
         return {"result": result}
 
 
@@ -141,44 +142,36 @@ def collate_video_frames(batch: DataBatch) -> DataBatch:
     return {"video": np.concatenate(batch["video"], axis=0)}
 
 
-def process_batch(batch, classifier):
-    batch = collate_video_frames(batch)
-
-    res = classifier.__call__.remote(batch)
-
-    return ray.get(res)
-
-
 @timeit
 def main():
-    ACCELERATOR = "NVIDIA_A10G"
-    TIMELINE_FILENAME = f"video_inference_{args.source}_{ACCELERATOR}_batch_{BATCH_SIZE}.json"
-    CSV_FILENAME = f"video_inference_{args.source}_{ACCELERATOR}_batch_{BATCH_SIZE}.csv"
+    INSTANCE = "g5_xlarge"
+    TIMELINE_FILENAME = f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}.json"
+    OUTPUT_FILENAME = f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}.out"
 
     start_time = time.time()
+    print("[Start Time]", start_time)
 
     ds = ray.data.read_binary_files(
         INPUT_PATH,
-        override_num_blocks=1291,
     )
 
     ds = ds.map(preprocess_video)
-    classifier = Classifier.remote()
 
     ds = ds.map_batches(
-        process_batch,
+        Classifier,
         batch_size=BATCH_SIZE,
-        concurrency=2,
-        fn_kwargs={"classifier": classifier},
+        num_gpus=1,
+        concurrency=1,
         zero_copy_batch=True,
     )
 
-    ds.write_json("/tmp/video_inference_output")
+    ds.take_all()
     print(ds.stats())
 
+    time.sleep(1)
     ray.timeline(TIMELINE_FILENAME)
 
-    postprocess(TIMELINE_FILENAME, start_time, get_size(INPUT_PATH), BATCH_SIZE, CSV_FILENAME)
+    postprocess(OUTPUT_FILENAME)
 
 
 if __name__ == "__main__":

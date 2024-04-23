@@ -1,0 +1,30 @@
+---
+- name: Start Ray workers
+  hosts: all
+  gather_facts: false
+  vars:
+    head_ip: 0.0.0.0
+    mnt_paths:
+      - /mnt/data0
+    tmpfs_path: /mnt/tmpfs
+    workdir: ~/ray-data-eval
+    pythondir: ~/miniconda3/envs/raydata/bin
+    clear_data_dir: false
+    ray_object_manager_port: 8076
+    ray_merics_export_port: 8090
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    S3_BUCKET: "{{ lookup('env', 'S3_BUCKET') }}"
+  tasks:
+    - name: Restart Ray
+      ansible.builtin.shell: >
+        {{ pythondir }}/ray stop -f &&
+        sleep 3 &&
+        nohup
+        {{ pythondir }}/ray start
+        --address={{ head_ip }}:6379
+        --metrics-export-port={{ ray_merics_export_port }}
+        --object-manager-port={{ ray_object_manager_port }}
+        --resources='{"worker":1}'
+      changed_when: true

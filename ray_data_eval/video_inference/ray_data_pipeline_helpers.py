@@ -4,6 +4,7 @@ import ray
 import time
 import csv
 import os
+import re
 
 
 class ChromeTracer:
@@ -91,39 +92,69 @@ def get_prefixes(bucket_name, prefix):
     return prefixes, len(prefixes)
 
 
-def postprocess(timeline_file, start_time, total_size, batch_size, csv_filename):
-    with open(timeline_file, "r") as f:
-        timeline = json.load(f)
+def postprocess(logging_file):
+    start_time_pattern = r"\[Start Time\] (\d+\.\d+)"
+    batch_pattern = r"\[Completed Batch\] (\d+\.\d+) (\d+)"
 
+    start_time = None
     batch_finish_times = []
-    for idx, event in enumerate(timeline):
-        if event["cat"].startswith("task::Classifier.__call__"):
-            event["cname"] = "rail_load"  # modify color
-            elapsed_time = (event["ts"] + event["dur"]) / 1e6 - start_time
-            batch_finish_times.append(elapsed_time)
-            timeline[idx] = event
-    json.dump(timeline, open(timeline_file, "w"))
 
-    batch_finish_times = sorted(batch_finish_times)
+    with open(logging_file, "r") as f:
+        for line in f:
+            if not start_time:
+                match = re.search(start_time_pattern, line)
+                if match:
+                    start_time = float(match.group(1))
+                    print(f"Found start time: {start_time}")
+            else:
+                match = re.search(batch_pattern, line)
+                if match:
+                    timestamp = float(match.group(1))
+                    batch_size = int(match.group(2))
 
+                    elapsed_time = timestamp - start_time
+                    batch_finish_times.append((elapsed_time, batch_size))
+                    print(f"Found batch completion: Completed {batch_size} at {elapsed_time}")
+
+    batch_finish_times = sorted(batch_finish_times, key=lambda x: x[0])
+
+    accumulated_size = 0
+    results = []
+    for elapsed_time, batch_size in batch_finish_times:
+        accumulated_size += batch_size
+        results.append((elapsed_time, accumulated_size))
+
+    csv_filename = logging_file.replace(".out", ".csv")
     csv_ref = open(csv_filename, "w")
+    print(f"Created csv file: {csv_filename}")
     writer = csv.writer(csv_ref)
     writer.writerow(["time_from_start", "number_of_rows_finished"])
     writer.writerow([0, 0])
-    for i, finish_time in enumerate(batch_finish_times):
-        num_rows_read = (i + 1) * batch_size
-        if num_rows_read > total_size:
-            num_rows_read = total_size
-        writer.writerow([finish_time, num_rows_read])
+    for result in results:
+        writer.writerow(result)
     csv_ref.close()
     return
 
 
-def get_size(input_path):
-    count = 0
-    for path in input_path:
-        count += len(os.listdir(path))
-    return count
+def get_num_items(input_path):
+    is_local = not input_path[0].startswith("s3://")
+
+    if is_local:
+        count = 0
+        for path in input_path:
+            count += len(os.listdir(path))
+        return count
+    else:
+        s3 = boto3.client("s3")
+        paginator = s3.get_paginator("list_objects_v2")
+        count = 0
+        for path in input_path:
+            path = path.split("s3://")[1]
+            bucket_name, prefix = path.split("/")[0], "/".join(path.split("/")[1:])
+            page_iterator = paginator.paginate(Bucket=bucket_name, Prefix=prefix)
+            for page in page_iterator:
+                count += len(page["Contents"])
+        return count
 
 
 def download_train_directories(
@@ -143,15 +174,6 @@ def download_train_directories(
 
 
 if __name__ == "__main__":
-    print(None)
-    # bucket_name = "ray-data-eval-us-west-2"
-    # prefix = "kinetics/k700-2020/train/"
-    # print(download_train_directories(bucket_name, prefix)[0])
-    # postprocess(
-    #     "/home/ubuntu/ray-data-eval/ray_data_eval/video_inference/video_inference_local_NVIDIA_A10G_batch_64.json",
-    #     1713767961,
-    #     640,
-    #     64,
-    #     "temp.csv",
-    # )
-    # print(get_size(["/home/ubuntu/kinetics/kinetics/k700-2020/train/abseiling"]))
+    bucket_name = "ray-data-eval-us-west-2"
+    prefix = "kinetics/k700-2020/train/"
+    print(download_train_directories(bucket_name, prefix)[0])
