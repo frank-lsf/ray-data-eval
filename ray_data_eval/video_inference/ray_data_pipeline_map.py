@@ -134,7 +134,6 @@ def preprocess_video(row: DataBatch) -> DataBatch:
     processor = VideoMAEImageProcessor.from_pretrained(MODEL_ID)
     ret = processor(frames, return_tensors="np")
     arr = ret.data["pixel_values"]
-    # time.sleep(1)
 
     return {"video": arr}
 
