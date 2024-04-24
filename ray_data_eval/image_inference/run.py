@@ -138,10 +138,11 @@ def main():
     if args.mode == "map_batches":
         ds = ds.map_batches(
             ResnetModel,
-            concurrency=1,  # Use 1 GPU (number of GPUs in your cluster)
-            num_gpus=1,  # number of GPUs needed for each ImageClassifier instance
-            batch_size=BATCH_SIZE,  # Use the largest batch size that can fit on our GPUs
+            concurrency=1,
+            num_gpus=1,
+            batch_size=BATCH_SIZE,
             zero_copy_batch=True,
+            max_concurrency=2,
         )
     else:  # iter_batches
         model = ResnetModel()
