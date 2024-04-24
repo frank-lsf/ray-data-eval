@@ -89,6 +89,7 @@ class Classifier:
     @timeit("Inference")
     @torch.no_grad
     def __call__(self, batch: DataBatch) -> DataBatch:
+        inference_start_time = time.time()
         batch = collate_video_frames(batch)
         model_input = torch.from_numpy(batch["video"]).to(DEVICE)
         print(f"Input tensor size: {tensor_size(model_input)}")
@@ -97,17 +98,20 @@ class Classifier:
         preds = logits.argmax(-1)
         result = [self.model.config.id2label[pred.item()] for pred in preds]
         print_gpu_memory_usage()
-        print("[Completed Batch]", time.time(), len(batch["video"]))
+
+        inference_end_time = time.time()
+        print(
+            "[Completed Batch]",
+            inference_end_time,
+            len(batch["video"]),
+            "[Inference Tput]",
+            len(batch["video"]) / (inference_end_time - inference_start_time),
+        )
         return {"result": result}
-
-
-last_good_row = None
 
 
 def preprocess_video(row: DataBatch) -> DataBatch:
     from decord import VideoReader, DECORDError
-
-    global last_good_row
 
     video_bytes = row["bytes"]
     try:
@@ -124,16 +128,13 @@ def preprocess_video(row: DataBatch) -> DataBatch:
             frames = np.concatenate([frames, last_frame_repeated], axis=0)
     except DECORDError as e:
         print(f"Failed to process video: {e}")
-        return last_good_row
+        return {"video": np.zeros((1, NUM_FRAMES, 3, IMAGE_SIZE, IMAGE_SIZE), dtype=np.float32)}
 
     frames = list(frames)
     processor = VideoMAEImageProcessor.from_pretrained(MODEL_ID)
     ret = processor(frames, return_tensors="np")
     arr = ret.data["pixel_values"]
     # time.sleep(1)
-
-    if last_good_row is None:
-        last_good_row = {"video": arr}
 
     return {"video": arr}
 
@@ -163,6 +164,7 @@ def main():
         num_gpus=1,
         concurrency=1,
         zero_copy_batch=True,
+        max_concurrency=2,
     )
 
     ds.take_all()
