@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "cluster" {
-  for_each = toset(var.instances)
+  for_each = var.instances
 
   instance_type               = each.value
   ami                         = "ami-079e23e92981f0030"
@@ -17,6 +17,6 @@ resource "aws_instance" "cluster" {
 
   tags = {
     ClusterName = var.cluster_name
-    Name        = "${var.cluster_name}-${each.value}"
+    Name        = "${var.cluster_name}-${each.key}"
   }
 }

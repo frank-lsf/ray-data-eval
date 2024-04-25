@@ -1,6 +1,12 @@
 all:
   hosts:
-    node_10_0_34_67:
-      ansible_host: 10.0.34.67
-    node_10_0_46_189:
-      ansible_host: 10.0.46.189
+    node_10_0_34_253:
+      ansible_host: 10.0.34.253
+    node_10_0_39_220:
+      ansible_host: 10.0.39.220
+    node_10_0_40_97:
+      ansible_host: 10.0.40.97
+    node_10_0_41_132:
+      ansible_host: 10.0.41.132
+    node_10_0_43_232:
+      ansible_host: 10.0.43.232

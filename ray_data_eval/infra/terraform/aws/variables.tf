@@ -1,6 +1,8 @@
 variable "instances" {
-  type    = list(string)
-  default = ["g5.xlarge"]
+  type = map(string)
+  default = {
+    "node_01" = "m7i.xlarge"
+  }
 }
 
 variable "cluster_name" {

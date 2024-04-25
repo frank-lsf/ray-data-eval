@@ -1,5 +1,4 @@
-from enum import Enum
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass
 import os
 
 
@@ -14,8 +13,14 @@ class Cluster:
     instance_types: dict[InstanceType, int]
 
     @property
-    def instances(self) -> list[InstanceType]:
-        return [inst for inst, cnt in self.instance_types.items() for _ in range(cnt)]
+    def terraform_instances_map(self) -> dict[str, str]:
+        i = 1
+        ret = {}
+        for inst, cnt in self.instance_types.items():
+            for _ in range(cnt):
+                ret[f"node_{i:02d}"] = inst
+                i += 1
+        return ret
 
 
 @dataclass
@@ -30,11 +35,21 @@ CONFIGS = [
         cluster=Cluster(
             name="1+1",
             instance_types={
-                "g5.xlarge": 1,
-                "m7i.xlarge": 1,
+                "g5.xlarge": 0,
+                "m7i.2xlarge": 1,
             },
         ),
-    )
+    ),
+    JobConfig(
+        name="2+2",
+        cluster=Cluster(
+            name="1+1",
+            instance_types={
+                "g5.xlarge": 1,
+                "m7i.2xlarge": 2,
+            },
+        ),
+    ),
 ]
 
 

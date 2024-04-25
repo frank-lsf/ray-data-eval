@@ -41,7 +41,7 @@ def terraform_provision(cluster_name: str, cfg: JobConfig) -> None:
     shell_utils.run("terraform init", cwd=tf_dir)
     cmd = "terraform apply -auto-approve" + get_terraform_vars(
         cluster_name=cluster_name,
-        instances=cfg.cluster.instances,
+        instances=cfg.cluster.terraform_instances_map,
     )
     shell_utils.run(cmd, cwd=tf_dir)
 

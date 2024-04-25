@@ -3,7 +3,6 @@
 import json
 import os
 import pathlib
-import yaml
 
 import boto3
 import click
