@@ -102,6 +102,14 @@ class ResnetModel:
         self.model = models.resnet152(weights=self.weights).to(self.device)
         self.model.eval()
 
+        self.start_time = time.time()
+        self.total_rows_read = 0
+
+        with open(CSV_FILENAME, mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["time_from_start", "number_of_rows_finished"])
+            writer.writerow([0, 0])
+
     def __call__(self, batch: Dict[str, np.ndarray]):
         # Convert the numpy array of images into a PyTorch tensor.
         # Move the tensor batch to GPU if available.
@@ -111,6 +119,12 @@ class ResnetModel:
             prediction = self.model(torch_batch)
             predicted_classes = prediction.argmax(dim=1).detach().cpu()
             predicted_labels = [self.weights.meta["categories"][i] for i in predicted_classes]
+
+            # Write time_from_start, number_of_rows_finished to csv file
+            with open(CSV_FILENAME, mode="a") as file:
+                writer = csv.writer(file)
+                writer.writerow([time.time() - self.start_time, self.total_rows_read])
+
             print(f"Inference time: {time.time() - inference_start_time:.4f}")
             return {
                 "predicted_label": predicted_labels,
@@ -121,15 +135,10 @@ def main():
     start_time = time.time()
     rows_read = 0
 
-    # Initialize tput csv file writer
-    csv_file_obj = open(CSV_FILENAME, "w")
-    writer = csv.writer(csv_file_obj)
-    writer.writerow(["time_from_start", "number_of_rows_finished"])
-    writer.writerow([0, 0])
-
     ds = ray.data.read_images(
         INPUT_PATH,
         mode="RGB",
+        #   override_num_blocks=1000 / BATCH_SIZE
     )
 
     ds = ds.map(preprocess_image)
@@ -160,7 +169,6 @@ def main():
 
         # Write time_from_start, number_of_rows_finished to csv file
         rows_read += len(batch)
-        writer.writerow([last_batch_time - start_time, rows_read])
 
     print(ds.stats())
     print("Total images processed: ", rows_read)
