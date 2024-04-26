@@ -120,6 +120,7 @@ class ResnetModel:
             predicted_classes = prediction.argmax(dim=1).detach().cpu()
             predicted_labels = [self.weights.meta["categories"][i] for i in predicted_classes]
 
+            self.total_rows_read += len(predicted_labels)
             # Write time_from_start, number_of_rows_finished to csv file
             with open(CSV_FILENAME, mode="a") as file:
                 writer = csv.writer(file)
