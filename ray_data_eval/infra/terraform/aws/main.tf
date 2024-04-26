@@ -6,7 +6,7 @@ resource "aws_instance" "cluster" {
   for_each = var.instances
 
   instance_type               = each.value
-  ami                         = "ami-079e23e92981f0030"
+  ami                         = "ami-07d7684139c66e3e9"
   key_name                    = "login-us-west-2"
   subnet_id                   = "subnet-033a4bd05bcc8c21e" # exoshuffle-subnet-public3-us-west-2c
   associate_public_ip_address = true

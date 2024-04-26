@@ -11,6 +11,7 @@ from ray_data_eval.infra import ansible_utils
 from ray_data_eval.infra import config
 from ray_data_eval.infra import shell_utils
 from ray_data_eval.infra import terraform_utils
+from ray_data_eval.infra import yarn_utils
 
 cfg = config.get()
 
@@ -80,7 +81,6 @@ def restart_ray(inventory_path: pathlib.Path) -> None:
     ray_cmd, ray_env, _ = get_ray_start_cmd()
     shell_utils.run(ray_cmd, env=dict(os.environ, **ray_env))
     head_ip = get_current_ip()
-    # TODO(@lsf): pass ray_env to ansible
     ev = {
         "head_ip": head_ip,
         "ray_object_manager_port": RAY_OBJECT_MANAGER_PORT,
@@ -94,6 +94,10 @@ def restart_ray(inventory_path: pathlib.Path) -> None:
 def common_setup(cluster_name: str, _cluster_exists: bool) -> pathlib.Path:
     ips = terraform_utils.get_tf_output(cluster_name, "instance_ips")
     inventory_path = ansible_utils.get_or_create_ansible_inventory(cluster_name, ips=ips)
+    if not os.environ.get("HADOOP_HOME"):
+        click.secho("$HADOOP_HOME not set, skipping Hadoop setup", color="yellow")
+    else:
+        yarn_utils.setup_yarn(ips)
     # TODO: use boto3 to wait for describe_instance_status to be "ok" for all
     shell_utils.sleep(60, "worker nodes starting up")
     ansible_utils.run_ansible_playbook(inventory_path, "setup", ev={}, retries=10)
@@ -118,7 +122,7 @@ def cli():
 
 
 @cli.command()
-def up():
+def up(ray: bool = True, yarn: bool = True):
     cluster_name = get_cluster_name()
     cluster_exists = check_cluster_existence(cluster_name)
     config_exists = os.path.exists(terraform_utils.get_tf_dir(cluster_name))
@@ -126,7 +130,10 @@ def up():
         shell_utils.error(f"{cluster_name} exists on the cloud but nothing is found locally")
     terraform_utils.terraform_provision(cluster_name, cfg)
     inventory_path = common_setup(cluster_name, cluster_exists)
-    restart_ray(inventory_path)
+    if ray:
+        restart_ray(inventory_path)
+    if yarn:
+        yarn_utils.restart_yarn(inventory_path)
     print_after_setup(cluster_name)
 
 

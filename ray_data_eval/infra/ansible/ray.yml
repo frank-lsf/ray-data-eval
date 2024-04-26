@@ -17,6 +17,17 @@
     AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
     S3_BUCKET: "{{ lookup('env', 'S3_BUCKET') }}"
   tasks:
+    - name: Set soft and hard ulimit
+      become: true
+      community.general.pam_limits:
+        domain: '*'
+        limit_type: '{{ item }}'
+        limit_item: nofile
+        value: 65535
+      loop:
+        - hard
+        - soft
+
     - name: Restart Ray
       ansible.builtin.shell: >
         {{ pythondir }}/ray stop -f &&

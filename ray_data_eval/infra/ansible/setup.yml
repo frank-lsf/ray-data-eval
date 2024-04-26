@@ -51,14 +51,3 @@
       ansible.builtin.shell: |
         cd {{ workdir }} && {{ pythondir }}/pip install -e .
       changed_when: true
-
-    - name: Set soft and hard ulimit
-      become: true
-      community.general.pam_limits:
-        domain: '*'
-        limit_type: '{{ item }}'
-        limit_item: nofile
-        value: 65535
-      loop:
-        - hard
-        - soft

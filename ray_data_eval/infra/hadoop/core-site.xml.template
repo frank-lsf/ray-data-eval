@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>$DEFAULT_FS</value>
+    </property>
+    <!-- <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/mnt/data0/hadoop</value>
+    </property> -->
+    <!-- <property>
+        <name>io.file.buffer.size</name>
+        <value>$IO_BUFFER_SIZE</value>
+    </property> -->
+</configuration>

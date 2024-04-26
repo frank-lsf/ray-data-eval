@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<configuration>
+    <!-- <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>8</value>
+    </property> -->
+    <!-- <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>56000</value>
+    </property> -->
+    <property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>$HEAD_IP</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+</configuration>

@@ -1,0 +1,32 @@
+---
+- name: Setup Environment
+  hosts: all
+  gather_facts: false
+  vars:
+    hosts_path: /etc/hosts
+    hadoop_config_dir: /opt/hadoop/etc/hadoop
+  tasks:
+    - name: Check Hadoop files exist
+      delegate_to: localhost
+      ansible.builtin.stat:
+        path: '{{ hadoop_config_dir }}'
+      register: hadoop
+
+    - name: Sync hosts file
+      become: true
+      ansible.builtin.copy:
+        src: '{{ hosts_path }}'
+        dest: '{{ hosts_path }}'
+        mode: '0644'
+      when: hadoop.stat.exists
+
+    - name: Sync Hadoop config files
+      ansible.builtin.copy:
+        src: '{{ hadoop_config_dir }}/{{ item }}'
+        dest: '{{ hadoop_config_dir }}/{{ item }}'
+        mode: '0644'
+      loop:
+        - core-site.xml
+        - hdfs-site.xml
+        - yarn-site.xml
+      when: hadoop.stat.exists
