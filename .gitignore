@@ -3,6 +3,7 @@ bin
 data
 logs
 target
+thirdparty
 wandb
 __pycache__
 *.egg-info
