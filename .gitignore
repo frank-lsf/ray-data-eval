@@ -15,4 +15,4 @@ wandb
 .terraform
 .terraform.*
 terraform.*
-**/_*.yml
+_*.yml
