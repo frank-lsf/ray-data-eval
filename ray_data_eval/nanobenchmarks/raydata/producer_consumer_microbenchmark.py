@@ -60,7 +60,6 @@ def bench():
                 "memory_usage_in_bytes": logger_util.get_process_and_children_memory_usage_in_bytes(),
             }
         )
-        pass
     end_time = time.time()
     print(ds.stats())
     print(ray._private.internal_api.memory_summary(stats_only=True))
