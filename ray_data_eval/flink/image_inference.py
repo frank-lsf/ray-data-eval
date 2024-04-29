@@ -35,17 +35,7 @@ def transform_image(image: Image) -> torch.Tensor:
 
 
 class Loader(MapFunction):
-    """
-    Load the image from the path, decode it and return a PyTorch tensor.
-    """
-
-    def __init__(self):
-        with open("files.txt", "w") as fout:
-            pass
-
     def map(self, file_path: str) -> torch.Tensor:
-        with open("files.txt", "a") as fout:
-            fout.write(file_path + "\n")
         with open(file_path, "rb") as f:
             data = f.read()
         image = Image.open(io.BytesIO(data))
