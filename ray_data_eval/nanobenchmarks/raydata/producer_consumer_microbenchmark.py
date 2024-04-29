@@ -4,9 +4,13 @@ import time
 import numpy as np
 
 import ray
+from ray_data_eval.common import logger as logger_util
+
+LOG_ADDR = "logs/microbenchmark_ray_data.jsonl"
+logger = logger_util.Logger(LOG_ADDR)
+
 
 def bench():
-
     os.environ["RAY_DATA_OP_RESERVATION_RATIO"] = "0"
 
     NUM_CPUS = 8
@@ -15,6 +19,8 @@ def bench():
     NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
     BLOCK_SIZE = 10 * 1024 * 1024 * 10
     TIME_UNIT = 0.5
+    logger.record_start()
+
     def produce(batch):
         time.sleep(TIME_UNIT * 10)
         for id in batch["id"]:
@@ -22,9 +28,20 @@ def bench():
                 "id": [id],
                 "image": [np.zeros(BLOCK_SIZE, dtype=np.uint8)],
             }
+        logger.log(
+            {
+                "producer_finished": int(batch["id"][0] / NUM_ROWS_PER_TASK),
+            }
+        )
 
     def consume(batch):
         time.sleep(TIME_UNIT)
+
+        logger.log(
+            {
+                "consumer_finished": int(batch["id"]),
+            }
+        )
         return {"id": batch["id"], "result": [0 for _ in batch["id"]]}
 
     data_context = ray.data.DataContext.get_current()
@@ -37,7 +54,12 @@ def bench():
     ds = ds.map_batches(produce, batch_size=NUM_ROWS_PER_TASK)
     ds = ds.map_batches(consume, batch_size=None, num_cpus=0.99)
     start_time = time.time()
-    for i, _ in enumerate(ds.iter_batches(batch_size=NUM_ROWS_PER_TASK)):
+    for _, _ in enumerate(ds.iter_batches(batch_size=NUM_ROWS_PER_TASK)):
+        logger.log(
+            {
+                "memory_usage_in_bytes": logger_util.get_process_and_children_memory_usage_in_bytes(),
+            }
+        )
         pass
     end_time = time.time()
     print(ds.stats())
@@ -48,3 +70,4 @@ def bench():
 
 if __name__ == "__main__":
     bench()
+    logger_util.plot_from_jsonl(LOG_ADDR, "logs/microbenchmark_ray_data.pdf")
