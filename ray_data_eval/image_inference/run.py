@@ -122,7 +122,6 @@ class CsvLogger:
             )
             writer.writerow([0, 0, 0, 0, 0, 0, 0, 0])
 
-
     def write_csv_row(self, row):
         with open(self.filename, mode="a") as file:
             writer = csv.writer(file)
@@ -141,7 +140,7 @@ class ResnetModel:
         self.last_end_time = self.start_time
         self.total_num_rows = 0
 
-        init_csv_file()
+        self.csv_logger = CsvLogger(CSV_FILENAME)
 
     def __call__(self, batch: dict[str, np.ndarray]):
         # Convert the numpy array of images into a PyTorch tensor.
@@ -156,7 +155,7 @@ class ResnetModel:
         inference_end_time = time.time()
         num_rows = len(batch["image"])
         self.total_num_rows += num_rows
-        write_csv_row(
+        self.csv_logger.write_csv_row(
             [
                 inference_end_time - self.start_time,
                 self.total_num_rows,
