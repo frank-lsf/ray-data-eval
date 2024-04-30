@@ -26,9 +26,9 @@ def bench():
 
     options = tf.data.Options()
     options.autotune.enabled = True
-    options.autotune.cpu_budget = 8
-    options.autotune.autotune_algorithm = tf.data.experimental.AutotuneAlgorithm.GRADIENT_DESCENT
-    options.autotune.ram_budget = 25 * BLOCK_SIZE
+    options.autotune.cpu_budget = 80
+    # options.autotune.autotune_algorithm = tf.data.experimental.AutotuneAlgorithm.GRADIENT_DESCENT
+    options.autotune.ram_budget = 3 * BLOCK_SIZE
     logger.record_start()
 
     def producer_fn(idx):
@@ -39,19 +39,19 @@ def bench():
                 "data": np.full(BLOCK_SIZE, i, dtype=np.uint8),
             }
             yield data
-        logger.log(
-            {
-                "producer_finished": int(idx),
-            }
-        )
+        # logger.log(
+        #     {
+        #         "producer_finished": int(idx),
+        #     }
+        # )
 
     def consumer_fn(idx, data):
         busy_loop_for_seconds(TIME_UNIT)
-        logger.log(
-            {
-                "consumer_finished": int(idx),
-            }
-        )
+        # logger.log(
+        #     {
+        #         "consumer_finished": int(idx),
+        #     }
+        # )
         return len(data)
 
     start = time.perf_counter()
@@ -87,11 +87,11 @@ def bench():
     for row in ds:
         print(time.perf_counter() - start, row)
         ret += row
-        logger.log(
-            {
-                "memory_usage_in_bytes": logger_util.get_process_and_children_memory_usage_in_bytes(),
-            }
-        )
+        # logger.log(
+        #     {
+        #         "memory_usage_in_bytes": logger_util.get_process_and_children_memory_usage_in_bytes(),
+        #     }
+        # )
 
     run_time = time.perf_counter() - start
     print(f"\n{ret:,}")
@@ -107,4 +107,4 @@ if __name__ == "__main__":
 
     print("Check if log directory exists:", os.path.exists(TF_PROFILER_LOGS))
     print("Contents of the log directory:", os.listdir(TF_PROFILER_LOGS))
-    logger_util.plot_from_jsonl(LOG_ADDR, "logs/microbenchmark_tf_data.pdf")
+    # logger_util.plot_from_jsonl(LOG_ADDR, "logs/microbenchmark_tf_data.pdf")
