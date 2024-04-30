@@ -2,12 +2,20 @@ import tensorflow as tf
 import time
 import os
 import numpy as np
-from ray_data_eval.common import logger as logger_util
+# from ray_data_eval.common import logger as logger_util
+
+import resource
+
+# def set_memory_limit(soft_limit, hard_limit):
+#     # Set the memory limit in bytes
+#     resource.setrlimit(resource.RLIMIT_AS, (soft_limit, hard_limit))
+
+# set_memory_limit(1024 * 1024 * 1024, 1024 * 1024 * 1024)  # 1 GB limit
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
-TF_PROFILER_LOGS = "logs/tf"
-LOG_ADDR = "logs/microbenchmark_tf_data.jsonl"
-logger = logger_util.Logger(LOG_ADDR)
+# TF_PROFILER_LOGS = "logs/tf"
+# LOG_ADDR = "logs/microbenchmark_tf_data.jsonl"
+# logger = logger_util.Logger(LOG_ADDR)
 
 
 def busy_loop_for_seconds(time_diff):
@@ -29,7 +37,7 @@ def bench():
     options.autotune.cpu_budget = 80
     # options.autotune.autotune_algorithm = tf.data.experimental.AutotuneAlgorithm.GRADIENT_DESCENT
     options.autotune.ram_budget = 3 * BLOCK_SIZE
-    logger.record_start()
+    # logger.record_start()
 
     def producer_fn(idx):
         busy_loop_for_seconds(10 * TIME_UNIT)
@@ -99,12 +107,12 @@ def bench():
 
 
 if __name__ == "__main__":
-    if not os.path.exists(TF_PROFILER_LOGS):
-        os.makedirs(TF_PROFILER_LOGS)
-    tf.profiler.experimental.start(TF_PROFILER_LOGS)
+    # if not os.path.exists(TF_PROFILER_LOGS):
+        # os.makedirs(TF_PROFILER_LOGS)
+    # tf.profiler.experimental.start(TF_PROFILER_LOGS)
     bench()
-    tf.profiler.experimental.stop()
+    # tf.profiler.experimental.stop()
 
-    print("Check if log directory exists:", os.path.exists(TF_PROFILER_LOGS))
-    print("Contents of the log directory:", os.listdir(TF_PROFILER_LOGS))
+    # print("Check if log directory exists:", os.path.exists(TF_PROFILER_LOGS))
+    # print("Contents of the log directory:", os.listdir(TF_PROFILER_LOGS))
     # logger_util.plot_from_jsonl(LOG_ADDR, "logs/microbenchmark_tf_data.pdf")

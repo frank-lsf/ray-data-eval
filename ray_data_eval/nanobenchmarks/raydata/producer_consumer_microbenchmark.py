@@ -9,6 +9,14 @@ from ray_data_eval.common import logger as logger_util
 LOG_ADDR = "logs/microbenchmark_ray_data.jsonl"
 logger = logger_util.Logger(LOG_ADDR)
 
+import resource
+
+def set_memory_limit(soft_limit, hard_limit):
+    # Set the memory limit in bytes
+    resource.setrlimit(resource.RLIMIT_AS, (soft_limit, hard_limit))
+
+set_memory_limit(1024 * 1024 * 1024, 1024 * 1024 * 1024)  # 1 GB limit
+
 
 def bench():
     os.environ["RAY_DATA_OP_RESERVATION_RATIO"] = "0"
