@@ -6,11 +6,13 @@ import numpy as np
 
 import resource
 
-# def set_memory_limit(soft_limit, hard_limit):
-#     # Set the memory limit in bytes
-#     resource.setrlimit(resource.RLIMIT_AS, (soft_limit, hard_limit))
 
-# set_memory_limit(1024 * 1024 * 1024, 1024 * 1024 * 1024)  # 1 GB limit
+def set_memory_limit(soft_limit, hard_limit):
+    # Set the memory limit in bytes
+    resource.setrlimit(resource.RLIMIT_AS, (soft_limit, hard_limit))
+
+
+set_memory_limit(2000 * 1024 * 1024, 2000 * 1024 * 1024)  # 1 GB limit
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
 # TF_PROFILER_LOGS = "logs/tf"
@@ -34,9 +36,9 @@ def bench():
 
     options = tf.data.Options()
     options.autotune.enabled = True
-    options.autotune.cpu_budget = 80
+    options.autotune.cpu_budget = 8
     # options.autotune.autotune_algorithm = tf.data.experimental.AutotuneAlgorithm.GRADIENT_DESCENT
-    options.autotune.ram_budget = 3 * BLOCK_SIZE
+    options.autotune.ram_budget = 20 * BLOCK_SIZE
     # logger.record_start()
 
     def producer_fn(idx):
@@ -108,7 +110,7 @@ def bench():
 
 if __name__ == "__main__":
     # if not os.path.exists(TF_PROFILER_LOGS):
-        # os.makedirs(TF_PROFILER_LOGS)
+    # os.makedirs(TF_PROFILER_LOGS)
     # tf.profiler.experimental.start(TF_PROFILER_LOGS)
     bench()
     # tf.profiler.experimental.stop()

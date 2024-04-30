@@ -15,7 +15,7 @@ SHELL ["conda", "run", "-n", "hello", "/bin/bash", "-c"]
 RUN echo "Make sure conda is in the path" 
 
 # Make port 80 available to the world outside this container
-EXPOSE 80
+EXPOSE 80   
 
 # Run app.py when the container launches
-CMD ["conda", "run", "-n", "hello", "python", "producer_consumer_microbenchmark.py"]
+# CMD ["conda", "run", "-n", "hello", "python", "producer_consumer_microbenchmark.py"]

@@ -1,8 +1,6 @@
 import os
 import time
-
 import numpy as np
-
 import ray
 
 
@@ -11,9 +9,9 @@ def bench():
 
     NUM_CPUS = 8
     NUM_ROWS_PER_TASK = 10
-    NUM_TASKS = 16 * 5
+    NUM_TASKS = 16
     NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
-    BLOCK_SIZE = 10 * 1024 * 1024 * 10
+    BLOCK_SIZE = 10 * 1024 * 1024
     TIME_UNIT = 0.5
 
     def produce(batch):
@@ -24,9 +22,9 @@ def bench():
                 "image": [np.zeros(BLOCK_SIZE, dtype=np.uint8)],
             }
 
+    @ray.remote(num_gpus=1)
     def consume(batch):
         time.sleep(TIME_UNIT)
-
         return {"id": batch["id"], "result": [0 for _ in batch["id"]]}
 
     data_context = ray.data.DataContext.get_current()
@@ -37,7 +35,7 @@ def bench():
 
     ds = ray.data.range(NUM_ROWS_TOTAL, override_num_blocks=NUM_TASKS)
     ds = ds.map_batches(produce, batch_size=NUM_ROWS_PER_TASK)
-    ds = ds.map_batches(consume, batch_size=None, num_cpus=0.99)
+    ds = ds.map_batches(consume, batch_size=1, num_gpus=1)
     start_time = time.time()
     for _, _ in enumerate(ds.iter_batches(batch_size=NUM_ROWS_PER_TASK)):
         pass
