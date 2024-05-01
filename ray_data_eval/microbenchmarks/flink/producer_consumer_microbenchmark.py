@@ -10,11 +10,12 @@ NUM_CPUS = 8
 PRODUCER_PARALLELISM = 2
 CONSUMER_PARALLELISM = NUM_CPUS - PRODUCER_PARALLELISM
 EXECUTION_MODE = "process"
+MB = 1024 * 1024
 
 NUM_ROWS_PER_TASK = 10
 NUM_TASKS = 16 * 5
 NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
-BLOCK_SIZE = 100 * 1024 * 1024
+BLOCK_SIZE = 100 * MB
 TIME_UNIT = 0.1
 
 
@@ -76,6 +77,8 @@ def run_flink(env):
 def run_experiment():
     config = Configuration()
     config.set_string("python.execution-mode", EXECUTION_MODE)
+    config.set_string("taskmanager.memory.process.size", "2g")
+    config.set_string("jobmanager.memory.process.size", "2g")
     env = StreamExecutionEnvironment.get_execution_environment(config)
     run_flink(env)
 
