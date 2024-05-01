@@ -33,7 +33,8 @@ def bench():
     data_context.execution_options.verbose_progress = True
     data_context.target_max_block_size = BLOCK_SIZE
 
-    ray.init(num_cpus=NUM_CPUS, object_store_memory=20 * BLOCK_SIZE)
+    ray.shutdown()
+    ray.init(num_cpus=NUM_CPUS)
 
     ds = ray.data.range(NUM_ROWS_TOTAL, override_num_blocks=NUM_TASKS)
     ds = ds.map_batches(produce, batch_size=NUM_ROWS_PER_TASK)
