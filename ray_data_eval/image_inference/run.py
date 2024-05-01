@@ -20,7 +20,7 @@ from ray_data_pipeline_helpers import (
 DATA_PERCENTAGE = 1
 BUCKET_NAME = "ray-data-eval-us-west-2"
 PREFIX = "imagenet/ILSVRC/Data/CLS-LOC/train/"
-IMAGENET_LOCAL_DIR = f"/mnt/data/ray-data-eval/ILSVRC/Data/CLS-LOC/10k/"
+IMAGENET_LOCAL_DIR = "/mnt/data/ray-data-eval/ILSVRC/Data/CLS-LOC/10k/"
 IMAGENET_S3_FILELIST = f"imagenet-train-{DATA_PERCENTAGE}-percent.txt"
 DEFAULT_IMAGE_SIZE = 256  # transformed size in ResNet152_Weights.IMAGENET1K_V1.transforms
 BATCH_SIZE = 1024
