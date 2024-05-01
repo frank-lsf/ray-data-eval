@@ -1,5 +1,4 @@
 import time
-import os
 
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, IntegerType, BinaryType
