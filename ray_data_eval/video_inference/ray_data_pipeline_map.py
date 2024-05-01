@@ -16,7 +16,7 @@ from transformers import (
 )
 
 
-from ray_data_pipeline_helpers import postprocess, download_train_directories
+from ray_data_pipeline_helpers import postprocess
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -39,16 +39,10 @@ if args.source == "local":
     print("Using local data.")
     train_data_path = "/home/ubuntu/kinetics/kinetics/k700-2020/train"
     labels = [os.path.join(train_data_path, label) for label in sorted(os.listdir(train_data_path))]
-    INPUT_PATH = labels[:7]
+    INPUT_PATH = labels
 else:
     print("Using S3 data.")
-    try:
-        with open("kinetics-train-1-percent.txt", "r") as f:
-            INPUT_PATH = eval(f.read())
-    except FileNotFoundError:
-        INPUT_PATH = download_train_directories(
-            bucket_name="ray-data-eval-us-west-2", prefix="kinetics/k700-2020/train/", percentage=1
-        )
+    INPUT_PATH = "s3://ray-data-eval-us-west-2/kinetics/k700-2020/"
 
 
 def timeit(name=None):
@@ -123,7 +117,7 @@ def preprocess_video(row: DataBatch) -> DataBatch:
         )
         frames = vr.get_batch(range(min(NUM_FRAMES, len(vr)))).asnumpy()
         if frames.shape[0] < NUM_FRAMES:
-            last_frame = frames[-2:-1]
+            last_frame = frames[-1:]
             last_frame_repeated = np.repeat(last_frame, NUM_FRAMES - len(frames), axis=0)
             frames = np.concatenate([frames, last_frame_repeated], axis=0)
     except DECORDError as e:
@@ -139,17 +133,57 @@ def preprocess_video(row: DataBatch) -> DataBatch:
 
 
 def collate_video_frames(batch: DataBatch) -> DataBatch:
-    return {"video": np.concatenate(batch["video"], axis=0)}
+    try:
+        return {"video": np.concatenate(batch["video"], axis=0)}
+    except ValueError as e:
+        print(f"Failed to collate video frames: {e}", flush=True)
+        for i in range(len(batch["video"])):
+            if batch["video"][i].shape[0] != NUM_FRAMES:
+                last_frame = batch["video"][i][-1:]
+                last_frame_repeated = np.repeat(
+                    last_frame, NUM_FRAMES - batch["video"][i].shape[0], axis=0
+                )
+                batch["video"][i] = np.concatenate([batch["video"][i], last_frame_repeated], axis=0)
+        return {"video": np.concatenate(batch["video"], axis=0)}
 
 
 @timeit
 def main():
+    ray.init("auto")
+
+    print("Starting warmup.", flush=True)
+    NUM_CPUS_IN_CLUSTER = int(ray.available_resources()["CPU"])
+    NUM_GPUS_IN_CLUSTER = int(ray.available_resources()["GPU"])
+
+    ds = (
+        ray.data.read_binary_files(
+            [
+                "s3://ray-data-eval-us-west-2/kinetics/k700-2020/train/abseiling/__NrybzYzUg_000415_000425.mp4"
+            ]
+            * NUM_CPUS_IN_CLUSTER
+            * 2
+        )
+        .map(preprocess_video)
+        .map_batches(
+            Classifier,
+            batch_size=BATCH_SIZE,
+            num_gpus=1,
+            concurrency=NUM_GPUS_IN_CLUSTER,
+            zero_copy_batch=True,
+            max_concurrency=NUM_GPUS_IN_CLUSTER * 2,
+        )
+    )
+    ds.take_all()
+
+    print("Finished warmup. Starting the pipeline.", flush=True)
+    time.sleep(10)
+
     INSTANCE = "g5_xlarge"
     TIMELINE_FILENAME = f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}.json"
     OUTPUT_FILENAME = f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}.out"
 
     start_time = time.time()
-    print("[Start Time]", start_time)
+    print("[Start Time]", start_time, flush=True)
 
     ds = ray.data.read_binary_files(
         INPUT_PATH,
@@ -161,9 +195,9 @@ def main():
         Classifier,
         batch_size=BATCH_SIZE,
         num_gpus=1,
-        concurrency=1,
+        concurrency=NUM_GPUS_IN_CLUSTER,
         zero_copy_batch=True,
-        max_concurrency=2,
+        max_concurrency=NUM_GPUS_IN_CLUSTER * 2,
     )
 
     ds.take_all()

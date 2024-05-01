@@ -112,7 +112,8 @@ def postprocess(logging_file):
                     batch_size = int(match.group(2))
 
                     elapsed_time = timestamp - start_time
-                    batch_finish_times.append((elapsed_time, batch_size))
+                    if elapsed_time > 0:
+                        batch_finish_times.append((elapsed_time, batch_size))
                     print(f"Found batch completion: Completed {batch_size} at {elapsed_time}")
 
     batch_finish_times = sorted(batch_finish_times, key=lambda x: x[0])
