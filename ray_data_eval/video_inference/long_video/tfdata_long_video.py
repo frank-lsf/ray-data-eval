@@ -1,4 +1,3 @@
-import argparse
 import contextlib
 import functools
 import io
@@ -10,6 +9,7 @@ import numpy as np
 import ray
 from ray.data.block import DataBatch
 
+import tensorflow as tf
 import torch
 from transformers import (
     VideoMAEImageProcessor,
@@ -25,6 +25,7 @@ PRODUCER_NUM_FRAMES = MODEL_NUM_FRAMES * 8
 PRODUCER_OUTPUT_SHAPE = (PRODUCER_NUM_FRAMES, IMAGE_SIZE, IMAGE_SIZE, 3)
 BATCH_SIZE = 32
 NUM_INPUT_REPEAT = 1
+TF_PROFILER_LOGS = "logs/tf"
 
 
 def timeit(name=None):
@@ -111,10 +112,9 @@ class Classifier:
         return {"result": result}
 
 
-def produce_video_slices(row: DataBatch):
+def produce_video_slices(path: str):
     from decord import VideoReader, DECORDError
 
-    path = row["item"][0]
     with open(path, "rb") as fin:
         video_bytes = fin.read()
 
@@ -141,14 +141,12 @@ def produce_video_slices(row: DataBatch):
         print(f"Failed to process video: {e}")
 
 
-def preprocess_video(row: DataBatch) -> DataBatch:
-    print("preprocess video")
+def preprocess_video(frames) -> DataBatch:
     busy_loop_for_seconds(0.5)
-    frames = row["frames"]
     processor = VideoMAEImageProcessor.from_pretrained(MODEL_ID)
     ret = processor(list(frames), return_tensors="np")
     arr = ret.data["pixel_values"][0]
-    return {"video": arr}
+    return arr
 
 
 def collate_video_frames(batch: DataBatch) -> DataBatch:
@@ -161,63 +159,68 @@ def get_video_paths(limit: int = 1) -> list[str]:
     return all_files[:limit]
 
 
-@timeit
-def warmup():
-    ds = ray.data.from_items(get_video_paths(limit=4))
-    ds = ds.map_batches(produce_video_slices, batch_size=1)
-    ds = ds.map_batches(
-        preprocess_video,
-        batch_size=MODEL_NUM_FRAMES,
-        num_cpus=0.99,
-    )
-    ds.take_all()
-    time.sleep(1)
+def configure_tf():
+    gpus = tf.config.experimental.list_physical_devices("GPU")
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+        except RuntimeError as e:
+            print(e)
 
 
 @timeit
-def main_job():
-    ds = ray.data.from_items(
-        get_video_paths(
-            limit=20,
-        )
-    )
-    ds = ds.map_batches(
-        produce_video_slices,
-        batch_size=1,
-        concurrency=7,
-    )
-    ds = ds.map_batches(
-        preprocess_video,
-        batch_size=MODEL_NUM_FRAMES,
-        num_cpus=0.99,
-        concurrency=1,
-    )
-    ds = ds.map_batches(
-        Classifier,
-        batch_size=BATCH_SIZE * MODEL_NUM_FRAMES,
-        num_gpus=1,
-        concurrency=1,
-        zero_copy_batch=True,
-        max_concurrency=2,
-    )
-    ds.take_all()
-    print(ds.stats())
-
-
 def main():
-    TIMELINE_FILENAME = "long_video_pipeline.json"
-
     data_context = ray.data.DataContext.get_current()
     data_context.execution_options.verbose_progress = True
     data_context.target_max_block_size = (
         np.prod(MODEL_INPUT_SHAPE) * np.dtype(np.float32).itemsize * 1.001
     )
 
-    warmup()
-    main_job()
+    options = tf.data.Options()
+    options.autotune.enabled = True
+    options.autotune.cpu_budget = 8
 
-    ray.timeline(TIMELINE_FILENAME)
+    configure_tf()
+
+    items = get_video_paths(
+        limit=20,
+    )
+    ds = tf.data.Dataset.from_tensor_slices(items)
+    ds = ds.with_options(options).interleave(
+        lambda item: tf.data.Dataset.from_generator(
+            produce_video_slices,
+            args=(item,),
+            output_signature={
+                "frames": tf.TensorSpec(shape=PRODUCER_OUTPUT_SHAPE, dtype=tf.float32),
+            },
+            name="producer",
+        ),
+        cycle_length=1,
+        num_parallel_calls=tf.data.experimental.AUTOTUNE,
+        name="producer_flat_map",
+    )
+    ds = ds.with_options(options).map(
+        lambda item: tf.numpy_function(
+            preprocess_video,
+            inp=[item["frames"]],
+            Tout=tf.float32,
+            name="consumer",
+        ),
+        num_parallel_calls=tf.data.experimental.AUTOTUNE,
+        name="consumer_map",
+    )
+    start = time.perf_counter()
+    classifier = Classifier()
+    for row in ds:
+        print(time.perf_counter() - start)
+        arr = row.numpy()
+        classifier({"video": arr})
 
 
 if __name__ == "__main__":
+    if not os.path.exists(TF_PROFILER_LOGS):
+        os.makedirs(TF_PROFILER_LOGS)
+    tf.profiler.experimental.start(TF_PROFILER_LOGS)
     main()
+    tf.profiler.experimental.stop()
