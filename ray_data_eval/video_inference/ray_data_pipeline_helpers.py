@@ -1,9 +1,10 @@
 import boto3
-import json
-import ray
-import time
 import csv
+import json
+import os
+import ray
 import re
+import time
 
 
 class ChromeTracer:
@@ -92,6 +93,9 @@ def get_prefixes(bucket_name, prefix):
 
 
 def postprocess(logging_file):
+    if not os.path.exists(logging_file):
+        print(f"File {logging_file} does not exist.")
+        return
     start_time_pattern = r"\[Start Time\] (\d+\.\d+)"
     batch_pattern = r"\[Completed Batch\] (\d+\.\d+) (\d+)"
 

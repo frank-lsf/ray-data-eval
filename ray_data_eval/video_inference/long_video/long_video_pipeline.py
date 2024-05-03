@@ -1,7 +1,7 @@
 import argparse
+import contextlib
 import functools
 import io
-import os
 import time
 
 import humanize
@@ -66,6 +66,16 @@ def timeit(name=None):
         return decorator
 
 
+@contextlib.contextmanager
+def timer(description: str = ""):
+    start = time.time()
+    try:
+        yield
+    finally:
+        end = time.time()
+        print(f"{description} took {end - start:.2f} seconds")
+
+
 def tensor_size(t: torch.Tensor) -> str:
     return humanize.naturalsize(t.element_size() * t.nelement())
 
@@ -89,9 +99,11 @@ class Classifier:
     @torch.no_grad
     def __call__(self, batch: DataBatch) -> DataBatch:
         inference_start_time = time.time()
-        batch = collate_video_frames(batch)
-        model_input = torch.from_numpy(batch["video"]).to(DEVICE)
-        print(f"Input tensor size: {tensor_size(model_input)}")
+        batch = batch["video"]
+        batch = batch[: (batch.shape[0] // 16) * 16]  # align to 16 frames
+        batch = batch.reshape(-1, 16, 3, 224, 224)
+        model_input = torch.from_numpy(batch).to(DEVICE)
+        print(f"Input tensor size: {tensor_size(model_input)}, shape {model_input.shape}")
         model_output = self.model(model_input)
         logits = model_output.logits
         preds = logits.argmax(-1)
@@ -102,21 +114,32 @@ class Classifier:
         print(
             "[Completed Batch]",
             inference_end_time,
-            len(batch["video"]),
+            len(batch),
             "[Batch Tput]",
-            len(batch["video"]) / (inference_end_time - self.last_batch_time),
+            len(batch) / (inference_end_time - self.last_batch_time),
             "[Inference Tput]",
-            len(batch["video"]) / (inference_end_time - inference_start_time),
+            len(batch) / (inference_end_time - inference_start_time),
         )
         self.last_batch_time = inference_end_time
+        print(result)
         return {"result": result}
 
 
-def generate_video_slices(row: DataBatch) -> list[DataBatch]:
+def produce_video_slices(row: DataBatch):
     from decord import VideoReader, DECORDError
 
-    video_bytes = row["bytes"]
-    ret = []
+    path = row["item"][0]
+
+    # start_time = time.time()
+    # s3 = boto3.client("s3")
+    # response = s3.get_object(Bucket="ray-data-eval-us-west-2", Key=path)
+    # video_bytes = response["Body"].read()
+    # print(
+    #     f"Time to download video: {time.time() - start_time:.2f} seconds, size {humanize.naturalsize(len(video_bytes))}"
+    # )
+    with open(path, "rb") as fin:
+        video_bytes = fin.read()
+
     try:
         vr = VideoReader(
             io.BytesIO(video_bytes),
@@ -125,45 +148,28 @@ def generate_video_slices(row: DataBatch) -> list[DataBatch]:
             height=IMAGE_SIZE,
         )
         total_num_frames = len(vr)
-        for start in range(0, total_num_frames, NUM_FRAMES):
-            if start + NUM_FRAMES > total_num_frames:
-                break
-            ret.append(
-                {
-                    "bytes": video_bytes,
-                    "start": start,
-                }
-            )
+        print(f"Total number of frames: {total_num_frames}")
+        for iteration in range(15):
+            for start in range(0, total_num_frames, NUM_FRAMES):
+                if start + NUM_FRAMES > total_num_frames:
+                    break
+                with timer("decode 16 frames"):
+                    frames = vr.get_batch(range(start, start + NUM_FRAMES)).asnumpy()
+                print(
+                    f"[Iteration {iteration}] Yielded frames {start}-{start + NUM_FRAMES} for video, shape {frames.shape}"
+                )
+                yield {"frames": frames}
     except DECORDError as e:
         print(f"Failed to process video: {e}")
-    return ret
 
 
 def preprocess_video(row: DataBatch) -> DataBatch:
-    from decord import VideoReader, DECORDError
-
-    video_bytes = row["bytes"]
-    start = row.get("start", 0)
-    end = start + NUM_FRAMES
-    try:
-        vr = VideoReader(
-            io.BytesIO(video_bytes),
-            num_threads=1,
-            width=IMAGE_SIZE,
-            height=IMAGE_SIZE,
-        )
-        if end > len(vr):
-            raise DECORDError("End frame is greater than total frames")
-        frames = vr.get_batch(range(start, end)).asnumpy()
-    except DECORDError as e:
-        print(f"Failed to process video: {e}")
-        return {"video": np.zeros((1, NUM_FRAMES, 3, IMAGE_SIZE, IMAGE_SIZE), dtype=np.float32)}
-
-    frames = list(frames)
+    print("preprocess video")
+    time.sleep(0.5)
+    frames = row["frames"]
     processor = VideoMAEImageProcessor.from_pretrained(MODEL_ID)
-    ret = processor(frames, return_tensors="np")
-    arr = ret.data["pixel_values"]
-
+    ret = processor(list(frames), return_tensors="np")
+    arr = ret.data["pixel_values"][0]
     return {"video": arr}
 
 
@@ -177,18 +183,24 @@ def main():
     TIMELINE_FILENAME = f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}.json"
     OUTPUT_FILENAME = f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}.out"
 
-    start_time = time.time()
-    print("[Start Time]", start_time)
-
-    ds = ray.data.read_binary_files(
-        INPUT_PATH,
+    data_context = ray.data.DataContext.get_current()
+    data_context.execution_options.verbose_progress = True
+    data_context.target_max_block_size = (
+        np.prod(MODEL_INPUT_SHAPE) * np.dtype(np.float32).itemsize * 1.001
     )
-    ds = ds.flat_map(generate_video_slices)
-    ds = ds.map(preprocess_video, num_cpus=0.99)
 
+    ds = ray.data.from_items(
+        ["/mnt/data/ray-data-eval/kinetics/Kinetics700-2020-test/-LK7TeL2DNg_000027_000037.mp4"]
+    )
+    ds = ds.map_batches(produce_video_slices, batch_size=1)
+    ds = ds.map_batches(
+        preprocess_video,
+        batch_size=NUM_FRAMES,
+        # num_cpus=0.99,
+    )
     ds = ds.map_batches(
         Classifier,
-        batch_size=BATCH_SIZE,
+        batch_size=BATCH_SIZE * NUM_FRAMES,
         num_gpus=1,
         concurrency=1,
         zero_copy_batch=True,
