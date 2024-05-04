@@ -43,10 +43,30 @@ CONFIGS = [
     JobConfig(
         name="2+2",
         cluster=Cluster(
-            name="1+1",
+            name="2+2",
             instance_types={
                 "g5.xlarge": 1,
                 "m7i.2xlarge": 2,
+            },
+        ),
+    ),
+    JobConfig(
+        name="4+4",
+        cluster=Cluster(
+            name="4+4",
+            instance_types={
+                "g5.xlarge": 3,
+                "m7i.2xlarge": 4,
+            },
+        ),
+    ),
+    JobConfig(
+        name="8+8",
+        cluster=Cluster(
+            name="8+8",
+            instance_types={
+                "g5.xlarge": 7,
+                "m7i.2xlarge": 8,
             },
         ),
     ),

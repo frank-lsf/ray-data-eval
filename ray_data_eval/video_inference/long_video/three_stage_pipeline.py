@@ -1,7 +1,6 @@
 import argparse
 import functools
 import io
-import os
 import time
 
 import humanize
@@ -16,7 +15,7 @@ from transformers import (
 )
 
 
-from ray_data_pipeline_helpers import postprocess
+from ray_data_pipeline_helpers import postprocess, download_train_directories
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -37,12 +36,16 @@ BATCH_SIZE = 32
 
 if args.source == "local":
     print("Using local data.")
-    train_data_path = "/home/ubuntu/kinetics/kinetics/k700-2020/train"
-    labels = [os.path.join(train_data_path, label) for label in sorted(os.listdir(train_data_path))]
-    INPUT_PATH = labels
+    INPUT_PATH = "/mnt/data/ray-data-eval/kinetics/Kinetics700-2020-test"
 else:
     print("Using S3 data.")
-    INPUT_PATH = "s3://ray-data-eval-us-west-2/kinetics/k700-2020/"
+    try:
+        with open("kinetics-train-1-percent.txt", "r") as f:
+            INPUT_PATH = eval(f.read())
+    except FileNotFoundError:
+        INPUT_PATH = download_train_directories(
+            bucket_name="ray-data-eval-us-west-2", prefix="kinetics/k700-2020/train/", percentage=1
+        )
 
 
 def timeit(name=None):
@@ -79,6 +82,7 @@ class Classifier:
         start_time = time.time()
         self.model = VideoMAEForVideoClassification.from_pretrained(MODEL_ID).eval().to(DEVICE)
         print(f"Time to initialize model: {time.time() - start_time}")
+        self.last_batch_time = start_time
 
     @timeit("Inference")
     @torch.no_grad
@@ -98,16 +102,20 @@ class Classifier:
             "[Completed Batch]",
             inference_end_time,
             len(batch["video"]),
+            "[Batch Tput]",
+            len(batch["video"]) / (inference_end_time - self.last_batch_time),
             "[Inference Tput]",
             len(batch["video"]) / (inference_end_time - inference_start_time),
         )
+        self.last_batch_time = inference_end_time
         return {"result": result}
 
 
-def preprocess_video(row: DataBatch) -> DataBatch:
+def generate_video_slices(row: DataBatch) -> list[DataBatch]:
     from decord import VideoReader, DECORDError
 
     video_bytes = row["bytes"]
+    ret = []
     try:
         vr = VideoReader(
             io.BytesIO(video_bytes),
@@ -115,11 +123,37 @@ def preprocess_video(row: DataBatch) -> DataBatch:
             width=IMAGE_SIZE,
             height=IMAGE_SIZE,
         )
-        frames = vr.get_batch(range(min(NUM_FRAMES, len(vr)))).asnumpy()
-        if frames.shape[0] < NUM_FRAMES:
-            last_frame = frames[-1:]
-            last_frame_repeated = np.repeat(last_frame, NUM_FRAMES - len(frames), axis=0)
-            frames = np.concatenate([frames, last_frame_repeated], axis=0)
+        total_num_frames = len(vr)
+        for start in range(0, total_num_frames, NUM_FRAMES):
+            if start + NUM_FRAMES > total_num_frames:
+                break
+            ret.append(
+                {
+                    "bytes": video_bytes,
+                    "start": start,
+                }
+            )
+    except DECORDError as e:
+        print(f"Failed to process video: {e}")
+    return ret
+
+
+def preprocess_video(row: DataBatch) -> DataBatch:
+    from decord import VideoReader, DECORDError
+
+    video_bytes = row["bytes"]
+    start = row.get("start", 0)
+    end = start + NUM_FRAMES
+    try:
+        vr = VideoReader(
+            io.BytesIO(video_bytes),
+            num_threads=1,
+            width=IMAGE_SIZE,
+            height=IMAGE_SIZE,
+        )
+        if end > len(vr):
+            raise DECORDError("End frame is greater than total frames")
+        frames = vr.get_batch(range(start, end)).asnumpy()
     except DECORDError as e:
         print(f"Failed to process video: {e}")
         return {"video": np.zeros((1, NUM_FRAMES, 3, IMAGE_SIZE, IMAGE_SIZE), dtype=np.float32)}
@@ -133,71 +167,31 @@ def preprocess_video(row: DataBatch) -> DataBatch:
 
 
 def collate_video_frames(batch: DataBatch) -> DataBatch:
-    try:
-        return {"video": np.concatenate(batch["video"], axis=0)}
-    except ValueError as e:
-        print(f"Failed to collate video frames: {e}", flush=True)
-        for i in range(len(batch["video"])):
-            if batch["video"][i].shape[0] != NUM_FRAMES:
-                last_frame = batch["video"][i][-1:]
-                last_frame_repeated = np.repeat(
-                    last_frame, NUM_FRAMES - batch["video"][i].shape[0], axis=0
-                )
-                batch["video"][i] = np.concatenate([batch["video"][i], last_frame_repeated], axis=0)
-        return {"video": np.concatenate(batch["video"], axis=0)}
+    return {"video": np.concatenate(batch["video"], axis=0)}
 
 
 @timeit
 def main():
-    ray.init("auto")
-
-    print("Starting warmup.", flush=True)
-    NUM_CPUS_IN_CLUSTER = int(ray.available_resources()["CPU"])
-    NUM_GPUS_IN_CLUSTER = int(ray.available_resources()["GPU"])
-
-    ds = (
-        ray.data.read_binary_files(
-            [
-                "s3://ray-data-eval-us-west-2/kinetics/k700-2020/train/abseiling/__NrybzYzUg_000415_000425.mp4"
-            ]
-            * NUM_CPUS_IN_CLUSTER
-            * 2
-        )
-        .map(preprocess_video)
-        .map_batches(
-            Classifier,
-            batch_size=BATCH_SIZE,
-            num_gpus=1,
-            concurrency=NUM_GPUS_IN_CLUSTER,
-            zero_copy_batch=True,
-            max_concurrency=NUM_GPUS_IN_CLUSTER * 2,
-        )
-    )
-    ds.take_all()
-
-    print("Finished warmup. Starting the pipeline.", flush=True)
-    time.sleep(10)
-
     INSTANCE = "g5_xlarge"
     TIMELINE_FILENAME = f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}.json"
     OUTPUT_FILENAME = f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}.out"
 
     start_time = time.time()
-    print("[Start Time]", start_time, flush=True)
+    print("[Start Time]", start_time)
 
     ds = ray.data.read_binary_files(
         INPUT_PATH,
     )
-
-    ds = ds.map(preprocess_video)
+    ds = ds.flat_map(generate_video_slices)
+    ds = ds.map(preprocess_video, num_cpus=0.99)
 
     ds = ds.map_batches(
         Classifier,
         batch_size=BATCH_SIZE,
         num_gpus=1,
-        concurrency=NUM_GPUS_IN_CLUSTER,
+        concurrency=1,
         zero_copy_batch=True,
-        max_concurrency=NUM_GPUS_IN_CLUSTER * 2,
+        max_concurrency=2,
     )
 
     ds.take_all()
