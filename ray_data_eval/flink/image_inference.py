@@ -4,6 +4,7 @@ import io
 import logging
 import time
 
+import boto3
 import numpy as np
 from PIL import Image
 from pyflink.common.typeinfo import Types
@@ -15,11 +16,13 @@ from torchvision.models import ResNet152_Weights
 from torchvision import models
 
 EXECUTION_MODE = "process"
-LOADER_PARALLELISM = 1
+LOADER_PARALLELISM = 12
 MODEL_PARALLELISM = 1
 
+USE_LOCAL = False
+BUCKET = "ray-data-eval-us-west-2"
 IMAGENET_LOCAL_DIR = "/mnt/data/ray-data-eval/ILSVRC/Data/CLS-LOC/10k/"
-BATCH_SIZE = 256
+BATCH_SIZE = 128
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -36,9 +39,15 @@ def transform_image(image: Image) -> torch.Tensor:
 
 class Loader(MapFunction):
     def map(self, file_path: str) -> torch.Tensor:
-        with open(file_path, "rb") as f:
-            data = f.read()
-        image = Image.open(io.BytesIO(data))
+        if USE_LOCAL:
+            with open(file_path, "rb") as f:
+                image_bytes = f.read()
+        else:
+            s3 = boto3.client("s3")
+            response = s3.get_object(Bucket=BUCKET, Key=file_path)
+            image_bytes = response["Body"].read()
+
+        image = Image.open(io.BytesIO(image_bytes))
         image = transform_image(image)
         return image
 
@@ -158,15 +167,6 @@ class ModelProcessor(KeyedProcessFunction):
         return result
 
 
-def get_image_file_paths(root_path: str) -> list[str]:
-    ret = []
-    extensions = ["jp*g", "png", "gif"]
-    extensions.extend([ext.upper() for ext in extensions])
-    for ext in extensions:
-        ret.extend(glob.iglob(f"{root_path}/**/*.{ext}", recursive=True))
-    return ret
-
-
 def test_without_flink(file_paths: list[str]):
     loader = Loader()
     mapper = ModelMapper()
@@ -177,8 +177,35 @@ def test_without_flink(file_paths: list[str]):
     print(result)
 
 
+def get_local_image_file_paths() -> list[str]:
+    ret = []
+    extensions = ["jp*g", "png", "gif"]
+    extensions.extend([ext.upper() for ext in extensions])
+    for ext in extensions:
+        ret.extend(glob.iglob(f"{IMAGENET_LOCAL_DIR}/**/*.{ext}", recursive=True))
+    return ret
+
+
+def get_image_file_paths(limit: int = -1) -> list[str]:
+    ret = []
+    with open("../manifests/imagenet-manifest.txt", "r") as fin:
+        for line in fin:
+            try:
+                _, _, _, path = line.strip().split(maxsplit=3)
+                ret.append(path)
+                if len(ret) % 100_000 == 0:
+                    print(len(ret))
+                if limit > 0 and len(ret) >= limit:
+                    break
+            except ValueError as e:
+                print(line.strip().split(maxsplit=3))
+                raise e
+    return ret
+
+
 def run_flink(env):
-    file_paths = get_image_file_paths(IMAGENET_LOCAL_DIR)
+    limit = 10000
+    file_paths = get_local_image_file_paths(limit) if USE_LOCAL else get_image_file_paths(limit)
     print(len(file_paths))
 
     # test_without_flink(file_paths)
@@ -194,7 +221,7 @@ def run_flink(env):
     # ds = ds.map(ModelMapper()).set_parallelism(MODEL_PARALLELISM)
     # ds = ds.key_by(lambda x: 0).process(DummyProcessor()).set_parallelism(MODEL_PARALLELISM)
     ds = ds.key_by(lambda x: 0).process(ModelProcessor()).set_parallelism(MODEL_PARALLELISM)
-    ds.print()
+    # ds.print()
     env.execute("Image Batch Inference")
 
 
