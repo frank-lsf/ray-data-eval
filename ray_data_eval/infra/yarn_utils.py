@@ -1,3 +1,4 @@
+from collections import defaultdict
 import click
 import os
 import pathlib
@@ -9,7 +10,7 @@ from ray_data_eval.infra import shell_utils
 SSH_KEY = "/home/ubuntu/.aws/login-us-west-2.pem"
 
 SCRIPT_DIR = pathlib.Path(os.path.dirname(__file__))
-HADOOP_TEMPLATE_DIR = SCRIPT_DIR / "config" / "hadoop"
+HADOOP_TEMPLATE_DIR = SCRIPT_DIR / "hadoop"
 
 
 def update_hosts_file(ips: list[str]) -> None:
@@ -38,12 +39,22 @@ def update_workers_file(ips: list[str]) -> None:
     click.secho(f"Updated {PATH}", fg="green")
 
 
+class DefaultDict(defaultdict):
+    def __missing__(self, _key):
+        return ""
+
+
 def update_hadoop_xml(filename: str, head_ip: str) -> None:
     with open(HADOOP_TEMPLATE_DIR / (filename + ".template")) as fin:
         template = string.Template(fin.read())
     content = template.substitute(
-        DEFAULT_FS=f"hdfs://{head_ip}:9000",
-        HEAD_IP=head_ip,
+        DefaultDict(
+            str,
+            dict(
+                DEFAULT_FS=f"hdfs://{head_ip}:9000",
+                HEAD_IP=head_ip,
+            ),
+        )
     )
     output_path = os.path.join(os.getenv("HADOOP_HOME"), "etc/hadoop", filename)
     with open(output_path, "w") as fout:
@@ -58,9 +69,13 @@ def update_hadoop_config() -> None:
 
 
 def setup_yarn(ips: list[str]) -> None:
+    current_node_ip = shell_utils.run_output("ec2metadata --local-ipv4")
+    if current_node_ip not in ips:
+        ips.append(current_node_ip)
+
     update_hosts_file(ips)
     update_workers_file(ips)
-    update_hadoop_config
+    update_hadoop_config()
 
 
 def restart_yarn(inventory_path: pathlib.Path) -> None:
@@ -71,14 +86,14 @@ def restart_yarn(inventory_path: pathlib.Path) -> None:
     )
     HADOOP_HOME = os.getenv("HADOOP_HOME")
     SPARK_HOME = os.getenv("SPARK_HOME")
+    FLINK_HOME = os.getenv("FLINK_HOME")
     SPARK_EVENTS_PATH = os.getenv("SPARK_EVENTS_PATH")
     shell_utils.run(f"{SPARK_HOME}/sbin/stop-history-server.sh")
     shell_utils.run(f"{HADOOP_HOME}/sbin/stop-yarn.sh", env=env)
-    shell_utils.run(f"{HADOOP_HOME}/sbin/stop-dfs.sh", env=env)
     shell_utils.run(f"{HADOOP_HOME}/bin/hdfs namenode -format -force")
     ansible_utils.run_ansible_playbook(inventory_path, "yarn")
-    shell_utils.run(f"{HADOOP_HOME}/sbin/start-dfs.sh", env=env)
     shell_utils.run(f"{HADOOP_HOME}/sbin/start-yarn.sh", env=env)
+    shell_utils.run(f"{FLINK_HOME}/bin/yarn-session.sh --detached")
     shell_utils.run(
         f"{SPARK_HOME}/sbin/start-history-server.sh",
         env=dict(

@@ -99,7 +99,7 @@ def common_setup(cluster_name: str, _cluster_exists: bool) -> pathlib.Path:
     else:
         yarn_utils.setup_yarn(ips)
     # TODO: use boto3 to wait for describe_instance_status to be "ok" for all
-    shell_utils.sleep(60, "worker nodes starting up")
+    # shell_utils.sleep(60, "worker nodes starting up")
     ansible_utils.run_ansible_playbook(inventory_path, "setup", ev={}, retries=10)
     return inventory_path
 
