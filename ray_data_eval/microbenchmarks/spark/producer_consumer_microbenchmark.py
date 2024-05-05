@@ -29,7 +29,7 @@ def start_spark():
 
 
 def producer_udf(row):
-    print('producer_udf', row.item)
+    # print('producer_udf', row.item)
     # Simulate a delay
     time.sleep(TIME_UNIT * 10)
     for j in range(NUM_ROWS_PER_PRODUCER):  
@@ -37,9 +37,9 @@ def producer_udf(row):
         yield (data, row.item * NUM_ROWS_PER_PRODUCER + j)
 
 def consumer_udf(batch_rows):
-    print('consumer_udf', len(batch_rows))
+    # print('consumer_udf', len(batch_rows))
     time.sleep(TIME_UNIT * 1 / NUM_ROWS_PER_CONSUMER)
-    return len(batch_rows)
+    return (int(len(batch_rows)),)
 
 def run_spark_data(spark):
     start = time.perf_counter()
@@ -48,17 +48,22 @@ def run_spark_data(spark):
     input_schema = StructType([StructField("item", IntegerType(), True)])
     df = spark.createDataFrame(items, schema=input_schema)
 
+    # df = df.repartition(NUM_CPUS)
     # Applying the producer UDF
-    producer_rdd = df.rdd.flatMap(producer_udf)
-
+    producer_df = df.rdd.flatMap(producer_udf).toDF()
+    # df = df.repartition(NUM_CPUS)
+    print(producer_df.count())
+    
     # Applying the consumer UDF
     # consumer_rdd = producer_rdd \
     #     .groupBy(lambda x: (x[1] // NUM_ROWS_PER_CONSUMER)) \
     #     .map(lambda x: consumer_udf(list(x[1])))
 
-    consumer_rdd = producer_rdd.map(lambda x: consumer_udf(x))
-        
-    total_processed = consumer_rdd.sum()
+    result_schema = StructType([StructField("result", IntegerType(), True)])
+    consumer_rdd = producer_df.rdd.map(lambda x: consumer_udf(x))
+    consumer_df = consumer_rdd.toDF(result_schema)
+
+    total_processed = consumer_df.agg({"result": "sum"}).collect()[0][0]
 
     run_time = time.perf_counter() - start
     print(f"\nTotal length of data processed: {total_processed:,}")
