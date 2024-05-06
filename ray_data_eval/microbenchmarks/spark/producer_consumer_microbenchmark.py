@@ -1,8 +1,7 @@
 import time
 
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, IntegerType, BinaryType
-from pyspark.sql import Row
+from pyspark.sql.types import StructType, StructField, IntegerType
 import os
 
 NUM_CPUS = 8
@@ -15,16 +14,18 @@ BLOCK_SIZE = 1 * MB
 NUM_ROWS_PER_PRODUCER = 1000
 NUM_ROWS_PER_CONSUMER = 100
 
+
 def start_spark():
-    spark = SparkSession.builder \
-        .appName("Local Spark Example") \
-        .master(f"local[{NUM_CPUS}]") \
-        .config("spark.eventLog.enabled", "true") \
-        .config("spark.eventLog.dir", os.getenv("SPARK_EVENTS_FILEURL")) \
-        .config("spark.driver.memory", "2g") \
-        .config("spark.executor.memory", "2g") \
-        .config("spark.cores.max", NUM_CPUS) \
+    spark = (
+        SparkSession.builder.appName("Local Spark Example")
+        .master(f"local[{NUM_CPUS}]")
+        .config("spark.eventLog.enabled", "true")
+        .config("spark.eventLog.dir", os.getenv("SPARK_EVENTS_FILEURL"))
+        .config("spark.driver.memory", "2g")
+        .config("spark.executor.memory", "2g")
+        .config("spark.cores.max", NUM_CPUS)
         .getOrCreate()
+    )
     return spark
 
 
@@ -32,14 +33,16 @@ def producer_udf(row):
     # print('producer_udf', row.item)
     # Simulate a delay
     time.sleep(TIME_UNIT * 10)
-    for j in range(NUM_ROWS_PER_PRODUCER):  
+    for j in range(NUM_ROWS_PER_PRODUCER):
         data = b"1" * BLOCK_SIZE
         yield (data, row.item * NUM_ROWS_PER_PRODUCER + j)
+
 
 def consumer_udf(batch_rows):
     # print('consumer_udf', len(batch_rows))
     time.sleep(TIME_UNIT * 1 / NUM_ROWS_PER_CONSUMER)
     return (int(len(batch_rows)),)
+
 
 def run_spark_data(spark):
     start = time.perf_counter()
@@ -53,7 +56,7 @@ def run_spark_data(spark):
     producer_df = df.rdd.flatMap(producer_udf).toDF()
     # df = df.repartition(NUM_CPUS)
     print(producer_df.count())
-    
+
     # Applying the consumer UDF
     # consumer_rdd = producer_rdd \
     #     .groupBy(lambda x: (x[1] // NUM_ROWS_PER_CONSUMER)) \

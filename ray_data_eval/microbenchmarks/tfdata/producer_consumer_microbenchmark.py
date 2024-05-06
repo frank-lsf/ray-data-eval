@@ -2,22 +2,9 @@ import tensorflow as tf
 import time
 import os
 import numpy as np
-# from ray_data_eval.common import logger as logger_util
 
-import resource
-
-
-def set_memory_limit(soft_limit, hard_limit):
-    # Set the memory limit in bytes
-    resource.setrlimit(resource.RLIMIT_AS, (soft_limit, hard_limit))
-
-
-set_memory_limit(2000 * 1024 * 1024, 2000 * 1024 * 1024)  # 1 GB limit
-
+TF_PROFILER_LOGS = "logs/tf"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
-# TF_PROFILER_LOGS = "logs/tf"
-# LOG_ADDR = "logs/microbenchmark_tf_data.jsonl"
-# logger = logger_util.Logger(LOG_ADDR)
 
 
 def busy_loop_for_seconds(time_diff):
@@ -29,40 +16,36 @@ def busy_loop_for_seconds(time_diff):
 
 
 def bench():
-    NUM_ROWS_PER_TASK = 10
+    MB = 1024 * 1024
     NUM_TASKS = 16 * 5
-    BLOCK_SIZE = 10 * 1024 * 1024 * 10
     TIME_UNIT = 0.5
+
+    BLOCK_SIZE = 1 * MB
+    NUM_ROWS_PER_PRODUCER = 1000
+    NUM_ROWS_PER_CONSUMER = 100
 
     options = tf.data.Options()
     options.autotune.enabled = True
     options.autotune.cpu_budget = 8
-    # options.autotune.autotune_algorithm = tf.data.experimental.AutotuneAlgorithm.GRADIENT_DESCENT
-    options.autotune.ram_budget = 20 * BLOCK_SIZE
-    # logger.record_start()
 
     def producer_fn(idx):
         busy_loop_for_seconds(10 * TIME_UNIT)
-        for i in range(NUM_ROWS_PER_TASK):
+        for i in range(NUM_ROWS_PER_PRODUCER):
             data = {
-                "idx": idx * NUM_ROWS_PER_TASK + i,
+                "idx": idx * NUM_ROWS_PER_PRODUCER + i,
                 "data": np.full(BLOCK_SIZE, i, dtype=np.uint8),
             }
             yield data
-        # logger.log(
-        #     {
-        #         "producer_finished": int(idx),
-        #     }
-        # )
 
-    def consumer_fn(idx, data):
-        busy_loop_for_seconds(TIME_UNIT)
-        # logger.log(
-        #     {
-        #         "consumer_finished": int(idx),
-        #     }
-        # )
-        return len(data)
+    # def consumer_fn(idxs, datas):
+    #     busy_loop_for_seconds(TIME_UNIT)
+    #     print(len(datas))
+    #     return len(datas)
+
+    def consumer_fn(idxs, datas):
+        busy_loop_for_seconds(TIME_UNIT / NUM_ROWS_PER_CONSUMER)
+        print(len(datas))
+        return len(datas)
 
     start = time.perf_counter()
 
@@ -79,13 +62,17 @@ def bench():
             name="producer",
         ),
         cycle_length=1,
+        block_length=NUM_ROWS_PER_CONSUMER,
         num_parallel_calls=tf.data.experimental.AUTOTUNE,
         name="producer_flat_map",
     )
+
+    # ds = ds.batch(NUM_ROWS_PER_CONSUMER)  # Group items into batches
+
     ds = ds.with_options(options).map(
-        lambda item: tf.numpy_function(
+        lambda items: tf.numpy_function(
             consumer_fn,
-            inp=[item["idx"], item["data"]],  # Pass tensors individually
+            inp=[items["idx"], items["data"]],  # Process batches of items
             Tout=tf.int64,
             name="consumer",
         ),
@@ -95,26 +82,15 @@ def bench():
 
     ret = 0
     for row in ds:
-        print(time.perf_counter() - start, row)
         ret += row
-        # logger.log(
-        #     {
-        #         "memory_usage_in_bytes": logger_util.get_process_and_children_memory_usage_in_bytes(),
-        #     }
-        # )
-
     run_time = time.perf_counter() - start
     print(f"\n{ret:,}")
     print(f"Run time: {run_time:.2f} seconds")
 
 
 if __name__ == "__main__":
-    # if not os.path.exists(TF_PROFILER_LOGS):
-    # os.makedirs(TF_PROFILER_LOGS)
-    # tf.profiler.experimental.start(TF_PROFILER_LOGS)
+    if not os.path.exists(TF_PROFILER_LOGS):
+        os.makedirs(TF_PROFILER_LOGS)
+    tf.profiler.experimental.start(TF_PROFILER_LOGS)
     bench()
-    # tf.profiler.experimental.stop()
-
-    # print("Check if log directory exists:", os.path.exists(TF_PROFILER_LOGS))
-    # print("Contents of the log directory:", os.listdir(TF_PROFILER_LOGS))
-    # logger_util.plot_from_jsonl(LOG_ADDR, "logs/microbenchmark_tf_data.pdf")
+    tf.profiler.experimental.stop()
