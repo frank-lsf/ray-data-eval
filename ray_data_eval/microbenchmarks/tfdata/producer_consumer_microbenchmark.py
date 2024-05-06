@@ -43,7 +43,7 @@ def bench():
     #     return len(datas)
 
     def consumer_fn(idxs, datas):
-        busy_loop_for_seconds(TIME_UNIT / NUM_ROWS_PER_CONSUMER)
+        busy_loop_for_seconds(TIME_UNIT)
         print(len(datas))
         return len(datas)
 
@@ -61,13 +61,14 @@ def bench():
             },
             name="producer",
         ),
-        cycle_length=1,
+        # cycle_length=1,
         block_length=NUM_ROWS_PER_CONSUMER,
         num_parallel_calls=tf.data.experimental.AUTOTUNE,
-        name="producer_flat_map",
+        name="producer_interleave",
     )
 
-    # ds = ds.batch(NUM_ROWS_PER_CONSUMER)  # Group items into batches
+    if NUM_ROWS_PER_CONSUMER > 1:
+        ds = ds.batch(NUM_ROWS_PER_CONSUMER)  # Group items into batches
 
     ds = ds.with_options(options).map(
         lambda items: tf.numpy_function(
@@ -91,6 +92,6 @@ def bench():
 if __name__ == "__main__":
     if not os.path.exists(TF_PROFILER_LOGS):
         os.makedirs(TF_PROFILER_LOGS)
-    tf.profiler.experimental.start(TF_PROFILER_LOGS)
+    # tf.profiler.experimental.start(TF_PROFILER_LOGS)
     bench()
-    tf.profiler.experimental.stop()
+    # tf.profiler.experimental.stop()
