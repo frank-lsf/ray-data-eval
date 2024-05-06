@@ -1,14 +1,14 @@
-import os
 import subprocess
 import yaml
 
-NUM_TASK_MANAGERS = os.cpu_count() + 1
+NUM_TASK_MANAGERS = 12 + 1
 FLINK_PATH = "/opt/flink/"
 
 
 def update_workers_file(num_task_managers: int = 1):
-    with open(FLINK_PATH + "conf/workers", "w") as file:
-        file.writelines(["localhost\n"] * num_task_managers)
+    with open(FLINK_PATH + "conf/workers", "w") as fout:
+        for _ in range(num_task_managers):
+            print("localhost", file=fout)
 
 
 def read_flink_config():
