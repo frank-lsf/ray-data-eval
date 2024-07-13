@@ -43,11 +43,10 @@ def process_file(file_path):
     print(f"Processed and saved modified data to {new_file_path}")
 
 
-# Process each file
-for file_path in file_paths:
-    process_file(file_path)
+def main():
+    for file_path in file_paths:
+        process_file(file_path)
 
 
 if __name__ == "__main__":
-    for file_path in file_paths:
-        process_file(file_path)
+    main()
