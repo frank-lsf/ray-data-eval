@@ -1,6 +1,6 @@
 import libsolver
 
-from ray_data_eval.common.pipeline import e2e_problem3 as problem
+from ray_data_eval.common.pipeline import three_stage_problem as problem
 import time
 
 start_time = time.time()
