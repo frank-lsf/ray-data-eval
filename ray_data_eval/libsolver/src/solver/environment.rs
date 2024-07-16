@@ -1,3 +1,8 @@
+use serde::{Deserialize, Serialize};
+use serde_json;
+use std::collections::HashMap;
+use std::fs::File;
+use std::io::Write;
 use std::{hash::Hash, sync::Arc};
 
 use crate::types::*;
@@ -20,6 +25,19 @@ pub struct Buffer {
     consumable_size: usize,
     timeline: Vec<usize>,
     consumable_timeline: Vec<usize>,
+}
+
+#[derive(Serialize, Debug, Clone)]
+struct TraceEvent {
+    cat: String,
+    name: String,
+    pid: String,
+    tid: String,
+    ts: u64,
+    dur: u64,
+    ph: String,
+    cname: String,
+    args: Option<std::collections::HashMap<String, String>>,
 }
 
 impl PartialEq for Buffer {
@@ -159,6 +177,9 @@ struct Executor {
     pub resource: Resource,
     running_task: Option<RunningTask>,
     timeline: String,
+    current_time: u64,
+    timeline_json: Vec<TraceEvent>,
+    color_map: HashMap<String, String>,
 }
 
 impl PartialEq for Executor {
@@ -193,6 +214,15 @@ fn try_finishing_running_task(
     true
 }
 
+fn create_event_color_map() -> HashMap<String, String> {
+    let mut map = HashMap::new();
+    map.insert("P".to_string(), "rail_response".to_string());
+    map.insert("C".to_string(), "cq_build_passed".to_string());
+    map.insert("I".to_string(), "rail_load".to_string());
+    map.insert("T".to_string(), "cq_build_failed".to_string());
+    map
+}
+
 impl Executor {
     pub fn new(name: String, resource: Resource) -> Self {
         Self {
@@ -200,6 +230,9 @@ impl Executor {
             resource,
             running_task: None,
             timeline: String::new(),
+            current_time: 0,
+            timeline_json: Vec::new(),
+            color_map: create_event_color_map(),
         }
     }
 
@@ -270,11 +303,29 @@ impl Executor {
             if task.remaining_ticks > 0 {
                 self.timeline.push_str(&task.spec.id);
                 self.timeline.push_str("  ");
+
+                if task.remaining_ticks == task.spec.duration as i32 {
+                    let dur_time = (task.spec.duration as u64) * 500_000;
+                    let event = TraceEvent {
+                        cat: "task".to_string(),
+                        name: task.spec.id.clone(),
+                        pid: "1".to_string(),
+                        tid: self.name.clone(),
+                        ts: self.current_time,
+                        dur: dur_time,
+                        ph: "X".to_string(),
+                        cname: self.color_map[&task.spec.id].clone(),
+                        args: None,
+                    };
+                    self.current_time += dur_time;
+                    self.timeline_json.push(event);
+                }
             } else {
                 self.timeline.push_str("!  ");
             }
         } else {
             self.timeline.push_str("   ");
+            self.current_time += 500_000;
         }
     }
 }
@@ -562,6 +613,35 @@ impl Environment {
         false
     }
 
+    fn collect_all_events(&self) -> Vec<TraceEvent> {
+        let mut all_events = Vec::new();
+        for executor in self.executors.iter() {
+            all_events.extend(executor.timeline_json.clone());
+        }
+        all_events
+    }
+
+    fn write_all_events_to_json(&self) {
+        let all_events = self.collect_all_events();
+        let json = match serde_json::to_string(&all_events) {
+            Ok(json) => json,
+            Err(e) => {
+                eprintln!("Failed to serialize events: {}", e);
+                return;
+            }
+        };
+        let mut file = match File::create("output.json") {
+            Ok(file) => file,
+            Err(e) => {
+                eprintln!("Failed to create file: {}", e);
+                return;
+            }
+        };
+        if let Err(e) = file.write_all(json.as_bytes()) {
+            eprintln!("Failed to write to file: {}", e);
+        }
+    }
+
     pub fn print(&self) {
         for executor in self.executors.iter() {
             info!("{:?}", executor.timeline);
@@ -571,6 +651,7 @@ impl Environment {
             info!("{:?}", buffer.consumable_timeline);
         }
         info!("");
+        self.write_all_events_to_json()
     }
 
     pub fn get_fingerprint(&self) -> u64 {
