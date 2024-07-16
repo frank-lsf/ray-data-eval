@@ -13,6 +13,8 @@ use std::hash::Hasher;
 type OperatorIndex = usize;
 type Tick = u32;
 
+const MICROSECS_PER_TICK: u64 = 500_000;
+
 #[derive(Debug, Clone)]
 pub struct Solution {
     pub total_time: u32,
@@ -223,6 +225,32 @@ fn create_event_color_map() -> HashMap<String, String> {
     map
 }
 
+impl TraceEvent {
+    pub fn new(
+        cat: String,
+        name: String,
+        pid: String,
+        tid: String,
+        ts: u64,
+        dur: u64,
+        ph: String,
+        cname: String,
+        args: Option<HashMap<String, String>>,
+    ) -> Self {
+        Self {
+            cat,
+            name,
+            pid,
+            tid,
+            ts,
+            dur,
+            ph,
+            cname,
+            args,
+        }
+    }
+}
+
 impl Executor {
     pub fn new(name: String, resource: Resource) -> Self {
         Self {
@@ -305,18 +333,18 @@ impl Executor {
                 self.timeline.push_str("  ");
 
                 if task.remaining_ticks == task.spec.duration as i32 {
-                    let dur_time = (task.spec.duration as u64) * 500_000;
-                    let event = TraceEvent {
-                        cat: "task".to_string(),
-                        name: task.spec.id.clone(),
-                        pid: "1".to_string(),
-                        tid: self.name.clone(),
-                        ts: self.current_time,
-                        dur: dur_time,
-                        ph: "X".to_string(),
-                        cname: self.color_map[&task.spec.id].clone(),
-                        args: None,
-                    };
+                    let dur_time = (task.spec.duration as u64) * MICROSECS_PER_TICK;
+                    let event = TraceEvent::new(
+                        "task".to_string(),
+                        task.spec.id.clone(),
+                        "1".to_string(),
+                        self.name.clone(),
+                        self.current_time,
+                        dur_time,
+                        "X".to_string(),
+                        self.color_map[&task.spec.id].clone(),
+                        None,
+                    );
                     self.current_time += dur_time;
                     self.timeline_json.push(event);
                 }
@@ -325,7 +353,7 @@ impl Executor {
             }
         } else {
             self.timeline.push_str("   ");
-            self.current_time += 500_000;
+            self.current_time += MICROSECS_PER_TICK;
         }
     }
 }
@@ -613,7 +641,7 @@ impl Environment {
         false
     }
 
-    fn collect_all_events(&self) -> Vec<TraceEvent> {
+    fn collect_events_from_all_executors(&self) -> Vec<TraceEvent> {
         let mut all_events = Vec::new();
         for executor in self.executors.iter() {
             all_events.extend(executor.timeline_json.clone());
@@ -622,24 +650,10 @@ impl Environment {
     }
 
     fn write_all_events_to_json(&self) {
-        let all_events = self.collect_all_events();
-        let json = match serde_json::to_string(&all_events) {
-            Ok(json) => json,
-            Err(e) => {
-                eprintln!("Failed to serialize events: {}", e);
-                return;
-            }
-        };
-        let mut file = match File::create("output.json") {
-            Ok(file) => file,
-            Err(e) => {
-                eprintln!("Failed to create file: {}", e);
-                return;
-            }
-        };
-        if let Err(e) = file.write_all(json.as_bytes()) {
-            eprintln!("Failed to write to file: {}", e);
-        }
+        let all_events = self.collect_events_from_all_executors();
+        let json = serde_json::to_string(&all_events).unwrap();
+        let mut file = File::create("output.json").unwrap();
+        file.write_all(json.as_bytes()).unwrap();
     }
 
     pub fn print(&self) {
@@ -651,7 +665,7 @@ impl Environment {
             info!("{:?}", buffer.consumable_timeline);
         }
         info!("");
-        self.write_all_events_to_json()
+        self.write_all_events_to_json();
     }
 
     pub fn get_fingerprint(&self) -> u64 {
