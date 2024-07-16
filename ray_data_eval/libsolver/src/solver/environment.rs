@@ -27,7 +27,7 @@ pub struct Buffer {
     consumable_timeline: Vec<usize>,
 }
 
-#[derive(Serialize, Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 struct TraceEvent {
     cat: String,
     name: String,
@@ -37,7 +37,7 @@ struct TraceEvent {
     dur: u64,
     ph: String,
     cname: String,
-    args: Option<std::collections::HashMap<String, String>>,
+    args: Option<HashMap<String, String>>,
 }
 
 impl PartialEq for Buffer {
