@@ -342,7 +342,10 @@ impl Executor {
                         self.current_time,
                         dur_time,
                         "X".to_string(),
-                        self.color_map[&task.spec.id].clone(),
+                        self.color_map
+                            .get(&task.spec.id)
+                            .unwrap_or(&"olive".to_string())
+                            .clone(),
                         None,
                     );
                     self.current_time += dur_time;
