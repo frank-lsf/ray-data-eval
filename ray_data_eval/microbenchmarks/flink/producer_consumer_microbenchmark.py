@@ -5,12 +5,15 @@ from pyflink.common import Configuration
 from pyflink.datastream.functions import FlatMapFunction, RuntimeContext, ProcessFunction
 import logging
 import json
+import resource
 
 NUM_CPUS = 8
-PRODUCER_PARALLELISM = 4
-CONSUMER_PARALLELISM = NUM_CPUS - PRODUCER_PARALLELISM
+PRODUCER_PARALLELISM = 1
+# CONSUMER_PARALLELISM = NUM_CPUS - PRODUCER_PARALLELISM
+CONSUMER_PARALLELISM = 1
 EXECUTION_MODE = "process"
 MB = 1024 * 1024
+GB = 1024 * MB
 
 NUM_TASKS = 16 * 5
 BLOCK_SIZE = int(1 * MB)
@@ -18,8 +21,18 @@ TIME_UNIT = 0.5
 
 NUM_ROWS_PER_PRODUCER = 1000
 NUM_ROWS_PER_CONSUMER = 100
+MEMORY_USAGE_CURRENT_PROGRAM =  4 * GB
 
+def configure_flink_memory(env: StreamExecutionEnvironment, config_path: str):
+    config = Configuration()
+    config.load_yaml_file(config_path)
+    env.set_configuration(config)
 
+def limit_memory(max_mem):
+    """ Set a memory limit in bytes. """
+    soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+    resource.setrlimit(resource.RLIMIT_AS, (max_mem, hard))
+    
 class Producer(FlatMapFunction):
     def open(self, runtime_context: RuntimeContext):
         self.task_info = runtime_context.get_task_name_with_subtasks()
@@ -27,7 +40,7 @@ class Producer(FlatMapFunction):
 
     def flat_map(self, value):
         producer_start = time.time()
-        print("Producer", value)
+        # print("Producer", value)
         time.sleep(TIME_UNIT * 10)
         producer_end = time.time()
         log = {
@@ -40,7 +53,7 @@ class Producer(FlatMapFunction):
             "ph": "X",
             "args": {},
         }
-        logging.warn(json.dumps(log))
+        logging.warning(json.dumps(log))
 
         for _ in range(NUM_ROWS_PER_PRODUCER):
             yield b"1" * BLOCK_SIZE
@@ -67,7 +80,7 @@ class ConsumerActor(ProcessFunction):
         if len(self.current_batch) == 0:
             self.consumer_start = time.time()
 
-        print("Consumer", self.idx, len(self.current_batch), len(value))
+        # print("Consumer", self.idx, len(self.current_batch), len(value))
         time.sleep(TIME_UNIT / NUM_ROWS_PER_CONSUMER)
         self.current_batch.append(value)
         self.idx += 1
@@ -85,7 +98,7 @@ class ConsumerActor(ProcessFunction):
             "ph": "X",
             "args": {},
         }
-        logging.warn(json.dumps(log))
+        logging.warning(json.dumps(log))
         current_batch_len = len(self.current_batch)
         self.current_batch = []
         return [current_batch_len]
@@ -125,7 +138,17 @@ def run_flink(env):
 def run_experiment():
     config = Configuration()
     config.set_string("python.execution-mode", EXECUTION_MODE)
+    
+    # Lower the memory so that it might possibly fit under 2GB
+    # config.set_string("taskmanager.memory.process.size", "1600m")
+    # config.set_string("taskmanager.memory.flink.size", "1200m")
+    # config.set_string("taskmanager.memory.jvm-overhead.size", "200m")
+    # config.set_string("taskmanager.memory.managed.size", "100m")
+    # config.set_string("taskmanager.memory.network.size", "100m")
+    
     env = StreamExecutionEnvironment.get_execution_environment(config)
+
+    limit_memory(MEMORY_USAGE_CURRENT_PROGRAM)
     run_flink(env)
 
 
