@@ -3,8 +3,6 @@ import functools
 import io
 import os
 import time
-import regex as re
-import pandas as pd
 
 import humanize
 import numpy as np
