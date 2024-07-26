@@ -347,12 +347,14 @@ e2e_problem2 = SchedulingProblem(
     buffer_size_limit=80,
 )
 
+NUM_PRODUCERS = 20
+
 e2e_problem3 = SchedulingProblem(
     [
         OperatorSpec(
             name="P",
             operator_idx=0,
-            num_tasks=16,
+            num_tasks=NUM_PRODUCERS,
             duration=10,
             input_size=0,
             output_size=10,
@@ -361,7 +363,7 @@ e2e_problem3 = SchedulingProblem(
         OperatorSpec(
             name="C",
             operator_idx=1,
-            num_tasks=160,
+            num_tasks=NUM_PRODUCERS * 10,
             duration=1,
             input_size=1,
             output_size=0,
@@ -370,8 +372,44 @@ e2e_problem3 = SchedulingProblem(
     ],
     name="e2e_problem3",
     resources=ResourcesSpec(cpu=8),
-    time_limit=100,  # To make tasks finish.
-    buffer_size_limit=100,
+    time_limit=300,
+    buffer_size_limit=20,
+)
+
+three_stage_problem = SchedulingProblem(
+    [
+        OperatorSpec(
+            name="P",
+            operator_idx=0,
+            num_tasks=NUM_PRODUCERS,
+            duration=10,
+            input_size=0,
+            output_size=10,
+            resources=ResourcesSpec(cpu=1),
+        ),
+        OperatorSpec(
+            name="C",
+            operator_idx=1,
+            num_tasks=NUM_PRODUCERS * 10,
+            duration=1,
+            input_size=1,
+            output_size=1,
+            resources=ResourcesSpec(cpu=1),
+        ),
+        OperatorSpec(
+            name="I",
+            operator_idx=2,
+            num_tasks=NUM_PRODUCERS * 10,
+            duration=1,
+            input_size=1,
+            output_size=0,
+            resources=ResourcesSpec(gpu=1),
+        ),
+    ],
+    name="three_stage_problem",
+    resources=ResourcesSpec(cpu=8, gpu=4),
+    time_limit=300,
+    buffer_size_limit=30,
 )
 
 problems = [
@@ -383,4 +421,5 @@ problems = [
     e2e_problem,
     e2e_problem2,
     e2e_problem3,
+    three_stage_problem,
 ]
