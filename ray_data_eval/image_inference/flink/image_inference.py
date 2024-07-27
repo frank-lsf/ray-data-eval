@@ -204,7 +204,7 @@ def get_image_file_paths(limit: int = -1) -> list[str]:
 
 
 def run_flink(env):
-    limit = 10000
+    limit = 500 * 1000
     file_paths = get_local_image_file_paths(limit) if USE_LOCAL else get_image_file_paths(limit)
     print(len(file_paths))
 
