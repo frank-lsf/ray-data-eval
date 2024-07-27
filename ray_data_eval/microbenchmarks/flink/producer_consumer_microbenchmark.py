@@ -20,8 +20,8 @@ BLOCK_SIZE = int(1 * MB)
 TIME_UNIT = 0.5
 
 NUM_ROWS_PER_PRODUCER = 1000
-NUM_ROWS_PER_CONSUMER = 100
-MEMORY_USAGE_CURRENT_PROGRAM =  4 * GB
+NUM_ROWS_PER_CONSUMER = 1
+MEMORY_USAGE_CURRENT_PROGRAM =  3 * GB
 
 def configure_flink_memory(env: StreamExecutionEnvironment, config_path: str):
     config = Configuration()
@@ -140,9 +140,9 @@ def run_experiment():
     config.set_string("python.execution-mode", EXECUTION_MODE)
     
     # Lower the memory so that it might possibly fit under 2GB
-    # config.set_string("taskmanager.memory.process.size", "1600m")
-    # config.set_string("taskmanager.memory.flink.size", "1200m")
-    # config.set_string("taskmanager.memory.jvm-overhead.size", "200m")
+    config.set_string("taskmanager.memory.process.size", "1000m")
+    # config.set_string("taskmanager.memory.flink.size", "400m")
+    # config.set_string("taskmanager.memory.jvm-overhead.size", "100m")
     # config.set_string("taskmanager.memory.managed.size", "100m")
     # config.set_string("taskmanager.memory.network.size", "100m")
     
