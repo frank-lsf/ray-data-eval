@@ -21,18 +21,21 @@ TIME_UNIT = 0.5
 
 NUM_ROWS_PER_PRODUCER = 1000
 NUM_ROWS_PER_CONSUMER = 1
-MEMORY_USAGE_CURRENT_PROGRAM =  3 * GB
+MEMORY_USAGE_CURRENT_PROGRAM = 3 * GB
+
 
 def configure_flink_memory(env: StreamExecutionEnvironment, config_path: str):
     config = Configuration()
     config.load_yaml_file(config_path)
     env.set_configuration(config)
 
+
 def limit_memory(max_mem):
-    """ Set a memory limit in bytes. """
+    """Set a memory limit in bytes."""
     soft, hard = resource.getrlimit(resource.RLIMIT_AS)
     resource.setrlimit(resource.RLIMIT_AS, (max_mem, hard))
-    
+
+
 class Producer(FlatMapFunction):
     def open(self, runtime_context: RuntimeContext):
         self.task_info = runtime_context.get_task_name_with_subtasks()
@@ -138,14 +141,14 @@ def run_flink(env):
 def run_experiment():
     config = Configuration()
     config.set_string("python.execution-mode", EXECUTION_MODE)
-    
+
     # Lower the memory so that it might possibly fit under 2GB
     config.set_string("taskmanager.memory.process.size", "1000m")
     # config.set_string("taskmanager.memory.flink.size", "400m")
     # config.set_string("taskmanager.memory.jvm-overhead.size", "100m")
     # config.set_string("taskmanager.memory.managed.size", "100m")
     # config.set_string("taskmanager.memory.network.size", "100m")
-    
+
     env = StreamExecutionEnvironment.get_execution_environment(config)
 
     limit_memory(MEMORY_USAGE_CURRENT_PROGRAM)

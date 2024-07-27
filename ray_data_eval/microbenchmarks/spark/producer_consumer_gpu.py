@@ -12,11 +12,12 @@ MB = 1024 * 1024
 
 NUM_ROWS_PER_TASK = 10
 NUM_TASKS = 16 * 5
-NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS  
-# Currently OOM at consumer stage. 
+NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
+# Currently OOM at consumer stage.
 BLOCK_SIZE = 100 * MB
 
 TIME_UNIT = 0.5
+
 
 def start_spark(executor_memory: int):
     executor_memory_in_mb = int(executor_memory * 1024 / (NUM_CPUS + NUM_GPUS))
@@ -28,11 +29,12 @@ def start_spark(executor_memory: int):
         .config("spark.driver.memory", "4g")
         .config("spark.executor.memory", f"{executor_memory_in_mb}m")
         .config("spark.executor.instances", NUM_CPUS + NUM_GPUS)
-        .config("spark.executor.cores", 1) 
+        .config("spark.executor.cores", 1)
         .config("spark.cores.max", NUM_CPUS + NUM_GPUS)
         .getOrCreate()
     )
     return spark
+
 
 def producer_udf(row):
     time.sleep(TIME_UNIT * 10)
@@ -40,14 +42,17 @@ def producer_udf(row):
         data = b"1" * BLOCK_SIZE
         yield (data, row.item * NUM_ROWS_PER_TASK + j)
 
+
 def consumer_udf(row):
     time.sleep(TIME_UNIT)
     data = b"2" * BLOCK_SIZE
     return (data,)
 
+
 def inference_udf(row):
     time.sleep(TIME_UNIT)
     return 1
+
 
 def run_spark_data(spark):
     start = time.perf_counter()
@@ -56,25 +61,27 @@ def run_spark_data(spark):
     input_schema = StructType([StructField("item", IntegerType(), True)])
     df = spark.createDataFrame(items, schema=input_schema)
 
-    print('df.count()', df.count())
+    print("df.count()", df.count())
 
-    producer_schema = StructType([StructField("data", BinaryType(), True), StructField("id", IntegerType(), True)])
+    producer_schema = StructType(
+        [StructField("data", BinaryType(), True), StructField("id", IntegerType(), True)]
+    )
     producer_rdd = df.rdd.flatMap(producer_udf)
     producer_df = spark.createDataFrame(producer_rdd, schema=producer_schema)
-    
-    print('producer_df.count()', producer_df.count())
+
+    print("producer_df.count()", producer_df.count())
 
     consumer_schema = StructType([StructField("data", BinaryType(), True)])
     consumer_rdd = producer_df.rdd.map(consumer_udf)
     consumer_df = spark.createDataFrame(consumer_rdd, schema=consumer_schema)
-    
-    print('consumer_df.count()', consumer_df.count())
+
+    print("consumer_df.count()", consumer_df.count())
 
     result_schema = StructType([StructField("result", IntegerType(), True)])
     inference_rdd = consumer_df.rdd.map(lambda row: (inference_udf(row),))
     inference_df = spark.createDataFrame(inference_rdd, schema=result_schema)
 
-    print('inference_df.count()', inference_df.count())
+    print("inference_df.count()", inference_df.count())
 
     total_processed = inference_df.agg({"result": "sum"}).collect()[0][0]
 
@@ -83,13 +90,17 @@ def run_spark_data(spark):
     print(f"Run time: {run_time:.2f} seconds")
     return total_processed
 
+
 def bench(mem_limit):
     spark = start_spark(mem_limit)
     run_spark_data(spark)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mem-limit', type=int, required=False, help='Memory limit in GB', default=30)
+    parser.add_argument(
+        "--mem-limit", type=int, required=False, help="Memory limit in GB", default=30
+    )
     args = parser.parse_args()
 
     bench(args.mem_limit)
