@@ -17,6 +17,7 @@ NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
 ROW_SIZE = 100 * MB
 TIME_UNIT = 0.5
 
+
 class Producer(FlatMapFunction):
     def open(self, runtime_context: RuntimeContext):
         self.task_info = runtime_context.get_task_name_with_subtasks()
@@ -27,8 +28,8 @@ class Producer(FlatMapFunction):
         for _ in range(NUM_ROWS_PER_TASK):
             yield b"1" * ROW_SIZE
 
-class Consumer(MapFunction):
 
+class Consumer(MapFunction):
     def open(self, runtime_context):
         self.task_info = runtime_context.get_task_name_with_subtasks()
         self.task_index = runtime_context.get_index_of_this_subtask()
@@ -37,8 +38,8 @@ class Consumer(MapFunction):
         time.sleep(TIME_UNIT)
         return b"2" * ROW_SIZE
 
-class Inference(MapFunction):
 
+class Inference(MapFunction):
     def open(self, runtime_context):
         self.task_info = runtime_context.get_task_name_with_subtasks()
         self.task_index = runtime_context.get_index_of_this_subtask()
@@ -46,6 +47,7 @@ class Inference(MapFunction):
     def map(self, value):
         time.sleep(TIME_UNIT)
         return 1
+
 
 def run_flink(env):
     start = time.perf_counter()
@@ -57,16 +59,10 @@ def run_flink(env):
         NUM_CPUS // 2
     )
 
-    ds = (
-        ds.map(Consumer(), output_type=Types.PICKLED_BYTE_ARRAY())
-        .set_parallelism(NUM_CPUS // 2)
-    )
+    ds = ds.map(Consumer(), output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(NUM_CPUS // 2)
 
-    ds = (
-        ds.map(Inference(), output_type=Types.LONG())
-        .set_parallelism(NUM_GPUS)
-    )
-    
+    ds = ds.map(Inference(), output_type=Types.LONG()).set_parallelism(NUM_GPUS)
+
     result = []
     for length in ds.execute_and_collect():
         result.append(length)
@@ -77,6 +73,7 @@ def run_flink(env):
     end = time.perf_counter()
     print(f"\nTotal data length: {total_length:,}")
     print(f"Time: {end - start:.4f}s")
+
 
 def run_experiment(mem_limit):
     config = Configuration()
@@ -93,11 +90,12 @@ def run_experiment(mem_limit):
 def main(mem_limit):
     run_experiment(mem_limit)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--mem-limit", type=int, required=False, help="Memory limit in GB", default=20
     )
     args = parser.parse_args()
-    
+
     main(args.mem_limit)
