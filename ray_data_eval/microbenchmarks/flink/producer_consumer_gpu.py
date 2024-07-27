@@ -7,7 +7,6 @@ import argparse
 
 EXECUTION_MODE = "process"
 MB = 1024 * 1024
-GB = 1024 * MB
 TIME_UNIT = 0.5
 NUM_CPUS = 8
 NUM_GPUS = 4

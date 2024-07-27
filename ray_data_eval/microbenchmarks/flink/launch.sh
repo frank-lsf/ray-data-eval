@@ -1,1 +1,1 @@
-python producer_consumer_gpu.py
+python producer_consumer_gpu.py --mem-limit 15
