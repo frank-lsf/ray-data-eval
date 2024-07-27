@@ -13,7 +13,7 @@ MB = 1024 * 1024
 NUM_ROWS_PER_TASK = 10
 NUM_TASKS = 16 * 5
 NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
-BLOCK_SIZE = 100 * MB
+ROW_SIZE = 100 * MB
 
 TIME_UNIT = 0.5
 
@@ -38,13 +38,13 @@ def start_spark(executor_memory: int):
 def producer_udf(row):
     time.sleep(TIME_UNIT * 10)
     for j in range(NUM_ROWS_PER_TASK):
-        data = b"1" * BLOCK_SIZE
+        data = b"1" * ROW_SIZE
         yield (data, row.item * NUM_ROWS_PER_TASK + j)
 
 
 def consumer_udf(row):
     time.sleep(TIME_UNIT)
-    data = b"2" * BLOCK_SIZE
+    data = b"2" * ROW_SIZE
     return (data,)
 
 
