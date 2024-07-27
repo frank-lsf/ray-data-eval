@@ -1,1 +1,1 @@
-python producer_consumer_microbenchmark.py
+python producer_consumer_gpu.py
