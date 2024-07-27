@@ -53,7 +53,7 @@ def bench(mem_limit):
     print(ds.stats())
     print(ray._private.internal_api.memory_summary(stats_only=True))
     print(f"Total time: {end_time - start_time:.4f}s")
-    timeline_utils.save_timeline_with_cpus_gpus(f"timeline_ray_data", NUM_CPUS, NUM_GPUS)
+    timeline_utils.save_timeline_with_cpus_gpus("timeline_ray_data", NUM_CPUS, NUM_GPUS)
     ray.shutdown()
 
 
