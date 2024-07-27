@@ -17,6 +17,7 @@ def busy_loop_for_seconds(time_diff):
 
 
 MB = 1024 * 1024
+GB = 1024 * MB
 NUM_CPUS = 8
 NUM_GPUS = 4
 NUM_ROWS_PER_TASK = 10
@@ -28,7 +29,7 @@ TIME_UNIT = 0.5
 
 def limit_cpu_memory(mem_limit):
     # limit cpu memory with resources
-    mem_limit_bytes = mem_limit * 1024**3
+    mem_limit_bytes = mem_limit * GB
     resource.setrlimit(resource.RLIMIT_AS, (mem_limit_bytes, mem_limit_bytes))
 
 
@@ -54,7 +55,7 @@ def bench(mem_limit):
         return np.zeros(ROW_SIZE, dtype=np.uint8)
 
     def inference_fn(data):
-        return 0
+        return 1
 
     start = time.perf_counter()
     items = list(range(NUM_TASKS))
@@ -101,7 +102,7 @@ def bench(mem_limit):
     for row in ds:
         ret += row.numpy()
     run_time = time.perf_counter() - start
-    print(f"\n{ret:,}")
+    print(f"Sum: {ret:,}")
     print(f"Run time: {run_time:.2f} seconds")
 
 
