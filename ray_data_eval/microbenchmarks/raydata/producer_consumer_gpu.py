@@ -3,7 +3,7 @@ import os
 import numpy as np
 import ray
 import argparse
-import timeline_utils
+# import timeline_utils
 
 MB = 1024 * 1024
 GB = 1024 * MB

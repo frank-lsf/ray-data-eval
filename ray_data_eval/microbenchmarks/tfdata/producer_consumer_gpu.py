@@ -33,7 +33,7 @@ def bench(mem_limit):
     options.autotune.enabled = True
     options.autotune.cpu_budget = NUM_CPUS + NUM_GPUS
     # When autotuning is enabled (through autotune), determines the RAM budget to use. Values greater than the available RAM in bytes may result in OOM. If None, defaults to half of the available RAM in bytes.
-    # Doesn't work at the moment. 
+    # Doesn't work at the moment.
     options.autotune.ram_budget = mem_limit * GB
 
     def producer_fn(idx):
