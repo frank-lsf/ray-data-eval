@@ -66,7 +66,7 @@ def bench(mem_limit):
             },
             name="producer",
         ),
-        block_length=NUM_ROWS_PER_TASK,
+        block_length=1,
         num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 10 else 1,
         name="producer_interleave",
     )
