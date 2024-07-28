@@ -20,15 +20,19 @@ TIME_UNIT = 0.5
 
 def start_spark(executor_memory: int):
     executor_memory_in_mb = int(executor_memory * 1024 / (NUM_CPUS + NUM_GPUS))
+    # https://spark.apache.org/docs/latest/configuration.html
     spark = (
         SparkSession.builder.appName("Local Spark Example")
         .master(f"local[{NUM_CPUS + NUM_GPUS}]")
         .config("spark.eventLog.enabled", "true")
         .config("spark.eventLog.dir", os.getenv("SPARK_EVENTS_FILEURL"))
-        .config("spark.driver.memory", "4g")
+        .config("spark.driver.memory", "2g")
+        # Amount of memory to use per executor process
         .config("spark.executor.memory", f"{executor_memory_in_mb}m")
         .config("spark.executor.instances", NUM_CPUS + NUM_GPUS)
+        # The number of cores to use on each executor. 
         .config("spark.executor.cores", 1)
+        # The maximum amount of CPU cores to request for the application from across the cluster (not from each machine).
         .config("spark.cores.max", NUM_CPUS + NUM_GPUS)
         .getOrCreate()
     )

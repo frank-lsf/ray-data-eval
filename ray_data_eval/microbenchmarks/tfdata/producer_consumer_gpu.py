@@ -8,14 +8,6 @@ import resource
 TF_PROFILER_LOGS = "logs/tf"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
 
-
-def busy_loop_for_seconds(time_diff):
-    start = time.time()
-    i = 0
-    while time.time() - start < time_diff:
-        i += 1
-
-
 MB = 1024 * 1024
 GB = 1024 * MB
 NUM_CPUS = 8
@@ -34,15 +26,18 @@ def limit_cpu_memory(mem_limit):
 
 
 def bench(mem_limit):
-    # Currently memory limit doesn't work.
     limit_cpu_memory(mem_limit)
 
     options = tf.data.Options()
+    # https://www.tensorflow.org/api_docs/python/tf/data/experimental/AutotuneOptions
     options.autotune.enabled = True
-    options.autotune.cpu_budget = 8
+    options.autotune.cpu_budget = NUM_CPUS + NUM_GPUS
+    # When autotuning is enabled (through autotune), determines the RAM budget to use. Values greater than the available RAM in bytes may result in OOM. If None, defaults to half of the available RAM in bytes.
+    # Doesn't work at the moment. 
+    options.autotune.ram_budget = mem_limit * GB
 
     def producer_fn(idx):
-        busy_loop_for_seconds(10 * TIME_UNIT)
+        time.sleep(10 * TIME_UNIT)
         for i in range(NUM_ROWS_PER_TASK):
             data = {
                 "idx": idx * NUM_ROWS_PER_TASK + i,
@@ -51,7 +46,7 @@ def bench(mem_limit):
             yield data
 
     def consumer_fn(idx, data):
-        busy_loop_for_seconds(TIME_UNIT)
+        time.sleep(TIME_UNIT)
         return np.zeros(ROW_SIZE, dtype=np.uint8)
 
     def inference_fn(data):
@@ -72,7 +67,7 @@ def bench(mem_limit):
             name="producer",
         ),
         block_length=NUM_ROWS_PER_TASK,
-        num_parallel_calls=tf.data.experimental.AUTOTUNE,
+        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 10 else 1,
         name="producer_interleave",
     )
 
@@ -83,7 +78,7 @@ def bench(mem_limit):
             Tout=tf.uint8,
             name="consumer",
         ),
-        num_parallel_calls=tf.data.experimental.AUTOTUNE,
+        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 10 else 1,
         name="consumer_map",
     )
 
@@ -94,7 +89,7 @@ def bench(mem_limit):
             Tout=tf.int64,
             name="inference",
         ),
-        num_parallel_calls=tf.data.experimental.AUTOTUNE,
+        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 10 else 1,
         name="inference_map",
     )
 

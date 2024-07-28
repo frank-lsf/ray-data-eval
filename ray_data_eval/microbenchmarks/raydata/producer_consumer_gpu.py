@@ -1,5 +1,5 @@
 import time
-
+import os
 import numpy as np
 import ray
 import argparse
@@ -11,6 +11,8 @@ TIME_UNIT = 0.5
 
 
 def bench(mem_limit):
+    os.environ["RAY_DATA_OP_RESERVATION_RATIO"] = "0"
+
     NUM_CPUS = 8
     NUM_GPUS = 4
     NUM_ROWS_PER_TASK = 10
@@ -53,7 +55,7 @@ def bench(mem_limit):
     print(ds.stats())
     print(ray._private.internal_api.memory_summary(stats_only=True))
     print(f"Total time: {end_time - start_time:.4f}s")
-    timeline_utils.save_timeline_with_cpus_gpus("timeline_ray_data", NUM_CPUS, NUM_GPUS)
+    # timeline_utils.save_timeline_with_cpus_gpus(f"timeline_ray_data_{mem_limit}", NUM_CPUS, NUM_GPUS)
     ray.shutdown()
 
 
