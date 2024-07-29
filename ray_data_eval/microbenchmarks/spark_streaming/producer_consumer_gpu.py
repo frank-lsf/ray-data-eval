@@ -4,8 +4,7 @@ from pyspark import SparkConf, SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.listener import StreamingListener
 from pyspark.sql import SQLContext, Row
-from pyspark.sql.types import StructType, StructField, IntegerType, BinaryType
-from pyspark.sql.functions import udf
+from pyspark.sql.types import StructType, StructField, IntegerType
 
 import argparse
 
@@ -77,6 +76,7 @@ def consumer(batch_rows):
 def inference(row):
     time.sleep(TIME_UNIT)
     return 1
+
 
 def run_spark_data(ssc, sql_context):
     start = time.perf_counter()
