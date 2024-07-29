@@ -78,50 +78,7 @@ def inference(row):
     time.sleep(TIME_UNIT)
     return 1
 
-
 def run_spark_data(ssc, sql_context):
-    # Define schema for incoming data
-    schema = StructType(
-        [StructField("data", BinaryType(), True), StructField("id", IntegerType(), True)]
-    )
-
-    producer_udf = udf(producer, schema)
-
-    consumer_udf = udf(consumer, BinaryType())
-
-    inference_udf = udf(inference, IntegerType())
-
-    rdd = ssc.sparkContext.parallelize([Row(id=i) for i in range(10)])
-    dstream = ssc.queueStream([rdd])
-
-    # Apply the UDFs in the streaming pipeline
-    def process_stream(rdd):
-        if not rdd.isEmpty():
-            df = ssc.createDataFrame(rdd, schema=schema)
-
-            # Apply Producer UDF
-            produced_df = df.withColumn("produced_data", producer_udf(df["id"]))
-
-            # Apply Consumer UDF
-            consumed_df = produced_df.withColumn(
-                "consumed_data", consumer_udf(produced_df["produced_data"])
-            )
-
-            # Apply Inference UDF
-            inferred_df = consumed_df.withColumn(
-                "inference_result", inference_udf(consumed_df["consumed_data"])
-            )
-
-            inferred_df.show()
-
-    dstream.foreachRDD(lambda rdd: process_stream(rdd))
-
-    # Start streaming context
-    ssc.start()
-    ssc.awaitTermination()
-
-
-def _run_spark_data(ssc, sql_context):
     start = time.perf_counter()
     items = [(item,) for item in range(NUM_TASKS)]
 

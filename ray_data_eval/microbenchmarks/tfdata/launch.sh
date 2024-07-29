@@ -1,4 +1,5 @@
+# High memory
 python producer_consumer_gpu.py --mem-limit 15
 
-# OOM
+# Low memory
 python producer_consumer_gpu.py --mem-limit 6
