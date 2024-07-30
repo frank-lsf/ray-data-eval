@@ -8,22 +8,16 @@ import resource
 TF_PROFILER_LOGS = "logs/tf"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
 
-MB = 1024 * 1024
-GB = 1024 * MB
-NUM_CPUS = 8
-NUM_GPUS = 4
-NUM_ROWS_PER_TASK = 10
-NUM_TASKS = 16 * 5
-NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
-ROW_SIZE = 100 * MB
-TIME_UNIT = 0.5
-
+import os
+import sys
+parent_directory = os.path.abspath('..')
+sys.path.append(parent_directory)
+from setting import *
 
 def limit_cpu_memory(mem_limit):
     # limit cpu memory with resources
     mem_limit_bytes = mem_limit * GB
     resource.setrlimit(resource.RLIMIT_AS, (mem_limit_bytes, mem_limit_bytes))
-
 
 def bench(mem_limit):
     limit_cpu_memory(mem_limit)
@@ -38,22 +32,22 @@ def bench(mem_limit):
 
     def producer_fn(idx):
         time.sleep(10 * TIME_UNIT)
-        for i in range(NUM_ROWS_PER_TASK):
+        for i in range(FRAMES_PER_VIDEO):
             data = {
-                "idx": idx * NUM_ROWS_PER_TASK + i,
-                "data": np.full(ROW_SIZE, i, dtype=np.uint8),
+                "idx": idx * FRAMES_PER_VIDEO + i,
+                "data": np.full(FRAME_SIZE_B, i, dtype=np.uint8),
             }
             yield data
 
     def consumer_fn(idx, data):
         time.sleep(TIME_UNIT)
-        return np.zeros(ROW_SIZE, dtype=np.uint8)
+        return np.zeros(FRAME_SIZE_B, dtype=np.uint8)
 
     def inference_fn(data):
         return 1
 
     start = time.perf_counter()
-    items = list(range(NUM_TASKS))
+    items = list(range(NUM_VIDEOS))
     ds = tf.data.Dataset.from_tensor_slices(items)
 
     ds = ds.with_options(options).interleave(
@@ -62,7 +56,7 @@ def bench(mem_limit):
             args=(item,),
             output_signature={
                 "idx": tf.TensorSpec(shape=(), dtype=tf.int64),
-                "data": tf.TensorSpec(shape=(ROW_SIZE,), dtype=tf.uint8),
+                "data": tf.TensorSpec(shape=(FRAME_SIZE_B,), dtype=tf.uint8),
             },
             name="producer",
         ),
@@ -89,13 +83,15 @@ def bench(mem_limit):
             Tout=tf.int64,
             name="inference",
         ),
-        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 10 else 1,
+        # GPU stage. 
+        num_parallel_calls= 4 if mem_limit > 10 else 1,
         name="inference_map",
     )
 
     ret = 0
     for row in ds:
         ret += row.numpy()
+        print(f'ret: {ret}/{NUM_FRAMES_TOTAL}')
     run_time = time.perf_counter() - start
     print(f"Sum: {ret:,}")
     print(f"Run time: {run_time:.2f} seconds")
@@ -108,6 +104,15 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    # if args.mem_limit >= 10:
+    #     pass
+    # else:
+    #     pass
+        # SCALE_FACTOR = 20
+        # FRAME_SIZE_B //= SCALE_FACTOR
+        # FRAMES_PER_VIDEO *= SCALE_FACTOR
+        # NUM_FRAMES_TOTAL = FRAMES_PER_VIDEO * NUM_VIDEOS
+            
     if not os.path.exists(TF_PROFILER_LOGS):
         os.makedirs(TF_PROFILER_LOGS)
     bench(args.mem_limit)

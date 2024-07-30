@@ -8,17 +8,11 @@ from pyspark.sql.types import StructType, StructField, IntegerType
 
 import argparse
 
-NUM_CPUS = 8
-NUM_GPUS = 4
-
-MB = 1024 * 1024
-
-NUM_ROWS_PER_TASK = 10
-NUM_TASKS = 16 * 5
-NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
-ROW_SIZE = 100 * MB
-
-TIME_UNIT = 0.5
+import os
+import sys
+parent_directory = os.path.abspath('..')
+sys.path.append(parent_directory)
+from setting import *
 
 
 class CustomStreamingListener(StreamingListener):
@@ -39,7 +33,8 @@ class CustomStreamingListener(StreamingListener):
 
 
 def start_spark_streaming(executor_memory):
-    executor_memory_in_mb = int(executor_memory * 1024 / (NUM_CPUS + NUM_GPUS))
+    NUM_EXECUTORS = 4
+    executor_memory_in_mb = int(executor_memory * 1024 / NUM_EXECUTORS)
     # https://spark.apache.org/docs/latest/configuration.html
     conf = (
         SparkConf()
@@ -49,9 +44,10 @@ def start_spark_streaming(executor_memory):
         .set("spark.eventLog.dir", os.getenv("SPARK_EVENTS_FILEURL"))
         .set("spark.driver.memory", "2g")
         .set("spark.executor.memory", f"{executor_memory_in_mb}m")
-        .set("spark.executor.instances", NUM_CPUS + NUM_GPUS)
-        .set("spark.executor.cores", 1)
-        .set("spark.cores.max", NUM_CPUS + NUM_GPUS)
+        .set("spark.executor.instances", NUM_EXECUTORS)  # 4 executors
+        .set("spark.executor.cores", NUM_CPUS / NUM_EXECUTORS)      # Number of cores per executor
+        .set("spark.dynamicAllocation.enabled", "false")  # Disable dynamic allocation
+        .set("spark.executor.resource.gpu.amount", 1)     # Allocate 1 GPU per executor
         .set("spark.scheduler.mode", "FAIR")
     )
     BATCH_INTERVAL = 0.1  # seconds
@@ -62,14 +58,14 @@ def start_spark_streaming(executor_memory):
 
 def producer(row):
     time.sleep(TIME_UNIT * 10)
-    for j in range(NUM_ROWS_PER_TASK):
-        data = b"1" * ROW_SIZE
-        yield (data, row[0] * NUM_ROWS_PER_TASK + j)
+    for j in range(FRAMES_PER_VIDEO):
+        data = b"1" * FRAME_SIZE_B
+        yield (data, row[0] * FRAMES_PER_VIDEO + j)
 
 
 def consumer(batch_rows):
     time.sleep(TIME_UNIT)
-    data = b"2" * ROW_SIZE
+    data = b"2" * FRAME_SIZE_B
     return (data,)
 
 
@@ -80,7 +76,7 @@ def inference(row):
 
 def run_spark_data(ssc, sql_context):
     start = time.perf_counter()
-    items = [(item,) for item in range(NUM_TASKS)]
+    items = [(item,) for item in range(NUM_VIDEOS)]
 
     # Create a DStream from a queue of RDDs
     rdd_queue = [ssc.sparkContext.parallelize(items, NUM_CPUS)]

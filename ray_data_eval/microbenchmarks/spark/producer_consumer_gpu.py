@@ -7,18 +7,11 @@ from pyspark.resource import ResourceProfileBuilder
 import os
 import argparse
 
-NUM_CPUS = 8
-NUM_GPUS = 4
-
-MB = 1024 * 1024
-
-NUM_ROWS_PER_TASK = 5
-NUM_TASKS = 16 * 5 * 2
-NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
-ROW_SIZE = 100 * MB
-
-TIME_UNIT = 0.5
-
+import os
+import sys
+parent_directory = os.path.abspath('..')
+sys.path.append(parent_directory)
+from setting import *
 
 def start_spark(stage_level_scheduling: bool):
     spark_config = (
@@ -55,15 +48,15 @@ def start_spark(stage_level_scheduling: bool):
 
 def producer_udf(row):
     time.sleep(TIME_UNIT * 10)
-    for j in range(NUM_ROWS_PER_TASK):
-        data = b"1" * ROW_SIZE
-        assert len(data) == ROW_SIZE
-        yield (data, row * NUM_ROWS_PER_TASK + j)
+    for j in range(FRAMES_PER_VIDEO):
+        data = b"1" * FRAME_SIZE_B
+        assert len(data) == FRAME_SIZE_B
+        yield (data, row * FRAMES_PER_VIDEO + j)
 
 
 def consumer_udf(row):
     time.sleep(TIME_UNIT)
-    data = b"2" * ROW_SIZE
+    data = b"2" * FRAME_SIZE_B
     return (data,)
 
 
@@ -86,7 +79,7 @@ def run_spark_data(spark, stage_level_scheduling: bool = False, cache: bool = Fa
         gpu_task_profile = builder.require(gpu_task_requests).build
     
 
-    rdd = spark.sparkContext.range(start=0, end=NUM_TASKS, numSlices=NUM_TASKS) # Set NUM_TASKS as the number of partitions.
+    rdd = spark.sparkContext.range(start=0, end=NUM_VIDEOS, numSlices=NUM_VIDEOS) # Set NUM_VIDEOS as the number of partitions.
 
     producer_rdd = rdd.flatMap(producer_udf)
     # if stage_level_scheduling:
@@ -110,7 +103,7 @@ def run_spark_data(spark, stage_level_scheduling: bool = False, cache: bool = Fa
     
     if stage_level_scheduling:
         # Call repartition to force a new stage for stage level scheduling
-        inference_rdd = consumer_rdd.repartition(NUM_TASKS)
+        inference_rdd = consumer_rdd.repartition(NUM_VIDEOS)
         inference_rdd = inference_rdd.map(lambda row: (inference_udf(row),)).withResources(gpu_task_profile)
     else:
         inference_rdd = consumer_rdd.map(lambda row: (inference_udf(row),))
