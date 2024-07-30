@@ -1,7 +1,6 @@
 import time
 
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, IntegerType, BinaryType
 from pyspark import StorageLevel
 from pyspark.resource.requests import TaskResourceRequests, ExecutorResourceRequests
 from pyspark.resource import ResourceProfileBuilder
@@ -78,7 +77,7 @@ def run_spark_data(spark, stage_level_scheduling: bool = False, cache: bool = Fa
 
     if stage_level_scheduling:
         # For the CPU stages, request 1 CPU and 0.5 GPU. This will run 8 concurrent tasks.
-        cpu_task_requests = TaskResourceRequests().cpus(1).resource("gpu", 0.5)
+        # cpu_task_requests = TaskResourceRequests().cpus(1).resource("gpu", 0.5)
         # For the GPU stages, request 1 CPU and 1 GPU. This will run 4 concurrent tasks.
         gpu_task_requests = TaskResourceRequests().cpus(1).resource("gpu", 1)
 
