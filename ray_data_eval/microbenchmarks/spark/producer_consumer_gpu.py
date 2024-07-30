@@ -2,7 +2,7 @@ import time
 
 from pyspark.sql import SparkSession
 from pyspark import StorageLevel
-from pyspark.resource.requests import TaskResourceRequests, ExecutorResourceRequests
+from pyspark.resource.requests import TaskResourceRequests
 from pyspark.resource import ResourceProfileBuilder
 import os
 import argparse
