@@ -79,6 +79,7 @@ def run_experiment(mem_limit):
     config.set_string("python.execution-mode", EXECUTION_MODE)
 
     # Set memory limit for the task manager
+    # https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/memory/mem_setup/
     mem_limit_mb = mem_limit * 1024  # Convert GB to MB
     config.set_string("taskmanager.memory.process.size", f"{mem_limit_mb}m")
 
