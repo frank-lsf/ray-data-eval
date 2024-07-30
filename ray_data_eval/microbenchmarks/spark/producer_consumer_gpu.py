@@ -42,7 +42,12 @@ def start_spark(stage_level_scheduling: bool):
         )
     else:
         spark_config = (
-            spark_config.config("spark.dynamicAllocation.enabled", "true")
+            spark_config.config("spark.dynamicAllocation.enabled", "false")
+            .config("spark.executor.instances", 4)
+            .config("spark.executor.cores", 2)
+            .config("spark.executor.memory", "4g")
+             # Allocate 1 GPU per executor.
+            .config("spark.executor.resource.gpu.amount", 1)
         )
     
     spark = spark_config.getOrCreate()
@@ -72,28 +77,21 @@ def run_spark_data(spark, stage_level_scheduling: bool = False, cache: bool = Fa
     start = time.perf_counter()
 
     if stage_level_scheduling:
-        cpu_executor_requests = (
-            ExecutorResourceRequests()
-            .cores(1)
-        )
-        gpu_executor_requests = (
-            ExecutorResourceRequests()
-            .cores(0)
-            .resource("gpu", 1)
-        )
-        cpu_task_requests = TaskResourceRequests().cpus(1)
+        # For the CPU stages, request 1 CPU and 0.5 GPU. This will run 8 concurrent tasks.
+        cpu_task_requests = TaskResourceRequests().cpus(1).resource("gpu", 0.5)
+        # For the GPU stages, request 1 CPU and 1 GPU. This will run 4 concurrent tasks.
         gpu_task_requests = TaskResourceRequests().cpus(1).resource("gpu", 1)
 
         builder = ResourceProfileBuilder()
-        cpu_task_profile = builder.require(cpu_executor_requests).require(cpu_task_requests).build
-        gpu_task_profile = builder.require(gpu_executor_requests).require(gpu_task_requests).build
+        cpu_task_profile = builder.require(cpu_task_requests).build
+        gpu_task_profile = builder.require(gpu_task_requests).build
     
 
     rdd = spark.sparkContext.range(start=0, end=NUM_TASKS, numSlices=NUM_TASKS) # Set NUM_TASKS as the number of partitions.
 
     producer_rdd = rdd.flatMap(producer_udf)
-    if stage_level_scheduling:
-        producer_rdd = producer_rdd.withResources(cpu_task_profile)
+    # if stage_level_scheduling:
+    #     producer_rdd = producer_rdd.withResources(cpu_task_profile)
     if cache:
         producer_rdd = producer_rdd.cache()
     elif cache_disk:
@@ -102,8 +100,8 @@ def run_spark_data(spark, stage_level_scheduling: bool = False, cache: bool = Fa
 
     
     consumer_rdd = producer_rdd.map(consumer_udf)
-    if stage_level_scheduling:
-        consumer_rdd = consumer_rdd.withResources(cpu_task_profile)
+    # if stage_level_scheduling:
+    #     consumer_rdd = consumer_rdd.withResources(cpu_task_profile)
     if cache:
         consumer_rdd = consumer_rdd.cache()
     elif cache_disk:
@@ -112,9 +110,9 @@ def run_spark_data(spark, stage_level_scheduling: bool = False, cache: bool = Fa
     
     
     if stage_level_scheduling:
-        # Call coalesce to force a new stage for stage level scheduling
-        # This currently hangs
-        inference_rdd = consumer_rdd.coalesce(NUM_TASKS, shuffle=True).map(lambda row: (inference_udf(row),)).withResources(gpu_task_profile)
+        # Call repartition to force a new stage for stage level scheduling
+        inference_rdd = consumer_rdd.repartition(NUM_TASKS)
+        inference_rdd = inference_rdd.map(lambda row: (inference_udf(row),)).withResources(gpu_task_profile)
     else:
         inference_rdd = consumer_rdd.map(lambda row: (inference_udf(row),))
 

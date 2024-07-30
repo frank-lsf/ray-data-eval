@@ -9,4 +9,4 @@ export SPARK_HISTORY_OPTS="-Dspark.history.fs.logDirectory=$SPARK_EVENTS_FILEURL
 
 ./spark-3.5.1-bin-hadoop3/sbin/stop-history-server.sh
 ./spark-3.5.1-bin-hadoop3/sbin/start-history-server.sh
-python producer_consumer_gpu.py --cache_disk
+python producer_consumer_gpu.py --stage-level-scheduling
