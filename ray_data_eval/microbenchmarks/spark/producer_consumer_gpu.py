@@ -82,7 +82,7 @@ def run_spark_data(spark, stage_level_scheduling: bool = False, cache: bool = Fa
         gpu_task_requests = TaskResourceRequests().cpus(1).resource("gpu", 1)
 
         builder = ResourceProfileBuilder()
-        cpu_task_profile = builder.require(cpu_task_requests).build
+        # cpu_task_profile = builder.require(cpu_task_requests).build
         gpu_task_profile = builder.require(gpu_task_requests).build
     
 
