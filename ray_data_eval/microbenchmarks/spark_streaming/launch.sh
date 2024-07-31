@@ -11,4 +11,5 @@ export SPARK_HISTORY_OPTS="-Dspark.history.fs.logDirectory=$SPARK_EVENTS_FILEURL
 /home/ubuntu/miniconda3/envs/ray-data/lib/python3.10/site-packages/pyspark/sbin/start-history-server.sh
 
 export PYTHONPATH=$(dirname $(pwd)):$PYTHONPATH
-python -u producer_consumer_gpu.py --mem-limit 10 # > mem-limit-10.log 2>&1
+python -u producer_consumer_gpu.py --mem-limit 10 > mem-limit-10.log 2>&1
+python -u producer_consumer_gpu.py --mem-limit 7 > mem-limit-7.log 2>&1

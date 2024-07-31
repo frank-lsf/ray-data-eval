@@ -18,6 +18,7 @@ from setting import (
     FRAME_SIZE_B,
 )
 
+
 def limit_cpu_memory(mem_limit):
     # limit cpu memory with resources
     mem_limit_bytes = mem_limit * GB
