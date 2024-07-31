@@ -7,12 +7,7 @@ from pyspark.resource import ResourceProfileBuilder
 import os
 import argparse
 
-import sys
 from setting import TIME_UNIT, NUM_CPUS, FRAMES_PER_VIDEO, NUM_VIDEOS, FRAME_SIZE_B, busy_loop
-
-
-parent_directory = os.path.abspath("..")
-sys.path.append(parent_directory)
 
 
 def start_spark(stage_level_scheduling: bool):

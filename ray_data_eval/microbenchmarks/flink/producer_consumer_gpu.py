@@ -6,8 +6,6 @@ from pyflink.datastream.functions import FlatMapFunction, RuntimeContext, MapFun
 import argparse
 import resource
 
-import os
-import sys
 from setting import (
     GB,
     EXECUTION_MODE,
@@ -19,11 +17,6 @@ from setting import (
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
 )
-
-
-parent_directory = os.path.abspath("..")
-sys.path.append(parent_directory)
-
 
 def limit_cpu_memory(mem_limit):
     # limit cpu memory with resources

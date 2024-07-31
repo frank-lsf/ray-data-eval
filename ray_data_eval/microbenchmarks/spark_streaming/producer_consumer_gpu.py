@@ -1,20 +1,15 @@
 import time
-import os
 from pyspark import SparkConf, SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.listener import StreamingListener
 
 import argparse
-import sys
 from setting import (
     TIME_UNIT,
     FRAMES_PER_VIDEO,
     NUM_VIDEOS,
     FRAME_SIZE_B,
 )
-
-parent_directory = os.path.abspath("..")
-sys.path.append(parent_directory)
 
 
 class CustomStreamingListener(StreamingListener):
@@ -72,7 +67,7 @@ def inference(row):
 
 def run_spark_data(ssc, mem_limit):
     start = time.perf_counter()
-    BATCH_SIZE = NUM_VIDEOS if mem_limit >= 10 else 1
+    BATCH_SIZE = NUM_VIDEOS // 10 if mem_limit >= 10 else 1
     rdd_queue = [
         ssc.sparkContext.range(i, i + BATCH_SIZE) for i in range(0, NUM_VIDEOS, BATCH_SIZE)
     ]

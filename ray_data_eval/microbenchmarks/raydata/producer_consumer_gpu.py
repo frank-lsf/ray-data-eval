@@ -5,7 +5,6 @@ import ray
 import argparse
 import timeline_utils
 
-import sys
 from setting import (
     GB,
     TIME_UNIT,
@@ -16,10 +15,6 @@ from setting import (
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
 )
-
-
-parent_directory = os.path.abspath("..")
-sys.path.append(parent_directory)
 
 
 def bench(mem_limit):

@@ -6,6 +6,7 @@ export PYSPARK_PYTHON=/home/ray/anaconda3/bin/python
 export SPARK_HISTORY_OPTS="-Dspark.history.fs.logDirectory=$SPARK_EVENTS_FILEURL"
 
 # export SPARK_WORKER_OPTS="-Dspark.worker.resource.gpu.amount=4 -Dspark.worker.resource.gpu.discoveryScript=./gpu_discovery.sh -Dspark.executor.instances=8 -Dspark.executor.cores=1"
+export PYTHONPATH=$(dirname $(pwd)):$PYTHONPATH
 
 ./spark-3.5.1-bin-hadoop3/sbin/stop-history-server.sh
 ./spark-3.5.1-bin-hadoop3/sbin/start-history-server.sh
