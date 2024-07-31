@@ -3,13 +3,24 @@ import os
 import numpy as np
 import ray
 import argparse
-# import timeline_utils
+import timeline_utils
 
-import os
 import sys
-parent_directory = os.path.abspath('..')
+from setting import (
+    GB,
+    TIME_UNIT,
+    NUM_CPUS,
+    NUM_GPUS,
+    FRAMES_PER_VIDEO,
+    NUM_VIDEOS,
+    NUM_FRAMES_TOTAL,
+    FRAME_SIZE_B,
+)
+
+
+parent_directory = os.path.abspath("..")
 sys.path.append(parent_directory)
-from setting import *
+
 
 def bench(mem_limit):
     os.environ["RAY_DATA_OP_RESERVATION_RATIO"] = "0"
@@ -32,7 +43,7 @@ def bench(mem_limit):
 
     data_context = ray.data.DataContext.get_current()
     data_context.execution_options.verbose_progress = True
-    data_context.target_max_FRAME_SIZE_B = FRAME_SIZE_B
+    data_context.target_max_block_size = FRAME_SIZE_B
     data_context.is_budget_policy = True
     # data_context.is_conservative_policy = True
 
@@ -50,7 +61,9 @@ def bench(mem_limit):
     print(ds.stats())
     print(ray._private.internal_api.memory_summary(stats_only=True))
     print(f"Total time: {end_time - start_time:.4f}s")
-    # timeline_utils.save_timeline_with_cpus_gpus(f"timeline_ray_data_{mem_limit}", NUM_CPUS, NUM_GPUS)
+    timeline_utils.save_timeline_with_cpus_gpus(
+        f"timeline_ray_data_{mem_limit}.json", NUM_CPUS, NUM_GPUS
+    )
     ray.shutdown()
 
 

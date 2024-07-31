@@ -4,20 +4,31 @@ import os
 import numpy as np
 import argparse
 import resource
+from setting import (
+    GB,
+    TIME_UNIT,
+    NUM_CPUS,
+    NUM_GPUS,
+    FRAMES_PER_VIDEO,
+    NUM_VIDEOS,
+    NUM_FRAMES_TOTAL,
+    FRAME_SIZE_B,
+)
+import sys
 
 TF_PROFILER_LOGS = "logs/tf"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
 
-import os
-import sys
-parent_directory = os.path.abspath('..')
+
+parent_directory = os.path.abspath("..")
 sys.path.append(parent_directory)
-from setting import *
+
 
 def limit_cpu_memory(mem_limit):
     # limit cpu memory with resources
     mem_limit_bytes = mem_limit * GB
     resource.setrlimit(resource.RLIMIT_AS, (mem_limit_bytes, mem_limit_bytes))
+
 
 def bench(mem_limit):
     limit_cpu_memory(mem_limit)
@@ -83,15 +94,15 @@ def bench(mem_limit):
             Tout=tf.int64,
             name="inference",
         ),
-        # GPU stage. 
-        num_parallel_calls= 4 if mem_limit > 10 else 1,
+        # GPU stage.
+        num_parallel_calls=4 if mem_limit > 10 else 1,
         name="inference_map",
     )
 
     ret = 0
     for row in ds:
         ret += row.numpy()
-        print(f'ret: {ret}/{NUM_FRAMES_TOTAL}')
+        print(f"ret: {ret}/{NUM_FRAMES_TOTAL}")
     run_time = time.perf_counter() - start
     print(f"Sum: {ret:,}")
     print(f"Run time: {run_time:.2f} seconds")
@@ -108,11 +119,11 @@ if __name__ == "__main__":
     #     pass
     # else:
     #     pass
-        # SCALE_FACTOR = 20
-        # FRAME_SIZE_B //= SCALE_FACTOR
-        # FRAMES_PER_VIDEO *= SCALE_FACTOR
-        # NUM_FRAMES_TOTAL = FRAMES_PER_VIDEO * NUM_VIDEOS
-            
+    # SCALE_FACTOR = 20
+    # FRAME_SIZE_B //= SCALE_FACTOR
+    # FRAMES_PER_VIDEO *= SCALE_FACTOR
+    # NUM_FRAMES_TOTAL = FRAMES_PER_VIDEO * NUM_VIDEOS
+
     if not os.path.exists(TF_PROFILER_LOGS):
         os.makedirs(TF_PROFILER_LOGS)
     bench(args.mem_limit)

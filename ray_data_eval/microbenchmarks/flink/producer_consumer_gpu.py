@@ -8,14 +8,28 @@ import resource
 
 import os
 import sys
-parent_directory = os.path.abspath('..')
+from setting import (
+    GB,
+    EXECUTION_MODE,
+    TIME_UNIT,
+    NUM_CPUS,
+    NUM_GPUS,
+    FRAMES_PER_VIDEO,
+    NUM_VIDEOS,
+    NUM_FRAMES_TOTAL,
+    FRAME_SIZE_B,
+)
+
+
+parent_directory = os.path.abspath("..")
 sys.path.append(parent_directory)
-from setting import *
+
 
 def limit_cpu_memory(mem_limit):
     # limit cpu memory with resources
     mem_limit_bytes = mem_limit * GB
     resource.setrlimit(resource.RLIMIT_AS, (mem_limit_bytes, mem_limit_bytes))
+
 
 class Producer(FlatMapFunction):
     def open(self, runtime_context: RuntimeContext):
@@ -26,6 +40,7 @@ class Producer(FlatMapFunction):
         time.sleep(TIME_UNIT * 10)
         for _ in range(FRAMES_PER_VIDEO):
             yield b"1" * FRAME_SIZE_B
+
 
 class Consumer(MapFunction):
     def open(self, runtime_context):
