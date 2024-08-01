@@ -35,17 +35,22 @@ class CustomStreamingListener(StreamingListener):
 def start_spark_streaming(executor_memory, stage_level_scheduling):
     # https://spark.apache.org/docs/latest/configuration.html
 
-    limit_cpu_memory(executor_memory)
     if executor_memory < 10:
+        # Using rlimit will oom.
+        # Instead, I just set executor.memory.
+        # The total memory should be 1 * 2g + 2g = 4g. 
+        # limit_cpu_memory(executor_memory)
+        assert executor_memory == 4
         conf = (
             SparkConf()
-            .set("spark.dynamicAllocation.enabled", "false")
-            .set("spark.cores.max", NUM_CPUS)
-            .set("spark.executor.cores", 1)
+            # .set("spark.dynamicAllocation.enabled", "false")
+            .set("spark.cores.max", 4)
+            .set("spark.executor.cores", 4)
             .set("spark.executor.instances", 1)
             .set("spark.executor.memory", "1g")
-            .set("spark.driver.memory", "1g")
+            .set("spark.driver.memory", "2g")
             # .set("spark.executor.resource.gpu.amount", 1)
+            # .set("spark.task.resource.gpu.amount", 1)
         )
     elif not stage_level_scheduling:
         conf = (
@@ -106,7 +111,7 @@ def run_spark_data(ssc, mem_limit, stage_level_scheduling):
         gpu_task_profile = builder.require(gpu_task_requests).build
 
     start = time.perf_counter()
-    BATCH_SIZE = NUM_VIDEOS // 10 if mem_limit >= 10 else 1
+    BATCH_SIZE = NUM_VIDEOS // 5 if mem_limit >= 10 else 4
     rdd_queue = [
         ssc.sparkContext.range(i, i + BATCH_SIZE) for i in range(0, NUM_VIDEOS, BATCH_SIZE)
     ]

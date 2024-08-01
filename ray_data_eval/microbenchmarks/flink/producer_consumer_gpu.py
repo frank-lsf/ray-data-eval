@@ -63,15 +63,15 @@ def run_flink(env, mem_limit):
 
     producer = Producer()
     ds = ds.flat_map(producer, output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        NUM_CPUS // 2 if mem_limit >= 10 else 1
+        NUM_CPUS // 2 if mem_limit >= 10 else 3
     )
 
     ds = ds.map(Consumer(), output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        NUM_CPUS // 2 if mem_limit >= 10 else 1
+        NUM_CPUS // 2 if mem_limit >= 10 else 3
     )
 
     ds = ds.map(Inference(), output_type=Types.LONG()).set_parallelism(
-        NUM_GPUS if mem_limit >= 10 else 1
+        NUM_GPUS if mem_limit >= 10 else 3
     )
 
     count = 0
@@ -91,9 +91,10 @@ def run_experiment(mem_limit):
     # Set memory limit for the task manager
     # https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/memory/mem_setup/
     mem_limit_mb = mem_limit * 1024  # Convert GB to MB
-    config.set_string("taskmanager.memory.process.size", f"{mem_limit_mb}m")
-    config.set_string("jobmanager.memory.process.size", f"{mem_limit_mb}m")
-    limit_cpu_memory(mem_limit)
+    config.set_string("taskmanager.memory.process.size", f"{mem_limit_mb // 2}m")
+    config.set_string("jobmanager.memory.process.size", f"{mem_limit_mb // 2}m")
+    # This will oom. 
+    # limit_cpu_memory(mem_limit)
     env = StreamExecutionEnvironment.get_execution_environment(config)
     run_flink(env, mem_limit)
 

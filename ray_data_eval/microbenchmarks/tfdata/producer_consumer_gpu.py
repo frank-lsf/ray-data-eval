@@ -31,7 +31,8 @@ def limit_cpu_memory(mem_limit):
 
 
 def bench(mem_limit):
-    limit_cpu_memory(mem_limit)
+    # oom at 4GB
+    # limit_cpu_memory(mem_limit)
 
     options = tf.data.Options()
     # https://www.tensorflow.org/api_docs/python/tf/data/experimental/AutotuneOptions
@@ -61,6 +62,7 @@ def bench(mem_limit):
     items = list(range(NUM_VIDEOS))
     ds = tf.data.Dataset.from_tensor_slices(items)
 
+    # flat_map doesn't have num_parallel_calls
     ds = ds.with_options(options).interleave(
         lambda item: tf.data.Dataset.from_generator(
             producer_fn,
