@@ -38,7 +38,7 @@ def start_spark_streaming(executor_memory, stage_level_scheduling):
     if executor_memory < 10:
         # Using rlimit will oom.
         # Instead, I just set executor.memory.
-        # The total memory should be 1 * 2g + 2g = 4g. 
+        # The total memory should be 1 * 2g + 2g = 4g.
         # limit_cpu_memory(executor_memory)
         assert executor_memory == 4
         conf = (

@@ -93,7 +93,7 @@ def run_experiment(mem_limit):
     mem_limit_mb = mem_limit * 1024  # Convert GB to MB
     config.set_string("taskmanager.memory.process.size", f"{mem_limit_mb // 2}m")
     config.set_string("jobmanager.memory.process.size", f"{mem_limit_mb // 2}m")
-    # This will oom. 
+    # This will oom.
     # limit_cpu_memory(mem_limit)
     env = StreamExecutionEnvironment.get_execution_environment(config)
     run_flink(env, mem_limit)
