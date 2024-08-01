@@ -49,6 +49,7 @@ def start_spark_streaming(executor_memory, stage_level_scheduling):
             .set("spark.executor.instances", 1)
             .set("spark.executor.memory", "1g")
             .set("spark.driver.memory", "2g")
+            .set("spark.scheduler.mode", "FAIR")
             # .set("spark.executor.resource.gpu.amount", 1)
             # .set("spark.task.resource.gpu.amount", 1)
         )
@@ -61,6 +62,7 @@ def start_spark_streaming(executor_memory, stage_level_scheduling):
             .set("spark.executor.instances", NUM_CPUS)
             .set("spark.executor.memory", "5g")
             .set("spark.driver.memory", "8g")
+            # .set("spark.scheduler.mode", "FAIR")
             # .set("spark.executor.resource.gpu.amount", 1)
         )
     else:
@@ -82,6 +84,7 @@ def start_spark_streaming(executor_memory, stage_level_scheduling):
 
 
 def producer(row):
+    print('producer')
     time.sleep(TIME_UNIT * 10)
     for j in range(FRAMES_PER_VIDEO):
         data = b"1" * FRAME_SIZE_B
@@ -89,12 +92,14 @@ def producer(row):
 
 
 def consumer(row):
+    print('consumer')
     time.sleep(TIME_UNIT)
     data = b"2" * FRAME_SIZE_B
     return (data,)
 
 
 def inference(row):
+    print('inference')
     time.sleep(TIME_UNIT)
     return 1
 

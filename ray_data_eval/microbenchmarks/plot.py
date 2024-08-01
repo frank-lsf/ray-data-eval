@@ -30,7 +30,7 @@ plt.rc("figure", titlesize=BIG_SIZE)  # fontsize of the figure title
 # Data
 frameworks = ["Radar", "Spark", "Spark\nStreaming", "Flink", "tf.data"]
 unlimited_memory = [209, 326, 291.76, 475.53, 305]
-limited_memory = [209, 843.88, 890.64, 624.6, 549.6]  # None for missing Tf.data large row value
+limited_memory = [211, 843.88, 890.64, 624.6, 549.6]  # None for missing Tf.data large row value
 
 
 def calculate_ratio(a, b):
@@ -54,6 +54,8 @@ bar_width = 0.4
 # Plotting small row, large row, and limited memory bars
 ax.bar(x, unlimited_memory, width=bar_width, label="Unlim. Mem.", zorder=2)
 ax.bar([p + bar_width for p in x], limited_memory, width=bar_width, label="Lim. Mem.", zorder=2)
+theoretical_minimum = 153
+ax.axhline(y=theoretical_minimum, color='g', linestyle='--', label='Theo. Min.', zorder=1)
 
 # Adding text for zero value in large row
 for i, value in enumerate(limited_memory):
