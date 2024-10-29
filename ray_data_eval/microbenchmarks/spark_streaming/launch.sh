@@ -1,3 +1,5 @@
+set -ex
+
 export SPARK_EVENTS_PATH=/home/ubuntu/ray-data-eval/logs/spark-events
 export SPARK_TRACE_EVENT_PATH=/home/ubuntu/ray-data-eval/logs/spark-trace-events
 export SPARK_EVENTS_FILEURL=file://$SPARK_EVENTS_PATH
