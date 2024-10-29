@@ -1,11 +1,11 @@
-import time
+import argparse
 import os
+import time
+
 import numpy as np
 import ray
-import argparse
-import timeline_utils
 
-from setting import (
+from ray_data_eval.microbenchmarks.setting import (
     GB,
     TIME_UNIT,
     NUM_CPUS,
@@ -15,6 +15,7 @@ from setting import (
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
 )
+from ray_data_eval.microbenchmarks import timeline_utils
 
 
 def bench(mem_limit):

@@ -4,10 +4,9 @@ import boto3
 import pandas as pd
 from PIL import Image
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, pandas_udf
+from pyspark.sql.functions import pandas_udf
 from pyspark.sql.types import ArrayType, FloatType
 import torch
-from torchvision.models import resnet50, ResNet50_Weights
 import torchvision.transforms.functional as F
 
 BUCKET = "ray-data-eval-us-west-2"
