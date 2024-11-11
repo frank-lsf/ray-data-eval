@@ -1,6 +1,4 @@
-use serde::Serialize;
-use serde_json;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::fs::File;
 use std::hash::Hasher;
 use std::io::Write;
@@ -9,22 +7,9 @@ use std::{hash::Hash, sync::Arc};
 use crate::types::*;
 use itertools::Itertools;
 use log::{debug, info};
-use once_cell::sync::Lazy;
-use rayon::prelude::*;
 
 type OperatorIndex = usize;
 type Tick = u32;
-
-const MICROSECS_PER_TICK: u64 = 500_000;
-
-static COLOR_MAP: Lazy<HashMap<String, String>> = Lazy::new(|| {
-    let mut map = HashMap::new();
-    map.insert("P".to_string(), "rail_response".to_string());
-    map.insert("C".to_string(), "cq_build_passed".to_string());
-    map.insert("I".to_string(), "rail_load".to_string());
-    map.insert("T".to_string(), "cq_build_failed".to_string());
-    map
-});
 
 #[derive(Debug, Clone)]
 pub struct Solution {
@@ -38,19 +23,6 @@ pub struct Buffer {
     consumable_size: usize,
     timeline: Vec<usize>,
     consumable_timeline: Vec<usize>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct TraceEvent {
-    cat: String,
-    name: String,
-    pid: String,
-    tid: String,
-    ts: u64,
-    dur: u64,
-    ph: String,
-    cname: String,
-    args: Option<HashMap<String, String>>,
 }
 
 impl PartialEq for Buffer {
@@ -190,8 +162,6 @@ struct Executor {
     pub resource: Resource,
     running_task: Option<RunningTask>,
     timeline: String,
-    current_time: u64,
-    timeline_json: Vec<TraceEvent>,
 }
 
 impl PartialEq for Executor {
@@ -226,32 +196,6 @@ fn try_finishing_running_task(
     true
 }
 
-impl TraceEvent {
-    pub fn new(
-        cat: String,
-        name: String,
-        pid: String,
-        tid: String,
-        ts: u64,
-        dur: u64,
-        ph: String,
-        cname: String,
-        args: Option<HashMap<String, String>>,
-    ) -> Self {
-        Self {
-            cat,
-            name,
-            pid,
-            tid,
-            ts,
-            dur,
-            ph,
-            cname,
-            args,
-        }
-    }
-}
-
 impl Executor {
     pub fn new(name: String, resource: Resource) -> Self {
         Self {
@@ -259,8 +203,6 @@ impl Executor {
             resource,
             running_task: None,
             timeline: String::new(),
-            current_time: 0,
-            timeline_json: Vec::new(),
         }
     }
 
@@ -331,32 +273,11 @@ impl Executor {
             if task.remaining_ticks > 0 {
                 self.timeline.push_str(&task.spec.id);
                 self.timeline.push_str("  ");
-
-                if task.remaining_ticks == task.spec.duration as i32 {
-                    let dur_time = (task.spec.duration as u64) * MICROSECS_PER_TICK;
-                    let event = TraceEvent::new(
-                        "task".into(),
-                        task.spec.id.clone(),
-                        "1".into(),
-                        self.name.clone(),
-                        self.current_time,
-                        dur_time,
-                        "X".into(),
-                        COLOR_MAP
-                            .get(&task.spec.id)
-                            .unwrap_or(&"olive".into())
-                            .clone(),
-                        None,
-                    );
-                    self.current_time += dur_time;
-                    self.timeline_json.push(event);
-                }
             } else {
                 self.timeline.push_str("!  ");
             }
         } else {
             self.timeline.push_str("   ");
-            self.current_time += MICROSECS_PER_TICK;
         }
     }
 }
@@ -602,7 +523,7 @@ impl Environment {
         } else {
             let action_sets = self.get_action_sets();
             action_sets
-                .into_par_iter()
+                .into_iter()
                 .filter_map(|action_set| {
                     let mut state_ = self.clone();
                     if state_.tick_with_actions(&action_set) {
@@ -652,19 +573,20 @@ impl Environment {
         false
     }
 
-    fn collect_events_from_all_executors(&self) -> Vec<TraceEvent> {
-        let mut all_events = Vec::new();
+    fn write_timeline_to_file(&self, filename: &str) {
+        let mut file = File::create(filename).unwrap();
         for executor in self.executors.iter() {
-            all_events.extend(executor.timeline_json.clone());
+            file.write_all(executor.timeline.as_bytes()).unwrap();
+            file.write_all(b"\n").unwrap();
         }
-        all_events
-    }
-
-    fn write_all_events_to_json(&self) {
-        let all_events = self.collect_events_from_all_executors();
-        let json = serde_json::to_string(&all_events).unwrap();
-        let mut file = File::create("output.json").unwrap();
-        file.write_all(json.as_bytes()).unwrap();
+        for buffer in self.buffers.iter() {
+            file.write_all(buffer.timeline.iter().join(" ").as_bytes())
+                .unwrap();
+            file.write_all(b"\n").unwrap();
+            file.write_all(buffer.consumable_timeline.iter().join(" ").as_bytes())
+                .unwrap();
+            file.write_all(b"\n").unwrap();
+        }
     }
 
     pub fn print(&self) {
@@ -676,7 +598,7 @@ impl Environment {
             info!("{:?}", buffer.consumable_timeline);
         }
         info!("");
-        self.write_all_events_to_json();
+        self.write_timeline_to_file("timeline.txt");
     }
 
     pub fn get_fingerprint(&self) -> u64 {
