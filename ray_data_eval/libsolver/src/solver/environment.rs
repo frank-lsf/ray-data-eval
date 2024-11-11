@@ -1,19 +1,30 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use serde_json;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs::File;
+use std::hash::Hasher;
 use std::io::Write;
 use std::{hash::Hash, sync::Arc};
 
 use crate::types::*;
 use itertools::Itertools;
 use log::{debug, info};
-use std::hash::Hasher;
+use once_cell::sync::Lazy;
+use rayon::prelude::*;
 
 type OperatorIndex = usize;
 type Tick = u32;
 
 const MICROSECS_PER_TICK: u64 = 500_000;
+
+static COLOR_MAP: Lazy<HashMap<String, String>> = Lazy::new(|| {
+    let mut map = HashMap::new();
+    map.insert("P".to_string(), "rail_response".to_string());
+    map.insert("C".to_string(), "cq_build_passed".to_string());
+    map.insert("I".to_string(), "rail_load".to_string());
+    map.insert("T".to_string(), "cq_build_failed".to_string());
+    map
+});
 
 #[derive(Debug, Clone)]
 pub struct Solution {
@@ -181,7 +192,6 @@ struct Executor {
     timeline: String,
     current_time: u64,
     timeline_json: Vec<TraceEvent>,
-    color_map: HashMap<String, String>,
 }
 
 impl PartialEq for Executor {
@@ -214,15 +224,6 @@ fn try_finishing_running_task(
         }
     }
     true
-}
-
-fn create_event_color_map() -> HashMap<String, String> {
-    let mut map = HashMap::new();
-    map.insert("P".to_string(), "rail_response".to_string());
-    map.insert("C".to_string(), "cq_build_passed".to_string());
-    map.insert("I".to_string(), "rail_load".to_string());
-    map.insert("T".to_string(), "cq_build_failed".to_string());
-    map
 }
 
 impl TraceEvent {
@@ -260,7 +261,6 @@ impl Executor {
             timeline: String::new(),
             current_time: 0,
             timeline_json: Vec::new(),
-            color_map: create_event_color_map(),
         }
     }
 
@@ -335,16 +335,16 @@ impl Executor {
                 if task.remaining_ticks == task.spec.duration as i32 {
                     let dur_time = (task.spec.duration as u64) * MICROSECS_PER_TICK;
                     let event = TraceEvent::new(
-                        "task".to_string(),
+                        "task".into(),
                         task.spec.id.clone(),
-                        "1".to_string(),
+                        "1".into(),
                         self.name.clone(),
                         self.current_time,
                         dur_time,
-                        "X".to_string(),
-                        self.color_map
+                        "X".into(),
+                        COLOR_MAP
                             .get(&task.spec.id)
-                            .unwrap_or(&"olive".to_string())
+                            .unwrap_or(&"olive".into())
                             .clone(),
                         None,
                     );
@@ -596,20 +596,28 @@ impl Environment {
         true
     }
 
-    pub fn get_next_states(&self) -> Vec<Self> {
+    pub fn get_next_states(&self, visited: &HashSet<u64>) -> Vec<Self> {
         if self.is_finished() || self.tick >= self.time_limit {
             vec![]
         } else {
-            let mut ret = Vec::new();
             let action_sets = self.get_action_sets();
-            for action_set in action_sets {
-                let mut state_ = self.clone();
-                if state_.tick_with_actions(&action_set) {
-                    debug!("Tick: {}, actions: {:?}", self.tick, action_set);
-                    ret.push(state_);
-                }
-            }
-            ret
+            action_sets
+                .into_par_iter()
+                .filter_map(|action_set| {
+                    let mut state_ = self.clone();
+                    if state_.tick_with_actions(&action_set) {
+                        debug!("Tick: {}, actions: {:?}", self.tick, action_set);
+                        let fingerprint = state_.get_fingerprint();
+                        if visited.contains(&fingerprint) {
+                            None
+                        } else {
+                            Some(state_)
+                        }
+                    } else {
+                        None
+                    }
+                })
+                .collect()
         }
     }
 
