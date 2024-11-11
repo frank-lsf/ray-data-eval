@@ -9,12 +9,6 @@ pub fn solve(problem: &SchedulingProblem) {
     let mut heap = std::collections::BinaryHeap::new();
     let mut best_solution: Option<Solution> = None;
 
-    fn update_best_solution(best_solution: &mut Option<Solution>, solution: Solution) {
-        info!("New best solution: {}", solution.total_time);
-        solution.state.print();
-        *best_solution = Some(solution);
-    }
-
     heap.push(Environment::new(
         &problem.resources,
         &problem.operators,
@@ -29,19 +23,20 @@ pub fn solve(problem: &SchedulingProblem) {
             continue;
         }
         visited.insert(fingerprint);
-        // state.print();
         let solution_lower_bound = state.get_solution_lower_bound();
         if let Some(best) = &best_solution {
             if best.total_time < solution_lower_bound {
                 continue;
             }
         }
-        if let Some(solution) = state.get_solution() {
+        if let Some(total_time) = state.get_solution_tick() {
             if best_solution
                 .as_ref()
-                .map_or(true, |best| solution.total_time < best.total_time)
+                .map_or(true, |best| total_time < best.total_time)
             {
-                update_best_solution(&mut best_solution, solution);
+                info!("New best solution: {}", total_time);
+                state.print();
+                best_solution = Some(Solution { total_time, state });
             }
         } else {
             let next_states = state.get_next_states(&visited);

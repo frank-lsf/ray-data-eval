@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::HashSet;
 use std::fs::File;
 use std::hash::Hasher;
@@ -5,6 +6,7 @@ use std::io::Write;
 use std::{hash::Hash, sync::Arc};
 
 use crate::types::*;
+use im::Vector;
 use itertools::Itertools;
 use log::{debug, info};
 
@@ -21,8 +23,8 @@ pub struct Solution {
 pub struct Buffer {
     size: usize,
     consumable_size: usize,
-    timeline: Vec<usize>,
-    consumable_timeline: Vec<usize>,
+    timeline: Vector<usize>,
+    consumable_timeline: Vector<usize>,
 }
 
 impl PartialEq for Buffer {
@@ -45,14 +47,14 @@ impl Buffer {
         Self {
             size: 0,
             consumable_size: 0,
-            timeline: Vec::new(),
-            consumable_timeline: Vec::new(),
+            timeline: Vector::new(),
+            consumable_timeline: Vector::new(),
         }
     }
 
     pub fn tick(&mut self, _tick: Tick) {
-        self.timeline.push(self.size);
-        self.consumable_timeline.push(self.consumable_size);
+        self.timeline.push_back(self.size);
+        self.consumable_timeline.push_back(self.consumable_size);
     }
 
     pub fn push(&mut self, size: usize) -> bool {
@@ -161,7 +163,7 @@ struct Executor {
     pub name: String,
     pub resource: Resource,
     running_task: Option<RunningTask>,
-    timeline: String,
+    timeline: Vector<char>,
 }
 
 impl PartialEq for Executor {
@@ -202,7 +204,7 @@ impl Executor {
             name,
             resource,
             running_task: None,
-            timeline: String::new(),
+            timeline: Vector::new(),
         }
     }
 
@@ -271,13 +273,13 @@ impl Executor {
     fn push_timeline_item(&mut self) {
         if let Some(task) = &self.running_task {
             if task.remaining_ticks > 0 {
-                self.timeline.push_str(&task.spec.id);
-                self.timeline.push_str("  ");
+                self.timeline
+                    .push_back(task.spec.id.chars().next().unwrap());
             } else {
-                self.timeline.push_str("!  ");
+                self.timeline.push_back('!');
             }
         } else {
-            self.timeline.push_str("   ");
+            self.timeline.push_back(' ');
         }
     }
 }
@@ -402,14 +404,11 @@ impl Environment {
         self.num_tasks_finished == self.num_tasks
     }
 
-    pub fn get_solution(&self) -> Option<Solution> {
+    pub fn get_solution_tick(&self) -> Option<u32> {
         if !self.is_finished() {
             None
         } else {
-            Some(Solution {
-                total_time: self.tick,
-                state: self.clone(),
-            })
+            Some(self.tick)
         }
     }
 
@@ -468,16 +467,15 @@ impl Environment {
             Action::Noop => true,
             Action::StartTask { operator_idx } => {
                 let task = {
-                    if let Some(operator_state) = self.operator_states.get_mut(*operator_idx) {
-                        let task_idx = operator_state.next_task_idx;
-                        operator_state.next_task_idx += 1;
-                        if let Some(task) = self.operator_specs[*operator_idx].tasks.get(task_idx) {
-                            Some(task.clone())
-                        } else {
-                            None
-                        }
+                    if let Some(op_state) = self.operator_states.get_mut(*operator_idx) {
+                        let task_idx = op_state.next_task_idx;
+                        op_state.next_task_idx += 1;
+                        self.operator_specs[*operator_idx]
+                            .tasks
+                            .get(task_idx)
+                            .cloned()
                     } else {
-                        None
+                        return false;
                     }
                 };
                 if let Some(task) = task {
@@ -525,14 +523,14 @@ impl Environment {
             action_sets
                 .into_iter()
                 .filter_map(|action_set| {
-                    let mut state_ = self.clone();
-                    if state_.tick_with_actions(&action_set) {
+                    let mut state_ = Cow::Borrowed(self);
+                    if state_.to_mut().tick_with_actions(&action_set) {
                         debug!("Tick: {}, actions: {:?}", self.tick, action_set);
                         let fingerprint = state_.get_fingerprint();
                         if visited.contains(&fingerprint) {
                             None
                         } else {
-                            Some(state_)
+                            Some(state_.into_owned())
                         }
                     } else {
                         None
@@ -576,7 +574,8 @@ impl Environment {
     fn write_timeline_to_file(&self, filename: &str) {
         let mut file = File::create(filename).unwrap();
         for executor in self.executors.iter() {
-            file.write_all(executor.timeline.as_bytes()).unwrap();
+            file.write_all(executor.timeline.iter().join(" ").as_bytes())
+                .unwrap();
             file.write_all(b"\n").unwrap();
         }
         for buffer in self.buffers.iter() {
@@ -591,7 +590,7 @@ impl Environment {
 
     pub fn print(&self) {
         for executor in self.executors.iter() {
-            info!("{:?}", executor.timeline);
+            info!("{}", executor.timeline.iter().join("  "));
         }
         for buffer in self.buffers.iter() {
             info!("{:?}", buffer.timeline);
