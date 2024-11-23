@@ -1,0 +1,5 @@
+accelerate
+git+https://github.com/huggingface/diffusers
+tensorrt
+torch
+transformers
