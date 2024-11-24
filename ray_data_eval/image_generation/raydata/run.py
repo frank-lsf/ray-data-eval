@@ -11,6 +11,7 @@ from ray_data_pipeline_helpers import (
     CsvLogger,
     append_gpu_timeline,
 )
+from ray_data_eval.image_generation.common import encode_and_upload
 
 NUM_BATCHES = 20
 BATCH_SIZE = 10
@@ -50,6 +51,7 @@ class Model:
         inference_start_time = time.time()
 
         images = batch["image"]
+        print(batch["path"])
         with self.tracer.profile("task:gpu_execution"):
             output_batch = self.model(
                 prompt=[prompt] * len(images),
@@ -57,7 +59,6 @@ class Model:
                 height=RESOLUTION,
                 width=RESOLUTION,
                 num_inference_steps=5,
-                output_type="np",
             )
 
         inference_end_time = time.time()
@@ -81,19 +82,14 @@ class Model:
         # print(ray._private.internal_api.memory_summary(stats_only=True))
         return {
             "image": output_batch.images,
+            "path": batch["path"],
         }
-
-
-def postprocess(batch):
-    time.sleep(2)
-    return {
-        "path": ["ok"] * len(batch["image"]),
-    }
 
 
 def main():
     ds = ray.data.read_images(
         ["./mountain.png"] * BATCH_SIZE * NUM_BATCHES,
+        include_paths=True,
         transform=transform_image,
         override_num_blocks=NUM_BATCHES,
     )
@@ -106,7 +102,7 @@ def main():
         max_concurrency=2,
     )
     ds = ds.map_batches(
-        postprocess,
+        encode_and_upload,
         batch_size=BATCH_SIZE,
         zero_copy_batch=True,
     )
