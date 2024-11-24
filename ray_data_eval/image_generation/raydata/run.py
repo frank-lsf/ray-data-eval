@@ -83,6 +83,8 @@ def postprocess(batch):
 
 
 def main():
+    tracer = ChromeTracer(GPU_TIMELINE_FILENAME, ACCELERATOR)
+
     ds = ray.data.read_images(
         ["./mountain.png"] * BATCH_SIZE * NUM_BATCHES,
         override_num_blocks=NUM_BATCHES,
@@ -100,8 +102,6 @@ def main():
         batch_size=BATCH_SIZE,
         zero_copy_batch=True,
     )
-
-    tracer = ChromeTracer(GPU_TIMELINE_FILENAME, ACCELERATOR)
     ds.take_all()
 
     print(ds.stats())

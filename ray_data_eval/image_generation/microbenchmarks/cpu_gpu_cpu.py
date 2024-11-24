@@ -1,5 +1,4 @@
 import argparse
-import os
 import time
 
 import numpy as np
@@ -8,7 +7,6 @@ import ray
 from ray_data_eval.microbenchmarks.setting import (
     GB,
     TIME_UNIT,
-    NUM_CPUS,
     NUM_GPUS,
     FRAMES_PER_VIDEO,
     NUM_VIDEOS,

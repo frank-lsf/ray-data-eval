@@ -49,7 +49,7 @@ class ChromeTracer:
             "ph": phase,
             "ts": timestamp,
             "pid": ray._private.services.get_node_ip_address(),
-            "tid": "gpu:" + "NVIDIA_A10G",
+            "tid": "gpu:" + self.device_name,
             "cname": cname,
             "args": extra_data or {},
         }
