@@ -1,8 +1,7 @@
 import time
 
-from diffusers import StableDiffusionXLInstructPix2PixPipeline
+from diffusers import AutoPipelineForImage2Image
 import numpy as np
-from PIL import Image
 import ray
 import torch
 
@@ -12,29 +11,26 @@ from ray_data_pipeline_helpers import (
     append_gpu_timeline,
 )
 
-BATCH_SIZE = 5
-RESOLUTION = 768
+NUM_BATCHES = 20
+BATCH_SIZE = 10
+RESOLUTION = 512
 CSV_FILENAME = "log.csv"
-GPU_TIMELINE_FILENAME = "gpu_timeline.csv"
+GPU_TIMELINE_FILENAME = "gpu_timeline.json"
 TIMELINE_FILENAME = "ray_timeline.json"
-
-ACCELERATOR = "A10G"
-
-
-edit_instruction = "Turn sky into a cloudy one"
+ACCELERATOR = "NVIDIA_A10G"
 
 
-def transform_image(image: Image) -> np.ndarray:
-    image = image.resize((RESOLUTION, RESOLUTION), resample=Image.BILINEAR)
-    image = image.convert("RGB")
-    return image
+prompt = "Astronaut in a jungle, cold color palette, muted colors, detailed, 8k"
 
 
 class Model:
     def __init__(self):
-        self.model = StableDiffusionXLInstructPix2PixPipeline.from_pretrained(
-            "diffusers/sdxl-instructpix2pix-768", torch_dtype=torch.float16
-        ).to("cuda")
+        self.model = AutoPipelineForImage2Image.from_pretrained(
+            "stable-diffusion-v1-5/stable-diffusion-v1-5",
+            torch_dtype=torch.float16,
+            variant="fp16",
+            use_safetensors=True,
+        ).to("cuda")  # StableDiffusionImg2ImgPipeline
 
         self.start_time = time.time()
         self.last_end_time = self.start_time
@@ -47,7 +43,7 @@ class Model:
 
         images = batch["image"]
         output_batch = self.model(
-            prompt=[edit_instruction] * len(images),
+            prompt=[prompt] * len(images),
             image=images,
             height=RESOLUTION,
             width=RESOLUTION,
@@ -80,6 +76,7 @@ class Model:
 
 def postprocess(batch):
     print(batch["image"][0])
+    time.sleep(1)
     return {
         "path": ["ok"] * len(batch["image"]),
     }
@@ -87,9 +84,8 @@ def postprocess(batch):
 
 def main():
     ds = ray.data.read_images(
-        ["./mountain.png"] * BATCH_SIZE,
-        transform=transform_image,
-        override_num_blocks=1,
+        ["./mountain.png"] * BATCH_SIZE * NUM_BATCHES,
+        override_num_blocks=NUM_BATCHES,
     )
     ds = ds.map_batches(
         Model,
