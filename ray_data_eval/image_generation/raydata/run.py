@@ -2,6 +2,7 @@ import time
 
 from diffusers import AutoPipelineForImage2Image
 import numpy as np
+from PIL import Image
 import ray
 import torch
 
@@ -23,8 +24,15 @@ ACCELERATOR = "NVIDIA_A10G"
 prompt = "Astronaut in a jungle, cold color palette, muted colors, detailed, 8k"
 
 
+def transform_image(image: Image) -> Image:
+    image = image.resize((RESOLUTION, RESOLUTION), resample=Image.BILINEAR)
+    image = image.convert("RGB")
+    return image
+
+
 class Model:
     def __init__(self):
+        self.tracer = ChromeTracer(GPU_TIMELINE_FILENAME)
         self.model = AutoPipelineForImage2Image.from_pretrained(
             "stable-diffusion-v1-5/stable-diffusion-v1-5",
             torch_dtype=torch.float16,
@@ -42,14 +50,15 @@ class Model:
         inference_start_time = time.time()
 
         images = batch["image"]
-        output_batch = self.model(
-            prompt=[prompt] * len(images),
-            image=images,
-            height=RESOLUTION,
-            width=RESOLUTION,
-            num_inference_steps=10,
-            output_type="np",
-        )
+        with self.tracer.profile("task:gpu_execution"):
+            output_batch = self.model(
+                prompt=[prompt] * len(images),
+                image=images,
+                height=RESOLUTION,
+                width=RESOLUTION,
+                num_inference_steps=5,
+                output_type="np",
+            )
 
         inference_end_time = time.time()
         num_rows = len(images)
@@ -67,6 +76,7 @@ class Model:
             ]
         )
         self.last_end_time = inference_end_time
+        self.tracer.save()
 
         # print(ray._private.internal_api.memory_summary(stats_only=True))
         return {
@@ -75,18 +85,16 @@ class Model:
 
 
 def postprocess(batch):
-    print(batch["image"][0])
-    time.sleep(1)
+    time.sleep(2)
     return {
         "path": ["ok"] * len(batch["image"]),
     }
 
 
 def main():
-    tracer = ChromeTracer(GPU_TIMELINE_FILENAME, ACCELERATOR)
-
     ds = ray.data.read_images(
         ["./mountain.png"] * BATCH_SIZE * NUM_BATCHES,
+        transform=transform_image,
         override_num_blocks=NUM_BATCHES,
     )
     ds = ds.map_batches(
@@ -103,11 +111,9 @@ def main():
         zero_copy_batch=True,
     )
     ds.take_all()
-
     print(ds.stats())
 
-    # Save and combine cpu, gpu timeline view
-    tracer.save()
+    print(f"Ray timeline saved to {TIMELINE_FILENAME}")
     ray.timeline(TIMELINE_FILENAME)
     append_gpu_timeline(TIMELINE_FILENAME, GPU_TIMELINE_FILENAME)
     print("Timeline log saved to: ", TIMELINE_FILENAME)
