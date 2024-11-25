@@ -1,10 +1,12 @@
 import time
+import os
 
 from diffusers import AutoPipelineForImage2Image
 import numpy as np
 from PIL import Image
 import ray
 import torch
+import pandas as pd
 
 from ray_data_pipeline_helpers import (
     ChromeTracer,
@@ -22,7 +24,8 @@ TIMELINE_FILENAME = "ray_timeline.json"
 ACCELERATOR = "NVIDIA_A10G"
 
 
-prompt = "Astronaut in a jungle, cold color palette, muted colors, detailed, 8k"
+# prompt = "Astronaut in a jungle, cold color palette, muted colors, detailed, 8k"
+PATH2PROMPT = dict(pd.read_csv('../path2prompt.csv', index_col=0).iterrows())
 
 
 def transform_image(image: Image) -> Image:
@@ -52,14 +55,18 @@ class Model:
 
         images = batch["image"]
         print(batch["path"])
+        keys = [os.path.basename(path) for path in batch['path']]
+        prompts = [PATH2PROMPT[key][0] for key in keys]
+        
         with self.tracer.profile("task:gpu_execution"):
             output_batch = self.model(
-                prompt=[prompt] * len(images),
-                image=images,
-                height=RESOLUTION,
-                width=RESOLUTION,
-                num_inference_steps=5,
-            )
+            prompt = prompts, # len(prompts) == len(images)
+            image=images,
+            height=RESOLUTION,
+            width=RESOLUTION,
+            num_inference_steps=10,
+            output_type="np",
+        )
 
         inference_end_time = time.time()
         num_rows = len(images)
@@ -88,7 +95,8 @@ class Model:
 
 def main():
     ds = ray.data.read_images(
-        ["./mountain.png"] * BATCH_SIZE * NUM_BATCHES,
+        # ["./mountain.png"] * BATCH_SIZE * NUM_BATCHES,
+        "s3://ray-data-eval-us-west-2/instructpix2pix/",
         include_paths=True,
         transform=transform_image,
         override_num_blocks=NUM_BATCHES,
@@ -119,3 +127,4 @@ if __name__ == "__main__":
     ray.init(num_cpus=5, object_store_memory=8e9)
     main()
     ray.shutdown()
+
