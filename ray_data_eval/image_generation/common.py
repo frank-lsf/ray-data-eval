@@ -36,7 +36,7 @@ def encode_and_upload(batch: dict[str, Any]):
             Body=buf.getvalue(),
         )
         output_paths.append(f"s3://{S3_BUCKET_NAME}/{key}")
-    time.sleep(2)
+    time.sleep(8)
     return {
         "path": output_paths,
     }

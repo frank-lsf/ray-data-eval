@@ -1,3 +1,4 @@
+import argparse
 import time
 import os
 
@@ -7,16 +8,15 @@ from PIL import Image
 import ray
 import torch
 
+from ray_data_eval.image_generation.raydata import timeline_utils
 from ray_data_pipeline_helpers import (
     ChromeTracer,
     CsvLogger,
-    append_gpu_timeline,
 )
 from ray_data_eval.image_generation.common import (
     encode_and_upload,
     get_image_paths,
     IMAGE_PROMPTS_DF,
-    S3_DATASOURCE,
 )
 
 NUM_BATCHES = 10
@@ -26,6 +26,8 @@ CSV_FILENAME = "log.csv"
 GPU_TIMELINE_FILENAME = "gpu_timeline.json"
 TIMELINE_FILENAME = "ray_timeline.json"
 ACCELERATOR = "NVIDIA_A10G"
+NUM_CPUS = 12
+NUM_GPUS = 1
 
 
 def get_image_prompt(path: str) -> str:
@@ -37,7 +39,7 @@ def get_image_prompt(path: str) -> str:
 def transform_image(image: Image) -> Image:
     image = image.resize((RESOLUTION, RESOLUTION), resample=Image.BILINEAR)
     image = image.convert("RGB")
-    time.sleep(1)
+    time.sleep(4)
     return image
 
 
@@ -70,7 +72,7 @@ class Model:
                 image=images,
                 height=RESOLUTION,
                 width=RESOLUTION,
-                num_inference_steps=5,
+                num_inference_steps=2,
                 output_type="np",
             )
 
@@ -99,37 +101,142 @@ class Model:
         }
 
 
-def main():
-    image_paths = get_image_paths(limit=NUM_BATCHES * BATCH_SIZE)
+def ray_data_pipeline(image_paths: list[str]):
     ds = ray.data.read_images(
         image_paths,
         include_paths=True,
         transform=transform_image,
         override_num_blocks=NUM_BATCHES,
-    )
+    )  # 12s per batch
     ds = ds.map_batches(
         Model,
-        concurrency=1,
+        concurrency=NUM_GPUS,
         num_gpus=1,
         batch_size=BATCH_SIZE,
         zero_copy_batch=True,
-        max_concurrency=2,
-    )
+    )  # 5s per batch
     ds = ds.map_batches(
         encode_and_upload,
         batch_size=BATCH_SIZE,
         zero_copy_batch=True,
-    )
+    )  # 10s per batch
+    return ds
+
+
+def fused_pipeline(image_paths: list[str]):
+    ds = ray.data.read_images(
+        image_paths,
+        include_paths=True,
+        transform=transform_image,
+        override_num_blocks=NUM_BATCHES,
+        concurrency=NUM_GPUS,
+    )  # 12s per batch
+    ds = ds.map_batches(
+        Model,
+        concurrency=NUM_GPUS,
+        num_gpus=1,
+        batch_size=BATCH_SIZE,
+        zero_copy_batch=True,
+    )  # 5s per batch
+    ds = ds.map_batches(
+        encode_and_upload,
+        batch_size=BATCH_SIZE,
+        zero_copy_batch=True,
+        concurrency=NUM_GPUS,
+    )  # 10s per batch
+    return ds
+
+
+def staged_pipeline(image_paths: list[str]):
+    ds = ray.data.read_images(
+        image_paths,
+        include_paths=True,
+        transform=transform_image,
+        override_num_blocks=NUM_BATCHES,
+        concurrency=NUM_GPUS,
+    )  # 12s per batch
+    ds = ds.materialize()
+    ds = ds.map_batches(
+        Model,
+        concurrency=NUM_GPUS,
+        num_gpus=1,
+        batch_size=BATCH_SIZE,
+        zero_copy_batch=True,
+    )  # 5s per batch
+    ds = ds.materialize()
+    ds = ds.map_batches(
+        encode_and_upload,
+        batch_size=BATCH_SIZE,
+        zero_copy_batch=True,
+        concurrency=NUM_GPUS,
+    )  # 10s per batch
+    return ds
+
+
+def static_pipeline(image_paths: list[str]):
+    ds = ray.data.read_images(
+        image_paths,
+        include_paths=True,
+        transform=transform_image,
+        override_num_blocks=NUM_BATCHES,
+        concurrency=4,
+    )  # 12s per batch
+    ds = ds.map_batches(
+        Model,
+        concurrency=NUM_GPUS,
+        num_gpus=1,
+        batch_size=BATCH_SIZE,
+        zero_copy_batch=True,
+    )  # 5s per batch
+    ds = ds.map_batches(
+        encode_and_upload,
+        batch_size=BATCH_SIZE,
+        zero_copy_batch=True,
+        concurrency=4,
+    )  # 10s per batch
+    return ds
+
+
+def main(args):
+    image_paths = get_image_paths(limit=NUM_BATCHES * BATCH_SIZE)
+    if args.mode == "raydata":
+        ds = ray_data_pipeline(image_paths)
+    elif args.mode == "fused":
+        ds = fused_pipeline(image_paths)
+    elif args.mode == "staged":
+        ds = staged_pipeline(image_paths)
+    elif args.mode == "static":
+        ds = static_pipeline(image_paths)
+    else:
+        raise ValueError(f"Unknown mode: {args.mode}")
     ds.take_all()
     print(ds.stats())
 
-    print(f"Ray timeline saved to {TIMELINE_FILENAME}")
-    ray.timeline(TIMELINE_FILENAME)
-    append_gpu_timeline(TIMELINE_FILENAME, GPU_TIMELINE_FILENAME)
-    print("Timeline log saved to: ", TIMELINE_FILENAME)
+    timeline_utils.save_timeline_with_cpus_gpus("ray_combined.json", NUM_CPUS, NUM_GPUS)
+
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=[
+            "raydata",
+            "fused",
+            "staged",
+            "static",
+        ],
+        default="raydata",
+    )
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
-    ray.init(object_store_memory=8e9)
-    main()
-    ray.shutdown()
+    args = get_args()
+    ray.init(num_cpus=NUM_CPUS, object_store_memory=8e9)
+
+    data_context = ray.data.DataContext.get_current()
+    data_context.op_resource_reservation_ratio = 0
+    data_context.execution_options.verbose_progress = True
+    data_context.is_budget_policy = True
+    main(args)
