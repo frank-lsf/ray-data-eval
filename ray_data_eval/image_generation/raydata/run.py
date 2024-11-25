@@ -44,7 +44,7 @@ def transform_image(image: Image) -> Image:
 
 
 class Model:
-    def __init__(self):
+    def __init__(self, postprocess: bool = False):
         self.tracer = ChromeTracer(GPU_TIMELINE_FILENAME)
         self.model = AutoPipelineForImage2Image.from_pretrained(
             "stable-diffusion-v1-5/stable-diffusion-v1-5",
@@ -58,6 +58,7 @@ class Model:
         self.total_num_rows = 0
 
         self.csv_logger = CsvLogger(CSV_FILENAME)
+        self.postprocess = postprocess
 
     def __call__(self, batch: dict[str, np.ndarray]):
         inference_start_time = time.time()
@@ -94,11 +95,16 @@ class Model:
         self.last_end_time = inference_end_time
         self.tracer.save()
 
-        # print(ray._private.internal_api.memory_summary(stats_only=True))
-        return {
+        ret = {
             "image": output_batch.images,
             "path": batch["path"],
         }
+
+        if self.postprocess:
+            return encode_and_upload(ret)
+
+        # print(ray._private.internal_api.memory_summary(stats_only=True))
+        return ret
 
 
 def ray_data_pipeline(image_paths: list[str]):
@@ -124,6 +130,31 @@ def ray_data_pipeline(image_paths: list[str]):
 
 
 def fused_pipeline(image_paths: list[str]):
+    ds = ray.data.read_images(
+        image_paths,
+        include_paths=True,
+        transform=transform_image,
+        override_num_blocks=NUM_BATCHES,
+        concurrency=NUM_GPUS,
+    )  # 12s per batch
+    ds = ds.map_batches(
+        Model,
+        concurrency=NUM_GPUS,
+        num_gpus=1,
+        batch_size=BATCH_SIZE,
+        zero_copy_batch=True,
+        fn_constructor_kwargs={"postprocess": True},
+    )  # 5s per batch
+    ds = ds.map_batches(
+        lambda batch: {"path": batch["path"]},
+        batch_size=BATCH_SIZE,
+        zero_copy_batch=True,
+        concurrency=NUM_GPUS,
+    )  # 10s per batch
+    return ds
+
+
+def concurrency_1_pipeline(image_paths: list[str]):
     ds = ray.data.read_images(
         image_paths,
         include_paths=True,
