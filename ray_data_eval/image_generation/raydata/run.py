@@ -6,17 +6,21 @@ import numpy as np
 from PIL import Image
 import ray
 import torch
-import pandas as pd
 
 from ray_data_pipeline_helpers import (
     ChromeTracer,
     CsvLogger,
     append_gpu_timeline,
 )
-from ray_data_eval.image_generation.common import encode_and_upload
+from ray_data_eval.image_generation.common import (
+    encode_and_upload,
+    get_image_paths,
+    IMAGE_PROMPTS_DF,
+    S3_DATASOURCE,
+)
 
-NUM_BATCHES = 20
-BATCH_SIZE = 10
+NUM_BATCHES = 10
+BATCH_SIZE = 20
 RESOLUTION = 512
 CSV_FILENAME = "log.csv"
 GPU_TIMELINE_FILENAME = "gpu_timeline.json"
@@ -24,13 +28,16 @@ TIMELINE_FILENAME = "ray_timeline.json"
 ACCELERATOR = "NVIDIA_A10G"
 
 
-# prompt = "Astronaut in a jungle, cold color palette, muted colors, detailed, 8k"
-PATH2PROMPT = dict(pd.read_csv('../path2prompt.csv', index_col=0).iterrows())
+def get_image_prompt(path: str) -> str:
+    if path not in IMAGE_PROMPTS_DF.index:
+        return "make it black and white"
+    return IMAGE_PROMPTS_DF.loc[path, "prompt"]
 
 
 def transform_image(image: Image) -> Image:
     image = image.resize((RESOLUTION, RESOLUTION), resample=Image.BILINEAR)
     image = image.convert("RGB")
+    time.sleep(1)
     return image
 
 
@@ -54,19 +61,18 @@ class Model:
         inference_start_time = time.time()
 
         images = batch["image"]
-        print(batch["path"])
-        keys = [os.path.basename(path) for path in batch['path']]
-        prompts = [PATH2PROMPT[key][0] for key in keys]
-        
+        keys = [os.path.basename(path) for path in batch["path"]]
+        prompts = [get_image_prompt(key) for key in keys]
+
         with self.tracer.profile("task:gpu_execution"):
             output_batch = self.model(
-            prompt = prompts, # len(prompts) == len(images)
-            image=images,
-            height=RESOLUTION,
-            width=RESOLUTION,
-            num_inference_steps=10,
-            output_type="np",
-        )
+                prompt=prompts,
+                image=images,
+                height=RESOLUTION,
+                width=RESOLUTION,
+                num_inference_steps=5,
+                output_type="np",
+            )
 
         inference_end_time = time.time()
         num_rows = len(images)
@@ -94,9 +100,9 @@ class Model:
 
 
 def main():
+    image_paths = get_image_paths(limit=NUM_BATCHES * BATCH_SIZE)
     ds = ray.data.read_images(
-        # ["./mountain.png"] * BATCH_SIZE * NUM_BATCHES,
-        "s3://ray-data-eval-us-west-2/instructpix2pix/",
+        image_paths,
         include_paths=True,
         transform=transform_image,
         override_num_blocks=NUM_BATCHES,
@@ -124,7 +130,6 @@ def main():
 
 
 if __name__ == "__main__":
-    ray.init(num_cpus=5, object_store_memory=8e9)
+    ray.init(object_store_memory=8e9)
     main()
     ray.shutdown()
-
