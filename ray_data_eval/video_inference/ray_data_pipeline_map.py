@@ -14,7 +14,7 @@ from transformers import (
     VideoMAEImageProcessor,
     VideoMAEForVideoClassification,
 )
-
+import timeline_utils
 
 from ray_data_pipeline_helpers import postprocess
 
@@ -155,6 +155,12 @@ def main():
     NUM_CPUS_IN_CLUSTER = int(ray.available_resources()["CPU"])
     NUM_GPUS_IN_CLUSTER = int(ray.available_resources()["GPU"])
 
+    data_context = ray.data.DataContext.get_current()
+    data_context.is_budget_policy = True
+    data_context.op_resource_reservation_ratio = 0
+    data_context.execution_options.verbose_progress = True
+
+    print("NUM_GPUS_IN_CLUSTER", NUM_GPUS_IN_CLUSTER, "NUM_CPUS_IN_CLUSTER: ", NUM_CPUS_IN_CLUSTER)
     ds = (
         ray.data.read_binary_files(
             [
@@ -189,6 +195,7 @@ def main():
         INPUT_PATH,
     )
 
+    # ds = ds.limit(1000)
     ds = ds.map(preprocess_video)
 
     ds = ds.map_batches(
@@ -203,7 +210,10 @@ def main():
     ds.take_all()
     print(ds.stats())
 
-    ray.timeline(TIMELINE_FILENAME)
+    # ray.timeline(TIMELINE_FILENAME)
+    timeline_utils.save_timeline_with_cpus_gpus(
+            TIMELINE_FILENAME, NUM_CPUS_IN_CLUSTER * 10, NUM_GPUS_IN_CLUSTER * 10
+        )
 
     postprocess(OUTPUT_FILENAME)
 
