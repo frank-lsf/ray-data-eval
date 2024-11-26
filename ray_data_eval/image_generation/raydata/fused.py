@@ -115,7 +115,7 @@ def download_and_decode(batch: dict[str, str]):
     images = []
     for path in paths:
         buffer = io.BytesIO()
-        s3_path = "instructpix2pix/" + path
+        s3_path = "instructpix2pix/" + os.path.basename(path)
         s3_client.download_fileobj(S3_BUCKET_NAME, s3_path, buffer)
         buffer.seek(0)
 

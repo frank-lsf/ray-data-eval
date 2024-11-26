@@ -6,6 +6,7 @@ consumer_task_name = "task::MapBatches(encode_and_upload)"
 inference_task_name = "task::MapBatches(Model)"
 transform_task_name = "task::MapBatches(transform)"
 write_task_name = "task::MapBatches(write)"
+fused_task_name = "task::MapBatches(FusedProcessor)"   
 
 COLORS = {
     producer_task_name: "rail_response",
@@ -13,6 +14,7 @@ COLORS = {
     inference_task_name: "cq_build_failed",
     transform_task_name: "rail_load",
     write_task_name: "cq_build_running",
+    fused_task_name: "rail_response",
 }
 
 
