@@ -149,7 +149,7 @@ def collate_video_frames(batch: DataBatch) -> DataBatch:
 
 @timeit
 def main():
-    ray.init("auto")
+    ray.init(num_cpus=8, num_gpus=1, object_store_memory=5 * 1024 * 1024 * 1024)
 
     print("Starting warmup.", flush=True)
     NUM_CPUS_IN_CLUSTER = int(ray.available_resources()["CPU"])
@@ -210,12 +210,13 @@ def main():
     ds.take_all()
     print(ds.stats())
 
-    # ray.timeline(TIMELINE_FILENAME)
+    ray.timeline(f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}_original.json")
     timeline_utils.save_timeline_with_cpus_gpus(
-            TIMELINE_FILENAME, NUM_CPUS_IN_CLUSTER * 10, NUM_GPUS_IN_CLUSTER * 10
+            TIMELINE_FILENAME, NUM_CPUS_IN_CLUSTER, NUM_GPUS_IN_CLUSTER
         )
 
     postprocess(OUTPUT_FILENAME)
+    ray.shutdown()
 
 
 if __name__ == "__main__":

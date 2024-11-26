@@ -8,11 +8,11 @@ transform_task_name = "task::MapBatches(transform)"
 write_task_name = "task::MapBatches(write)"
 
 
-producer_task_name = "task:deserialize_arguments"
-consumer_task_name = "task:execute"
-inference_task_name = "task:store_outputs"
-transform_task_name = "task::MapBatches(transform)"
-write_task_name = "task::MapBatches(write)"
+producer_task_name = "task::Map(preprocess_video)" 
+consumer_task_name = "task::MapBatches(Classifier)"
+# inference_task_name = "task:store_outputs"
+# transform_task_name = "task:deserialize_arguments"
+# write_task_name = "task:execute"
 
 
 COLORS = {
@@ -31,7 +31,11 @@ def assign_slots(events, num_cpus, num_gpus):
     slots_to_tid = [None] * (num_cpus + num_gpus)
     events = sorted(events, key=lambda x: x["ts"])
 
-    def i_to_slot_name(i):
+    def i_to_slot_name(i, cat):
+        if cat == consumer_task_name:
+            return f"GPU"
+        else:
+            return f"CPU: {i}"
         if i < num_cpus:
             return f"CPU: {i}"
         else:
@@ -53,7 +57,7 @@ def assign_slots(events, num_cpus, num_gpus):
             if slots_to_tid[i] == event["tid"]:
                 slots[i] = end_time
                 slots_to_tid[i] = event["tid"]
-                event["tid"] = i_to_slot_name(i)
+                event["tid"] = i_to_slot_name(i, event["cat"])
                 assigned = True
                 break
 
@@ -67,7 +71,7 @@ def assign_slots(events, num_cpus, num_gpus):
                     if slots_to_cat[i] == event["cat"]:
                         slots[i] = end_time
                         slots_to_tid[i] = event["tid"]
-                        event["tid"] = i_to_slot_name(i)
+                        event["tid"] = i_to_slot_name(i, event["cat"])
                         assigned = True
                         break
 
@@ -80,7 +84,7 @@ def assign_slots(events, num_cpus, num_gpus):
                 if slots[i] is None or slots[i] <= start_time:
                     slots[i] = end_time
                     slots_to_tid[i] = event["tid"]
-                    event["tid"] = i_to_slot_name(i)
+                    event["tid"] = i_to_slot_name(i, event["cat"])
                     slots_to_cat[i] = event["cat"]
                     assigned = True
                     break
@@ -104,6 +108,7 @@ def save_timeline_with_cpus_gpus(addr: str, num_cpus: int, num_gpus: int):
     df = pd.read_json(addr)
     filtered_df = df[df["cat"].isin(COLORS.keys())]
     filtered_df.loc[:, "cname"] = filtered_df["cat"].apply(lambda x: COLORS[x])
+    filtered_df.loc[:,"name"] = filtered_df["cat"]
 
     # Assign slots to events
     events = filtered_df.to_dict(orient="records")
