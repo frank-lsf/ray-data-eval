@@ -21,7 +21,7 @@ from ray_data_eval.image_generation.common import (
     IMAGE_PROMPTS_DF,
 )
 
-NUM_BATCHES = 10
+NUM_BATCHES = 1
 BATCH_SIZE = 20
 RESOLUTION = 512
 CSV_FILENAME = "log.csv"
@@ -115,7 +115,7 @@ def download_and_decode(batch: dict[str, str]):
     images = []
     for path in paths:
         buffer = io.BytesIO()
-        s3_path = "instructpix2pix/" + path
+        s3_path = "instructpix2pix/" + os.path.basename(path)
         s3_client.download_fileobj(S3_BUCKET_NAME, s3_path, buffer)
         buffer.seek(0)
 
@@ -152,7 +152,7 @@ def main():
     ds.take_all()
     print(ds.stats())
 
-    timeline_utils.save_timeline_with_cpus_gpus("ray_combined.json", NUM_CPUS, NUM_GPUS)
+    timeline_utils.save_timeline("ray_combined.json")
 
 
 if __name__ == "__main__":
