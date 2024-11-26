@@ -21,7 +21,7 @@ from ray_data_eval.image_generation.common import (
     IMAGE_PROMPTS_DF,
 )
 
-NUM_BATCHES = 1
+NUM_BATCHES = 10
 BATCH_SIZE = 20
 RESOLUTION = 512
 CSV_FILENAME = "log.csv"
