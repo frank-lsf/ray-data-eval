@@ -152,7 +152,7 @@ def main():
     ds.take_all()
     print(ds.stats())
 
-    timeline_utils.save_timeline("ray_combined.json")
+    timeline_utils.save_timeline_with_cpus_gpus("ray_combined.json", NUM_CPUS, NUM_GPUS)
 
 
 if __name__ == "__main__":
