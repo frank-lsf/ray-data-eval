@@ -46,31 +46,32 @@ def main(is_flink: bool):
 
     def produce(batch):
         logger.log({"name": "producer_start", "id": [int(x) for x in batch["id"]]})
-        if int(batch["id"][0].item()) < NUM_ROWS_TOTAL / 2:
-            time.sleep(TIME_UNIT)
-        else:
+        # Enable for variable duration benchmark. 
+        if False and int(batch["id"][0].item()) < NUM_ROWS_TOTAL / 2:
             time.sleep(TIME_UNIT * 4)
+        else:
+            time.sleep(TIME_UNIT)
         for id in batch["id"]:
             yield {
                 "id": [id],
                 "image": [np.zeros(BLOCK_SIZE, dtype=np.uint8)],
             }
 
-    def consume(batch):
-        logger.log({"name": "consume", "id": int(batch["id"].item())})
-        if int(batch["id"].item()) < NUM_ROWS_TOTAL / 2:
-            time.sleep(TIME_UNIT)
-        else:
-            time.sleep(TIME_UNIT * 2)
-        return {"id": batch["id"], "result": [0 for _ in batch["id"]]}
-
     def inference(batch):
         return {"id": batch["id"]}
-    
+
+    def consume(batch):
+        logger.log({"name": "consume", "id": int(batch["id"].item())})
+        # Enable for variable duration benchmark. 
+        if False and int(batch["id"].item()) < NUM_ROWS_TOTAL / 2:
+            time.sleep(TIME_UNIT * 2)
+        else:
+            time.sleep(TIME_UNIT)
+        return {"id": batch["id"], "result": [0 for _ in batch["id"]]}
+
     data_context = ray.data.DataContext.get_current()
     data_context.execution_options.verbose_progress = True
     data_context.target_max_block_size = BLOCK_SIZE
-    data_context.is_budget_policy = True
 
     if is_flink:
         data_context.is_budget_policy = False  # Disable our policy.
@@ -104,10 +105,7 @@ def main(is_flink: bool):
     timeline_utils.save_timeline_with_cpus_gpus(
         f"timeline_{'ray' if not is_flink else 'flink'}_variable_3stage.json", NUM_CPUS, NUM_GPUS
     )
-        
     ray.shutdown()
 
-
 if __name__ == "__main__":
-    # main(is_flink=True)
     main(is_flink=False)
