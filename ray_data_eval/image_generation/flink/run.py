@@ -119,7 +119,7 @@ class Producer(FlatMapFunction):
     def flat_map(self, value):
         producer_start = time.perf_counter()
         image: Image = S3Handler(S3_BUCKET_NAME).download_image(value)
-        image = transform_image(image)
+        image = transform_image(image, busy=True)
         producer_end = time.perf_counter()
         log = {
             "cat": "producer:" + str(self.task_index),
@@ -185,7 +185,7 @@ class Consumer(MapFunction):
         batch = {"path": path, "image": output}
 
         consumer_start = time.perf_counter()
-        encode_and_upload(batch)
+        encode_and_upload(batch, busy=True)
         consumer_end = time.perf_counter()
         log = {
             "cat": "consumer:" + str(self.task_index),
