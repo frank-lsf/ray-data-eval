@@ -20,6 +20,16 @@ def get_image_paths(limit: int = 200, s3: bool = True) -> list[str]:
         ret = [f"s3://{S3_BUCKET_NAME}/instructpix2pix/{path}" for path in ret]
     return ret
 
+def get_image_prompt(path: str) -> str:
+    if path not in IMAGE_PROMPTS_DF.index:
+        return "make it black and white"
+    return IMAGE_PROMPTS_DF.loc[path, "prompt"]
+
+def transform_image(image: Image, resolution=512) -> Image:
+    image = image.resize((resolution, resolution), resample=Image.BILINEAR)
+    image = image.convert("RGB")
+    time.sleep(4)
+    return image
 
 def encode_and_upload(batch: dict[str, Any]):
     s3 = boto3.client("s3")
