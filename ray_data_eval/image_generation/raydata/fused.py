@@ -14,7 +14,7 @@ from ray_data_pipeline_helpers import (
     ChromeTracer,
 )
 from ray_data_eval.image_generation.common import (
-    CsvLogger,
+    CsvTimerLogger,
     S3_BUCKET_NAME,
     encode_and_upload,
     get_image_paths,
@@ -55,11 +55,7 @@ class Model:
             use_safetensors=True,
         ).to("cuda")  # StableDiffusionImg2ImgPipeline
 
-        self.start_time = time.time()
-        self.last_end_time = self.start_time
-        self.total_num_rows = 0
-
-        self.csv_logger = CsvLogger(CSV_FILENAME)
+        self.csv_logger = CsvTimerLogger(CSV_FILENAME)
         self.postprocess = postprocess
 
     def __call__(self, batch: dict[str, np.ndarray]):
@@ -80,21 +76,10 @@ class Model:
             )
 
         inference_end_time = time.time()
-        num_rows = len(images)
-        self.total_num_rows += num_rows
-        self.csv_logger.write_csv_row(
-            [
-                inference_end_time - self.start_time,
-                self.total_num_rows,
-                self.total_num_rows / (inference_end_time - self.start_time),
-                num_rows,
-                inference_end_time - inference_start_time,
-                num_rows / (inference_end_time - inference_start_time),
-                inference_end_time - self.last_end_time,
-                num_rows / (inference_end_time - self.last_end_time),
-            ]
+        self.csv_logger.log_batch(
+            len(images),
+            inference_end_time - inference_start_time,
         )
-        self.last_end_time = inference_end_time
         self.tracer.save()
 
         ret = {

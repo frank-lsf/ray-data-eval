@@ -12,7 +12,7 @@ from diffusers import AutoPipelineForImage2Image
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType
 
-from ray_data_eval.image_generation.common import IMAGE_PROMPTS_DF, S3_BUCKET_NAME, CsvLogger
+from ray_data_eval.image_generation.common import IMAGE_PROMPTS_DF, S3_BUCKET_NAME, CsvTimerLogger
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -148,35 +148,20 @@ def process_partition(iterator, gpu_id: int):
 
 
 def mapper(iterator):
-    start_time = time.time()
-    last_end_time = start_time
-    csv_logger = CsvLogger(CSV_FILENAME)
+    csv_logger = CsvTimerLogger(CSV_FILENAME)
     gpu_id = torch.cuda.current_device()
     batch = []
-    total_num_rows = 0
 
     def run_batch(batch):
-        nonlocal total_num_rows, last_end_time
-
         inference_start_time = time.time()
         yield from process_partition(batch, gpu_id)
         inference_end_time = time.time()
-        num_rows = len(batch)
-        total_num_rows += num_rows
+        batch_size = len(batch)
         batch = []
-        csv_logger.write_csv_row(
-            [
-                inference_end_time - start_time,
-                total_num_rows,
-                total_num_rows / (inference_end_time - start_time),
-                num_rows,
-                inference_end_time - inference_start_time,
-                num_rows / (inference_end_time - inference_start_time),
-                inference_end_time - last_end_time,
-                num_rows / (inference_end_time - last_end_time),
-            ]
+        csv_logger.log_batch(
+            batch_size,
+            inference_end_time - inference_start_time,
         )
-        last_end_time = inference_end_time
 
     for row in iterator:
         batch.append(row)

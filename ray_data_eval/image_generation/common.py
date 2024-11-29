@@ -55,9 +55,12 @@ def numpy_to_pil(images: np.ndarray) -> list[Image.Image]:
     return pil_images
 
 
-class CsvLogger:
+class CsvTimerLogger:
     def __init__(self, filename: str):
         self.filename = filename
+        self.start_time = time.time()
+        self.last_batch_end = self.start_time
+        self.total_rows = 0
         with open(self.filename, mode="w") as file:
             writer = csv.writer(file)
             writer.writerow(
@@ -74,7 +77,31 @@ class CsvLogger:
             )
             writer.writerow([0, 0, 0, 0, 0, 0, 0, 0])
 
-    def write_csv_row(self, row):
+    def log_batch(self, batch_size: int, inference_time: float):
+        """Log metrics for a single batch"""
+
+        current_time = time.time()
+        time_from_start = current_time - self.start_time
+        total_time = current_time - self.last_batch_end
+        self.total_rows += batch_size
+
+        cumulative_throughput = self.total_rows / time_from_start
+        batch_inference_throughput = batch_size / inference_time
+        batch_total_throughput = batch_size / total_time
+
+        row = [
+            time_from_start,
+            self.total_rows,
+            cumulative_throughput,
+            batch_size,
+            inference_time,
+            batch_inference_throughput,
+            total_time,
+            batch_total_throughput,
+        ]
+
         with open(self.filename, mode="a") as file:
             writer = csv.writer(file)
             writer.writerow(row)
+
+        self.last_batch_end = current_time
