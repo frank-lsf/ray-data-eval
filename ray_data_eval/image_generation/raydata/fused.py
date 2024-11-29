@@ -12,9 +12,9 @@ import torch
 from ray_data_eval.image_generation.raydata import timeline_utils
 from ray_data_pipeline_helpers import (
     ChromeTracer,
-    CsvLogger,
 )
 from ray_data_eval.image_generation.common import (
+    CsvLogger,
     S3_BUCKET_NAME,
     encode_and_upload,
     get_image_paths,

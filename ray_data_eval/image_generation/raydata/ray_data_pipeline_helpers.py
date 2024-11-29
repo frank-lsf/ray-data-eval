@@ -1,34 +1,8 @@
-import csv
 import json
 import time
 
 import boto3
 import ray
-
-
-class CsvLogger:
-    def __init__(self, filename: str):
-        self.filename = filename
-        with open(self.filename, mode="w") as file:
-            writer = csv.writer(file)
-            writer.writerow(
-                [
-                    "time_from_start",
-                    "total_rows",
-                    "cumulative_throughput",
-                    "batch_rows",
-                    "batch_inference_time",
-                    "batch_inference_throughput",
-                    "batch_time",
-                    "batch_throughput",
-                ]
-            )
-            writer.writerow([0, 0, 0, 0, 0, 0, 0, 0])
-
-    def write_csv_row(self, row):
-        with open(self.filename, mode="a") as file:
-            writer = csv.writer(file)
-            writer.writerow(row)
 
 
 class ChromeTracer:

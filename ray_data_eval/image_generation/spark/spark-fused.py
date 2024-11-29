@@ -1,5 +1,6 @@
 import gc
 import io
+import logging
 import os
 import time
 
@@ -11,13 +12,21 @@ from diffusers import AutoPipelineForImage2Image
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType
 
-from ray_data_eval.image_generation.common import IMAGE_PROMPTS_DF, S3_BUCKET_NAME
+from ray_data_eval.image_generation.common import IMAGE_PROMPTS_DF, S3_BUCKET_NAME, CsvLogger
+
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+    handlers=[logging.StreamHandler()],
+)
 
 NUM_BATCHES = 10
 BATCH_SIZE = 20
 RESOLUTION = 512
 NUM_GPUS = 1
 NUM_CPUS = 8
+
+CSV_FILENAME = "spark_tput.csv"
 
 
 def get_memory_stats() -> dict[str, float]:
@@ -36,8 +45,6 @@ class GPUImageProcessor:
         self.gpu_id = gpu_id
         torch.cuda.set_device(self.gpu_id)
 
-        print("init")
-        print(get_memory_stats())
         self.model = AutoPipelineForImage2Image.from_pretrained(
             "stable-diffusion-v1-5/stable-diffusion-v1-5",
             torch_dtype=torch.float16,
@@ -60,8 +67,6 @@ class GPUImageProcessor:
 
     def cleanup(self):
         if hasattr(self, "model"):
-            # for param in self.model.parameters():
-            #     del param
             del self.model
 
             with torch.cuda.device(self.gpu_id):
@@ -71,9 +76,7 @@ class GPUImageProcessor:
                 torch.cuda.synchronize()
 
             gc.collect()
-
             print("GPU memory cleaned up")
-            print(get_memory_stats())
 
     def __del__(self):
         """Destructor to ensure cleanup"""
@@ -120,7 +123,6 @@ class S3Handler:
 
 
 def process_partition(iterator, gpu_id: int):
-    processor = GPUImageProcessor(gpu_id)
     s3_handler = S3Handler(S3_BUCKET_NAME)
 
     batch = list(iterator)
@@ -130,7 +132,10 @@ def process_partition(iterator, gpu_id: int):
     prompts = [row.prompt for row in batch]
 
     # Process images
+
+    processor = GPUImageProcessor(gpu_id)
     processed_images = processor.process_batch(images, prompts)
+    del processor
 
     # Upload results
     results = []
@@ -138,19 +143,65 @@ def process_partition(iterator, gpu_id: int):
         output_path = s3_handler.upload_image(processed_image, row.s3_path)
         results.append((row.s3_path, output_path))
 
-    print(time.time())
+    print("Batch done", time.time())
     yield from results
+
+
+def mapper(iterator):
+    start_time = time.time()
+    last_end_time = start_time
+    csv_logger = CsvLogger(CSV_FILENAME)
+    gpu_id = torch.cuda.current_device()
+    batch = []
+    total_num_rows = 0
+
+    def run_batch(batch):
+        nonlocal total_num_rows, last_end_time
+
+        inference_start_time = time.time()
+        yield from process_partition(batch, gpu_id)
+        inference_end_time = time.time()
+        num_rows = len(batch)
+        total_num_rows += num_rows
+        batch = []
+        csv_logger.write_csv_row(
+            [
+                inference_end_time - start_time,
+                total_num_rows,
+                total_num_rows / (inference_end_time - start_time),
+                num_rows,
+                inference_end_time - inference_start_time,
+                num_rows / (inference_end_time - inference_start_time),
+                inference_end_time - last_end_time,
+                num_rows / (inference_end_time - last_end_time),
+            ]
+        )
+        last_end_time = inference_end_time
+
+    for row in iterator:
+        batch.append(row)
+        if len(batch) == BATCH_SIZE:
+            yield from run_batch(batch)
+            batch = []
+
+    if len(batch) > 0:
+        yield from run_batch(batch)
 
 
 def main():
     spark = (
         SparkSession.builder.appName("GPU Image Pipeline")
+        .config("spark.executor.instances", str(NUM_GPUS))
+        .config("spark.executor.cores", "1")
+        .config("spark.executor.memory", "16g")
         .config("spark.task.cpus", "1")
-        .config("spark.executor.memory", "2g")
-        .config("spark.executor.instances", str(NUM_CPUS))
+        .config("spark.locality.wait", "0")
+        .config("spark.executor.logs.python.enabled", "true")
         .getOrCreate()
     )
     limit = NUM_BATCHES * BATCH_SIZE
+
+    start_time = time.time()
 
     pdf = IMAGE_PROMPTS_DF[:limit].reset_index()
     pdf.columns = ["s3_path", "prompt"]
@@ -160,12 +211,10 @@ def main():
             [StructField("s3_path", StringType(), False), StructField("prompt", StringType(), True)]
         ),
     )
-    df = df.repartition(NUM_BATCHES)
+    df = df.repartition(1)
     df.show()
 
-    result_rdd = df.rdd.mapPartitionsWithIndex(
-        lambda idx, iterator: process_partition(iterator, idx % NUM_GPUS),
-    )
+    result_rdd = df.rdd.mapPartitions(mapper)
 
     # Convert results back to dataframe
     results_df = spark.createDataFrame(
@@ -180,6 +229,9 @@ def main():
 
     results_df.show()
     print("Processed", results_df.count(), "images")
+
+    end_time = time.time()
+    print("Total time:", end_time - start_time)
     return results_df
 
 
