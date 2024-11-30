@@ -65,26 +65,6 @@ class GPUImageProcessor:
         )
         return output_batch.images
 
-    def cleanup(self):
-        if hasattr(self, "model"):
-            del self.model
-
-            with torch.cuda.device(self.gpu_id):
-                torch.cuda.empty_cache()
-                torch.cuda.ipc_collect()
-                torch.cuda.reset_peak_memory_stats()
-                torch.cuda.synchronize()
-
-            gc.collect()
-            print("GPU memory cleaned up")
-
-    def __del__(self):
-        """Destructor to ensure cleanup"""
-        try:
-            self.cleanup()
-        except Exception as e:
-            print(f"Error during cleanup: {e}")
-
 
 class S3Handler:
     def __init__(self, bucket_name: str):
