@@ -2,21 +2,22 @@ import time
 from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.common import Configuration
-from pyflink.datastream.functions import FlatMapFunction, RuntimeContext, ProcessFunction
+from pyflink.datastream.functions import FlatMapFunction, ProcessFunction
 import logging
 import json
 import os
 from pyflink.datastream import (
     CheckpointingMode
 )
-from pyflink.datastream.state import ValueStateDescriptor
-
+from pyflink.datastream.state import ValueStateDescriptor, ValueState, MapStateDescriptor, MapState
+from pyflink.datastream import StreamExecutionEnvironment
+from pyflink.datastream.functions import RuntimeContext
 
 NUM_CPUS = 8
 
 # Slot Sharing
-PRODUCER_PARALLELISM = 8
-CONSUMER_PARALLELISM = 8
+PRODUCER_PARALLELISM = 1
+CONSUMER_PARALLELISM = 1
 
 EXECUTION_MODE = "process"
 MB = 1024 * 1024    
@@ -27,9 +28,7 @@ TIME_UNIT = 0.5
 
 NUM_ROWS_PER_PRODUCER = 1
 NUM_ROWS_PER_CONSUMER = 1
-
-failure_injected = False
-
+        
 def append_dict_to_file(data: dict, file_path: str):
     """
     Append a dictionary to a file as a JSON object.
@@ -53,29 +52,37 @@ def append_dict_to_file(data: dict, file_path: str):
 #         print(f"Checkpoint {checkpoint_id} failed.")
         
 class Producer(FlatMapFunction):
-        
+    def __init__(self):
+        self.count = None  # Will be backed by distributed state (MapState)
+
     def open(self, runtime_context: RuntimeContext):
         self.task_info = runtime_context.get_task_name_with_subtasks()
         self.task_index = runtime_context.get_index_of_this_subtask()
+        print(f"Opened Producer {self.task_info} with index {self.task_index}")
 
-        # Define state descriptor for self.count
-        # self.count_state_descriptor = ValueStateDescriptor("count_state", Types.INT())
-        
-        # # Initialize state
-        # self.count_state = runtime_context.get_state(self.count_state_descriptor)
-        
-        # # Try to restore the state if it exists
-        # self.count = self.count_state.value() if self.count_state.value() is not None else 0
-        self.count = 0        
+        # Define a MapState descriptor and initialize the state (for distributed state)
+        state_descriptor = MapStateDescriptor("count_state", Types.INT(), Types.INT())
+        self.count: MapState = runtime_context.get_map_state(state_descriptor)
+        print(f"Restored state for task {self.task_index}: {self.count}, {state_descriptor.get_name()}, id(runtime_context): {id(runtime_context)}")
 
     def flat_map(self, value):
-        self.count += 1
-        global failure_injected
+
+        # Increment count and simulate processing
+        # Retrieve the current state or initialize it
+        current_count = 0
+        if self.count.contains(self.task_index):  # Ensure the key exists
+            current_count = self.count.get(self.task_index)
+
+        # Increment the state
+        current_count += 1
+        # Update the state
+        self.count.put(self.task_index, current_count)
         
         producer_start = time.time()
-        # print("Producer", value)
         time.sleep(TIME_UNIT * 3)
         producer_end = time.time()
+
+        # Log processing details
         log = {
             "cat": "producer:" + str(self.task_index),
             "name": "producer:" + str(self.task_index),
@@ -86,21 +93,18 @@ class Producer(FlatMapFunction):
             "ph": "X",
             "args": {},
         }
-        # print(log)
         append_dict_to_file(log, 'flink_logs.log')
-        # logging.warning(json.dumps(log))
 
+        # Generate output
         for _ in range(NUM_ROWS_PER_PRODUCER):
             yield b"1" * BLOCK_SIZE
 
-        print(f"self.count: {self.count}, failure_injected: {failure_injected}, {id(failure_injected)}")
-        if not failure_injected and self.count == 8:  # Simulate failure after processing 5000 elements
-            failure_injected = True
-            print(f"failure_injected: {failure_injected}, {id(failure_injected)}")
-            # raise RuntimeError("Simulated failure in Producer")
+        # Simulate failure after a certain count
+        print(f"count: {current_count}")
+        if current_count == 8:
+            print(f"Simulating failure in Producer, count: {current_count}")
+            raise RuntimeError("Simulated failure in Producer")
 
-        # Update state with the current count
-        # self.count_state.update(self.count)
         
         
 class ConsumerActor(ProcessFunction):
@@ -141,15 +145,10 @@ class ConsumerActor(ProcessFunction):
         self.current_batch = []
         return [current_batch_len]
 
-def configure_checkpointing(config):
-    # Set checkpointing interval and mode
-    config.set_string('execution.checkpointing.interval', '1000')  # 1000 ms (1 second)
-    config.set_string('execution.checkpointing.mode', 'EXACTLY_ONCE')  # Exactly once mode
-    
 def configure_restart_strategy(config):
     config.set_string('restart-strategy.type', 'fixed-delay')
     config.set_string('restart-strategy.fixed-delay.attempts', '3') # number of restart attempts
-    config.set_string('restart-strategy.fixed-delay.delay', '10000 ms') # delay
+    config.set_string('restart-strategy.fixed-delay.delay', '1000ms') # delay
 
 def run_flink(env):
     
@@ -157,33 +156,48 @@ def run_flink(env):
     items = list(range(NUM_TASKS))
     ds = env.from_collection(items, type_info=Types.INT())
     
+    # Apply a key_by transformation to create a KeyedStream
+    ds = ds.key_by(lambda x: x % PRODUCER_PARALLELISM)
+
     producer = Producer()
     ds = ds.flat_map(producer, output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
         PRODUCER_PARALLELISM
-    ).slot_sharing_group("default")    
+    ) 
     
     ds = (
         ds.process(ConsumerActor()).set_parallelism(CONSUMER_PARALLELISM)
-    ).slot_sharing_group("default")
+    )
     
-    result = []
-    for length in ds.execute_and_collect():
-        result.append(length)
-        print(f"Processed block of size: {sum(result)}/{NUM_ROWS_PER_PRODUCER * len(items)}", flush=True)
+    # result = []
+    # for length in ds.execute_and_collect():
+    #     result.append(length)
+    #     print(f"Processed block of size: {sum(result)}/{NUM_ROWS_PER_PRODUCER * len(items)}", flush=True)
 
-    total_length = sum(result)
+    # Use a print sink to observe the output
+    ds.print()
+
+    # Execute the Flink job
+    env.execute("Streaming Job Example")
+
+    # total_length = sum(result)
     end = time.perf_counter()
-    print(f"\nTotal data length: {total_length:,}")
+    # print(f"\nTotal data length: {total_length:,}")
     print(f"Time: {end - start:.4f}s")
 
 def run_experiment():
     config = Configuration()
     config.set_string("python.execution-mode", EXECUTION_MODE)
     config.set_integer("taskmanager.numberOfTaskSlots", NUM_CPUS)
+    
     configure_restart_strategy(config)
-    configure_checkpointing(config)
+
+    config.set_string("state.backend", "filesystem")  # Use a persistent backend
+    config.set_string("state.checkpoints.dir", "file:///home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/flink-checkpoints")  # Local or remote path
+
 
     env = StreamExecutionEnvironment.get_execution_environment(config)
+    env.enable_checkpointing(1000)
+    env.get_checkpoint_config().set_checkpointing_mode(CheckpointingMode.EXACTLY_ONCE)
     run_flink(env)
 
 def main():
