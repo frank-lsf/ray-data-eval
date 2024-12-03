@@ -1,15 +1,14 @@
 import time
 from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.common import Configuration
+from pyflink.common import Configuration, WatermarkStrategy
+from pyflink.datastream.connectors.number_seq import NumberSequenceSource
 from pyflink.datastream.functions import FlatMapFunction, ProcessFunction
-import logging
 import json
-import os
 from pyflink.datastream import (
     CheckpointingMode
 )
-from pyflink.datastream.state import ValueStateDescriptor, ValueState, MapStateDescriptor, MapState
+from pyflink.datastream.state import ValueStateDescriptor
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.datastream.functions import RuntimeContext
 
@@ -22,13 +21,25 @@ CONSUMER_PARALLELISM = 1
 EXECUTION_MODE = "process"
 MB = 1024 * 1024    
 
-NUM_TASKS = 16 * 5 * 10
+NUM_TASKS = 16 * 5 * 100
 BLOCK_SIZE = int(1 * MB)
-TIME_UNIT = 0.5
+TIME_UNIT = 0.1
 
 NUM_ROWS_PER_PRODUCER = 1
 NUM_ROWS_PER_CONSUMER = 1
-        
+
+start_time = time.time()
+
+def busy_loop(duration_in_seconds):
+    """
+    A busy loop that runs for the specified duration in seconds.
+
+    :param duration_in_seconds: The time (in seconds) the loop should run.
+    """
+    end_time = time.time() + duration_in_seconds
+    while time.time() < end_time:
+        pass  # Busy waiting
+
 def append_dict_to_file(data: dict, file_path: str):
     """
     Append a dictionary to a file as a JSON object.
@@ -43,14 +54,7 @@ def append_dict_to_file(data: dict, file_path: str):
     # Open the file in append mode, creating it if it doesn't exist
     with open(file_path, 'a') as file:
         file.write(json.dumps(data) + '\n')
-        
-# class CheckpointLoggingListener(CheckpointListener):
-#     def notify_checkpoint_completed(self, checkpoint_id: int) -> None:
-#         print(f"Checkpoint {checkpoint_id} completed successfully.")
 
-#     def notify_checkpoint_failed(self, checkpoint_id: int) -> None:
-#         print(f"Checkpoint {checkpoint_id} failed.")
-        
 class Producer(FlatMapFunction):
     def __init__(self):
         self.count = None  # Will be backed by distributed state (MapState)
@@ -58,28 +62,20 @@ class Producer(FlatMapFunction):
     def open(self, runtime_context: RuntimeContext):
         self.task_info = runtime_context.get_task_name_with_subtasks()
         self.task_index = runtime_context.get_index_of_this_subtask()
+        self.attempt_number = runtime_context.get_attempt_number()
         print(f"Opened Producer {self.task_info} with index {self.task_index}")
 
         # Define a MapState descriptor and initialize the state (for distributed state)
-        state_descriptor = MapStateDescriptor("count_state", Types.INT(), Types.INT())
-        self.count: MapState = runtime_context.get_map_state(state_descriptor)
-        print(f"Restored state for task {self.task_index}: {self.count}, {state_descriptor.get_name()}, id(runtime_context): {id(runtime_context)}")
+        state_descriptor = ValueStateDescriptor("count_state", Types.INT())
+        self.count = runtime_context.get_state(state_descriptor)
+        print(f"Init state for task {self.task_index}")
 
     def flat_map(self, value):
 
-        # Increment count and simulate processing
-        # Retrieve the current state or initialize it
-        current_count = 0
-        if self.count.contains(self.task_index):  # Ensure the key exists
-            current_count = self.count.get(self.task_index)
+        self.count.update((self.count.value() or 0) + 1)
 
-        # Increment the state
-        current_count += 1
-        # Update the state
-        self.count.put(self.task_index, current_count)
-        
         producer_start = time.time()
-        time.sleep(TIME_UNIT * 3)
+        busy_loop(TIME_UNIT * 3)
         producer_end = time.time()
 
         # Log processing details
@@ -96,20 +92,18 @@ class Producer(FlatMapFunction):
         append_dict_to_file(log, 'flink_logs.log')
 
         # Generate output
-        for _ in range(NUM_ROWS_PER_PRODUCER):
-            yield b"1" * BLOCK_SIZE
+        for i in range(NUM_ROWS_PER_PRODUCER):
+            yield i + value * NUM_ROWS_PER_PRODUCER
 
         # Simulate failure after a certain count
-        print(f"count: {current_count}")
-        if current_count == 8:
-            print(f"Simulating failure in Producer, count: {current_count}")
+        print(f"count: {self.count.value()}, value: {value}")
+        if self.count.value() == NUM_TASKS // 20 and self.attempt_number == 0:
+            print(f"Injecting failure {time.time() - start_time:.2f}s since start: Attempt {self.attempt_number}")
             raise RuntimeError("Simulated failure in Producer")
 
         
         
 class ConsumerActor(ProcessFunction):
-    current_batch = []
-    idx = 0
 
     def open(self, runtime_context):
         self.current_batch = []
@@ -121,7 +115,7 @@ class ConsumerActor(ProcessFunction):
         if len(self.current_batch) == 0:
             self.consumer_start = time.time()
 
-        time.sleep(TIME_UNIT)
+        busy_loop(TIME_UNIT)
         self.current_batch.append(value)
         self.idx += 1
         if len(self.current_batch) < NUM_ROWS_PER_CONSUMER:
@@ -140,48 +134,31 @@ class ConsumerActor(ProcessFunction):
         }
         append_dict_to_file(log, 'flink_logs.log')
 
-        # logging.warning(json.dumps(log))
-        current_batch_len = len(self.current_batch)
+        batch = self.current_batch
         self.current_batch = []
-        return [current_batch_len]
-
-def configure_restart_strategy(config):
-    config.set_string('restart-strategy.type', 'fixed-delay')
-    config.set_string('restart-strategy.fixed-delay.attempts', '3') # number of restart attempts
-    config.set_string('restart-strategy.fixed-delay.delay', '1000ms') # delay
+        return self.current_batch
 
 def run_flink(env):
     
     start = time.perf_counter()
-    items = list(range(NUM_TASKS))
-    ds = env.from_collection(items, type_info=Types.INT())
-    
+    number_source = NumberSequenceSource(0, NUM_TASKS)
+
+    ds = env.from_source(
+        source=number_source,
+        watermark_strategy=WatermarkStrategy.for_monotonous_timestamps(),
+        source_name="file_source",
+        type_info=Types.LONG(),
+    ).set_parallelism(1)
+        
     # Apply a key_by transformation to create a KeyedStream
     ds = ds.key_by(lambda x: x % PRODUCER_PARALLELISM)
-
-    producer = Producer()
-    ds = ds.flat_map(producer, output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        PRODUCER_PARALLELISM
-    ) 
-    
-    ds = (
-        ds.process(ConsumerActor()).set_parallelism(CONSUMER_PARALLELISM)
-    )
-    
-    # result = []
-    # for length in ds.execute_and_collect():
-    #     result.append(length)
-    #     print(f"Processed block of size: {sum(result)}/{NUM_ROWS_PER_PRODUCER * len(items)}", flush=True)
-
-    # Use a print sink to observe the output
+    ds = ds.flat_map(Producer(), output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(PRODUCER_PARALLELISM) 
+    ds = ds.process(ConsumerActor()).set_parallelism(CONSUMER_PARALLELISM)
     ds.print()
 
     # Execute the Flink job
     env.execute("Streaming Job Example")
-
-    # total_length = sum(result)
     end = time.perf_counter()
-    # print(f"\nTotal data length: {total_length:,}")
     print(f"Time: {end - start:.4f}s")
 
 def run_experiment():
@@ -189,15 +166,18 @@ def run_experiment():
     config.set_string("python.execution-mode", EXECUTION_MODE)
     config.set_integer("taskmanager.numberOfTaskSlots", NUM_CPUS)
     
-    configure_restart_strategy(config)
-
-    config.set_string("state.backend", "filesystem")  # Use a persistent backend
+    config.set_string('restart-strategy.type', 'fixed-delay')
+    config.set_string('restart-strategy.fixed-delay.attempts', '3') # number of restart attempts
+    config.set_string('restart-strategy.fixed-delay.delay', '3000ms') # delay
+    
+    config.set_string("state.backend.type", "rocksdb")  # Use a persistent backend
     config.set_string("state.checkpoints.dir", "file:///home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/flink-checkpoints")  # Local or remote path
-
+    config.set_boolean("state.backend.incremental", True)  # Enable incremental checkpointing
 
     env = StreamExecutionEnvironment.get_execution_environment(config)
-    env.enable_checkpointing(1000)
-    env.get_checkpoint_config().set_checkpointing_mode(CheckpointingMode.EXACTLY_ONCE)
+    env.enable_checkpointing(10000, CheckpointingMode.EXACTLY_ONCE)
+    print("checkpoint enabled: ", env.get_checkpoint_config().is_checkpointing_enabled())
+    print("interval: ", env.get_checkpoint_config().get_checkpoint_interval())
     run_flink(env)
 
 def main():

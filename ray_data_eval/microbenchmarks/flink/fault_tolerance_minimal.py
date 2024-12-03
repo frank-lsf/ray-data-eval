@@ -34,13 +34,14 @@ class Producer(FlatMapFunction):
 
     def flat_map(self, value):
         self.count.update((self.count.value() or 0) + 1)
+        time.sleep(0.01)
         print(f"count: {self.count.value()}, {value}")
         cnt = 0
         while cnt < 10000:
             cnt += 1
         yield value
 
-        if self.count.value() == NUM_TASKS // 20 and self.attempt_number == 0:
+        if self.count.value() == 10000 and self.attempt_number == 0:
             print(f"Injecting failure: Attempt {self.attempt_number}")
             raise RuntimeError("Failure injected")
 
