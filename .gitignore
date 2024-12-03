@@ -18,5 +18,5 @@ terraform.*
 _*.yml
 *.json
 *build*
-ray_data_eval/microbenchmarks/flink/flink-1.20.0/
+ray_data_eval/microbenchmarks/flink/flink-1.20.0
 ray_data_eval/microbenchmarks/flink/flink-1.20.0-bin-scala_2.12.tgz
