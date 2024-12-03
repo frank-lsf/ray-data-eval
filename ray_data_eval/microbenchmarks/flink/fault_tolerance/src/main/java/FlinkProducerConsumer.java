@@ -27,7 +27,7 @@ public class FlinkProducerConsumer {
     private static final int NUM_CPUS = 8;
     private static final int PRODUCER_PARALLELISM = 1;
     private static final int CONSUMER_PARALLELISM = 1;
-    private static final int NUM_TASKS = 16 * 5 * 100;
+    private static final int NUM_TASKS = 16 * 5 * 10;
     private static final int TIME_UNIT = 100; // in milliseconds
 
     private static void appendDictToFile(String data, String filePath) {
@@ -48,12 +48,16 @@ public class FlinkProducerConsumer {
 
     public class Producer extends RichFlatMapFunction<Long, Long> {
         private transient ValueState<Integer> count;
+        private transient Integer attemptNumber;
 
         @Override
         public void open(org.apache.flink.configuration.Configuration parameters) throws Exception {
             // Initialize state
             ValueStateDescriptor<Integer> stateDescriptor = new ValueStateDescriptor<>("count_state", Integer.class);
             count = getRuntimeContext().getState(stateDescriptor);
+
+            ValueStateDescriptor<Integer> attemptNumberStateDescriptor = new ValueStateDescriptor<>("attempt_number_state", Integer.class);
+            attemptNumber = getRuntimeContext().getAttemptNumber();
         }
 
         @Override
@@ -77,7 +81,7 @@ public class FlinkProducerConsumer {
                 out.collect(i + value * NUM_TASKS / 20);
             }
 
-            if (count.value() != null && count.value() == NUM_TASKS / 20) {
+            if (count.value() != null && count.value() == NUM_TASKS / 20 && attemptNumber == 0) {
                 throw new RuntimeException("Simulated failure in Producer");
             }
         }
