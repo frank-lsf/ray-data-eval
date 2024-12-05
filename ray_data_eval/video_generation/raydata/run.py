@@ -1,5 +1,6 @@
 import time
 from typing import Any, Iterator
+import io
 
 import cv2
 import mmcv
@@ -12,7 +13,9 @@ import torch
 INPUT_DIR = "data/input"
 OUTPUT_DIR = "data/output"
 
-BATCH_SIZE_LIMIT = 1024 * 1024 * 128
+DECORD_NUM_FRAMES_PER_BATCH = 32
+
+BATCH_SIZE_LIMIT = 1024 * 1024 * 32  # Adjust last dimension to avoid CUDA OOM
 RGB_MAX = 255.0
 
 
@@ -101,15 +104,56 @@ class VideoProcessor:
 
 
 def preprocess_operator(batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
-    paths = batch["item"]
-    for path in paths:
-        for tensor in preprocess(path):
-            yield {"bytes": tensor.unsqueeze(0), "path": [path]}
+    # print(batch.keys(), flush=True)
+    # paths = batch["path"]
+    # for path in paths:
+    #     for tensor in preprocess(path):
+    #         yield {"bytes": tensor.unsqueeze(0), "path": [path]}
+
+    path = batch["path"]
+    # print(type(path))
+    video_bytes = batch["bytes"][0]
+
+    from decord import VideoReader, DECORDError
+
+    reader = VideoReader(
+        io.BytesIO(video_bytes),
+        num_threads=1,
+        width=320,
+        height=240,
+    )
+    batch = []
+    batch_total_size = 0
+    last_batch_time = time.time()
+
+    start, end = 0, DECORD_NUM_FRAMES_PER_BATCH
+    while start < len(reader):
+        for frame in reader.get_batch(range(start, end)).asnumpy():
+            frame = np.array(frame)
+            batch.append(frame)
+            batch_total_size += frame.nbytes
+            if batch_total_size > BATCH_SIZE_LIMIT:
+                yield {"bytes": _batch_to_tensor(batch).unsqueeze(0), "path": path}
+                print(f"Time to decode {len(batch)} frames: {time.time() - last_batch_time:.3f}s")
+                batch = []
+                batch_total_size = 0
+                last_batch_time = time.time()
+        start = end
+        end = min(end + DECORD_NUM_FRAMES_PER_BATCH, len(reader))
+    if batch:
+        yield {"bytes": _batch_to_tensor(batch).unsqueeze(0), "path": path}
+        print(f"Time to decode {len(batch)} frames: {time.time() - last_batch_time:.3f}s")
 
 
 def postprocess_operator(batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
+    # print(batch.keys())
+    # print(type(batch["path"]))
+    # print(batch["path"][0])
     input_path = batch["path"][0]
-    output_path = input_path.replace("input", "output")
+    # output_path = input_path.replace("input", "output")
+    output_path = input_path.replace(
+        "ray-data-eval-us-west-2/youtube-8m-sample-sampled/", "data/output/"
+    )
     output_shape = batch["bytes"].shape
     width = output_shape[-1]
     height = output_shape[-2]
@@ -119,7 +163,12 @@ def postprocess_operator(batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
     yield {"path": [output_path]}
 
 
-ds = ray.data.from_items(["data/input/a.mp4"] * 10)
+# ds = ray.data.from_items(["data/input/a.mp4"] * 10)
+# ds = ray.data.from_items(["data/input/a.mp4"])
+ds = ray.data.read_binary_files(
+    "s3://ray-data-eval-us-west-2/youtube-8m-sample-sampled/",
+    include_paths=True,
+)
 ds = ds.map_batches(
     preprocess_operator,
     batch_size=1,
@@ -138,3 +187,5 @@ ds = ds.map_batches(
     zero_copy_batch=True,
 )
 print(ds.take_all())
+
+ray.timeline("timeline.json")
