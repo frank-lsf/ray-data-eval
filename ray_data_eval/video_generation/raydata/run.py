@@ -13,9 +13,9 @@ import torch
 INPUT_DIR = "data/input"
 OUTPUT_DIR = "data/output"
 
-DECORD_NUM_FRAMES_PER_BATCH = 32
+DECORD_NUM_FRAMES_PER_BATCH = 8  # Adjust to avoid CUDA OOM
 
-BATCH_SIZE_LIMIT = 1024 * 1024 * 32  # Adjust last dimension to avoid CUDA OOM
+BATCH_SIZE_LIMIT = 1024 * 1024 * 32  # Adjust to avoid CUDA OOM
 RGB_MAX = 255.0
 
 
@@ -91,7 +91,10 @@ class VideoProcessor:
         start_time = time.time()
         frames_processed = 0
         tensor = torch.from_numpy(batch["bytes"]).float()
+        # tensor = tensor.to("cuda", non_blocking=True)
+
         batch_start_time = time.time()
+        # with torch.autocast("cuda"):
         preds = self.engine.forward(tensor)  # (batch, frames, channels, width, height)
         frames_processed += preds.size(1)
         print(
@@ -119,15 +122,15 @@ def preprocess_operator(batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
     reader = VideoReader(
         io.BytesIO(video_bytes),
         num_threads=1,
-        width=320,
-        height=240,
+        # width=320,
+        # height=240,
     )
     batch = []
     batch_total_size = 0
     last_batch_time = time.time()
 
     start, end = 0, DECORD_NUM_FRAMES_PER_BATCH
-    while start < len(reader):
+    while start < 128:
         for frame in reader.get_batch(range(start, end)).asnumpy():
             frame = np.array(frame)
             batch.append(frame)
@@ -163,12 +166,29 @@ def postprocess_operator(batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
     yield {"path": [output_path]}
 
 
+def print_path(batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
+    # print(batch["path"])
+    yield {"path": batch["path"]}
+
+
 # ds = ray.data.from_items(["data/input/a.mp4"] * 10)
 # ds = ray.data.from_items(["data/input/a.mp4"])
+
 ds = ray.data.read_binary_files(
-    "s3://ray-data-eval-us-west-2/youtube-8m-sample-sampled/",
-    include_paths=True,
+    "s3://ray-data-eval-us-west-2/youtube-8m-sample-sampled/", include_paths=True
 )
+
+# ds_high_res = ray.data.read_binary_files(
+#     "s3://ray-data-eval-us-west-2/youtube-8m-sample-sampled/high-res/", include_paths=True
+# )
+# ds_low_res = ray.data.read_binary_files(
+#     "s3://ray-data-eval-us-west-2/youtube-8m-sample-sampled/low-res/", include_paths=True
+# )
+
+# ds = ds_high_res.union(ds_low_res)
+
+# ds = ds.map_batches(print_path, batch_size=1, zero_copy_batch=True)
+
 ds = ds.map_batches(
     preprocess_operator,
     batch_size=1,
