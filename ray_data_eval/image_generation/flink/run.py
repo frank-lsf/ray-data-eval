@@ -17,7 +17,7 @@ import numpy as np
 from diffusers import AutoPipelineForImage2Image
 from ray_data_eval.image_generation.raydata.ray_data_pipeline_helpers import (
     ChromeTracer,
-    CsvLogger,
+    # CsvLogger,
 )
 
 
@@ -29,20 +29,22 @@ from ray_data_eval.image_generation.common import (
     S3_BUCKET_NAME,
 )
 from ray_data_eval.image_generation.flink.common import postprocess_logs
-from ray_data_eval.image_generation.spark.fused import S3Handler
+from ray_data_eval.image_generation.spark.spark_fused import S3Handler
 
 import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler("flink_logs.log")
+file_handler = logging.FileHandler("flink_logs.log", mode="w")
 file_handler.setLevel(logging.DEBUG)
 logger.addHandler(file_handler)
+
+LOGGER = logger
 
 EXECUTION_MODE = "process"
 MB = 1024 * 1024
 
-NUM_TASKS = 16 * 5
+NUM_TASKS = 160 * 5
 BLOCK_SIZE = int(1 * MB)
 TIME_UNIT = 0.5
 
@@ -62,6 +64,17 @@ RESOLUTION = 512
 BATCH_SIZE = 10
 
 
+def record(log, logger=LOGGER):
+    """
+    @ronyw: When running with thread mode, flush the output to `flink_logs.log`
+    `python run.py > flink_logs.log`
+    """
+    if EXECUTION_MODE == "thread":
+        print(log)
+    else:
+        logger.info(log)
+
+
 class Model:
     def __init__(self):
         self.tracer = ChromeTracer(GPU_TIMELINE_FILENAME)
@@ -75,8 +88,6 @@ class Model:
         self.start_time = time.perf_counter()
         self.last_end_time = self.start_time
         self.total_num_rows = 0
-
-        self.csv_logger = CsvLogger(CSV_FILENAME)
 
     def __call__(self, images, prompts):
         inference_start_time = time.perf_counter()
@@ -94,18 +105,6 @@ class Model:
         inference_end_time = time.perf_counter()
         num_rows = len(images)
         self.total_num_rows += num_rows
-        self.csv_logger.write_csv_row(
-            [
-                inference_end_time - self.start_time,
-                self.total_num_rows,
-                self.total_num_rows / (inference_end_time - self.start_time),
-                num_rows,
-                inference_end_time - inference_start_time,
-                num_rows / (inference_end_time - inference_start_time),
-                inference_end_time - self.last_end_time,
-                num_rows / (inference_end_time - self.last_end_time),
-            ]
-        )
         self.last_end_time = inference_end_time
         self.tracer.save()
         return output_batch
@@ -131,9 +130,9 @@ class Producer(FlatMapFunction):
             "ph": "X",
             "args": {},
         }
-        logger.info(log)
+        record(log)
         for _ in range(NUM_ROWS_PER_PRODUCER):
-            yield np.array(image), value
+            yield np.array([np.array(image)] * 100), value
 
 
 class Inference(ProcessFunction):
@@ -165,7 +164,7 @@ class Inference(ProcessFunction):
                 "ph": "X",
                 "args": {},
             }
-            logger.info(log)
+            record(log)
             paths = self.paths.copy()
             self.images_batch.clear()
             self.prompts_batch.clear()
@@ -197,7 +196,7 @@ class Consumer(MapFunction):
             "ph": "X",
             "args": {},
         }
-        logger.info(log)
+        record(log)
         return BATCH_SIZE
 
 

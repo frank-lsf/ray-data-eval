@@ -15,6 +15,7 @@ def postprocess_logs(file_path: str = "flink_logs.log"):
             data.append(line)
 
     json.dump(data, open("flink_logs_parsed.json", "w"), indent=2)
+    print("Saved logs to flink_logs_parsed.json")
 
 
 if __name__ == "__main__":
