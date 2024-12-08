@@ -1,197 +1,52 @@
-  Process Memory Usage: 74.00 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 835.56 MB (4.10%)
-  Available Memory: 30415.56 MB
-
-2024-12-08 05:04:58,272	ERROR services.py:1353 -- Failed to start the dashboard , return code -11
-2024-12-08 05:04:58,273	ERROR services.py:1378 -- Error should be written to 'dashboard.log' or 'dashboard.err'. We are printing the last 20 lines for you. See 'https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure' to find where the log file is.
-2024-12-08 05:04:58,273	ERROR services.py:1422 -- 
-The last 20 lines of /tmp/ray/session_2024-12-08_05-04-57_124011_2069/logs/dashboard.log (it contains the error message from the dashboard): 
-2024-12-08 05:04:58,147	INFO head.py:221 -- Starting dashboard metrics server on port 44227
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1035.07 MB (4.70%)
-  Available Memory: 30216.37 MB
-
-2024-12-08 05:04:59,567	INFO worker.py:1836 -- Started a local Ray instance.
-[33m(raylet)[0m The node with node id: 0431bd222d999de586843e12cae95916730c166fb2064448561fa36c and address: 10.0.32.247 and node name: 10.0.32.247 has been marked dead because the detector has missed too many heartbeats from it. This can happen when a 	(1) raylet crashes unexpectedly (OOM, etc.) 
-	(2) raylet has lagging heartbeats due to slow network or busy workload.
-[33m(raylet)[0m [2024-12-08 05:05:00,327 E 2209 2265] (raylet) agent_manager.cc:83: The raylet exited immediately because one Ray agent failed, agent_name = dashboard_agent/424238335.
-[33m(raylet)[0m The raylet fate shares with the agent. This can happen because
-[33m(raylet)[0m - The version of `grpcio` doesn't follow Ray's requirement. Agent can segfault with the incorrect `grpcio` version. Check the grpcio version `pip freeze | grep grpcio`.
-[33m(raylet)[0m - The agent failed to start because of unexpected error or port conflict. Read the log `cat /tmp/ray/session_latest/logs/{dashboard_agent|runtime_env_agent}.log`. You can find the log file structure here https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure.
-[33m(raylet)[0m - The agent is killed by the OS (e.g., out of memory).
-2024-12-08 05:05:00,427	INFO streaming_executor.py:107 -- Starting execution of Dataset. Full logs are in /tmp/ray/session_2024-12-08_05-04-57_124011_2069/logs/ray-data
-2024-12-08 05:05:00,427	INFO streaming_executor.py:108 -- Execution plan of Dataset: InputDataBuffer[Input] -> TaskPoolMapOperator[ReadRange->MapBatches(produce)] -> TaskPoolMapOperator[MapBatches(consume)] -> TaskPoolMapOperator[MapBatches(inference)]
-Running 0: 0.00 row [00:00, ? row/s]2024-12-08 05:05:00,434	ERROR exceptions.py:73 -- Exception occurred in Ray Data or Ray Core internal code. If you continue to see this error, please open an issue on the Ray project GitHub page with the full stack trace below: https://github.com/ray-project/ray/issues/new/choose
-2024-12-08 05:05:00,434	ERROR exceptions.py:81 -- Full stack trace:
-Traceback (most recent call last):
-  File "/home/ubuntu/ray/python/ray/data/exceptions.py", line 49, in handle_trace
-    return fn(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/_internal/plan.py", line 424, in execute_to_iterator
-    bundle_iter = execute_to_legacy_bundle_iterator(executor, self)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/_internal/execution/legacy_compat.py", line 51, in execute_to_legacy_bundle_iterator
-    bundle_iter = executor.execute(dag, initial_stats=stats)
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/_internal/execution/streaming_executor.py", line 123, in execute
-    self._topology, _ = build_streaming_topology(dag, self._options)
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/_internal/execution/streaming_executor_state.py", line 382, in build_streaming_topology
-    setup_state(dag)
-  File "/home/ubuntu/ray/python/ray/data/_internal/execution/streaming_executor_state.py", line 373, in setup_state
-    parent_state = setup_state(parent)
-                   ^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/_internal/execution/streaming_executor_state.py", line 373, in setup_state
-    parent_state = setup_state(parent)
-                   ^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/_internal/execution/streaming_executor_state.py", line 373, in setup_state
-    parent_state = setup_state(parent)
-                   ^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/_internal/execution/streaming_executor_state.py", line 379, in setup_state
-    op.start(options)
-  File "/home/ubuntu/ray/python/ray/data/_internal/execution/operators/input_data_buffer.py", line 50, in start
-    self._input_data = self._input_data_factory(
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/_internal/planner/plan_read_op.py", line 81, in get_input_data
-    read_task_ref = ray.put(read_task)
-                    ^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/_private/auto_init_hook.py", line 21, in auto_init_wrapper
-    return fn(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/_private/client_mode_hook.py", line 103, in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/_private/worker.py", line 2848, in put
-    object_ref = worker.put_object(value, owner_address=serialize_owner_address)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/_private/worker.py", line 824, in put_object
-    self.core_worker.put_serialized_object_and_increment_local_ref(
-  File "python/ray/_raylet.pyx", line 3446, in ray._raylet.CoreWorker.put_serialized_object_and_increment_local_ref
-  File "python/ray/_raylet.pyx", line 3232, in ray._raylet.CoreWorker._create_put_buffer
-  File "python/ray/includes/common.pxi", line 88, in ray._raylet.check_status
-OSError: Broken pipe
-Running 0: 0.00 row [00:00, ? row/s]                                    Running 0: 0.00 row [00:00, ? row/s]
-ray.data.exceptions.SystemException
-
-The above exception was the direct cause of the following exception:
+  Process Memory Usage: 74.23 MB
+  Total Memory: 15788.21 MB
+  Used Memory: 3245.75 MB (23.00%)
+  Available Memory: 12150.30 MB
 
 Traceback (most recent call last):
   File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 79, in <module>
     bench(args.mem_limit)
-  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 54, in bench
-    for _ in ds.iter_batches(batch_size=FRAMES_PER_VIDEO):
-  File "/home/ubuntu/ray/python/ray/data/iterator.py", line 154, in _create_iterator
-    ) = self._to_ref_bundle_iterator()
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/_internal/iterator/iterator_impl.py", line 28, in _to_ref_bundle_iterator
-    ref_bundles_iterator, stats, executor = ds._plan.execute_to_iterator()
-                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/data/exceptions.py", line 89, in handle_trace
-    raise e.with_traceback(None) from SystemException()
-OSError: Broken pipe
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1070.75 MB (4.90%)
-  Available Memory: 30180.70 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1073.29 MB (4.90%)
-  Available Memory: 30178.16 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1073.92 MB (4.90%)
-  Available Memory: 30177.52 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1076.22 MB (4.90%)
-  Available Memory: 30175.22 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1068.44 MB (4.90%)
-  Available Memory: 30182.98 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1073.39 MB (4.90%)
-  Available Memory: 30178.02 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1069.61 MB (4.90%)
-  Available Memory: 30181.78 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1091.18 MB (4.90%)
-  Available Memory: 30160.25 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1132.10 MB (5.10%)
-  Available Memory: 30119.29 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1178.61 MB (5.20%)
-  Available Memory: 30072.81 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1157.31 MB (5.10%)
-  Available Memory: 30094.13 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1162.22 MB (5.10%)
-  Available Memory: 30089.21 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1171.09 MB (5.20%)
-  Available Memory: 30080.32 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1172.45 MB (5.20%)
-  Available Memory: 30079.00 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1194.54 MB (5.30%)
-  Available Memory: 30056.91 MB
-
-  Process Memory Usage: 74.38 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 1189.87 MB (5.20%)
-  Available Memory: 30061.58 MB
-
-Memory tracking interrupted, shutting down.
-Exception ignored in atexit callback: <function _exit_function at 0x73532937c540>
-Traceback (most recent call last):
-  File "/opt/conda/envs/ray-data/lib/python3.11/multiprocessing/util.py", line 360, in _exit_function
-    p.join()
-  File "/opt/conda/envs/ray-data/lib/python3.11/multiprocessing/process.py", line 149, in join
-    res = self._popen.wait(timeout)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/conda/envs/ray-data/lib/python3.11/multiprocessing/popen_fork.py", line 43, in wait
-    return self.poll(os.WNOHANG if timeout == 0.0 else 0)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/conda/envs/ray-data/lib/python3.11/multiprocessing/popen_fork.py", line 27, in poll
-    pid, sts = os.waitpid(self.pid, flag)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^
-KeyboardInterrupt: 
-Exception ignored in atexit callback: <function shutdown at 0x7353301482c0>
-Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 46, in bench
+    ray.init(num_cpus=NUM_CPUS, num_gpus=NUM_GPUS, object_store_memory= min(12, mem_limit) * GB, include_dashboard=False)
   File "/home/ubuntu/ray/python/ray/_private/client_mode_hook.py", line 103, in wrapper
     return func(*args, **kwargs)
            ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/_private/worker.py", line 1918, in shutdown
-    global_worker.core_worker.shutdown_driver()
+  File "/home/ubuntu/ray/python/ray/_private/worker.py", line 1714, in init
+    _global_node = ray._private.node.Node(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 339, in __init__
+    self.start_ray_processes()
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 1411, in start_ray_processes
+    resource_spec = self.get_resource_spec()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 583, in get_resource_spec
+    ).resolve(is_head=self.head, node_ip_address=self.node_ip_address)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/resource_spec.py", line 297, in resolve
+    raise ValueError(
+ValueError: After taking into account object store and redis memory usage, the amount of memory on this node available for tasks and actors (-1.19 GB) is less than -7% of total. You can adjust these settings with ray.init(memory=<bytes>, object_store_memory=<bytes>).
+  Process Memory Usage: 74.73 MB
+  Total Memory: 15788.21 MB
+  Used Memory: 3399.21 MB (24.00%)
+  Available Memory: 11996.84 MB
+
+  Process Memory Usage: 74.73 MB
+  Total Memory: 15788.21 MB
+  Used Memory: 3402.12 MB (24.00%)
+  Available Memory: 11993.93 MB
+
+Memory tracking interrupted, shutting down.
+Exception ignored in atexit callback: <function _exit_function at 0x751732954d60>
+Traceback (most recent call last):
+  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/multiprocessing/util.py", line 360, in _exit_function
+    p.join()
+  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/multiprocessing/process.py", line 149, in join
+    res = self._popen.wait(timeout)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/multiprocessing/popen_fork.py", line 43, in wait
+    return self.poll(os.WNOHANG if timeout == 0.0 else 0)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/multiprocessing/popen_fork.py", line 27, in poll
+    pid, sts = os.waitpid(self.pid, flag)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
 KeyboardInterrupt: 
