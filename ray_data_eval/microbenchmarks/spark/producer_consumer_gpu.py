@@ -174,12 +174,12 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    import multiprocessing
+    # import multiprocessing
     # Start memory usage logging in a separate process
-    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
-    logging_process.start()
+    # logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    # logging_process.start()
     
-
+    limit_cpu_memory(args.mem_limit)
     bench(args.stage_level_scheduling, args.cache, args.cache_disk, args.mem_limit)
-    logging_process.terminate()
+    # logging_process.terminate()
 

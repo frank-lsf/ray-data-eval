@@ -1,1573 +1,321 @@
-  Process Memory Usage: 74.55 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 4605.51 MB (31.40%)
-  Available Memory: 10834.54 MB
+  Process Memory Usage: 73.32 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 2717.71 MB (10.10%)
+  Available Memory: 28533.74 MB
 
-Memory exceeded!
-2024-12-08 08:51:12,067	INFO worker.py:1821 -- Started a local Ray instance.
-  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 4959.30 MB (33.60%)
-  Available Memory: 10480.73 MB
+  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 2926.14 MB (10.70%)
+  Available Memory: 28325.31 MB
 
-Memory exceeded!
-2024-12-08 08:51:14,061	INFO streaming_executor.py:108 -- Starting execution of Dataset. Full logs are in /tmp/ray/session_2024-12-08_08-51-10_676923_112860/logs/ray-data
-2024-12-08 08:51:14,061	INFO streaming_executor.py:109 -- Execution plan of Dataset: InputDataBuffer[Input] -> TaskPoolMapOperator[ReadRange->MapBatches(produce)] -> TaskPoolMapOperator[MapBatches(consume)] -> TaskPoolMapOperator[MapBatches(inference)]
-Running 0: 0.00 row [00:00, ? row/s]
-- ReadRange->MapBatches(produce) 1: 0.00 row [00:00, ? row/s][A
+2024-12-08 23:36:27,827	INFO worker.py:1779 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2024-12-08 23:36:29,320	INFO streaming_executor.py:108 -- Starting execution of Dataset. Full logs are in /tmp/ray/session_2024-12-08_23-36-25_778841_570839/logs/ray-data
+2024-12-08 23:36:29,320	INFO streaming_executor.py:109 -- Execution plan of Dataset: InputDataBuffer[Input] -> TaskPoolMapOperator[ReadRange->MapBatches(produce)] -> TaskPoolMapOperator[MapBatches(consume)] -> TaskPoolMapOperator[MapBatches(inference)]
 
-- MapBatches(consume) 2: 0.00 row [00:00, ? row/s][A[A
+- ReadRange->MapBatches(produce) 1:   0%|          | 0/160 [00:00<?, ?it/s][A
+
+- MapBatches(consume) 2:   0%|          | 0/160 [00:00<?, ?it/s][A[A
 
 
-- MapBatches(inference) 3: 0.00 row [00:00, ? row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5183.38 MB (35.00%)
-  Available Memory: 10256.57 MB
+- MapBatches(inference) 3:   0%|          | 0/160 [00:00<?, ?it/s][A[A[ARunning 0:   0%|          | 0/160 [00:00<?, ?it/s]  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3278.30 MB (11.80%)
+  Available Memory: 27972.57 MB
 
-Memory exceeded!
+  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3278.75 MB (11.80%)
+  Available Memory: 27972.11 MB
 
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 19; Resources: 1.0 CPU, 200.0MB object store: : 0.00 row [00:01, ? row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 19; Resources: 1.0 CPU, 200.0MB object store: : 0.00 row [00:01, ? row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:01, ? row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:01, ? row/s][A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:01, ? row/s][A[A[A
+  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3281.49 MB (11.80%)
+  Available Memory: 27969.38 MB
 
 
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:01, ? row/s][A[A[ARunning Dataset. Active & requested resources: 1/8 CPU, 200.0MB/4.0GB object store: : 0.00 row [00:01, ? row/s]Running Dataset. Active & requested resources: 1/8 CPU, 200.0MB/4.0GB object store: : 0.00 row [00:01, ? row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 19; Resources: 1.0 CPU, 200.0MB object store: : 0.00 row [00:02, ? row/s][A
+- ReadRange->MapBatches(produce): 1 active, 159 queued, [cpu: 1.0, objects: 200.0MB]:   0%|          | 0/160 [00:05<?, ?it/s][A
+- ReadRange->MapBatches(produce): 1 active, 159 queued, [cpu: 1.0, objects: 200.0MB]:   1%|          | 1/160 [00:05<13:21,  5.04s/it][ARunning: 1/1 CPU, 0/1 GPU, 300.0MB/2.0GB object_store_memory:   0%|          | 0/160 [00:05<?, ?it/s]
 
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:02, ? row/s][A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:02, ? row/s][A[A[ARunning Dataset. Active & requested resources: 1/8 CPU, 200.0MB/4.0GB object store: : 0.00 row [00:02, ? row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5204.95 MB (35.20%)
-  Available Memory: 10235.01 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 19; Resources: 1.0 CPU, 200.0MB object store: : 0.00 row [00:03, ? row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:03, ? row/s][A[A
+- MapBatches(consume): 0 active, 1 queued, [cpu: 0.0, objects: 0.0B]:   0%|          | 0/160 [00:05<?, ?it/s][A[A
 
 
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:03, ? row/s][A[A[ARunning Dataset. Active & requested resources: 1/8 CPU, 200.0MB/4.0GB object store: : 0.00 row [00:03, ? row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 19; Resources: 1.0 CPU, 200.0MB object store: : 0.00 row [00:04, ? row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:04, ? row/s][A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:04, ? row/s][A[A[ARunning Dataset. Active & requested resources: 1/8 CPU, 200.0MB/4.0GB object store: : 0.00 row [00:04, ? row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5205.95 MB (35.20%)
-  Available Memory: 10234.00 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 19; Resources: 1.0 CPU, 200.0MB object store: : 0.00 row [00:05, ? row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:05, ? row/s][A[A
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 200.0MB]:   0%|          | 0/160 [00:05<?, ?it/s][A[A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3542.32 MB (14.50%)
+  Available Memory: 27108.67 MB
 
 
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:05, ? row/s][A[A[ARunning Dataset. Active & requested resources: 1/8 CPU, 200.0MB/4.0GB object store: : 0.00 row [00:05, ? row/s]Running Dataset. Active & requested resources: 3.97/8 CPU, 1.1GB/4.0GB object store: : 0.00 row [00:06, ? row/s]Running Dataset. Active & requested resources: 3.97/8 CPU, 1.1GB/4.0GB object store: : 0.00 row [00:06, ? row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 19; Resources: 1.0 CPU, 500.0MB object store: : 0.00 row [00:06, ? row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 19; Resources: 1.0 CPU, 500.0MB object store: : 3.00 row [00:06, 2.05s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 19; Resources: 1.0 CPU, 500.0MB object store: : 3.00 row [00:06, 2.05s/ row][A
 
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 600.0MB object store: : 0.00 row [00:06, ? row/s][A[A
+- MapBatches(consume): 2 active, 2 queued, [cpu: 2.0, objects: 300.0MB]:   0%|          | 0/160 [00:06<?, ?it/s][A[A
 
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 600.0MB object store: : 0.00 row [00:06, ? row/s][A[A
+- MapBatches(consume): 2 active, 2 queued, [cpu: 2.0, objects: 300.0MB]:   0%|          | 0/800 [00:06<?, ?it/s][A[A
+
+- MapBatches(consume): 2 active, 2 queued, [cpu: 2.0, objects: 300.0MB]:   0%|          | 2/800 [00:06<43:40,  3.28s/it][A[ARunning: 0.99/1 CPU, 1/1 GPU, 800.0MB/2.0GB object_store_memory:   0%|          | 0/160 [00:06<?, ?it/s]
+- ReadRange->MapBatches(produce): 0 active, 159 queued, [cpu: 0.0, objects: 300.0MB]:   1%|          | 1/160 [00:06<13:21,  5.04s/it][A
+- ReadRange->MapBatches(produce): 0 active, 159 queued, [cpu: 0.0, objects: 300.0MB]:   3%|▎         | 5/160 [00:06<02:46,  1.08s/it][A
 
 
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:06, ? row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5266.54 MB (38.60%)
-  Available Memory: 9691.87 MB
+- MapBatches(inference): 1 active, 2 queued, [cpu: 0.0, gpu: 1.0, objects: 200.0MB]:   0%|          | 0/160 [00:07<?, ?it/s][A[A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 400.0MB]:   0%|          | 2/800 [00:07<43:40,  3.28s/it][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 400.0MB]:   0%|          | 4/800 [00:07<23:04,  1.74s/it][A[ARunning: 0.99/1 CPU, 1/1 GPU, 500.0MB/2.0GB object_store_memory:   0%|          | 0/160 [00:07<?, ?it/s]Running: 0.99/1 CPU, 1/1 GPU, 500.0MB/2.0GB object_store_memory:   0%|          | 0/800 [00:07<?, ?it/s]Running: 0.99/1 CPU, 1/1 GPU, 500.0MB/2.0GB object_store_memory:   0%|          | 1/800 [00:07<1:44:57,  7.88s/it]
+- ReadRange->MapBatches(produce): 0 active, 159 queued, [cpu: 0.0, objects: 100.0MB]:   3%|▎         | 5/160 [00:07<02:46,  1.08s/it][A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4258.62 MB (16.80%)
+  Available Memory: 26392.24 MB
 
 Memory exceeded!
 
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 19; Resources: 0.0 CPU, 500.0MB object store: : 3.00 row [00:07, 2.05s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 19; Resources: 0.0 CPU, 500.0MB object store:   3%|▎         | 3.00/100 [00:07<03:18, 2.05s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 19; Resources: 0.0 CPU, 500.0MB object store:   5%|▌         | 5.00/100 [00:07<02:03, 1.30s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 19; Resources: 0.0 CPU, 500.0MB object store:   5%|▌         | 5.00/100 [00:07<02:03, 1.30s/ row][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1000.0MB object store: : 0.00 row [00:07, ? row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1000.0MB object store: : 0.00 row [00:07, ? row/s][A[A
 
 
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: : 0.00 row [00:07, ? row/s][A[A[ARunning Dataset. Active & requested resources: 4.95/8 CPU, 1.5GB/4.0GB object store: : 0.00 row [00:07, ? row/s]Running Dataset. Active & requested resources: 4.95/8 CPU, 1.5GB/4.0GB object store: : 0.00 row [00:07, ? row/s]
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 19; Resources: 0.0 CPU, 400.0MB object store:   5%|▌         | 5.00/100 [00:08<02:03, 1.30s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 19; Resources: 0.0 CPU, 400.0MB object store:   5%|▌         | 5.00/100 [00:08<02:03, 1.30s/ row][A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 500.0MB object store: : 0.00 row [00:08, ? row/s] [A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 500.0MB object store:   0%|          | 0.00/100 [00:08<?, ? row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 500.0MB object store:   1%|          | 1.00/100 [00:08<13:34, 8.23s/ row][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 500.0MB object store:   1%|          | 1.00/100 [00:08<13:34, 8.23s/ row][A[A
+- MapBatches(inference): 1 active, 2 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   0%|          | 0/160 [00:08<?, ?it/s]   [A[A[A
 
 
-- MapBatches(inference): Tasks: 1; Queued blocks: 0; Resources: 0.0 CPU, 1.0 GPU, 200.0MB object store: : 0.00 row [00:08, ? row/s][A[A[A
+- MapBatches(inference): 1 active, 2 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   0%|          | 0/800 [00:08<?, ?it/s][A[A[A
 
 
-- MapBatches(inference): Tasks: 1; Queued blocks: 0; Resources: 0.0 CPU, 1.0 GPU, 200.0MB object store: : 0.00 row [00:08, ? row/s][A[A[ARunning Dataset. Active & requested resources: 3.96/8 CPU, 1/4 GPU, 1.1GB/4.0GB object store: : 0.00 row [00:08, ? row/s]Running Dataset. Active & requested resources: 3.96/8 CPU, 1/4 GPU, 1.1GB/4.0GB object store: : 0.00 row [00:08, ? row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6342.23 MB (46.20%)
-  Available Memory: 8497.71 MB
+- MapBatches(inference): 1 active, 2 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   0%|          | 2/800 [00:08<57:08,  4.30s/it][A[A[ARunning: 0/1 CPU, 0/1 GPU, 100.0MB/2.0GB object_store_memory:   0%|          | 1/800 [00:09<1:44:57,  7.88s/it]   Running: 0/1 CPU, 0/1 GPU, 100.0MB/2.0GB object_store_memory:   0%|          | 3/800 [00:09<34:05,  2.57s/it]  
+
+- MapBatches(consume): 0 active, 0 queued, [cpu: 0.0, objects: 100.0MB]:   0%|          | 4/800 [00:09<23:04,  1.74s/it][A[A
+
+- MapBatches(consume): 0 active, 0 queued, [cpu: 0.0, objects: 100.0MB]:   1%|          | 5/800 [00:09<21:45,  1.64s/it][A[A
+
+
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   0%|          | 2/800 [00:09<57:08,  4.30s/it][A[A[A
+
+
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   1%|          | 5/800 [00:09<22:10,  1.67s/it][A[A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4416.76 MB (17.30%)
+  Available Memory: 26234.09 MB
 
 Memory exceeded!
 
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 19; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:09<02:03, 1.30s/ row]   [A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 19; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:09<02:03, 1.30s/ row][A
+- ReadRange->MapBatches(produce): 1 active, 158 queued, [cpu: 1.0, objects: 200.0MB]:   3%|▎         | 5/160 [00:10<02:46,  1.08s/it][ARunning: 1/1 CPU, 0/1 GPU, 200.0MB/2.0GB object_store_memory:   0%|          | 3/800 [00:10<34:05,  2.57s/it]Running: 1/1 CPU, 0/1 GPU, 200.0MB/2.0GB object_store_memory:   1%|          | 5/800 [00:10<21:22,  1.61s/it]  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4351.14 MB (17.10%)
+  Available Memory: 26299.72 MB
 
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 500.0MB object store:   1%|          | 1.00/100 [00:09<13:34, 8.23s/ row][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 500.0MB object store:   5%|▌         | 5.00/100 [00:09<02:17, 1.45s/ row][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 500.0MB object store:   5%|▌         | 5.00/100 [00:09<02:17, 1.45s/ row][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 1; Resources: 0.0 CPU, 4.0 GPU, 800.0MB object store: : 0.00 row [00:09, ? row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 1; Resources: 0.0 CPU, 4.0 GPU, 800.0MB object store: : 0.00 row [00:09, ? row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store: : 0.00 row [00:09, ? row/s]   Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store: : 0.00 row [00:09, ? row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 18; Resources: 1.0 CPU, 200.0MB object store:   5%|▌         | 5.00/100 [00:10<02:03, 1.30s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 18; Resources: 1.0 CPU, 200.0MB object store:   5%|▌         | 5.00/100 [00:10<02:03, 1.30s/ row][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 300.0MB object store:   5%|▌         | 5.00/100 [00:10<02:17, 1.45s/ row][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 300.0MB object store:   5%|▌         | 5.00/100 [00:10<02:17, 1.45s/ row][A[A
-
-
-- MapBatches(inference): Tasks: 3; Queued blocks: 0; Resources: 0.0 CPU, 3.0 GPU, 24.0B object store: : 0.00 row [00:10, ? row/s]                  [A[A[A
-
-
-- MapBatches(inference): Tasks: 3; Queued blocks: 0; Resources: 0.0 CPU, 3.0 GPU, 24.0B object store:   0%|          | 0.00/100 [00:10<?, ? row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 3; Queued blocks: 0; Resources: 0.0 CPU, 3.0 GPU, 24.0B object store:   2%|▏         | 2.00/100 [00:10<08:25, 5.16s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 3; Queued blocks: 0; Resources: 0.0 CPU, 3.0 GPU, 24.0B object store:   2%|▏         | 2.00/100 [00:10<08:25, 5.16s/ row][A[A[ARunning Dataset. Active & requested resources: 1/8 CPU, 3/4 GPU, 500.0MB/4.0GB object store: : 0.00 row [00:10, ? row/s]Running Dataset. Active & requested resources: 1/8 CPU, 3/4 GPU, 500.0MB/4.0GB object store:   0%|          | 0.00/100 [00:10<?, ? row/s]Running Dataset. Active & requested resources: 1/8 CPU, 3/4 GPU, 500.0MB/4.0GB object store:   2%|▏         | 2.00/100 [00:10<08:27, 5.18s/ row]Running Dataset. Active & requested resources: 1/8 CPU, 3/4 GPU, 500.0MB/4.0GB object store:   2%|▏         | 2.00/100 [00:10<08:27, 5.18s/ row]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6503.50 MB (48.50%)
-  Available Memory: 8136.44 MB
+Memory exceeded!
+  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4279.72 MB (16.90%)
+  Available Memory: 26371.14 MB
 
 Memory exceeded!
 
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 18; Resources: 1.0 CPU, 200.0MB object store:   5%|▌         | 5.00/100 [00:11<02:03, 1.30s/ row][A
+- ReadRange->MapBatches(produce): 1 active, 158 queued, [cpu: 1.0, objects: 200.0MB]:   1%|          | 5/800 [00:15<14:15,  1.08s/it][A
+- ReadRange->MapBatches(produce): 1 active, 158 queued, [cpu: 1.0, objects: 200.0MB]:   1%|          | 6/800 [00:15<38:52,  2.94s/it][ARunning: 1/1 CPU, 0/1 GPU, 300.0MB/2.0GB object_store_memory:   1%|          | 5/800 [00:15<21:22,  1.61s/it]
 
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 100.0MB object store:   5%|▌         | 5.00/100 [00:11<02:17, 1.45s/ row][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 100.0MB object store:   5%|▌         | 5.00/100 [00:11<02:17, 1.45s/ row][A[A
-
-
-- MapBatches(inference): Tasks: 1; Queued blocks: 0; Resources: 0.0 CPU, 1.0 GPU, 8.0B object store:   2%|▏         | 2.00/100 [00:11<08:25, 5.16s/ row] [A[A[A
-
-
-- MapBatches(inference): Tasks: 1; Queued blocks: 0; Resources: 0.0 CPU, 1.0 GPU, 8.0B object store:   4%|▍         | 4.00/100 [00:11<03:52, 2.42s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 1; Queued blocks: 0; Resources: 0.0 CPU, 1.0 GPU, 8.0B object store:   4%|▍         | 4.00/100 [00:11<03:52, 2.42s/ row][A[A[ARunning Dataset. Active & requested resources: 1/8 CPU, 1/4 GPU, 300.0MB/4.0GB object store:   2%|▏         | 2.00/100 [00:11<08:27, 5.18s/ row]Running Dataset. Active & requested resources: 1/8 CPU, 1/4 GPU, 300.0MB/4.0GB object store:   4%|▍         | 4.00/100 [00:11<03:53, 2.44s/ row]Running Dataset. Active & requested resources: 1/8 CPU, 1/4 GPU, 300.0MB/4.0GB object store:   4%|▍         | 4.00/100 [00:11<03:53, 2.44s/ row]Running Dataset. Active & requested resources: 2/8 CPU, 400.0MB/4.0GB object store:   4%|▍         | 4.00/100 [00:12<03:53, 2.44s/ row]         Running Dataset. Active & requested resources: 2/8 CPU, 400.0MB/4.0GB object store:   5%|▌         | 5.00/100 [00:12<03:11, 2.02s/ row]Running Dataset. Active & requested resources: 2/8 CPU, 400.0MB/4.0GB object store:   5%|▌         | 5.00/100 [00:12<03:11, 2.02s/ row]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 17; Resources: 2.0 CPU, 400.0MB object store:   5%|▌         | 5.00/100 [00:12<02:03, 1.30s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 17; Resources: 2.0 CPU, 400.0MB object store:   5%|▌         | 5.00/100 [00:12<02:03, 1.30s/ row][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:12<02:17, 1.45s/ row]   [A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:12<02:17, 1.45s/ row][A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   4%|▍         | 4.00/100 [00:12<03:52, 2.42s/ row]         [A[A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:12<03:10, 2.01s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:12<03:10, 2.01s/ row][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6109.18 MB (46.00%)
-  Available Memory: 8530.75 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 17; Resources: 2.0 CPU, 400.0MB object store:   5%|▌         | 5.00/100 [00:13<02:03, 1.30s/ row][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:13<02:17, 1.45s/ row][A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:13<03:10, 2.01s/ row][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 400.0MB/4.0GB object store:   5%|▌         | 5.00/100 [00:13<03:11, 2.02s/ row]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5936.44 MB (44.90%)
-  Available Memory: 8703.50 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 17; Resources: 2.0 CPU, 400.0MB object store:   5%|▌         | 5.00/100 [00:14<02:03, 1.30s/ row][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:14<02:17, 1.45s/ row][A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:14<03:10, 2.01s/ row][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 400.0MB/4.0GB object store:   5%|▌         | 5.00/100 [00:14<03:11, 2.02s/ row]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 17; Resources: 1.0 CPU, 700.0MB object store:   5%|▌         | 5.00/100 [00:15<02:03, 1.30s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 17; Resources: 1.0 CPU, 700.0MB object store:  10%|█         | 10.0/100 [00:15<02:17, 1.53s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 17; Resources: 1.0 CPU, 700.0MB object store:  10%|█         | 10.0/100 [00:15<02:17, 1.53s/ row][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 500.0MB object store:   5%|▌         | 5.00/100 [00:15<02:17, 1.45s/ row][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 500.0MB object store:   5%|▌         | 5.00/100 [00:15<02:17, 1.45s/ row][A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store:   5%|▌         | 5.00/100 [00:15<03:10, 2.01s/ row][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 1.2GB/4.0GB object store:   5%|▌         | 5.00/100 [00:15<03:11, 2.02s/ row]Running Dataset. Active & requested resources: 5.95/8 CPU, 1.2GB/4.0GB object store:   5%|▌         | 5.00/100 [00:15<03:11, 2.02s/ row]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5675.02 MB (43.20%)
-  Available Memory: 8964.92 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 16; Resources: 2.0 CPU, 500.0MB object store:  10%|█         | 10.0/100 [00:16<02:17, 1.53s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 16; Resources: 2.0 CPU, 500.0MB object store:  10%|█         | 10.0/100 [00:16<02:17, 1.53s/ row][A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 500.0MB object store:   5%|▌         | 5.00/100 [00:16<02:17, 1.45s/ row][A[A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 500.0MB object store:   9%|▉         | 9.00/100 [00:16<02:29, 1.65s/ row][A[A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 500.0MB object store:   9%|▉         | 9.00/100 [00:16<02:29, 1.65s/ row][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 0; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   5%|▌         | 5.00/100 [00:16<03:10, 2.01s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 0; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   5%|▌         | 5.00/100 [00:16<03:10, 2.01s/ row][A[A[ARunning Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:   5%|▌         | 5.00/100 [00:16<03:11, 2.02s/ row]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:   5%|▌         | 5.00/100 [00:16<03:11, 2.02s/ row]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 16; Resources: 2.0 CPU, 600.0MB object store:  10%|█         | 10.0/100 [00:17<02:17, 1.53s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 16; Resources: 2.0 CPU, 600.0MB object store:  13%|█▎        | 13.0/100 [00:17<01:47, 1.24s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 16; Resources: 2.0 CPU, 600.0MB object store:  13%|█▎        | 13.0/100 [00:17<01:47, 1.24s/ row][A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 1; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   5%|▌         | 5.00/100 [00:17<03:10, 2.01s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 1; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   6%|▌         | 6.00/100 [00:17<04:38, 2.96s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 1; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   6%|▌         | 6.00/100 [00:17<04:38, 2.96s/ row][A[A[ARunning Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.2GB/4.0GB object store:   5%|▌         | 5.00/100 [00:17<03:11, 2.02s/ row]   Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.2GB/4.0GB object store:   6%|▌         | 6.00/100 [00:17<04:38, 2.97s/ row]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.2GB/4.0GB object store:   6%|▌         | 6.00/100 [00:17<04:38, 2.97s/ row]
-
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 700.0MB object store:   9%|▉         | 9.00/100 [00:17<02:29, 1.65s/ row][A[A
-
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 700.0MB object store:  10%|█         | 10.0/100 [00:17<02:19, 1.55s/ row][A[A
-
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 700.0MB object store:  10%|█         | 10.0/100 [00:17<02:19, 1.55s/ row][A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 7232.25 MB (53.70%)
-  Available Memory: 7307.69 MB
+- MapBatches(consume): 0 active, 1 queued, [cpu: 0.0, objects: 0.0B]:   1%|          | 5/800 [00:15<21:45,  1.64s/it]   [A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4229.87 MB (16.70%)
+  Available Memory: 26420.99 MB
 
 Memory exceeded!
 
 
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 700.0MB object store:  10%|█         | 10.0/100 [00:18<02:19, 1.55s/ row][A[A
+- MapBatches(consume): 2 active, 2 queued, [cpu: 2.0, objects: 300.0MB]:   1%|          | 5/800 [00:16<21:45,  1.64s/it][A[A
 
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 700.0MB object store:  12%|█▏        | 12.0/100 [00:18<01:47, 1.22s/ row][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 700.0MB object store:  12%|█▏        | 12.0/100 [00:18<01:47, 1.22s/ row][A[ARunning Dataset. Active & requested resources: 3.97/8 CPU, 3/4 GPU, 1.2GB/4.0GB object store:   6%|▌         | 6.00/100 [00:18<04:38, 2.97s/ row]Running Dataset. Active & requested resources: 3.97/8 CPU, 3/4 GPU, 1.2GB/4.0GB object store:   8%|▊         | 8.00/100 [00:18<02:50, 1.85s/ row]Running Dataset. Active & requested resources: 3.97/8 CPU, 3/4 GPU, 1.2GB/4.0GB object store:   8%|▊         | 8.00/100 [00:18<02:50, 1.85s/ row]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 16; Resources: 1.0 CPU, 500.0MB object store:  13%|█▎        | 13.0/100 [00:18<01:47, 1.24s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 16; Resources: 1.0 CPU, 500.0MB object store:  15%|█▌        | 15.0/100 [00:18<01:30, 1.06s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 16; Resources: 1.0 CPU, 500.0MB object store:  15%|█▌        | 15.0/100 [00:18<01:30, 1.06s/ row][A
+- MapBatches(consume): 2 active, 2 queued, [cpu: 2.0, objects: 300.0MB]:   1%|          | 7/800 [00:16<35:02,  2.65s/it][A[ARunning: 1.98/1 CPU, 1/1 GPU, 800.0MB/2.0GB object_store_memory:   1%|          | 5/800 [00:16<21:22,  1.61s/it]
+- ReadRange->MapBatches(produce): 1 active, 157 queued, [cpu: 1.0, objects: 500.0MB]:   1%|          | 6/800 [00:17<38:52,  2.94s/it][A
+- ReadRange->MapBatches(produce): 1 active, 157 queued, [cpu: 1.0, objects: 500.0MB]:   1%|▏         | 10/800 [00:17<19:19,  1.47s/it][A
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 0; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   6%|▌         | 6.00/100 [00:18<04:38, 2.96s/ row][A[A[A
+- MapBatches(inference): 1 active, 2 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   1%|          | 5/800 [00:17<22:10,  1.67s/it][A[A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4258.12 MB (16.80%)
+  Available Memory: 26392.74 MB
+
+Memory exceeded!
+Running: 1/1 CPU, 0/1 GPU, 500.0MB/2.0GB object_store_memory:   1%|          | 5/800 [00:18<21:22,  1.61s/it]   Running: 1/1 CPU, 0/1 GPU, 500.0MB/2.0GB object_store_memory:   1%|          | 6/800 [00:18<43:15,  3.27s/it]
+
+- MapBatches(consume): 0 active, 2 queued, [cpu: 0.0, objects: 100.0MB]:   1%|          | 7/800 [00:18<35:02,  2.65s/it][A[A
+
+- MapBatches(consume): 0 active, 2 queued, [cpu: 0.0, objects: 100.0MB]:   1%|          | 8/800 [00:18<31:18,  2.37s/it][A[A
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 0; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   8%|▊         | 8.00/100 [00:18<02:49, 1.85s/ row][A[A[A
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   1%|          | 5/800 [00:19<22:10,  1.67s/it][A[A[A
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 0; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   8%|▊         | 8.00/100 [00:18<02:49, 1.85s/ row][A[A[A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 15; Resources: 2.0 CPU, 400.0MB object store:  15%|█▌        | 15.0/100 [00:19<01:30, 1.06s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 15; Resources: 2.0 CPU, 400.0MB object store:  15%|█▌        | 15.0/100 [00:19<01:30, 1.06s/ row][A
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   1%|          | 8/800 [00:19<31:17,  2.37s/it][A[A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4145.62 MB (16.40%)
+  Available Memory: 26505.23 MB
 
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 600.0MB object store:  12%|█▏        | 12.0/100 [00:19<01:47, 1.22s/ row][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 600.0MB object store:  15%|█▌        | 15.0/100 [00:19<01:14, 1.15 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 600.0MB object store:  15%|█▌        | 15.0/100 [00:19<01:14, 1.15 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   8%|▊         | 8.00/100 [00:19<02:49, 1.85s/ row][A[A[A
+Memory exceeded!
+  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4053.02 MB (16.20%)
+  Available Memory: 26597.84 MB
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   9%|▉         | 9.00/100 [00:19<02:30, 1.65s/ row][A[A[A
+- ReadRange->MapBatches(produce): 1 active, 157 queued, [cpu: 1.0, objects: 400.0MB]:   1%|▏         | 10/800 [00:22<19:19,  1.47s/it][A
+- ReadRange->MapBatches(produce): 1 active, 157 queued, [cpu: 1.0, objects: 400.0MB]:   1%|▏         | 11/800 [00:22<28:31,  2.17s/it][ARunning: 1/1 CPU, 0/1 GPU, 500.0MB/2.0GB object_store_memory:   1%|          | 8/800 [00:22<36:26,  2.76s/it]
+
+- MapBatches(consume): 0 active, 3 queued, [cpu: 0.0, objects: 0.0B]:   1%|          | 8/800 [00:22<31:18,  2.37s/it]   [A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3875.78 MB (15.90%)
+  Available Memory: 26675.08 MB
+
+  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3820.59 MB (15.70%)
+  Available Memory: 26730.27 MB
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   9%|▉         | 9.00/100 [00:19<02:30, 1.65s/ row][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:   8%|▊         | 8.00/100 [00:19<02:50, 1.85s/ row]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:   9%|▉         | 9.00/100 [00:19<02:30, 1.66s/ row]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:   9%|▉         | 9.00/100 [00:19<02:30, 1.66s/ row]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5729.96 MB (44.20%)
-  Available Memory: 8809.97 MB
+- ReadRange->MapBatches(produce): 1 active, 156 queued, [cpu: 1.0, objects: 900.0MB]:   1%|▏         | 11/800 [00:27<28:31,  2.17s/it][A
+- ReadRange->MapBatches(produce): 1 active, 156 queued, [cpu: 1.0, objects: 900.0MB]:   2%|▏         | 16/800 [00:27<20:06,  1.54s/it][ARunning: 1/1 CPU, 0/1 GPU, 1000.0MB/2.0GB object_store_memory:   1%|          | 8/800 [00:27<36:26,  2.76s/it]
+
+- MapBatches(consume): 0 active, 8 queued, [cpu: 0.0, objects: 0.0B]:   1%|          | 8/800 [00:27<31:18,  2.37s/it][A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3659.93 MB (16.80%)
+  Available Memory: 26390.91 MB
+
+
+
+- MapBatches(consume): 2 active, 9 queued, [cpu: 2.0, objects: 300.0MB]:   1%|          | 8/800 [00:29<31:18,  2.37s/it][A[A
+
+- MapBatches(consume): 2 active, 9 queued, [cpu: 2.0, objects: 300.0MB]:   1%|▏         | 10/800 [00:29<47:43,  3.62s/it][A[ARunning: 0.99/1 CPU, 1/1 GPU, 1.3GB/2.0GB object_store_memory:   1%|          | 8/800 [00:29<36:26,  2.76s/it]
+- ReadRange->MapBatches(produce): 1 active, 155 queued, [cpu: 1.0, objects: 1.2GB]:   2%|▏         | 16/800 [00:29<20:06,  1.54s/it]  [A
+- ReadRange->MapBatches(produce): 1 active, 155 queued, [cpu: 1.0, objects: 1.2GB]:   2%|▎         | 20/800 [00:29<14:12,  1.09s/it][A
+
+
+- MapBatches(inference): 1 active, 2 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   1%|          | 8/800 [00:29<31:17,  2.37s/it][A[A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4076.53 MB (18.40%)
+  Available Memory: 25874.32 MB
+
+Running: 1/1 CPU, 0/1 GPU, 1.2GB/2.0GB object_store_memory:   1%|          | 8/800 [00:30<36:26,  2.76s/it]   Running: 1/1 CPU, 0/1 GPU, 1.2GB/2.0GB object_store_memory:   1%|          | 9/800 [00:30<52:49,  4.01s/it]
+
+- MapBatches(consume): 0 active, 9 queued, [cpu: 0.0, objects: 100.0MB]:   1%|▏         | 10/800 [00:30<47:43,  3.62s/it][A[A
+
+- MapBatches(consume): 0 active, 9 queued, [cpu: 0.0, objects: 100.0MB]:   1%|▏         | 11/800 [00:30<41:02,  3.12s/it][A[A
+
+
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   1%|          | 8/800 [00:31<31:17,  2.37s/it][A[A[A
+
+
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   1%|▏         | 11/800 [00:31<40:26,  3.08s/it][A[A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4233.31 MB (18.90%)
+  Available Memory: 25717.54 MB
+
+Memory exceeded!
+  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4136.70 MB (18.60%)
+  Available Memory: 25814.15 MB
 
 Memory exceeded!
 
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 15; Resources: 2.0 CPU, 400.0MB object store:  15%|█▌        | 15.0/100 [00:20<01:30, 1.06s/ row][A
+- ReadRange->MapBatches(produce): 1 active, 155 queued, [cpu: 1.0, objects: 1.1GB]:   2%|▎         | 20/800 [00:34<14:12,  1.09s/it][A
+- ReadRange->MapBatches(produce): 1 active, 155 queued, [cpu: 1.0, objects: 1.1GB]:   3%|▎         | 21/800 [00:34<21:16,  1.64s/it][ARunning: 1/1 CPU, 0/1 GPU, 1.2GB/2.0GB object_store_memory:   1%|▏         | 11/800 [00:34<42:34,  3.24s/it]
 
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 600.0MB object store:  15%|█▌        | 15.0/100 [00:20<01:14, 1.15 row/s][A[A
+- MapBatches(consume): 0 active, 10 queued, [cpu: 0.0, objects: 0.0B]:   1%|▏         | 11/800 [00:34<41:02,  3.12s/it]  [A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3990.89 MB (18.50%)
+  Available Memory: 25859.95 MB
 
+  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3910.34 MB (18.20%)
+  Available Memory: 25940.50 MB
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   9%|▉         | 9.00/100 [00:20<02:30, 1.65s/ row][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:   9%|▉         | 9.00/100 [00:20<02:30, 1.66s/ row]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 15; Resources: 1.0 CPU, 700.0MB object store:  15%|█▌        | 15.0/100 [00:21<01:30, 1.06s/ row][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 15; Resources: 1.0 CPU, 700.0MB object store:  20%|██        | 20.0/100 [00:21<01:08, 1.17 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 15; Resources: 1.0 CPU, 700.0MB object store:  20%|██        | 20.0/100 [00:21<01:08, 1.17 row/s][A
 
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1000.0MB object store:  15%|█▌        | 15.0/100 [00:21<01:14, 1.15 row/s][A[A
+- ReadRange->MapBatches(produce): 1 active, 154 queued, [cpu: 1.0, objects: 1.6GB]:   3%|▎         | 21/800 [00:40<21:16,  1.64s/it][A
+- ReadRange->MapBatches(produce): 1 active, 154 queued, [cpu: 1.0, objects: 1.6GB]:   3%|▎         | 26/800 [00:40<17:25,  1.35s/it][ARunning: 1/1 CPU, 0/1 GPU, 1.7GB/2.0GB object_store_memory:   1%|▏         | 11/800 [00:40<42:34,  3.24s/it]
 
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1000.0MB object store:  15%|█▌        | 15.0/100 [00:21<01:14, 1.15 row/s][A[A
+- MapBatches(consume): 0 active, 15 queued, [cpu: 0.0, objects: 0.0B]:   1%|▏         | 11/800 [00:40<41:02,  3.12s/it][A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3647.71 MB (18.70%)
+  Available Memory: 25787.27 MB
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 1; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:   9%|▉         | 9.00/100 [00:21<02:30, 1.65s/ row][A[A[A
 
+- MapBatches(consume): 1 active, 17 queued, [cpu: 1.0, objects: 200.0MB]:   1%|▏         | 11/800 [00:41<41:02,  3.12s/it][A[A
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 1; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  10%|█         | 10.0/100 [00:21<02:38, 1.77s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 1; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  10%|█         | 10.0/100 [00:21<02:38, 1.77s/ row][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 1.7GB/4.0GB object store:   9%|▉         | 9.00/100 [00:21<02:30, 1.66s/ row]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 1.7GB/4.0GB object store:  10%|█         | 10.0/100 [00:21<02:39, 1.77s/ row]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 1.7GB/4.0GB object store:  10%|█         | 10.0/100 [00:21<02:39, 1.77s/ row]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6169.03 MB (48.90%)
-  Available Memory: 8070.99 MB
-
-Memory exceeded!
-
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 700.0MB object store:  15%|█▌        | 15.0/100 [00:22<01:14, 1.15 row/s] [A[A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 700.0MB object store:  20%|██        | 20.0/100 [00:22<01:00, 1.33 row/s][A[A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 700.0MB object store:  20%|██        | 20.0/100 [00:22<01:00, 1.33 row/s][A[ARunning Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store:  10%|█         | 10.0/100 [00:22<02:39, 1.77s/ row]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store:  13%|█▎        | 13.0/100 [00:22<01:28, 1.02s/ row]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store:  13%|█▎        | 13.0/100 [00:22<01:28, 1.02s/ row]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 14; Resources: 2.0 CPU, 500.0MB object store:  20%|██        | 20.0/100 [00:22<01:08, 1.17 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 14; Resources: 2.0 CPU, 500.0MB object store:  20%|██        | 20.0/100 [00:22<01:08, 1.17 row/s][A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  10%|█         | 10.0/100 [00:22<02:38, 1.77s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  13%|█▎        | 13.0/100 [00:22<01:28, 1.02s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  13%|█▎        | 13.0/100 [00:22<01:28, 1.02s/ row][A[A[A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 14; Resources: 2.0 CPU, 400.0MB object store:  20%|██        | 20.0/100 [00:23<01:08, 1.17 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 14; Resources: 2.0 CPU, 400.0MB object store:  20%|██        | 20.0/100 [00:23<01:08, 1.17 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 700.0MB object store:  20%|██        | 20.0/100 [00:23<01:00, 1.33 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 700.0MB object store:  20%|██        | 20.0/100 [00:23<01:00, 1.33 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  13%|█▎        | 13.0/100 [00:23<01:28, 1.02s/ row][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.1GB/4.0GB object store:  13%|█▎        | 13.0/100 [00:23<01:28, 1.02s/ row]   Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.1GB/4.0GB object store:  13%|█▎        | 13.0/100 [00:23<01:28, 1.02s/ row]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5745.42 MB (46.20%)
-  Available Memory: 8494.51 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 14; Resources: 1.0 CPU, 700.0MB object store:  20%|██        | 20.0/100 [00:24<01:08, 1.17 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 14; Resources: 1.0 CPU, 700.0MB object store:  25%|██▌       | 25.0/100 [00:24<00:57, 1.31 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 14; Resources: 1.0 CPU, 700.0MB object store:  25%|██▌       | 25.0/100 [00:24<00:57, 1.31 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.1GB object store:  20%|██        | 20.0/100 [00:24<01:00, 1.33 row/s]  [A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.1GB object store:  20%|██        | 20.0/100 [00:24<01:00, 1.33 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  13%|█▎        | 13.0/100 [00:24<01:28, 1.02s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  14%|█▍        | 14.0/100 [00:24<01:46, 1.24s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  14%|█▍        | 14.0/100 [00:24<01:46, 1.24s/ row][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  13%|█▎        | 13.0/100 [00:24<01:28, 1.02s/ row]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  14%|█▍        | 14.0/100 [00:24<01:46, 1.24s/ row]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  14%|█▍        | 14.0/100 [00:24<01:46, 1.24s/ row]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store:  14%|█▍        | 14.0/100 [00:26<01:46, 1.24s/ row]   Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store:  16%|█▌        | 16.0/100 [00:26<01:22, 1.02 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store:  16%|█▌        | 16.0/100 [00:26<01:22, 1.02 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 13; Resources: 2.0 CPU, 400.0MB object store:  25%|██▌       | 25.0/100 [00:25<00:57, 1.31 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 13; Resources: 2.0 CPU, 400.0MB object store:  25%|██▌       | 25.0/100 [00:25<00:57, 1.31 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 900.0MB object store:  20%|██        | 20.0/100 [00:25<01:00, 1.33 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 900.0MB object store:  25%|██▌       | 25.0/100 [00:25<00:52, 1.42 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 900.0MB object store:  25%|██▌       | 25.0/100 [00:25<00:52, 1.42 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  14%|█▍        | 14.0/100 [00:25<01:46, 1.24s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  16%|█▌        | 16.0/100 [00:25<01:22, 1.02 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  16%|█▌        | 16.0/100 [00:25<01:22, 1.02 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5848.57 MB (48.10%)
-  Available Memory: 8191.36 MB
-
-Memory exceeded!
-Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.1GB/4.0GB object store:  16%|█▌        | 16.0/100 [00:27<01:22, 1.02 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.1GB/4.0GB object store:  18%|█▊        | 18.0/100 [00:27<01:07, 1.22 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.1GB/4.0GB object store:  18%|█▊        | 18.0/100 [00:27<01:07, 1.22 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 13; Resources: 2.0 CPU, 400.0MB object store:  25%|██▌       | 25.0/100 [00:27<00:57, 1.31 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 700.0MB object store:  25%|██▌       | 25.0/100 [00:27<00:52, 1.42 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 700.0MB object store:  25%|██▌       | 25.0/100 [00:27<00:52, 1.42 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  16%|█▌        | 16.0/100 [00:27<01:22, 1.02 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  18%|█▊        | 18.0/100 [00:27<01:07, 1.22 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  18%|█▊        | 18.0/100 [00:27<01:07, 1.22 row/s][A[A[A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 13; Resources: 2.0 CPU, 400.0MB object store:  25%|██▌       | 25.0/100 [00:28<00:57, 1.31 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 700.0MB object store:  25%|██▌       | 25.0/100 [00:28<00:52, 1.42 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  18%|█▊        | 18.0/100 [00:28<01:07, 1.22 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.1GB/4.0GB object store:  18%|█▊        | 18.0/100 [00:28<01:07, 1.22 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5805.75 MB (47.80%)
-  Available Memory: 8234.17 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 3; Queued blocks: 12; Resources: 3.0 CPU, 600.0MB object store:  25%|██▌       | 25.0/100 [00:29<00:57, 1.31 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 3; Queued blocks: 12; Resources: 3.0 CPU, 600.0MB object store:  25%|██▌       | 25.0/100 [00:29<00:57, 1.31 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 400.0MB object store:  25%|██▌       | 25.0/100 [00:29<00:52, 1.42 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 400.0MB object store:  25%|██▌       | 25.0/100 [00:29<00:52, 1.42 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 0; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  18%|█▊        | 18.0/100 [00:29<01:07, 1.22 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 0; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  21%|██        | 21.0/100 [00:29<01:00, 1.30 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 0; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  21%|██        | 21.0/100 [00:29<01:00, 1.30 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 800.0MB/4.0GB object store:  18%|█▊        | 18.0/100 [00:29<01:07, 1.22 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 800.0MB/4.0GB object store:  21%|██        | 21.0/100 [00:29<01:00, 1.30 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 800.0MB/4.0GB object store:  21%|██        | 21.0/100 [00:29<01:00, 1.30 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 12; Resources: 2.0 CPU, 900.0MB object store:  25%|██▌       | 25.0/100 [00:30<00:57, 1.31 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 12; Resources: 2.0 CPU, 900.0MB object store:  30%|███       | 30.0/100 [00:30<01:00, 1.15 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 12; Resources: 2.0 CPU, 900.0MB object store:  30%|███       | 30.0/100 [00:30<01:00, 1.15 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 800.0MB object store:  25%|██▌       | 25.0/100 [00:30<00:52, 1.42 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 800.0MB object store:  25%|██▌       | 25.0/100 [00:30<00:52, 1.42 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 3; Queued blocks: 0; Resources: 0.0 CPU, 3.0 GPU, 24.0B object store:  21%|██        | 21.0/100 [00:30<01:00, 1.30 row/s]                [A[A[A
-
-
-- MapBatches(inference): Tasks: 3; Queued blocks: 0; Resources: 0.0 CPU, 3.0 GPU, 24.0B object store:  22%|██▏       | 22.0/100 [00:30<01:03, 1.23 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 3; Queued blocks: 0; Resources: 0.0 CPU, 3.0 GPU, 24.0B object store:  22%|██▏       | 22.0/100 [00:30<01:03, 1.23 row/s][A[A[ARunning Dataset. Active & requested resources: 6.95/8 CPU, 3/4 GPU, 1.7GB/4.0GB object store:  21%|██        | 21.0/100 [00:30<01:00, 1.30 row/s]Running Dataset. Active & requested resources: 6.95/8 CPU, 3/4 GPU, 1.7GB/4.0GB object store:  22%|██▏       | 22.0/100 [00:30<01:03, 1.23 row/s]Running Dataset. Active & requested resources: 6.95/8 CPU, 3/4 GPU, 1.7GB/4.0GB object store:  22%|██▏       | 22.0/100 [00:30<01:03, 1.23 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6205.29 MB (50.40%)
-  Available Memory: 7834.64 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 12; Resources: 2.0 CPU, 1000.0MB object store:  30%|███       | 30.0/100 [00:31<01:00, 1.15 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 12; Resources: 2.0 CPU, 1000.0MB object store:  35%|███▌      | 35.0/100 [00:31<00:41, 1.56 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 12; Resources: 2.0 CPU, 1000.0MB object store:  35%|███▌      | 35.0/100 [00:31<00:41, 1.56 row/s][ARunning Dataset. Active & requested resources: 6.94/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  22%|██▏       | 22.0/100 [00:31<01:03, 1.23 row/s]Running Dataset. Active & requested resources: 6.94/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  22%|██▏       | 22.0/100 [00:31<01:03, 1.23 row/s]
-
-- MapBatches(consume): Tasks: 7; Queued blocks: 0; Resources: 6.9 CPU, 1.3GB object store:  25%|██▌       | 25.0/100 [00:31<00:52, 1.42 row/s]  [A[A
-
-- MapBatches(consume): Tasks: 7; Queued blocks: 0; Resources: 6.9 CPU, 1.3GB object store:  24%|██▍       | 25.0/104 [00:31<00:55, 1.42 row/s][A[A
-
-- MapBatches(consume): Tasks: 7; Queued blocks: 0; Resources: 6.9 CPU, 1.3GB object store:  27%|██▋       | 28.0/104 [00:31<01:14, 1.03 row/s][A[A
-
-- MapBatches(consume): Tasks: 7; Queued blocks: 0; Resources: 6.9 CPU, 1.3GB object store:  27%|██▋       | 28.0/104 [00:31<01:14, 1.03 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  22%|██▏       | 22.0/100 [00:31<01:03, 1.23 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  22%|██▏       | 22.0/100 [00:31<01:03, 1.23 row/s][A[A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.3GB object store:  27%|██▋       | 28.0/104 [00:32<01:14, 1.03 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.3GB object store:  28%|██▊       | 28.0/100 [00:32<01:10, 1.03 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.3GB object store:  32%|███▏      | 32.0/100 [00:32<00:50, 1.36 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.3GB object store:  32%|███▏      | 32.0/100 [00:32<00:50, 1.36 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  22%|██▏       | 22.0/100 [00:32<01:03, 1.23 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  23%|██▎       | 23.0/100 [00:32<01:21, 1.06s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  23%|██▎       | 23.0/100 [00:32<01:21, 1.06s/ row][A[A[ARunning Dataset. Active & requested resources: 2.98/8 CPU, 3/4 GPU, 1.6GB/4.0GB object store:  22%|██▏       | 22.0/100 [00:32<01:03, 1.23 row/s]Running Dataset. Active & requested resources: 2.98/8 CPU, 3/4 GPU, 1.6GB/4.0GB object store:  22%|██▏       | 22.0/100 [00:32<01:03, 1.23 row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 12; Resources: 1.0 CPU, 400.0MB object store:  35%|███▌      | 35.0/100 [00:32<00:41, 1.56 row/s] [A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 12; Resources: 1.0 CPU, 400.0MB object store:  35%|███▌      | 35.0/100 [00:32<00:41, 1.56 row/s][A                                                                                                                                                 
-                                                                                                                                                            [A
-
-                                                                                                                                              [A[A
-
-
-                                                                                                                                                                         [A[A[A[33m(raylet)[0m WARNING: 16 PYTHON worker processes have been started on node: 7367c95ddfde4b81a0b8cad1969ef541a968641603ab620ba89099e9 with address: 10.0.32.206. This could be a result of using a large number of actors, or due to tasks blocked in ray.get() calls (see https://github.com/ray-project/ray/issues/3644 for some discussion of workarounds).
-Running Dataset. Active & requested resources: 2.98/8 CPU, 3/4 GPU, 1.6GB/4.0GB object store:  22%|██▏       | 22.0/100 [00:32<01:03, 1.23 row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 12; Resources: 1.0 CPU, 400.0MB object store:  35%|███▌      | 35.0/100 [00:32<00:41, 1.56 row/s][A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.3GB object store:  32%|███▏      | 32.0/100 [00:32<00:50, 1.36 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  23%|██▎       | 23.0/100 [00:32<01:21, 1.06s/ row][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5857.62 MB (48.80%)
-  Available Memory: 8082.59 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 11; Resources: 2.0 CPU, 500.0MB object store:  35%|███▌      | 35.0/100 [00:33<00:41, 1.56 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 11; Resources: 2.0 CPU, 500.0MB object store:  35%|███▌      | 35.0/100 [00:33<00:41, 1.56 row/s][A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 900.0MB object store:  32%|███▏      | 32.0/100 [00:33<00:50, 1.36 row/s][A[A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 900.0MB object store:  34%|███▍      | 34.0/100 [00:33<00:46, 1.43 row/s][A[A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 900.0MB object store:  34%|███▍      | 34.0/100 [00:33<00:46, 1.43 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 4; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  23%|██▎       | 23.0/100 [00:33<01:21, 1.06s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 4; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  26%|██▌       | 26.0/100 [00:33<00:54, 1.35 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 4; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  26%|██▌       | 26.0/100 [00:33<00:54, 1.35 row/s][A[A[ARunning Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  22%|██▏       | 22.0/100 [00:33<01:03, 1.23 row/s]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  26%|██▌       | 26.0/100 [00:33<00:59, 1.24 row/s]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  26%|██▌       | 26.0/100 [00:33<00:59, 1.24 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 11; Resources: 2.0 CPU, 500.0MB object store:  37%|███▋      | 37.0/100 [00:34<00:50, 1.26 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 11; Resources: 2.0 CPU, 500.0MB object store:  37%|███▋      | 37.0/100 [00:34<00:50, 1.26 row/s][ARunning Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.6GB/4.0GB object store:  26%|██▌       | 26.0/100 [00:34<00:59, 1.24 row/s]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.6GB/4.0GB object store:  26%|██▌       | 26.0/100 [00:34<00:59, 1.24 row/s]
-
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 1.1GB object store:  34%|███▍      | 34.0/100 [00:34<00:46, 1.43 row/s]  [A[A
-
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 1.1GB object store:  35%|███▌      | 35.0/100 [00:34<00:47, 1.35 row/s][A[A
-
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 1.1GB object store:  35%|███▌      | 35.0/100 [00:34<00:47, 1.35 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  26%|██▌       | 26.0/100 [00:34<00:54, 1.35 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  26%|██▌       | 26.0/100 [00:34<00:54, 1.35 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5321.19 MB (45.40%)
-  Available Memory: 8618.73 MB
-
-Memory exceeded!
-
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.4GB object store:  35%|███▌      | 35.0/100 [00:35<00:47, 1.35 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.4GB object store:  36%|███▌      | 36.0/100 [00:35<00:50, 1.28 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.4GB object store:  36%|███▌      | 36.0/100 [00:35<00:50, 1.28 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  27%|██▋       | 27.0/100 [00:35<01:11, 1.02 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  27%|██▋       | 27.0/100 [00:35<01:11, 1.02 row/s][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 3/4 GPU, 2.1GB/4.0GB object store:  26%|██▌       | 26.0/100 [00:35<00:59, 1.24 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 3/4 GPU, 2.1GB/4.0GB object store:  26%|██▌       | 26.0/100 [00:35<00:59, 1.24 row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 11; Resources: 1.0 CPU, 700.0MB object store:  37%|███▋      | 37.0/100 [00:35<00:50, 1.26 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 11; Resources: 1.0 CPU, 700.0MB object store:  40%|████      | 40.0/100 [00:35<00:40, 1.47 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 11; Resources: 1.0 CPU, 700.0MB object store:  40%|████      | 40.0/100 [00:35<00:40, 1.47 row/s][A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5485.05 MB (47.10%)
-  Available Memory: 8354.87 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 10; Resources: 2.0 CPU, 400.0MB object store:  40%|████      | 40.0/100 [00:36<00:40, 1.47 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 10; Resources: 2.0 CPU, 400.0MB object store:  40%|████      | 40.0/100 [00:36<00:40, 1.47 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1000.0MB object store:  36%|███▌      | 36.0/100 [00:36<00:50, 1.28 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1000.0MB object store:  40%|████      | 40.0/100 [00:36<00:32, 1.82 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1000.0MB object store:  40%|████      | 40.0/100 [00:36<00:32, 1.82 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  27%|██▋       | 27.0/100 [00:36<01:11, 1.02 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  30%|███       | 30.0/100 [00:36<00:49, 1.41 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  30%|███       | 30.0/100 [00:36<00:49, 1.41 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  26%|██▌       | 26.0/100 [00:36<00:59, 1.24 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  30%|███       | 30.0/100 [00:36<00:55, 1.25 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  30%|███       | 30.0/100 [00:36<00:55, 1.25 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 10; Resources: 2.0 CPU, 400.0MB object store:  40%|████      | 40.0/100 [00:37<00:40, 1.47 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1000.0MB object store:  40%|████      | 40.0/100 [00:37<00:32, 1.82 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  30%|███       | 30.0/100 [00:37<00:49, 1.41 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  30%|███       | 30.0/100 [00:37<00:55, 1.25 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6580.97 MB (54.00%)
-  Available Memory: 7258.95 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 10; Resources: 1.0 CPU, 700.0MB object store:  40%|████      | 40.0/100 [00:38<00:40, 1.47 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 10; Resources: 1.0 CPU, 700.0MB object store:  45%|████▌     | 45.0/100 [00:38<00:36, 1.51 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 10; Resources: 1.0 CPU, 700.0MB object store:  45%|████▌     | 45.0/100 [00:38<00:36, 1.51 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.4GB object store:  40%|████      | 40.0/100 [00:38<00:32, 1.82 row/s]   [A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.4GB object store:  40%|████      | 40.0/100 [00:38<00:32, 1.82 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  30%|███       | 30.0/100 [00:38<00:49, 1.41 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  31%|███       | 31.0/100 [00:38<01:05, 1.05 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  31%|███       | 31.0/100 [00:38<01:05, 1.05 row/s][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  30%|███       | 30.0/100 [00:38<00:55, 1.25 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  31%|███       | 31.0/100 [00:38<01:06, 1.04 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  31%|███       | 31.0/100 [00:38<01:06, 1.04 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 9; Resources: 2.0 CPU, 400.0MB object store:  45%|████▌     | 45.0/100 [00:39<00:36, 1.51 row/s] [A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 9; Resources: 2.0 CPU, 400.0MB object store:  45%|████▌     | 45.0/100 [00:39<00:36, 1.51 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.1GB object store:  40%|████      | 40.0/100 [00:39<00:32, 1.82 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.1GB object store:  45%|████▌     | 45.0/100 [00:39<00:32, 1.70 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.1GB object store:  45%|████▌     | 45.0/100 [00:39<00:32, 1.70 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 7; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  31%|███       | 31.0/100 [00:39<01:05, 1.05 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 7; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  34%|███▍      | 34.0/100 [00:39<00:46, 1.43 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 7; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  34%|███▍      | 34.0/100 [00:39<00:46, 1.43 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.5GB/4.0GB object store:  31%|███       | 31.0/100 [00:39<01:06, 1.04 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.5GB/4.0GB object store:  34%|███▍      | 34.0/100 [00:39<00:49, 1.33 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.5GB/4.0GB object store:  34%|███▍      | 34.0/100 [00:39<00:49, 1.33 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5698.27 MB (48.40%)
-  Available Memory: 8141.65 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 9; Resources: 2.0 CPU, 400.0MB object store:  45%|████▌     | 45.0/100 [00:40<00:36, 1.51 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.1GB object store:  45%|████▌     | 45.0/100 [00:40<00:32, 1.70 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 7; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  34%|███▍      | 34.0/100 [00:40<00:46, 1.43 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.5GB/4.0GB object store:  34%|███▍      | 34.0/100 [00:40<00:49, 1.33 row/s]
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 4; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  34%|███▍      | 34.0/100 [00:41<00:46, 1.43 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 4; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  38%|███▊      | 38.0/100 [00:41<00:38, 1.61 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 4; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  38%|███▊      | 38.0/100 [00:41<00:38, 1.61 row/s][A[A[ARunning Dataset. Active & requested resources: 5.96/8 CPU, 3/4 GPU, 1.9GB/4.0GB object store:  34%|███▍      | 34.0/100 [00:41<00:49, 1.33 row/s]Running Dataset. Active & requested resources: 5.96/8 CPU, 3/4 GPU, 1.9GB/4.0GB object store:  37%|███▋      | 37.0/100 [00:41<00:46, 1.36 row/s]Running Dataset. Active & requested resources: 5.96/8 CPU, 3/4 GPU, 1.9GB/4.0GB object store:  37%|███▋      | 37.0/100 [00:41<00:46, 1.36 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 9; Resources: 2.0 CPU, 800.0MB object store:  45%|████▌     | 45.0/100 [00:41<00:36, 1.51 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 9; Resources: 2.0 CPU, 800.0MB object store:  49%|████▉     | 49.0/100 [00:41<00:35, 1.42 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 9; Resources: 2.0 CPU, 800.0MB object store:  49%|████▉     | 49.0/100 [00:41<00:35, 1.42 row/s][A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.1GB object store:  45%|████▌     | 45.0/100 [00:41<00:32, 1.70 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.1GB object store:  45%|████▌     | 45.0/100 [00:41<00:32, 1.70 row/s][A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6214.40 MB (51.70%)
-  Available Memory: 7625.52 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 9; Resources: 1.0 CPU, 700.0MB object store:  49%|████▉     | 49.0/100 [00:42<00:35, 1.42 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 9; Resources: 1.0 CPU, 700.0MB object store:  50%|█████     | 50.0/100 [00:42<00:36, 1.36 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 9; Resources: 1.0 CPU, 700.0MB object store:  50%|█████     | 50.0/100 [00:42<00:36, 1.36 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.2GB object store:  45%|████▌     | 45.0/100 [00:42<00:32, 1.70 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.2GB object store:  45%|████▌     | 45.0/100 [00:42<00:32, 1.70 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  38%|███▊      | 38.0/100 [00:42<00:38, 1.61 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  38%|███▊      | 38.0/100 [00:42<00:38, 1.61 row/s][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  37%|███▋      | 37.0/100 [00:42<00:46, 1.36 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  38%|███▊      | 38.0/100 [00:42<00:48, 1.29 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  38%|███▊      | 38.0/100 [00:42<00:48, 1.29 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 8; Resources: 2.0 CPU, 400.0MB object store:  50%|█████     | 50.0/100 [00:43<00:36, 1.36 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 8; Resources: 2.0 CPU, 400.0MB object store:  50%|█████     | 50.0/100 [00:43<00:36, 1.36 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.2GB object store:  45%|████▌     | 45.0/100 [00:43<00:32, 1.70 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.2GB object store:  50%|█████     | 50.0/100 [00:43<00:34, 1.46 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.2GB object store:  50%|█████     | 50.0/100 [00:43<00:34, 1.46 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 8; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  38%|███▊      | 38.0/100 [00:43<00:38, 1.61 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 8; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  38%|███▊      | 38.0/100 [00:43<00:38, 1.61 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.6GB/4.0GB object store:  38%|███▊      | 38.0/100 [00:43<00:48, 1.29 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.6GB/4.0GB object store:  38%|███▊      | 38.0/100 [00:43<00:48, 1.29 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5994.21 MB (50.30%)
-  Available Memory: 7845.71 MB
+- MapBatches(consume): 1 active, 17 queued, [cpu: 1.0, objects: 200.0MB]:   2%|▏         | 13/800 [00:41<52:50,  4.03s/it][A[ARunning: 1/1 CPU, 1/1 GPU, 2.1GB/2.0GB object_store_memory:   1%|▏         | 11/800 [00:41<42:34,  3.24s/it]
+- ReadRange->MapBatches(produce): 1 active, 153 queued, [cpu: 1.0, objects: 1.9GB]:   3%|▎         | 26/800 [00:41<17:25,  1.35s/it][A
+- ReadRange->MapBatches(produce): 1 active, 153 queued, [cpu: 1.0, objects: 1.9GB]:   4%|▍         | 30/800 [00:41<13:04,  1.02s/it][A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4290.18 MB (21.30%)
+  Available Memory: 24960.65 MB
 
 Memory exceeded!
 
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 48.0B object store:  38%|███▊      | 38.0/100 [00:44<00:38, 1.61 row/s][A[A[A
+- MapBatches(inference): 1 active, 1 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   1%|▏         | 11/800 [00:42<40:26,  3.08s/it][A[A[A
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 48.0B object store:  41%|████      | 41.0/100 [00:44<00:44, 1.32 row/s][A[A[A
+- MapBatches(inference): 1 active, 1 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   2%|▏         | 12/800 [00:42<57:10,  4.35s/it][A[A[ARunning: 1/1 CPU, 0/1 GPU, 1.9GB/2.0GB object_store_memory:   1%|▏         | 11/800 [00:42<42:34,  3.24s/it]Running: 1/1 CPU, 0/1 GPU, 1.9GB/2.0GB object_store_memory:   2%|▏         | 12/800 [00:42<56:41,  4.32s/it]
 
+- MapBatches(consume): 0 active, 17 queued, [cpu: 0.0, objects: 0.0B]:   2%|▏         | 13/800 [00:42<52:50,  4.03s/it]   [A[A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4335.44 MB (21.50%)
+  Available Memory: 24915.39 MB
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 48.0B object store:  41%|████      | 41.0/100 [00:44<00:44, 1.32 row/s][A[A[ARunning Dataset. Active & requested resources: 5.96/8 CPU, 2/4 GPU, 2.0GB/4.0GB object store:  38%|███▊      | 38.0/100 [00:44<00:48, 1.29 row/s]Running Dataset. Active & requested resources: 5.96/8 CPU, 2/4 GPU, 2.0GB/4.0GB object store:  40%|████      | 40.0/100 [00:44<00:51, 1.18 row/s]Running Dataset. Active & requested resources: 5.96/8 CPU, 2/4 GPU, 2.0GB/4.0GB object store:  40%|████      | 40.0/100 [00:44<00:51, 1.18 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 8; Resources: 2.0 CPU, 800.0MB object store:  50%|█████     | 50.0/100 [00:44<00:36, 1.36 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 8; Resources: 2.0 CPU, 800.0MB object store:  54%|█████▍    | 54.0/100 [00:44<00:30, 1.52 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 8; Resources: 2.0 CPU, 800.0MB object store:  54%|█████▍    | 54.0/100 [00:44<00:30, 1.52 row/s][A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.2GB object store:  50%|█████     | 50.0/100 [00:44<00:34, 1.46 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.2GB object store:  50%|█████     | 50.0/100 [00:44<00:34, 1.46 row/s][A[A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 8; Resources: 1.0 CPU, 700.0MB object store:  54%|█████▍    | 54.0/100 [00:45<00:30, 1.52 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 8; Resources: 1.0 CPU, 700.0MB object store:  55%|█████▌    | 55.0/100 [00:45<00:31, 1.42 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 8; Resources: 1.0 CPU, 700.0MB object store:  55%|█████▌    | 55.0/100 [00:45<00:31, 1.42 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.4GB object store:  50%|█████     | 50.0/100 [00:45<00:34, 1.46 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.4GB object store:  51%|█████     | 51.0/100 [00:45<00:40, 1.21 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.4GB object store:  51%|█████     | 51.0/100 [00:45<00:40, 1.21 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  41%|████      | 41.0/100 [00:45<00:44, 1.32 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  42%|████▏     | 42.0/100 [00:45<00:46, 1.25 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  42%|████▏     | 42.0/100 [00:45<00:46, 1.25 row/s][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  40%|████      | 40.0/100 [00:46<00:51, 1.18 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  42%|████▏     | 42.0/100 [00:46<00:44, 1.32 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  42%|████▏     | 42.0/100 [00:46<00:44, 1.32 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5969.41 MB (50.80%)
-  Available Memory: 7770.52 MB
+Memory exceeded!
+  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4299.75 MB (21.30%)
+  Available Memory: 24951.08 MB
 
 Memory exceeded!
 
+- ReadRange->MapBatches(produce): 1 active, 153 queued, [cpu: 1.0, objects: 1.9GB]:   4%|▍         | 31/800 [00:46<18:39,  1.46s/it][ARunning: 1/1 CPU, 0/1 GPU, 2.0GB/2.0GB object_store_memory:   2%|▏         | 12/800 [00:46<56:41,  4.32s/it]Running: 1/1 CPU, 0/1 GPU, 2.0GB/2.0GB object_store_memory:   2%|▏         | 13/800 [00:46<54:16,  4.14s/it]
 
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 1.3GB object store:  51%|█████     | 51.0/100 [00:47<00:40, 1.21 row/s][A[A
+- MapBatches(consume): 0 active, 18 queued, [cpu: 0.0, objects: 0.0B]:   2%|▏         | 13/800 [00:46<52:50,  4.03s/it][A[A
 
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 1.3GB object store:  54%|█████▍    | 54.0/100 [00:47<00:31, 1.46 row/s][A[A
 
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 1.3GB object store:  54%|█████▍    | 54.0/100 [00:47<00:31, 1.46 row/s][A[ARunning Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  42%|████▏     | 42.0/100 [00:47<00:44, 1.32 row/s]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  42%|████▏     | 42.0/100 [00:47<00:44, 1.32 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 7; Resources: 2.0 CPU, 500.0MB object store:  55%|█████▌    | 55.0/100 [00:47<00:31, 1.42 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 7; Resources: 2.0 CPU, 500.0MB object store:  55%|█████▌    | 55.0/100 [00:47<00:31, 1.42 row/s][A
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   2%|▏         | 12/800 [00:47<57:10,  4.35s/it][A[A[A
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 8; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  42%|████▏     | 42.0/100 [00:47<00:46, 1.25 row/s][A[A[A
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   2%|▏         | 13/800 [00:47<58:48,  4.48s/it][A[A[A
 
+- MapBatches(consume): 2 active, 19 queued, [cpu: 2.0, objects: 300.0MB]:   2%|▏         | 13/800 [00:47<52:50,  4.03s/it][A[A
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 8; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  42%|████▏     | 42.0/100 [00:47<00:46, 1.25 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  42%|████▏     | 42.0/100 [00:48<00:46, 1.25 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  43%|████▎     | 43.0/100 [00:48<00:57, 1.00s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  43%|████▎     | 43.0/100 [00:48<00:57, 1.00s/ row][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 1.6GB/4.0GB object store:  42%|████▏     | 42.0/100 [00:48<00:44, 1.32 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 1.6GB/4.0GB object store:  42%|████▏     | 42.0/100 [00:48<00:44, 1.32 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 7; Resources: 2.0 CPU, 400.0MB object store:  55%|█████▌    | 55.0/100 [00:48<00:31, 1.42 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 7; Resources: 2.0 CPU, 400.0MB object store:  55%|█████▌    | 55.0/100 [00:48<00:31, 1.42 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.2GB object store:  54%|█████▍    | 54.0/100 [00:48<00:31, 1.46 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.2GB object store:  55%|█████▌    | 55.0/100 [00:48<00:32, 1.37 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.2GB object store:  55%|█████▌    | 55.0/100 [00:48<00:32, 1.37 row/s][A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5728.39 MB (49.30%)
-  Available Memory: 8011.53 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 7; Resources: 2.0 CPU, 700.0MB object store:  55%|█████▌    | 55.0/100 [00:49<00:31, 1.42 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 7; Resources: 2.0 CPU, 700.0MB object store:  59%|█████▉    | 59.0/100 [00:49<00:30, 1.36 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 7; Resources: 2.0 CPU, 700.0MB object store:  59%|█████▉    | 59.0/100 [00:49<00:30, 1.36 row/s][ARunning Dataset. Active & requested resources: 4.97/8 CPU, 4/4 GPU, 2.0GB/4.0GB object store:  42%|████▏     | 42.0/100 [00:49<00:44, 1.32 row/s]Running Dataset. Active & requested resources: 4.97/8 CPU, 4/4 GPU, 2.0GB/4.0GB object store:  46%|████▌     | 46.0/100 [00:49<00:41, 1.29 row/s]Running Dataset. Active & requested resources: 4.97/8 CPU, 4/4 GPU, 2.0GB/4.0GB object store:  46%|████▌     | 46.0/100 [00:49<00:41, 1.29 row/s]
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.3GB object store:  55%|█████▌    | 55.0/100 [00:49<00:32, 1.37 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.3GB object store:  55%|█████▌    | 55.0/100 [00:49<00:32, 1.37 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  43%|████▎     | 43.0/100 [00:49<00:57, 1.00s/ row][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  46%|████▌     | 46.0/100 [00:49<00:40, 1.35 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 5; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  46%|████▌     | 46.0/100 [00:49<00:40, 1.35 row/s][A[A[ARunning Dataset. Active & requested resources: 5.96/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  46%|████▌     | 46.0/100 [00:50<00:41, 1.29 row/s]Running Dataset. Active & requested resources: 5.96/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  46%|████▌     | 46.0/100 [00:50<00:41, 1.29 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 6; Resources: 2.0 CPU, 800.0MB object store:  59%|█████▉    | 59.0/100 [00:50<00:30, 1.36 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 6; Resources: 2.0 CPU, 800.0MB object store:  60%|██████    | 60.0/100 [00:50<00:30, 1.29 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 6; Resources: 2.0 CPU, 800.0MB object store:  60%|██████    | 60.0/100 [00:50<00:30, 1.29 row/s][A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.4GB object store:  55%|█████▌    | 55.0/100 [00:50<00:32, 1.37 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.4GB object store:  56%|█████▌    | 56.0/100 [00:50<00:41, 1.07 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.4GB object store:  56%|█████▌    | 56.0/100 [00:50<00:41, 1.07 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  46%|████▌     | 46.0/100 [00:50<00:40, 1.35 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  46%|████▌     | 46.0/100 [00:50<00:40, 1.35 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6121.22 MB (51.70%)
-  Available Memory: 7618.70 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 6; Resources: 2.0 CPU, 400.0MB object store:  60%|██████    | 60.0/100 [00:51<00:30, 1.29 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 6; Resources: 2.0 CPU, 400.0MB object store:  60%|██████    | 60.0/100 [00:51<00:30, 1.29 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.4GB object store:  56%|█████▌    | 56.0/100 [00:51<00:41, 1.07 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.4GB object store:  60%|██████    | 60.0/100 [00:51<00:24, 1.61 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.4GB object store:  60%|██████    | 60.0/100 [00:51<00:24, 1.61 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  46%|████▌     | 46.0/100 [00:51<00:40, 1.35 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  46%|████▌     | 46.0/100 [00:51<00:40, 1.35 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  46%|████▌     | 46.0/100 [00:51<00:41, 1.29 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  46%|████▌     | 46.0/100 [00:51<00:41, 1.29 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 6; Resources: 2.0 CPU, 800.0MB object store:  60%|██████    | 60.0/100 [00:52<00:30, 1.29 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 6; Resources: 2.0 CPU, 800.0MB object store:  64%|██████▍   | 64.0/100 [00:52<00:24, 1.48 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 6; Resources: 2.0 CPU, 800.0MB object store:  64%|██████▍   | 64.0/100 [00:52<00:24, 1.48 row/s][A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.4GB object store:  60%|██████    | 60.0/100 [00:52<00:24, 1.61 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.4GB object store:  60%|██████    | 60.0/100 [00:52<00:24, 1.61 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  46%|████▌     | 46.0/100 [00:52<00:40, 1.35 row/s] [A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  45%|████▌     | 46.0/102 [00:52<00:41, 1.35 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  49%|████▉     | 50.0/102 [00:52<00:39, 1.31 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  49%|████▉     | 50.0/102 [00:52<00:39, 1.31 row/s][A[A[ARunning Dataset. Active & requested resources: 5.96/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  46%|████▌     | 46.0/100 [00:52<00:41, 1.29 row/s]Running Dataset. Active & requested resources: 5.96/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  45%|████▌     | 46.0/102 [00:52<00:43, 1.29 row/s]Running Dataset. Active & requested resources: 5.96/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  49%|████▉     | 50.0/102 [00:52<00:40, 1.28 row/s]Running Dataset. Active & requested resources: 5.96/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  49%|████▉     | 50.0/102 [00:52<00:40, 1.28 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5700.23 MB (49.10%)
-  Available Memory: 8039.69 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 6; Resources: 1.0 CPU, 700.0MB object store:  64%|██████▍   | 64.0/100 [00:53<00:24, 1.48 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 6; Resources: 1.0 CPU, 700.0MB object store:  65%|██████▌   | 65.0/100 [00:53<00:25, 1.39 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 6; Resources: 1.0 CPU, 700.0MB object store:  65%|██████▌   | 65.0/100 [00:53<00:25, 1.39 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.5GB object store:  60%|██████    | 60.0/100 [00:53<00:24, 1.61 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.5GB object store:  60%|██████    | 60.0/100 [00:53<00:24, 1.61 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  49%|████▉     | 50.0/102 [00:53<00:39, 1.31 row/s][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  49%|████▉     | 50.0/102 [00:53<00:40, 1.28 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  49%|████▉     | 50.0/102 [00:53<00:40, 1.28 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 5; Resources: 2.0 CPU, 400.0MB object store:  65%|██████▌   | 65.0/100 [00:54<00:25, 1.39 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 5; Resources: 2.0 CPU, 400.0MB object store:  65%|██████▌   | 65.0/100 [00:54<00:25, 1.39 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.5GB object store:  60%|██████    | 60.0/100 [00:54<00:24, 1.61 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.5GB object store:  65%|██████▌   | 65.0/100 [00:54<00:22, 1.59 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.5GB object store:  65%|██████▌   | 65.0/100 [00:54<00:22, 1.59 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  49%|████▉     | 50.0/102 [00:54<00:39, 1.31 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  49%|████▉     | 50.0/102 [00:54<00:39, 1.31 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  49%|████▉     | 50.0/102 [00:54<00:40, 1.28 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  49%|████▉     | 50.0/102 [00:54<00:40, 1.28 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5528.30 MB (48.60%)
-  Available Memory: 8111.76 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 5; Resources: 2.0 CPU, 400.0MB object store:  66%|██████▌   | 66.0/100 [00:55<00:31, 1.07 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 5; Resources: 2.0 CPU, 400.0MB object store:  66%|██████▌   | 66.0/100 [00:55<00:31, 1.07 row/s][ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.6GB/4.0GB object store:  49%|████▉     | 50.0/102 [00:55<00:40, 1.28 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.6GB/4.0GB object store:  50%|█████     | 50.0/100 [00:55<00:39, 1.28 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.6GB/4.0GB object store:  54%|█████▍    | 54.0/100 [00:55<00:35, 1.28 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.6GB/4.0GB object store:  54%|█████▍    | 54.0/100 [00:55<00:35, 1.28 row/s]
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 1.2GB object store:  65%|██████▌   | 65.0/100 [00:55<00:22, 1.59 row/s][A[A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 1.2GB object store:  65%|██████▌   | 65.0/100 [00:55<00:22, 1.59 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 7; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  49%|████▉     | 50.0/102 [00:55<00:39, 1.31 row/s] [A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 7; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  50%|█████     | 50.0/100 [00:55<00:38, 1.31 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 7; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  54%|█████▍    | 54.0/100 [00:55<00:35, 1.29 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 7; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  54%|█████▍    | 54.0/100 [00:55<00:35, 1.29 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5782.23 MB (50.20%)
-  Available Memory: 7857.69 MB
-
-Memory exceeded!
-Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.2GB/4.0GB object store:  54%|█████▍    | 54.0/100 [00:56<00:35, 1.28 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.2GB/4.0GB object store:  54%|█████▍    | 54.0/100 [00:56<00:35, 1.28 row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 5; Resources: 1.0 CPU, 700.0MB object store:  66%|██████▌   | 66.0/100 [00:56<00:31, 1.07 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 5; Resources: 1.0 CPU, 700.0MB object store:  70%|███████   | 70.0/100 [00:56<00:18, 1.61 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 5; Resources: 1.0 CPU, 700.0MB object store:  70%|███████   | 70.0/100 [00:56<00:18, 1.61 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.6GB object store:  65%|██████▌   | 65.0/100 [00:56<00:22, 1.59 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.6GB object store:  65%|██████▌   | 65.0/100 [00:56<00:22, 1.59 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 7; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  54%|█████▍    | 54.0/100 [00:56<00:35, 1.29 row/s][A[A[ARunning Dataset. Active & requested resources: 3.98/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  54%|█████▍    | 54.0/100 [00:57<00:35, 1.28 row/s]Running Dataset. Active & requested resources: 3.98/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  54%|█████▍    | 54.0/100 [00:57<00:35, 1.28 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 4; Resources: 2.0 CPU, 600.0MB object store:  70%|███████   | 70.0/100 [00:57<00:18, 1.61 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 4; Resources: 2.0 CPU, 600.0MB object store:  70%|███████   | 70.0/100 [00:57<00:18, 1.61 row/s][A
-
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 1.6GB object store:  65%|██████▌   | 65.0/100 [00:57<00:22, 1.59 row/s][A[A
-
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 1.6GB object store:  68%|██████▊   | 68.0/100 [00:57<00:23, 1.34 row/s][A[A
-
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 1.6GB object store:  68%|██████▊   | 68.0/100 [00:57<00:23, 1.34 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  54%|█████▍    | 54.0/100 [00:57<00:35, 1.29 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  54%|█████▍    | 54.0/100 [00:57<00:35, 1.29 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5906.20 MB (51.60%)
-  Available Memory: 7633.72 MB
+- MapBatches(consume): 2 active, 19 queued, [cpu: 2.0, objects: 300.0MB]:   2%|▏         | 15/800 [00:47<48:40,  3.72s/it][A[ARunning: 1.98/1 CPU, 1/1 GPU, 2.4GB/2.0GB object_store_memory:   2%|▏         | 13/800 [00:47<54:16,  4.14s/it]
+- ReadRange->MapBatches(produce): 0 active, 153 queued, [cpu: 0.0, objects: 2.0GB]:   4%|▍         | 31/800 [00:48<18:39,  1.46s/it][A
+- ReadRange->MapBatches(produce): 0 active, 153 queued, [cpu: 0.0, objects: 2.0GB]:   4%|▍         | 35/800 [00:48<13:11,  1.03s/it][A  Process Memory Usage: 73.82 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4490.51 MB (21.90%)
+  Available Memory: 24760.32 MB
 
 Memory exceeded!
 
 
 
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 40.0B object store:  54%|█████▍    | 54.0/100 [00:58<00:35, 1.29 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 40.0B object store:  57%|█████▋    | 57.0/100 [00:58<00:36, 1.17 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 40.0B object store:  57%|█████▋    | 57.0/100 [00:58<00:36, 1.17 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 1.7GB/4.0GB object store:  54%|█████▍    | 54.0/100 [00:58<00:35, 1.28 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 1.7GB/4.0GB object store:  56%|█████▌    | 56.0/100 [00:58<00:41, 1.06 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 1.7GB/4.0GB object store:  56%|█████▌    | 56.0/100 [00:58<00:41, 1.06 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 4; Resources: 2.0 CPU, 400.0MB object store:  70%|███████   | 70.0/100 [00:58<00:18, 1.61 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 4; Resources: 2.0 CPU, 400.0MB object store:  70%|███████   | 70.0/100 [00:58<00:18, 1.61 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.3GB object store:  68%|██████▊   | 68.0/100 [00:58<00:23, 1.34 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.3GB object store:  70%|███████   | 70.0/100 [00:58<00:21, 1.43 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.3GB object store:  70%|███████   | 70.0/100 [00:58<00:21, 1.43 row/s][A[A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 4; Resources: 2.0 CPU, 800.0MB object store:  70%|███████   | 70.0/100 [00:59<00:18, 1.61 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 4; Resources: 2.0 CPU, 800.0MB object store:  75%|███████▌  | 75.0/100 [00:59<00:15, 1.59 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 4; Resources: 2.0 CPU, 800.0MB object store:  75%|███████▌  | 75.0/100 [00:59<00:15, 1.59 row/s][ARunning Dataset. Active & requested resources: 4.96/8 CPU, 4/4 GPU, 2.2GB/4.0GB object store:  56%|█████▌    | 56.0/100 [00:59<00:41, 1.06 row/s]Running Dataset. Active & requested resources: 4.96/8 CPU, 4/4 GPU, 2.2GB/4.0GB object store:  58%|█████▊    | 58.0/100 [00:59<00:35, 1.17 row/s]Running Dataset. Active & requested resources: 4.96/8 CPU, 4/4 GPU, 2.2GB/4.0GB object store:  58%|█████▊    | 58.0/100 [00:59<00:35, 1.17 row/s]
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.7GB object store:  70%|███████   | 70.0/100 [00:59<00:21, 1.43 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.7GB object store:  70%|███████   | 70.0/100 [00:59<00:21, 1.43 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 8; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  57%|█████▋    | 57.0/100 [00:59<00:36, 1.17 row/s] [A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 8; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  58%|█████▊    | 58.0/100 [00:59<00:37, 1.13 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 8; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  58%|█████▊    | 58.0/100 [00:59<00:37, 1.13 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6140.86 MB (53.10%)
-  Available Memory: 7399.06 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 4; Resources: 1.0 CPU, 600.0MB object store:  75%|███████▌  | 75.0/100 [01:00<00:15, 1.59 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 4; Resources: 1.0 CPU, 600.0MB object store:  75%|███████▌  | 75.0/100 [01:00<00:15, 1.59 row/s][A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.7GB object store:  70%|███████   | 70.0/100 [01:00<00:21, 1.43 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.7GB object store:  71%|███████   | 71.0/100 [01:00<00:25, 1.13 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.7GB object store:  71%|███████   | 71.0/100 [01:00<00:25, 1.13 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  58%|█████▊    | 58.0/100 [01:00<00:37, 1.13 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  58%|█████▊    | 58.0/100 [01:00<00:37, 1.13 row/s][A[A[ARunning Dataset. Active & requested resources: 4.96/8 CPU, 4/4 GPU, 2.2GB/4.0GB object store:  58%|█████▊    | 58.0/100 [01:00<00:35, 1.17 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 3; Resources: 2.0 CPU, 400.0MB object store:  75%|███████▌  | 75.0/100 [01:01<00:15, 1.59 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 3; Resources: 2.0 CPU, 400.0MB object store:  75%|███████▌  | 75.0/100 [01:01<00:15, 1.59 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.7GB object store:  71%|███████   | 71.0/100 [01:01<00:25, 1.13 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.7GB object store:  75%|███████▌  | 75.0/100 [01:01<00:15, 1.62 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.7GB object store:  75%|███████▌  | 75.0/100 [01:01<00:15, 1.62 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  58%|█████▊    | 58.0/100 [01:01<00:37, 1.13 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  58%|█████▊    | 58.0/100 [01:01<00:37, 1.13 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  58%|█████▊    | 58.0/100 [01:01<00:35, 1.17 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  58%|█████▊    | 58.0/100 [01:01<00:35, 1.17 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5872.70 MB (52.10%)
-  Available Memory: 7567.21 MB
-
-Memory exceeded!
-Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  58%|█████▊    | 58.0/100 [01:02<00:35, 1.17 row/s]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  62%|██████▏   | 62.0/100 [01:02<00:31, 1.21 row/s]Running Dataset. Active & requested resources: 2.99/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  62%|██████▏   | 62.0/100 [01:02<00:31, 1.21 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 3; Resources: 2.0 CPU, 500.0MB object store:  75%|███████▌  | 75.0/100 [01:02<00:15, 1.59 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 3; Resources: 2.0 CPU, 500.0MB object store:  76%|███████▌  | 76.0/100 [01:02<00:22, 1.09 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 3; Resources: 2.0 CPU, 500.0MB object store:  76%|███████▌  | 76.0/100 [01:02<00:22, 1.09 row/s][A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 1.4GB object store:  75%|███████▌  | 75.0/100 [01:02<00:15, 1.62 row/s][A[A
-
-- MapBatches(consume): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 1.4GB object store:  75%|███████▌  | 75.0/100 [01:02<00:15, 1.62 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  58%|█████▊    | 58.0/100 [01:02<00:37, 1.13 row/s] [A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  62%|██████▏   | 62.0/100 [01:02<00:32, 1.18 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  62%|██████▏   | 62.0/100 [01:02<00:32, 1.18 row/s][A[A[A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 3; Resources: 1.0 CPU, 700.0MB object store:  76%|███████▌  | 76.0/100 [01:03<00:22, 1.09 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 3; Resources: 1.0 CPU, 700.0MB object store:  80%|████████  | 80.0/100 [01:03<00:13, 1.52 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 3; Resources: 1.0 CPU, 700.0MB object store:  80%|████████  | 80.0/100 [01:03<00:13, 1.52 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.8GB object store:  75%|███████▌  | 75.0/100 [01:03<00:15, 1.62 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.8GB object store:  75%|███████▌  | 75.0/100 [01:03<00:15, 1.62 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  62%|██████▏   | 62.0/100 [01:03<00:32, 1.18 row/s][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.4GB/4.0GB object store:  62%|██████▏   | 62.0/100 [01:03<00:31, 1.21 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.4GB/4.0GB object store:  62%|██████▏   | 62.0/100 [01:03<00:31, 1.21 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6150.34 MB (53.80%)
-  Available Memory: 7289.58 MB
-
-Memory exceeded!
-Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  62%|██████▏   | 62.0/100 [01:04<00:31, 1.21 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  62%|██████▏   | 62.0/100 [01:04<00:31, 1.21 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 2; Resources: 2.0 CPU, 400.0MB object store:  80%|████████  | 80.0/100 [01:04<00:13, 1.52 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 2; Resources: 2.0 CPU, 400.0MB object store:  80%|████████  | 80.0/100 [01:04<00:13, 1.52 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.8GB object store:  75%|███████▌  | 75.0/100 [01:04<00:15, 1.62 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.8GB object store:  80%|████████  | 80.0/100 [01:04<00:12, 1.60 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.8GB object store:  80%|████████  | 80.0/100 [01:04<00:12, 1.60 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 14; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  62%|██████▏   | 62.0/100 [01:04<00:32, 1.18 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 14; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  62%|██████▏   | 62.0/100 [01:04<00:32, 1.18 row/s][A[A[A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 2; Resources: 2.0 CPU, 400.0MB object store:  80%|████████  | 80.0/100 [01:05<00:13, 1.52 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.5GB object store:  80%|████████  | 80.0/100 [01:05<00:12, 1.60 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.5GB object store:  80%|████████  | 80.0/100 [01:05<00:12, 1.60 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  62%|██████▏   | 62.0/100 [01:05<00:32, 1.18 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  65%|██████▌   | 65.0/100 [01:05<00:31, 1.10 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  65%|██████▌   | 65.0/100 [01:05<00:31, 1.10 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  62%|██████▏   | 62.0/100 [01:06<00:31, 1.21 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  65%|██████▌   | 65.0/100 [01:06<00:31, 1.12 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  65%|██████▌   | 65.0/100 [01:06<00:31, 1.12 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5502.34 MB (49.70%)
-  Available Memory: 7937.58 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 2; Resources: 1.0 CPU, 700.0MB object store:  80%|████████  | 80.0/100 [01:07<00:13, 1.52 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 2; Resources: 1.0 CPU, 700.0MB object store:  85%|████████▌ | 85.0/100 [01:07<00:09, 1.54 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 2; Resources: 1.0 CPU, 700.0MB object store:  85%|████████▌ | 85.0/100 [01:07<00:09, 1.54 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.9GB object store:  80%|████████  | 80.0/100 [01:07<00:12, 1.60 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 1.9GB object store:  80%|████████  | 80.0/100 [01:07<00:12, 1.60 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  65%|██████▌   | 65.0/100 [01:07<00:31, 1.10 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  66%|██████▌   | 66.0/100 [01:07<00:31, 1.08 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  66%|██████▌   | 66.0/100 [01:07<00:31, 1.08 row/s][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.5GB/4.0GB object store:  65%|██████▌   | 65.0/100 [01:07<00:31, 1.12 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.5GB/4.0GB object store:  66%|██████▌   | 66.0/100 [01:07<00:31, 1.09 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.5GB/4.0GB object store:  66%|██████▌   | 66.0/100 [01:07<00:31, 1.09 row/s]
-
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 2.0GB object store:  80%|████████  | 80.0/100 [01:08<00:12, 1.60 row/s][A[A
-
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 2.0GB object store:  85%|████████▌ | 85.0/100 [01:08<00:09, 1.59 row/s][A[A
-
-- MapBatches(consume): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 2.0GB object store:  85%|████████▌ | 85.0/100 [01:08<00:09, 1.59 row/s][A[ARunning Dataset. Active & requested resources: 1.99/8 CPU, 4/4 GPU, 2.2GB/4.0GB object store:  66%|██████▌   | 66.0/100 [01:08<00:31, 1.09 row/s]Running Dataset. Active & requested resources: 1.99/8 CPU, 4/4 GPU, 2.2GB/4.0GB object store:  66%|██████▌   | 66.0/100 [01:08<00:31, 1.09 row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 2; Resources: 1.0 CPU, 300.0MB object store:  85%|████████▌ | 85.0/100 [01:08<00:09, 1.54 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 2; Resources: 1.0 CPU, 300.0MB object store:  85%|████████▌ | 85.0/100 [01:08<00:09, 1.54 row/s][A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 15; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  66%|██████▌   | 66.0/100 [01:08<00:31, 1.08 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 15; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  66%|██████▌   | 66.0/100 [01:08<00:31, 1.08 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5575.30 MB (51.50%)
-  Available Memory: 7664.61 MB
-
-Memory exceeded!
-
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  66%|██████▌   | 66.0/100 [01:09<00:31, 1.08 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  69%|██████▉   | 69.0/100 [01:09<00:26, 1.18 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  69%|██████▉   | 69.0/100 [01:09<00:26, 1.18 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 2.0GB/4.0GB object store:  66%|██████▌   | 66.0/100 [01:09<00:31, 1.09 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 2.0GB/4.0GB object store:  68%|██████▊   | 68.0/100 [01:09<00:30, 1.06 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 2.0GB/4.0GB object store:  68%|██████▊   | 68.0/100 [01:09<00:30, 1.06 row/s]
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 1; Resources: 2.0 CPU, 400.0MB object store:  85%|████████▌ | 85.0/100 [01:09<00:09, 1.54 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 1; Resources: 2.0 CPU, 400.0MB object store:  85%|████████▌ | 85.0/100 [01:09<00:09, 1.54 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.6GB object store:  85%|████████▌ | 85.0/100 [01:09<00:09, 1.59 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.6GB object store:  85%|████████▌ | 85.0/100 [01:09<00:09, 1.59 row/s][A[A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 1; Resources: 2.0 CPU, 600.0MB object store:  85%|████████▌ | 85.0/100 [01:10<00:09, 1.54 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 1; Resources: 2.0 CPU, 600.0MB object store:  88%|████████▊ | 88.0/100 [01:10<00:09, 1.33 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 1; Resources: 2.0 CPU, 600.0MB object store:  88%|████████▊ | 88.0/100 [01:10<00:09, 1.33 row/s][ARunning Dataset. Active & requested resources: 3.98/8 CPU, 4/4 GPU, 2.3GB/4.0GB object store:  68%|██████▊   | 68.0/100 [01:10<00:30, 1.06 row/s]Running Dataset. Active & requested resources: 3.98/8 CPU, 4/4 GPU, 2.3GB/4.0GB object store:  70%|███████   | 70.0/100 [01:10<00:25, 1.20 row/s]Running Dataset. Active & requested resources: 3.98/8 CPU, 4/4 GPU, 2.3GB/4.0GB object store:  70%|███████   | 70.0/100 [01:10<00:25, 1.20 row/s]
-
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 1.8GB object store:  85%|████████▌ | 85.0/100 [01:10<00:09, 1.59 row/s][A[A
-
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 1.8GB object store:  85%|████████▌ | 85.0/100 [01:10<00:09, 1.59 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  69%|██████▉   | 69.0/100 [01:10<00:26, 1.18 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  70%|███████   | 70.0/100 [01:10<00:26, 1.14 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  70%|███████   | 70.0/100 [01:10<00:26, 1.14 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5631.10 MB (51.80%)
-  Available Memory: 7608.81 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 1; Resources: 1.0 CPU, 500.0MB object store:  88%|████████▊ | 88.0/100 [01:11<00:09, 1.33 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 1; Resources: 1.0 CPU, 500.0MB object store:  90%|█████████ | 90.0/100 [01:11<00:07, 1.42 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 1; Resources: 1.0 CPU, 500.0MB object store:  90%|█████████ | 90.0/100 [01:11<00:07, 1.42 row/s][A
-
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 2.0GB object store:  85%|████████▌ | 85.0/100 [01:11<00:09, 1.59 row/s][A[A
-
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 2.0GB object store:  87%|████████▋ | 87.0/100 [01:11<00:10, 1.26 row/s][A[A
-
-- MapBatches(consume): Tasks: 3; Queued blocks: 0; Resources: 3.0 CPU, 2.0GB object store:  87%|████████▋ | 87.0/100 [01:11<00:10, 1.26 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  70%|███████   | 70.0/100 [01:11<00:26, 1.14 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  70%|███████   | 70.0/100 [01:11<00:26, 1.14 row/s][A[A[ARunning Dataset. Active & requested resources: 3.97/8 CPU, 4/4 GPU, 2.4GB/4.0GB object store:  70%|███████   | 70.0/100 [01:11<00:25, 1.20 row/s]Running Dataset. Active & requested resources: 3.97/8 CPU, 4/4 GPU, 2.4GB/4.0GB object store:  70%|███████   | 70.0/100 [01:11<00:25, 1.20 row/s]
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 14; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  70%|███████   | 70.0/100 [01:12<00:26, 1.14 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 14; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  73%|███████▎  | 73.0/100 [01:12<00:21, 1.24 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 14; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  73%|███████▎  | 73.0/100 [01:12<00:21, 1.24 row/s][A[A[A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 400.0MB object store:  90%|█████████ | 90.0/100 [01:12<00:07, 1.42 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 400.0MB object store:  90%|█████████ | 90.0/100 [01:12<00:07, 1.42 row/s][ARunning Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 2.1GB/4.0GB object store:  70%|███████   | 70.0/100 [01:12<00:25, 1.20 row/s]   Running Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 2.1GB/4.0GB object store:  73%|███████▎  | 73.0/100 [01:12<00:21, 1.28 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 3/4 GPU, 2.1GB/4.0GB object store:  73%|███████▎  | 73.0/100 [01:12<00:21, 1.28 row/s]
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.7GB object store:  87%|████████▋ | 87.0/100 [01:12<00:10, 1.26 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.7GB object store:  90%|█████████ | 90.0/100 [01:12<00:06, 1.49 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.7GB object store:  90%|█████████ | 90.0/100 [01:12<00:06, 1.49 row/s][A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5253.17 MB (50.00%)
-  Available Memory: 7886.74 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 2; Queued blocks: 0; Resources: 2.0 CPU, 400.0MB object store:  90%|█████████ | 90.0/100 [01:13<00:07, 1.42 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.6GB object store:  90%|█████████ | 90.0/100 [01:13<00:06, 1.49 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.6GB object store:  90%|█████████ | 90.0/100 [01:13<00:06, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 12; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  73%|███████▎  | 73.0/100 [01:13<00:21, 1.24 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 12; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  74%|███████▍  | 74.0/100 [01:13<00:21, 1.19 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 12; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  74%|███████▍  | 74.0/100 [01:13<00:21, 1.19 row/s][A[A[ARunning Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 2.0GB/4.0GB object store:  73%|███████▎  | 73.0/100 [01:13<00:21, 1.28 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 2.0GB/4.0GB object store:  74%|███████▍  | 74.0/100 [01:13<00:21, 1.22 row/s]Running Dataset. Active & requested resources: 2/8 CPU, 4/4 GPU, 2.0GB/4.0GB object store:  74%|███████▍  | 74.0/100 [01:13<00:21, 1.22 row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 700.0MB object store:  90%|█████████ | 90.0/100 [01:14<00:07, 1.42 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 700.0MB object store:  95%|█████████▌| 95.0/100 [01:14<00:03, 1.48 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 700.0MB object store:  95%|█████████▌| 95.0/100 [01:14<00:03, 1.48 row/s][A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 2.1GB object store:  90%|█████████ | 90.0/100 [01:14<00:06, 1.49 row/s][A[A
-
-- MapBatches(consume): Tasks: 5; Queued blocks: 0; Resources: 5.0 CPU, 2.1GB object store:  90%|█████████ | 90.0/100 [01:14<00:06, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 12; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  74%|███████▍  | 74.0/100 [01:14<00:21, 1.19 row/s][A[A[ARunning Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.7GB/4.0GB object store:  74%|███████▍  | 74.0/100 [01:14<00:21, 1.22 row/s]Running Dataset. Active & requested resources: 5.95/8 CPU, 4/4 GPU, 2.7GB/4.0GB object store:  74%|███████▍  | 74.0/100 [01:14<00:21, 1.22 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6056.32 MB (55.10%)
-  Available Memory: 7083.59 MB
-
-Memory exceeded!
-Running Dataset. Active & requested resources: 1/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  74%|███████▍  | 74.0/100 [01:15<00:21, 1.22 row/s]   Running Dataset. Active & requested resources: 1/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  76%|███████▌  | 76.0/100 [01:15<00:21, 1.12 row/s]Running Dataset. Active & requested resources: 1/8 CPU, 4/4 GPU, 2.1GB/4.0GB object store:  76%|███████▌  | 76.0/100 [01:15<00:21, 1.12 row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 200.0MB object store:  95%|█████████▌| 95.0/100 [01:15<00:03, 1.48 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 200.0MB object store:  95%|█████████▌| 95.0/100 [01:15<00:03, 1.48 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.9GB object store:  90%|█████████ | 90.0/100 [01:15<00:06, 1.49 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.9GB object store:  95%|█████████▌| 95.0/100 [01:15<00:03, 1.53 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.9GB object store:  95%|█████████▌| 95.0/100 [01:15<00:03, 1.53 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 15; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  74%|███████▍  | 74.0/100 [01:15<00:21, 1.19 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 15; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  76%|███████▌  | 76.0/100 [01:15<00:21, 1.10 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 15; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  76%|███████▌  | 76.0/100 [01:15<00:21, 1.10 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5089.95 MB (49.60%)
-  Available Memory: 7949.96 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 200.0MB object store:  95%|█████████▌| 95.0/100 [01:16<00:03, 1.48 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.7GB object store:  95%|█████████▌| 95.0/100 [01:16<00:03, 1.53 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.7GB object store:  95%|█████████▌| 95.0/100 [01:16<00:03, 1.53 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  76%|███████▌  | 76.0/100 [01:16<00:21, 1.10 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  78%|███████▊  | 78.0/100 [01:16<00:17, 1.26 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  78%|███████▊  | 78.0/100 [01:16<00:17, 1.26 row/s][A[A[ARunning Dataset. Active & requested resources: 1/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  76%|███████▌  | 76.0/100 [01:16<00:21, 1.12 row/s]Running Dataset. Active & requested resources: 1/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  78%|███████▊  | 78.0/100 [01:16<00:17, 1.28 row/s]Running Dataset. Active & requested resources: 1/8 CPU, 4/4 GPU, 1.9GB/4.0GB object store:  78%|███████▊  | 78.0/100 [01:16<00:17, 1.28 row/s]
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 500.0MB object store:  95%|█████████▌| 95.0/100 [01:17<00:03, 1.48 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 500.0MB object store:  99%|█████████▉| 99.0/100 [01:17<00:00, 1.41 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 1; Queued blocks: 0; Resources: 1.0 CPU, 500.0MB object store:  99%|█████████▉| 99.0/100 [01:17<00:00, 1.41 row/s][ARunning Dataset. Active & requested resources: 3.97/8 CPU, 4/4 GPU, 2.5GB/4.0GB object store:  78%|███████▊  | 78.0/100 [01:17<00:17, 1.28 row/s]Running Dataset. Active & requested resources: 3.97/8 CPU, 4/4 GPU, 2.5GB/4.0GB object store:  78%|███████▊  | 78.0/100 [01:17<00:17, 1.28 row/s]
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 2.1GB object store:  95%|█████████▌| 95.0/100 [01:17<00:03, 1.53 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 2.1GB object store:  95%|█████████▌| 95.0/100 [01:17<00:03, 1.53 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 13; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  78%|███████▊  | 78.0/100 [01:17<00:17, 1.26 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 6734.07 MB (60.10%)
-  Available Memory: 6306.03 MB
-
-Memory exceeded!
-
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 40.0B object store:  78%|███████▊  | 78.0/100 [01:18<00:17, 1.26 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 40.0B object store:  82%|████████▏ | 82.0/100 [01:18<00:11, 1.50 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 11; Resources: 0.0 CPU, 4.0 GPU, 40.0B object store:  82%|████████▏ | 82.0/100 [01:18<00:11, 1.50 row/s][A[A[ARunning Dataset. Active & requested resources: 3.96/8 CPU, 3/4 GPU, 2.1GB/4.0GB object store:  78%|███████▊  | 78.0/100 [01:18<00:17, 1.28 row/s]Running Dataset. Active & requested resources: 3.96/8 CPU, 3/4 GPU, 2.1GB/4.0GB object store:  81%|████████  | 81.0/100 [01:18<00:14, 1.34 row/s]Running Dataset. Active & requested resources: 3.96/8 CPU, 3/4 GPU, 2.1GB/4.0GB object store:  81%|████████  | 81.0/100 [01:18<00:14, 1.34 row/s]
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 400.0MB object store:  99%|█████████▉| 99.0/100 [01:18<00:00, 1.41 row/s][A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 400.0MB object store: 100%|██████████| 100/100 [01:18<00:00, 1.34 row/s] [A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 400.0MB object store: 100%|██████████| 100/100 [01:18<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.8GB object store:  95%|█████████▌| 95.0/100 [01:18<00:03, 1.53 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.8GB object store:  96%|█████████▌| 96.0/100 [01:18<00:03, 1.10 row/s][A[A
-
-- MapBatches(consume): Tasks: 4; Queued blocks: 0; Resources: 4.0 CPU, 1.8GB object store:  96%|█████████▌| 96.0/100 [01:18<00:03, 1.10 row/s][A[A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:19<00:00, 1.34 row/s]   [A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:19<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.8GB object store:  96%|█████████▌| 96.0/100 [01:19<00:03, 1.10 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.8GB object store: 100%|██████████| 100/100 [01:19<00:00, 1.49 row/s] [A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.8GB object store: 100%|██████████| 100/100 [01:19<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 14; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  82%|████████▏ | 82.0/100 [01:19<00:11, 1.50 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 14; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  82%|████████▏ | 82.0/100 [01:19<00:11, 1.50 row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  81%|████████  | 81.0/100 [01:19<00:14, 1.34 row/s]   Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  82%|████████▏ | 82.0/100 [01:19<00:14, 1.26 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  82%|████████▏ | 82.0/100 [01:19<00:14, 1.26 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5676.66 MB (53.40%)
-  Available Memory: 7363.24 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:20<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.8GB object store: 100%|██████████| 100/100 [01:20<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 14; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  82%|████████▏ | 82.0/100 [01:20<00:11, 1.50 row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.8GB/4.0GB object store:  82%|████████▏ | 82.0/100 [01:20<00:14, 1.26 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  82%|████████▏ | 82.0/100 [01:21<00:14, 1.26 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  86%|████████▌ | 86.0/100 [01:21<00:09, 1.51 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  86%|████████▌ | 86.0/100 [01:21<00:09, 1.51 row/s]
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:21<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.4GB object store: 100%|██████████| 100/100 [01:21<00:00, 1.49 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.4GB object store: 100%|██████████| 100/100 [01:21<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  82%|████████▏ | 82.0/100 [01:21<00:11, 1.50 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  86%|████████▌ | 86.0/100 [01:21<00:09, 1.40 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  86%|████████▌ | 86.0/100 [01:21<00:09, 1.40 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5687.54 MB (53.40%)
-  Available Memory: 7352.36 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:22<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.4GB object store: 100%|██████████| 100/100 [01:22<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 10; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  86%|████████▌ | 86.0/100 [01:22<00:09, 1.40 row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.4GB/4.0GB object store:  86%|████████▌ | 86.0/100 [01:22<00:09, 1.51 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store:  86%|████████▌ | 86.0/100 [01:23<00:09, 1.51 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store:  87%|████████▋ | 87.0/100 [01:23<00:11, 1.16 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1.3GB/4.0GB object store:  87%|████████▋ | 87.0/100 [01:23<00:11, 1.16 row/s]
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:23<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.3GB object store: 100%|██████████| 100/100 [01:23<00:00, 1.49 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1.3GB object store: 100%|██████████| 100/100 [01:23<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  86%|████████▌ | 86.0/100 [01:23<00:09, 1.40 row/s] [A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  87%|████████▋ | 87.0/100 [01:23<00:11, 1.14 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 9; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  87%|████████▋ | 87.0/100 [01:23<00:11, 1.14 row/s][A[A[A  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5662.20 MB (53.30%)
-  Available Memory: 7377.71 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:24<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1000.0MB object store: 100%|██████████| 100/100 [01:24<00:00, 1.49 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1000.0MB object store: 100%|██████████| 100/100 [01:24<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  87%|████████▋ | 87.0/100 [01:24<00:11, 1.14 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  90%|█████████ | 90.0/100 [01:24<00:06, 1.44 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  90%|█████████ | 90.0/100 [01:24<00:06, 1.44 row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:  87%|████████▋ | 87.0/100 [01:24<00:11, 1.16 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:  90%|█████████ | 90.0/100 [01:24<00:06, 1.50 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:  90%|█████████ | 90.0/100 [01:24<00:06, 1.50 row/s]
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:25<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 1000.0MB object store: 100%|██████████| 100/100 [01:25<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 6; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  90%|█████████ | 90.0/100 [01:25<00:06, 1.44 row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 1000.0MB/4.0GB object store:  90%|█████████ | 90.0/100 [01:25<00:06, 1.50 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5776.42 MB (54.00%)
-  Available Memory: 7263.48 MB
-
-Memory exceeded!
-Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 700.0MB/4.0GB object store:  90%|█████████ | 90.0/100 [01:26<00:06, 1.50 row/s] Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 700.0MB/4.0GB object store:  93%|█████████▎| 93.0/100 [01:26<00:04, 1.49 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 700.0MB/4.0GB object store:  93%|█████████▎| 93.0/100 [01:26<00:04, 1.49 row/s]
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:26<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 700.0MB object store: 100%|██████████| 100/100 [01:26<00:00, 1.49 row/s] [A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 700.0MB object store: 100%|██████████| 100/100 [01:26<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  90%|█████████ | 90.0/100 [01:26<00:06, 1.44 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  93%|█████████▎| 93.0/100 [01:26<00:04, 1.45 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 3; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  93%|█████████▎| 93.0/100 [01:26<00:04, 1.45 row/s][A[A[A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:27<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 600.0MB object store: 100%|██████████| 100/100 [01:27<00:00, 1.49 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 600.0MB object store: 100%|██████████| 100/100 [01:27<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  93%|█████████▎| 93.0/100 [01:27<00:04, 1.45 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  94%|█████████▍| 94.0/100 [01:27<00:04, 1.36 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  94%|█████████▍| 94.0/100 [01:27<00:04, 1.36 row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 600.0MB/4.0GB object store:  93%|█████████▎| 93.0/100 [01:27<00:04, 1.49 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 600.0MB/4.0GB object store:  94%|█████████▍| 94.0/100 [01:27<00:04, 1.38 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 600.0MB/4.0GB object store:  94%|█████████▍| 94.0/100 [01:27<00:04, 1.38 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5449.52 MB (51.90%)
-  Available Memory: 7590.39 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:28<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 600.0MB object store: 100%|██████████| 100/100 [01:28<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 4 [backpressured]; Queued blocks: 2; Resources: 0.0 CPU, 4.0 GPU, 32.0B object store:  94%|█████████▍| 94.0/100 [01:28<00:04, 1.36 row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 4/4 GPU, 600.0MB/4.0GB object store:  94%|█████████▍| 94.0/100 [01:28<00:04, 1.38 row/s]
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:29<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 200.0MB object store: 100%|██████████| 100/100 [01:29<00:00, 1.49 row/s][A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 200.0MB object store: 100%|██████████| 100/100 [01:29<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 2; Queued blocks: 0; Resources: 0.0 CPU, 2.0 GPU, 16.0B object store:  94%|█████████▍| 94.0/100 [01:29<00:04, 1.36 row/s]                [A[A[A
-
-
-- MapBatches(inference): Tasks: 2; Queued blocks: 0; Resources: 0.0 CPU, 2.0 GPU, 16.0B object store:  98%|█████████▊| 98.0/100 [01:29<00:01, 1.57 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 2; Queued blocks: 0; Resources: 0.0 CPU, 2.0 GPU, 16.0B object store:  98%|█████████▊| 98.0/100 [01:29<00:01, 1.57 row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 2/4 GPU, 200.0MB/4.0GB object store:  94%|█████████▍| 94.0/100 [01:29<00:04, 1.38 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 2/4 GPU, 200.0MB/4.0GB object store:  98%|█████████▊| 98.0/100 [01:29<00:01, 1.59 row/s]Running Dataset. Active & requested resources: 0/8 CPU, 2/4 GPU, 200.0MB/4.0GB object store:  98%|█████████▊| 98.0/100 [01:29<00:01, 1.59 row/s]  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5387.29 MB (51.50%)
-  Available Memory: 7652.62 MB
-
-Memory exceeded!
-
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:30<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 200.0MB object store: 100%|██████████| 100/100 [01:30<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 2; Queued blocks: 0; Resources: 0.0 CPU, 2.0 GPU, 16.0B object store:  98%|█████████▊| 98.0/100 [01:30<00:01, 1.57 row/s][A[A[ARunning Dataset. Active & requested resources: 0/8 CPU, 2/4 GPU, 200.0MB/4.0GB object store:  98%|█████████▊| 98.0/100 [01:30<00:01, 1.59 row/s]✔️  Dataset execution finished in 91.53 seconds:  98%|█████████▊| 98.0/100 [01:31<00:01, 1.59 row/s]                                            ✔️  Dataset execution finished in 91.53 seconds: 100%|██████████| 100/100 [01:31<00:00, 1.49 row/s] ✔️  Dataset execution finished in 91.53 seconds: 100%|██████████| 100/100 [01:31<00:00, 1.49 row/s]                                                                                                   
-                                                                                                                                                       [A
-
-                                                                                                                                               [A[A
-
-
-                                                                                                                                                         [A[A[A✔️  Dataset execution finished in 91.53 seconds: 100%|██████████| 100/100 [01:31<00:00, 1.09 row/s]
-
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:31<00:00, 1.34 row/s][A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 200.0MB object store: 100%|██████████| 100/100 [01:31<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 2; Queued blocks: 0; Resources: 0.0 CPU, 2.0 GPU, 16.0B object store:  98%|█████████▊| 98.0/100 [01:31<00:01, 1.57 row/s][A[A[A
-- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:31<00:00, 1.34 row/s][A
-                                                                                                                                                       [A
-
-                                                                                                                                               [A[A
-
-
-                                                                                                                                                         [A[A[A- ReadRange->MapBatches(produce): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:31<00:00, 1.09 row/s]
-
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 200.0MB object store: 100%|██████████| 100/100 [01:31<00:00, 1.49 row/s][A[A
-
-
-- MapBatches(inference): Tasks: 2; Queued blocks: 0; Resources: 0.0 CPU, 2.0 GPU, 16.0B object store:  98%|█████████▊| 98.0/100 [01:31<00:01, 1.57 row/s][A[A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:31<00:00, 1.49 row/s]   [A[A
-
-- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:31<00:00, 1.49 row/s][A[A
-
-                                                                                                                                            [A[A
-
-
-                                                                                                                                                         [A[A[A- MapBatches(consume): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 0.0B object store: 100%|██████████| 100/100 [01:31<00:00, 1.09 row/s]
-
-
-
-- MapBatches(inference): Tasks: 2; Queued blocks: 0; Resources: 0.0 CPU, 2.0 GPU, 16.0B object store:  98%|█████████▊| 98.0/100 [01:31<00:01, 1.57 row/s][A[A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 8.0B object store:  98%|█████████▊| 98.0/100 [01:31<00:01, 1.57 row/s]          [A[A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 8.0B object store: 100%|██████████| 100/100 [01:31<00:00, 1.48 row/s] [A[A[A
-
-
-- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 8.0B object store: 100%|██████████| 100/100 [01:31<00:00, 1.48 row/s][A[A[A
-
-
-                                                                                                                                              [A[A[A- MapBatches(inference): Tasks: 0; Queued blocks: 0; Resources: 0.0 CPU, 8.0B object store: 100%|██████████| 100/100 [01:31<00:00, 1.09 row/s]
-Operator 1 ReadRange->MapBatches(produce): 20 tasks executed, 100 blocks produced in 76.71s
-* Remote wall time: 1.15ms min, 5.05s max, 1.01s mean, 100.71s total
-* Remote cpu time: 1.24ms min, 29.63ms max, 5.71ms mean, 570.77ms total
-* UDF time: 5.0s min, 5.05s max, 5.01s mean, 500.7s total
-* Peak heap memory usage (MiB): 159.03 min, 2211.32 max, 1351 mean
-* Output num rows per block: 1 min, 1 max, 1 mean, 100 total
-* Output size bytes per block: 104857616 min, 104857616 max, 104857616 mean, 10485761600 total
-* Output rows per task: 5 min, 5 max, 5 mean, 20 tasks used
-* Tasks per node: 20 min, 20 max, 20 mean; 1 nodes used
-* Operator throughput:
-	* Ray Data throughput: 1.3036477354327032 rows/s
-	* Estimated single node throughput: 0.9929963856977807 rows/s
-
-Operator 2 MapBatches(consume): 100 tasks executed, 100 blocks produced in 72.23s
-* Remote wall time: 779.93ms min, 2.17s max, 1.27s mean, 126.71s total
-* Remote cpu time: 242.45ms min, 316.28ms max, 269.59ms mean, 26.96s total
-* UDF time: 532.34ms min, 1.14s max, 602.42ms mean, 60.24s total
-* Peak heap memory usage (MiB): 549.56 min, 2406.67 max, 1500 mean
-* Output num rows per block: 1 min, 1 max, 1 mean, 100 total
-* Output size bytes per block: 104857616 min, 104857616 max, 104857616 mean, 10485761600 total
-* Output rows per task: 1 min, 1 max, 1 mean, 100 tasks used
-* Tasks per node: 100 min, 100 max, 100 mean; 1 nodes used
-* Operator throughput:
-	* Ray Data throughput: 1.38449142787303 rows/s
-	* Estimated single node throughput: 0.7892046332003758 rows/s
-
-Operator 3 MapBatches(inference): 100 tasks executed, 100 blocks produced in 82.65s
-* Remote wall time: 689.61ms min, 1.51s max, 848.37ms mean, 84.84s total
-* Remote cpu time: 192.14ms min, 319.79ms max, 242.76ms mean, 24.28s total
-* UDF time: 500.12ms min, 535.71ms max, 501.93ms mean, 50.19s total
-* Peak heap memory usage (MiB): 451.46 min, 452.3 max, 451 mean
-* Output num rows per block: 1 min, 1 max, 1 mean, 100 total
-* Output size bytes per block: 8 min, 8 max, 8 mean, 800 total
-* Output rows per task: 1 min, 1 max, 1 mean, 100 tasks used
-* Tasks per node: 100 min, 100 max, 100 mean; 1 nodes used
-* Operator throughput:
-	* Ray Data throughput: 1.2099892980679077 rows/s
-	* Estimated single node throughput: 1.1787318287687292 rows/s
-
-Dataset throughput:
-	* Ray Data throughput: 1.1020437421199787 rows/s
-	* Estimated single node throughput: 0.3202540624217217 rows/s
-
---- Aggregate object store stats across all nodes ---
-Plasma memory usage 0 MiB, 23 objects, 0.0% full, 0.0% needed
-Objects consumed by Ray tasks: 8900 MiB.
-
-Total time: 91.5611s
-  Process Memory Usage: 75.05 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 5175.05 MB (50.20%)
-  Available Memory: 7864.85 MB
-
-Memory exceeded!
-Processed and saved modified data to timeline_ray_data_4.json
+- MapBatches(inference): 1 active, 2 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   2%|▏         | 13/800 [00:48<58:48,  4.48s/it][A[A[AMemory tracking interrupted, shutting down.
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 82, in <module>
+    bench(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 55, in bench
+    for _ in ds.iter_batches(batch_size=FRAMES_PER_VIDEO):
+  File "/home/ubuntu/ray/python/ray/data/iterator.py", line 185, in _create_iterator
+    for batch in iterator:
+  File "/home/ubuntu/ray/python/ray/data/_internal/block_batching/iter_batches.py", line 176, in iter_batches
+    next_batch = next(async_batch_iter)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/data/_internal/util.py", line 930, in make_async_gen
+    next_item = output_queue.get()
+                ^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/data/_internal/util.py", line 832, in get
+    self._consumer_semaphore.acquire()
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 479, in acquire
+    self._cond.wait(timeout)
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 327, in wait
+    waiter.acquire()
+KeyboardInterrupt
+
+
+- MapBatches(consume): 2 active, 17 queued, [cpu: 2.0, objects: 400.0MB]:   2%|▏         | 15/800 [00:49<48:40,  3.72s/it][A[A
+
+- MapBatches(consume): 2 active, 17 queued, [cpu: 2.0, objects: 400.0MB]:   2%|▏         | 17/800 [00:49<35:11,  2.70s/it][A[ARunning: 0.99/1 CPU, 1/1 GPU, 2.1GB/2.0GB object_store_memory:   2%|▏         | 13/800 [00:49<54:16,  4.14s/it]Running: 0.99/1 CPU, 1/1 GPU, 2.1GB/2.0GB object_store_memory:   2%|▏         | 14/800 [00:49<49:36,  3.79s/it]
+- ReadRange->MapBatches(produce): 0 active, 153 queued, [cpu: 0.0, objects: 1.8GB]:   4%|▍         | 35/800 [00:49<13:11,  1.03s/it][A2024-12-08 23:37:19,555	WARNING worker.py:1450 -- SIGTERM handler is not set because current thread is not the main thread.
+- ReadRange->MapBatches(produce): 0 active, 153 queued, [cpu: 0.0, objects: 1.8GB]:   4%|▍         | 35/800 [00:51<18:53,  1.48s/it]
+- MapBatches(consume): 2 active, 17 queued, [cpu: 2.0, objects: 400.0MB]:   2%|▏         | 17/800 [00:51<39:49,  3.05s/it]
+- MapBatches(inference): 1 active, 2 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   2%|▏         | 13/800 [00:51<52:20,  3.99s/it]
+Running: 0.99/1 CPU, 1/1 GPU, 2.1GB/2.0GB object_store_memory:   2%|▏         | 14/800 [00:51<48:32,  3.71s/it]

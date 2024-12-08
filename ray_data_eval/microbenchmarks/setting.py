@@ -12,7 +12,7 @@ TIME_UNIT = 0.5
 NUM_CPUS = 8
 NUM_GPUS = 4
 FRAMES_PER_VIDEO = 5
-NUM_VIDEOS = 20 # 160
+NUM_VIDEOS = 160
 NUM_FRAMES_TOTAL = FRAMES_PER_VIDEO * NUM_VIDEOS
 FRAME_SIZE_B = 100 * MB
 EXECUTION_MODE = "process"
@@ -68,7 +68,7 @@ def busy_loop(time_in_s):
         pass
 
 def limit_cpu_memory(mem_limit):
-    # limit cpu memory with resources
+    # Set memory limit in bytes
     mem_limit_bytes = mem_limit * GB
     resource.setrlimit(resource.RLIMIT_AS, (mem_limit_bytes, mem_limit_bytes))
 

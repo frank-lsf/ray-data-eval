@@ -1,466 +1,104 @@
-2024-12-08 07:18:50.462613: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
-2024-12-08 07:18:50.467655: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
-2024-12-08 07:18:50.482541: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:477] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2024-12-08 23:37:41.445631: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:477] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
 WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-E0000 00:00:1733642330.510439   14188 cuda_dnn.cc:8310] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
-E0000 00:00:1733642330.517851   14188 cuda_blas.cc:1418] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-2024-12-08 07:18:50.542563: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+E0000 00:00:1733701061.466396  572756 cuda_dnn.cc:8310] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1733701061.472684  572756 cuda_blas.cc:1418] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-12-08 23:37:41.494587: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+W0000 00:00:1733701063.291172  572756 gpu_device.cc:2344] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2024-12-08 23:37:51.029151: W tensorflow/core/framework/op_kernel.cc:1829] RESOURCE_EXHAUSTED: MemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
+Traceback (most recent call last):
 
-A module that was compiled using NumPy 1.x cannot be run in
-NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
-versions of NumPy, modules must be compiled with NumPy 2.0.
-Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/ops/script_ops.py", line 269, in __call__
+    ret = func(*args)
+          ^^^^^^^^^^^
 
-If you are a user of the module, the easiest solution will be to
-downgrade to 'numpy<2' or try to upgrade the affected module.
-We expect that some modules will need time to support NumPy 2.
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/autograph/impl/api.py", line 643, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
 
-Traceback (most recent call last):  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 1, in <module>
-    import tensorflow as tf
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/tensorflow/__init__.py", line 467, in <module>
-    importlib.import_module("keras.src.optimizers")
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/__init__.py", line 2, in <module>
-    from keras.api import DTypePolicy
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/api/__init__.py", line 8, in <module>
-    from keras.api import activations
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/api/activations/__init__.py", line 7, in <module>
-    from keras.src.activations import deserialize
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/__init__.py", line 1, in <module>
-    from keras.src import activations
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/activations/__init__.py", line 30, in <module>
-    from keras.src.saving import object_registration
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/saving/__init__.py", line 7, in <module>
-    from keras.src.saving.saving_api import load_model
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/saving/saving_api.py", line 7, in <module>
-    from keras.src.legacy.saving import legacy_h5_format
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/legacy/saving/legacy_h5_format.py", line 13, in <module>
-    from keras.src.legacy.saving import saving_utils
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/legacy/saving/saving_utils.py", line 10, in <module>
-    from keras.src import models
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/__init__.py", line 1, in <module>
-    from keras.src.models.functional import Functional
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/functional.py", line 16, in <module>
-    from keras.src.models.model import Model
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/model.py", line 12, in <module>
-    from keras.src.trainers import trainer as base_trainer
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/trainer.py", line 14, in <module>
-    from keras.src.trainers.data_adapters import data_adapter_utils
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/__init__.py", line 4, in <module>
-    from keras.src.trainers.data_adapters import array_data_adapter
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/array_data_adapter.py", line 7, in <module>
-    from keras.src.trainers.data_adapters import array_slicing
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/array_slicing.py", line 12, in <module>
-    import pandas
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/__init__.py", line 26, in <module>
-    from pandas.compat import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/compat/__init__.py", line 27, in <module>
-    from pandas.compat.pyarrow import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/compat/pyarrow.py", line 8, in <module>
-    import pyarrow as pa
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pyarrow/__init__.py", line 65, in <module>
-    import pyarrow.lib as _lib
-AttributeError: _ARRAY_API not found
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/from_generator_op.py", line 198, in generator_py_func
+    values = next(generator_state.get_iterator(iterator_id))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A module that was compiled using NumPy 1.x cannot be run in
-NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
-versions of NumPy, modules must be compiled with NumPy 2.0.
-Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 44, in producer_fn
+    "data": np.full(FRAME_SIZE_B, i, dtype=np.uint8),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you are a user of the module, the easiest solution will be to
-downgrade to 'numpy<2' or try to upgrade the affected module.
-We expect that some modules will need time to support NumPy 2.
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/numpy/core/numeric.py", line 344, in full
+    a = empty(shape, dtype, order)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Traceback (most recent call last):  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 1, in <module>
-    import tensorflow as tf
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/tensorflow/__init__.py", line 467, in <module>
-    importlib.import_module("keras.src.optimizers")
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/__init__.py", line 2, in <module>
-    from keras.api import DTypePolicy
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/api/__init__.py", line 8, in <module>
-    from keras.api import activations
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/api/activations/__init__.py", line 7, in <module>
-    from keras.src.activations import deserialize
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/__init__.py", line 1, in <module>
-    from keras.src import activations
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/activations/__init__.py", line 30, in <module>
-    from keras.src.saving import object_registration
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/saving/__init__.py", line 7, in <module>
-    from keras.src.saving.saving_api import load_model
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/saving/saving_api.py", line 7, in <module>
-    from keras.src.legacy.saving import legacy_h5_format
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/legacy/saving/legacy_h5_format.py", line 13, in <module>
-    from keras.src.legacy.saving import saving_utils
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/legacy/saving/saving_utils.py", line 10, in <module>
-    from keras.src import models
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/__init__.py", line 1, in <module>
-    from keras.src.models.functional import Functional
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/functional.py", line 16, in <module>
-    from keras.src.models.model import Model
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/model.py", line 12, in <module>
-    from keras.src.trainers import trainer as base_trainer
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/trainer.py", line 14, in <module>
-    from keras.src.trainers.data_adapters import data_adapter_utils
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/__init__.py", line 4, in <module>
-    from keras.src.trainers.data_adapters import array_data_adapter
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/array_data_adapter.py", line 7, in <module>
-    from keras.src.trainers.data_adapters import array_slicing
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/array_slicing.py", line 12, in <module>
-    import pandas
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/__init__.py", line 49, in <module>
-    from pandas.core.api import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/core/api.py", line 9, in <module>
-    from pandas.core.dtypes.dtypes import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/core/dtypes/dtypes.py", line 24, in <module>
-    from pandas._libs import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pyarrow/__init__.py", line 65, in <module>
-    import pyarrow.lib as _lib
-AttributeError: _ARRAY_API not found
-  Process Memory Usage: 210.81 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2219.71 MB (32.40%)
-  Available Memory: 5284.46 MB
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
 
-2024-12-08 07:18:53.055843: E external/local_xla/xla/stream_executor/cuda/cuda_driver.cc:152] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2250.40 MB (32.80%)
-  Available Memory: 5253.77 MB
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2248.71 MB (32.80%)
-  Available Memory: 5255.46 MB
+2024-12-08 23:37:51.029637: I tensorflow/core/framework/local_rendezvous.cc:405] Local rendezvous is aborting with status: RESOURCE_EXHAUSTED: MemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
+Traceback (most recent call last):
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2969.18 MB (42.00%)
-  Available Memory: 4534.99 MB
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/ops/script_ops.py", line 269, in __call__
+    ret = func(*args)
+          ^^^^^^^^^^^
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2969.40 MB (42.00%)
-  Available Memory: 4534.77 MB
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/autograph/impl/api.py", line 643, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2928.20 MB (41.50%)
-  Available Memory: 4575.97 MB
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/from_generator_op.py", line 198, in generator_py_func
+    values = next(generator_state.get_iterator(iterator_id))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3794.23 MB (52.60%)
-  Available Memory: 3709.94 MB
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 44, in producer_fn
+    "data": np.full(FRAME_SIZE_B, i, dtype=np.uint8),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3794.45 MB (52.60%)
-  Available Memory: 3709.72 MB
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/numpy/core/numeric.py", line 344, in full
+    a = empty(shape, dtype, order)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4123.23 MB (56.80%)
-  Available Memory: 3380.94 MB
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
 
-ret: 1/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4612.00 MB (63.00%)
-  Available Memory: 2892.17 MB
 
-ret: 2/100
-ret: 3/100
-ret: 4/100
-ret: 5/100
-ret: 6/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4634.95 MB (63.30%)
-  Available Memory: 2869.22 MB
+	 [[{{node PyFunc}}]]
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 127, in <module>
+    bench(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 104, in bench
+    for row in ds:
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/iterator_ops.py", line 826, in __next__
+    return self._next_internal()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/iterator_ops.py", line 776, in _next_internal
+    ret = gen_dataset_ops.iterator_get_next(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/ops/gen_dataset_ops.py", line 3086, in iterator_get_next
+    _ops.raise_from_not_ok_status(e, name)
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/framework/ops.py", line 6002, in raise_from_not_ok_status
+    raise core._status_to_exception(e) from None  # pylint: disable=protected-access
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tensorflow.python.framework.errors_impl.ResourceExhaustedError: {{function_node __wrapped__IteratorGetNext_output_types_1_device_/job:localhost/replica:0/task:0/device:CPU:0}} MemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
+Traceback (most recent call last):
 
-ret: 7/100
-ret: 8/100
-ret: 9/100
-ret: 10/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4468.80 MB (61.20%)
-  Available Memory: 3035.37 MB
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/ops/script_ops.py", line 269, in __call__
+    ret = func(*args)
+          ^^^^^^^^^^^
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4429.24 MB (60.70%)
-  Available Memory: 3074.93 MB
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/autograph/impl/api.py", line 643, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4362.23 MB (59.80%)
-  Available Memory: 3141.95 MB
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/from_generator_op.py", line 198, in generator_py_func
+    values = next(generator_state.get_iterator(iterator_id))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-ret: 11/100
-ret: 12/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4580.81 MB (62.60%)
-  Available Memory: 2923.36 MB
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 44, in producer_fn
+    "data": np.full(FRAME_SIZE_B, i, dtype=np.uint8),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-ret: 13/100
-ret: 14/100
-ret: 15/100
-ret: 16/100
-ret: 17/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4469.64 MB (61.20%)
-  Available Memory: 3034.54 MB
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/numpy/core/numeric.py", line 344, in full
+    a = empty(shape, dtype, order)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-ret: 18/100
-ret: 19/100
-ret: 20/100
-ret: 21/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4409.83 MB (60.40%)
-  Available Memory: 3094.34 MB
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4288.41 MB (58.90%)
-  Available Memory: 3215.76 MB
 
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4272.55 MB (58.70%)
-  Available Memory: 3231.61 MB
-
-ret: 22/100
-ret: 23/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4434.57 MB (60.80%)
-  Available Memory: 3069.60 MB
-
-ret: 24/100
-ret: 25/100
-ret: 26/100
-ret: 27/100
-ret: 28/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4424.79 MB (60.60%)
-  Available Memory: 3079.38 MB
-
-ret: 29/100
-ret: 30/100
-ret: 31/100
-ret: 32/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4437.96 MB (60.80%)
-  Available Memory: 3066.21 MB
-
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4182.59 MB (57.50%)
-  Available Memory: 3321.58 MB
-
-ret: 33/100
-ret: 34/100
-ret: 35/100
-ret: 36/100
-ret: 37/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3834.04 MB (53.10%)
-  Available Memory: 3670.14 MB
-
-ret: 38/100
-ret: 39/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3883.45 MB (53.70%)
-  Available Memory: 3620.72 MB
-
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3998.98 MB (55.20%)
-  Available Memory: 3505.19 MB
-
-ret: 40/100
-ret: 41/100
-ret: 42/100
-ret: 43/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4399.95 MB (60.30%)
-  Available Memory: 3104.22 MB
-
-ret: 44/100
-ret: 45/100
-ret: 46/100
-ret: 47/100
-ret: 48/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3897.07 MB (53.90%)
-  Available Memory: 3607.10 MB
-
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4026.59 MB (55.50%)
-  Available Memory: 3477.59 MB
-
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4215.72 MB (58.00%)
-  Available Memory: 3288.45 MB
-
-ret: 49/100
-ret: 50/100
-ret: 51/100
-ret: 52/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4295.19 MB (59.00%)
-  Available Memory: 3208.98 MB
-
-ret: 53/100
-ret: 54/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4212.11 MB (57.90%)
-  Available Memory: 3292.07 MB
-
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4045.08 MB (55.80%)
-  Available Memory: 3459.09 MB
-
-ret: 55/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4033.71 MB (55.60%)
-  Available Memory: 3470.46 MB
-
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4201.18 MB (57.80%)
-  Available Memory: 3302.99 MB
-
-ret: 56/100
-ret: 57/100
-ret: 58/100
-ret: 59/100
-ret: 60/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4044.31 MB (55.80%)
-  Available Memory: 3459.86 MB
-
-ret: 61/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4188.85 MB (57.60%)
-  Available Memory: 3315.32 MB
-
-ret: 62/100
-ret: 63/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4271.69 MB (58.70%)
-  Available Memory: 3232.48 MB
-
-ret: 64/100
-ret: 65/100
-ret: 66/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4627.60 MB (63.20%)
-  Available Memory: 2876.57 MB
-
-ret: 67/100
-ret: 68/100
-ret: 69/100
-ret: 70/100
-ret: 71/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4573.98 MB (62.50%)
-  Available Memory: 2930.19 MB
-
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4467.69 MB (61.20%)
-  Available Memory: 3036.48 MB
-
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4361.05 MB (59.80%)
-  Available Memory: 3143.11 MB
-
-ret: 72/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4626.36 MB (63.20%)
-  Available Memory: 2877.81 MB
-
-ret: 73/100
-ret: 74/100
-ret: 75/100
-ret: 76/100
-ret: 77/100
-ret: 78/100
-ret: 79/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4368.98 MB (59.90%)
-  Available Memory: 3135.19 MB
-
-ret: 80/100
-ret: 81/100
-ret: 82/100
-ret: 83/100
-ret: 84/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4035.46 MB (55.60%)
-  Available Memory: 3468.71 MB
-
-ret: 85/100
-ret: 86/100
-ret: 87/100
-ret: 88/100
-ret: 89/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3555.42 MB (49.50%)
-  Available Memory: 3948.75 MB
-
-ret: 90/100
-ret: 91/100
-ret: 92/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3733.43 MB (51.80%)
-  Available Memory: 3770.74 MB
-
-ret: 93/100
-ret: 94/100
-ret: 95/100
-ret: 96/100
-ret: 97/100
-ret: 98/100
-ret: 99/100
-  Process Memory Usage: 211.43 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2964.56 MB (42.00%)
-  Available Memory: 4539.61 MB
-
-ret: 100/100
-2024-12-08 07:20:27.228248: I tensorflow/core/framework/local_rendezvous.cc:405] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
-Sum: 100
-Run time: 94.18 seconds
+	 [[{{node PyFunc}}]] [Op:IteratorGetNext] name: 

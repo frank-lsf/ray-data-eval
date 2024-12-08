@@ -13,7 +13,8 @@ from setting import (
     NUM_VIDEOS,
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
-    log_memory_usage_process
+    log_memory_usage_process,
+    limit_cpu_memory
 )
 import sys
 
@@ -55,7 +56,7 @@ def bench(mem_limit):
     items = list(range(NUM_VIDEOS))
     ds = tf.data.Dataset.from_tensor_slices(items)
 
-    if mem_limit <= 8:
+    if mem_limit <= 12:
         p = 1
     else:
         p = tf.data.experimental.AUTOTUNE
@@ -117,10 +118,11 @@ if __name__ == "__main__":
     if not os.path.exists(TF_PROFILER_LOGS):
         os.makedirs(TF_PROFILER_LOGS)
         
-    import multiprocessing
+    # import multiprocessing
     # Start memory usage logging in a separate process
-    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
-    logging_process.start()
-    
+    # logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    # logging_process.start()
+    limit_cpu_memory(args.mem_limit)
+
     bench(args.mem_limit)
-    logging_process.terminate()
+    # logging_process.terminate()

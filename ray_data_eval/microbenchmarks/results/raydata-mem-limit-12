@@ -1,52 +1,2175 @@
-  Process Memory Usage: 74.23 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 3245.75 MB (23.00%)
-  Available Memory: 12150.30 MB
+  Process Memory Usage: 73.43 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 2676.56 MB (9.90%)
+  Available Memory: 28574.88 MB
 
-Traceback (most recent call last):
-  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 79, in <module>
-    bench(args.mem_limit)
-  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 46, in bench
-    ray.init(num_cpus=NUM_CPUS, num_gpus=NUM_GPUS, object_store_memory= min(12, mem_limit) * GB, include_dashboard=False)
-  File "/home/ubuntu/ray/python/ray/_private/client_mode_hook.py", line 103, in wrapper
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/_private/worker.py", line 1714, in init
-    _global_node = ray._private.node.Node(
-                   ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/_private/node.py", line 339, in __init__
-    self.start_ray_processes()
-  File "/home/ubuntu/ray/python/ray/_private/node.py", line 1411, in start_ray_processes
-    resource_spec = self.get_resource_spec()
-                    ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/_private/node.py", line 583, in get_resource_spec
-    ).resolve(is_head=self.head, node_ip_address=self.node_ip_address)
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/ray/python/ray/_private/resource_spec.py", line 297, in resolve
-    raise ValueError(
-ValueError: After taking into account object store and redis memory usage, the amount of memory on this node available for tasks and actors (-1.19 GB) is less than -7% of total. You can adjust these settings with ray.init(memory=<bytes>, object_store_memory=<bytes>).
-  Process Memory Usage: 74.73 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 3399.21 MB (24.00%)
-  Available Memory: 11996.84 MB
+  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 2957.50 MB (10.80%)
+  Available Memory: 28293.95 MB
 
-  Process Memory Usage: 74.73 MB
-  Total Memory: 15788.21 MB
-  Used Memory: 3402.12 MB (24.00%)
-  Available Memory: 11993.93 MB
+2024-12-08 23:13:43,673	INFO worker.py:1779 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2024-12-08 23:13:45,518	INFO streaming_executor.py:108 -- Starting execution of Dataset. Full logs are in /tmp/ray/session_2024-12-08_23-13-41_721823_527490/logs/ray-data
+2024-12-08 23:13:45,519	INFO streaming_executor.py:109 -- Execution plan of Dataset: InputDataBuffer[Input] -> TaskPoolMapOperator[ReadRange->MapBatches(produce)] -> TaskPoolMapOperator[MapBatches(consume)] -> TaskPoolMapOperator[MapBatches(inference)]
+  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3616.14 MB (12.90%)
+  Available Memory: 27635.16 MB
 
-Memory tracking interrupted, shutting down.
-Exception ignored in atexit callback: <function _exit_function at 0x751732954d60>
-Traceback (most recent call last):
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/multiprocessing/util.py", line 360, in _exit_function
-    p.join()
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/multiprocessing/process.py", line 149, in join
-    res = self._popen.wait(timeout)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/multiprocessing/popen_fork.py", line 43, in wait
-    return self.poll(os.WNOHANG if timeout == 0.0 else 0)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/multiprocessing/popen_fork.py", line 27, in poll
-    pid, sts = os.waitpid(self.pid, flag)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^
-KeyboardInterrupt: 
+
+- ReadRange->MapBatches(produce) 1:   0%|          | 0/160 [00:00<?, ?it/s][A
+
+- MapBatches(consume) 2:   0%|          | 0/160 [00:00<?, ?it/s][A[A
+
+
+- MapBatches(inference) 3:   0%|          | 0/160 [00:00<?, ?it/s][A[A[ARunning 0:   0%|          | 0/160 [00:00<?, ?it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3633.25 MB (12.90%)
+  Available Memory: 27617.61 MB
+
+  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3627.26 MB (12.90%)
+  Available Memory: 27623.60 MB
+
+
+- ReadRange->MapBatches(produce): 1 active, 159 queued, [cpu: 1.0, objects: 200.0MB]:   0%|          | 0/160 [00:05<?, ?it/s][A
+- ReadRange->MapBatches(produce): 1 active, 159 queued, [cpu: 1.0, objects: 200.0MB]:   1%|          | 1/160 [00:05<13:21,  5.04s/it][ARunning: 1/8 CPU, 0/4 GPU, 300.0MB/12.0GB object_store_memory:   0%|          | 0/160 [00:05<?, ?it/s]
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 200.0MB]:   0%|          | 0/160 [00:05<?, ?it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4823.58 MB (18.30%)
+  Available Memory: 25927.26 MB
+
+
+
+
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 200.0MB]:   0%|          | 0/160 [00:05<?, ?it/s][A[A[ARunning: 3.96/8 CPU, 1/4 GPU, 1.1GB/12.0GB object_store_memory:   0%|          | 0/160 [00:06<?, ?it/s]
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 500.0MB]:   0%|          | 0/160 [00:06<?, ?it/s][A[A
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 500.0MB]:   0%|          | 0/800 [00:06<?, ?it/s][A[A
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 500.0MB]:   0%|          | 2/800 [00:06<41:40,  3.13s/it][A[A
+- ReadRange->MapBatches(produce): 0 active, 159 queued, [cpu: 0.0, objects: 300.0MB]:   1%|          | 1/160 [00:06<13:21,  5.04s/it][A
+- ReadRange->MapBatches(produce): 0 active, 159 queued, [cpu: 0.0, objects: 300.0MB]:   3%|▎         | 5/160 [00:06<02:36,  1.01s/it][ARunning: 2/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:   0%|          | 0/160 [00:07<?, ?it/s]   
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 800.0MB]:   0%|          | 0/160 [00:07<?, ?it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 800.0MB]:   0%|          | 0/800 [00:07<?, ?it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 800.0MB]:   0%|          | 1/800 [00:07<1:39:43,  7.49s/it][A[A[A
+
+- MapBatches(consume): 0 active, 0 queued, [cpu: 0.0, objects: 400.0MB]:   0%|          | 2/800 [00:07<41:40,  3.13s/it][A[A
+
+- MapBatches(consume): 0 active, 0 queued, [cpu: 0.0, objects: 400.0MB]:   1%|          | 5/800 [00:07<16:53,  1.28s/it][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5554.28 MB (21.50%)
+  Available Memory: 24896.56 MB
+
+
+- ReadRange->MapBatches(produce): 3 active, 156 queued, [cpu: 3.0, objects: 600.0MB]:   3%|▎         | 5/160 [00:08<02:36,  1.01s/it][A
+- ReadRange->MapBatches(produce): 4 active, 155 queued, [cpu: 4.0, objects: 800.0MB]:   3%|▎         | 5/160 [00:09<02:36,  1.01s/it][ARunning: 4/8 CPU, 0/4 GPU, 800.0MB/12.0GB object_store_memory:   0%|          | 0/160 [00:09<?, ?it/s]Running: 4/8 CPU, 0/4 GPU, 800.0MB/12.0GB object_store_memory:   0%|          | 0/800 [00:09<?, ?it/s]Running: 4/8 CPU, 0/4 GPU, 800.0MB/12.0GB object_store_memory:   1%|          | 5/800 [00:09<24:56,  1.88s/it]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5139.18 MB (20.20%)
+  Available Memory: 25311.66 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 154 queued, [cpu: 5.0, objects: 1000.0MB]:   3%|▎         | 5/160 [00:10<02:36,  1.01s/it][ARunning: 5/8 CPU, 0/4 GPU, 1000.0MB/12.0GB object_store_memory:   1%|          | 5/800 [00:10<24:56,  1.88s/it]
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 200.0MB]:   1%|          | 5/800 [00:11<16:53,  1.28s/it][A[A
+- ReadRange->MapBatches(produce): 5 active, 154 queued, [cpu: 5.0, objects: 1.4GB]:   3%|▎         | 5/160 [00:11<02:36,  1.01s/it]   [A
+- ReadRange->MapBatches(produce): 5 active, 154 queued, [cpu: 5.0, objects: 1.4GB]:   1%|          | 5/800 [00:11<13:24,  1.01s/it][A
+- ReadRange->MapBatches(produce): 5 active, 154 queued, [cpu: 5.0, objects: 1.4GB]:   1%|▏         | 10/800 [00:11<13:48,  1.05s/it][ARunning: 8.95/8 CPU, 0/4 GPU, 1.8GB/12.0GB object_store_memory:   1%|          | 5/800 [00:11<24:56,  1.88s/it]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4933.48 MB (19.60%)
+  Available Memory: 25517.36 MB
+
+
+
+
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   0%|          | 1/800 [00:12<1:39:43,  7.49s/it]   [A[A[A
+
+
+- MapBatches(inference): 1 active, 0 queued, [cpu: 0.0, gpu: 1.0, objects: 8.0B]:   1%|          | 5/800 [00:12<28:29,  2.15s/it]  [A[A[A
+
+- MapBatches(consume): 5 active, 4 queued, [cpu: 5.0, objects: 600.0MB]:   1%|          | 5/800 [00:12<16:53,  1.28s/it][A[A
+
+- MapBatches(consume): 5 active, 4 queued, [cpu: 5.0, objects: 600.0MB]:   1%|          | 6/800 [00:12<28:50,  2.18s/it][A[ARunning: 7.96/8 CPU, 1/4 GPU, 2.2GB/12.0GB object_store_memory:   1%|          | 5/800 [00:12<24:56,  1.88s/it]
+- ReadRange->MapBatches(produce): 4 active, 153 queued, [cpu: 4.0, objects: 1.6GB]:   1%|▏         | 10/800 [00:12<13:48,  1.05s/it][A
+- ReadRange->MapBatches(produce): 4 active, 153 queued, [cpu: 4.0, objects: 1.6GB]:   2%|▏         | 15/800 [00:12<08:59,  1.46it/s][A
+
+- MapBatches(consume): 6 active, 4 queued, [cpu: 5.9, objects: 1.1GB]:   1%|          | 6/800 [00:13<28:50,  2.18s/it]  [A[A
+
+- MapBatches(consume): 6 active, 4 queued, [cpu: 5.9, objects: 1.1GB]:   1%|▏         | 11/800 [00:13<12:28,  1.05it/s][A[A
+
+
+- MapBatches(inference): 4 active, 2 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   1%|          | 5/800 [00:13<28:29,  2.15s/it][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5909.66 MB (25.80%)
+  Available Memory: 23542.73 MB
+
+Running: 8.95/8 CPU, 4/4 GPU, 2.6GB/12.0GB object_store_memory:   1%|          | 5/800 [00:14<24:56,  1.88s/it]Running: 8.95/8 CPU, 4/4 GPU, 2.6GB/12.0GB object_store_memory:   1%|          | 6/800 [00:14<32:52,  2.48s/it]
+- ReadRange->MapBatches(produce): 4 active, 152 queued, [cpu: 4.0, objects: 1.3GB]:   2%|▏         | 15/800 [00:14<08:59,  1.46it/s][A
+- ReadRange->MapBatches(produce): 4 active, 152 queued, [cpu: 4.0, objects: 1.3GB]:   2%|▎         | 20/800 [00:14<06:33,  1.98it/s][A
+
+- MapBatches(consume): 6 active, 2 queued, [cpu: 5.9, objects: 1.5GB]:   1%|▏         | 11/800 [00:14<12:28,  1.05it/s][A[A
+
+- MapBatches(consume): 6 active, 2 queued, [cpu: 5.9, objects: 1.5GB]:   2%|▏         | 19/800 [00:14<06:01,  2.16it/s][A[A
+
+
+- MapBatches(inference): 4 active, 5 queued, [cpu: 0.0, gpu: 4.0, objects: 48.0B]:   1%|          | 5/800 [00:14<28:29,  2.15s/it][A[A[A
+
+
+- MapBatches(inference): 4 active, 5 queued, [cpu: 0.0, gpu: 4.0, objects: 48.0B]:   1%|▏         | 10/800 [00:14<14:59,  1.14s/it][A[A[ARunning: 8.94/8 CPU, 4/4 GPU, 2.7GB/12.0GB object_store_memory:   1%|          | 6/800 [00:15<32:52,  2.48s/it]Running: 8.94/8 CPU, 4/4 GPU, 2.7GB/12.0GB object_store_memory:   1%|▏         | 10/800 [00:15<16:28,  1.25s/it]
+- ReadRange->MapBatches(produce): 4 active, 151 queued, [cpu: 4.0, objects: 1.3GB]:   2%|▎         | 20/800 [00:15<06:33,  1.98it/s][A
+- ReadRange->MapBatches(produce): 4 active, 151 queued, [cpu: 4.0, objects: 1.3GB]:   3%|▎         | 25/800 [00:15<05:12,  2.48it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 1.1GB]:   2%|▏         | 19/800 [00:15<06:01,  2.16it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 1.1GB]:   3%|▎         | 25/800 [00:15<04:35,  2.81it/s][A[A
+
+
+- MapBatches(inference): 4 active, 7 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   1%|▏         | 10/800 [00:15<14:59,  1.14s/it][A[A[A
+
+
+- MapBatches(inference): 4 active, 7 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   2%|▏         | 14/800 [00:15<10:20,  1.27it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6439.36 MB (28.10%)
+  Available Memory: 22811.46 MB
+
+Running: 4/8 CPU, 3/4 GPU, 1.5GB/12.0GB object_store_memory:   1%|▏         | 10/800 [00:16<16:28,  1.25s/it]   Running: 4/8 CPU, 3/4 GPU, 1.5GB/12.0GB object_store_memory:   2%|▏         | 17/800 [00:16<07:55,  1.65it/s]
+- ReadRange->MapBatches(produce): 5 active, 150 queued, [cpu: 5.0, objects: 1000.0MB]:   3%|▎         | 25/800 [00:16<05:12,  2.48it/s][A
+- ReadRange->MapBatches(produce): 5 active, 150 queued, [cpu: 5.0, objects: 1000.0MB]:   3%|▎         | 26/800 [00:16<06:04,  2.12it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 40.0B]:   2%|▏         | 14/800 [00:16<10:20,  1.27it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 40.0B]:   3%|▎         | 22/800 [00:16<05:37,  2.31it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:   3%|▎         | 25/800 [00:16<04:35,  2.81it/s][A[ARunning: 5.98/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:   2%|▏         | 17/800 [00:17<07:55,  1.65it/s]Running: 5.98/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:   3%|▎         | 22/800 [00:17<05:55,  2.19it/s]
+- ReadRange->MapBatches(produce): 4 active, 150 queued, [cpu: 4.0, objects: 900.0MB]:   3%|▎         | 26/800 [00:17<06:04,  2.12it/s] [A
+- ReadRange->MapBatches(produce): 4 active, 150 queued, [cpu: 4.0, objects: 900.0MB]:   4%|▍         | 31/800 [00:17<04:46,  2.68it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7078.59 MB (30.10%)
+  Available Memory: 22172.23 MB
+
+
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 900.0MB]:   3%|▎         | 25/800 [00:18<04:35,  2.81it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 900.0MB]:   4%|▍         | 31/800 [00:18<04:44,  2.71it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   3%|▎         | 22/800 [00:18<05:37,  2.31it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   3%|▎         | 27/800 [00:18<04:53,  2.64it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 2.1GB/12.0GB object_store_memory:   3%|▎         | 22/800 [00:18<05:55,  2.19it/s]Running: 8.95/8 CPU, 1/4 GPU, 2.1GB/12.0GB object_store_memory:   3%|▎         | 26/800 [00:18<05:07,  2.52it/s]
+- ReadRange->MapBatches(produce): 4 active, 149 queued, [cpu: 4.0, objects: 900.0MB]:   4%|▍         | 31/800 [00:18<04:46,  2.68it/s][A
+- ReadRange->MapBatches(produce): 4 active, 149 queued, [cpu: 4.0, objects: 900.0MB]:   4%|▍         | 36/800 [00:18<04:15,  2.99it/s][A
+
+
+- MapBatches(inference): 2 active, 0 queued, [cpu: 0.0, gpu: 2.0, objects: 16.0B]:   3%|▎         | 27/800 [00:19<04:53,  2.64it/s][A[A[A
+
+
+- MapBatches(inference): 2 active, 0 queued, [cpu: 0.0, gpu: 2.0, objects: 16.0B]:   4%|▍         | 34/800 [00:19<03:40,  3.47it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:   3%|▎         | 26/800 [00:19<05:07,  2.52it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:   4%|▍         | 33/800 [00:19<03:42,  3.44it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:   4%|▍         | 31/800 [00:19<04:44,  2.71it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:   4%|▍         | 35/800 [00:19<04:20,  2.93it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6711.89 MB (29.00%)
+  Available Memory: 22538.93 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 147 queued, [cpu: 5.0, objects: 1.1GB]:   4%|▍         | 36/800 [00:20<04:15,  2.99it/s]  [A
+- ReadRange->MapBatches(produce): 5 active, 147 queued, [cpu: 5.0, objects: 1.1GB]:   5%|▌         | 40/800 [00:20<04:08,  3.06it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:   4%|▍         | 35/800 [00:20<04:20,  2.93it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:   5%|▌         | 40/800 [00:20<03:46,  3.35it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   4%|▍         | 34/800 [00:20<03:40,  3.47it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   4%|▍         | 36/800 [00:20<04:03,  3.14it/s][A[A[ARunning: 5/8 CPU, 3/4 GPU, 1.4GB/12.0GB object_store_memory:   4%|▍         | 33/800 [00:20<03:42,  3.44it/s]   Running: 5/8 CPU, 3/4 GPU, 1.4GB/12.0GB object_store_memory:   4%|▍         | 35/800 [00:20<04:07,  3.10it/s]
+- ReadRange->MapBatches(produce): 4 active, 147 queued, [cpu: 4.0, objects: 1.1GB]:   5%|▌         | 40/800 [00:21<04:08,  3.06it/s][A
+- ReadRange->MapBatches(produce): 4 active, 147 queued, [cpu: 4.0, objects: 1.1GB]:   6%|▌         | 45/800 [00:21<03:34,  3.52it/s][ARunning: 5.98/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:   4%|▍         | 35/800 [00:21<04:07,  3.10it/s]Running: 5.98/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:   5%|▌         | 40/800 [00:21<03:34,  3.54it/s]
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 800.0MB]:   5%|▌         | 40/800 [00:21<03:46,  3.35it/s][A[A
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 800.0MB]:   6%|▌         | 44/800 [00:21<03:37,  3.48it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   5%|▌         | 41/800 [00:21<03:59,  3.17it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6596.21 MB (28.60%)
+  Available Memory: 22654.61 MB
+
+
+- ReadRange->MapBatches(produce): 4 active, 146 queued, [cpu: 4.0, objects: 1000.0MB]:   6%|▌         | 45/800 [00:22<03:34,  3.52it/s][A
+- ReadRange->MapBatches(produce): 4 active, 146 queued, [cpu: 4.0, objects: 1000.0MB]:   6%|▋         | 51/800 [00:22<03:20,  3.73it/s][A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:   6%|▌         | 44/800 [00:22<03:37,  3.48it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:   6%|▌         | 49/800 [00:22<03:25,  3.65it/s][A[ARunning: 4.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:   5%|▌         | 40/800 [00:22<03:34,  3.54it/s]Running: 4.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:   6%|▌         | 44/800 [00:22<03:38,  3.46it/s]
+
+
+- MapBatches(inference): 2 active, 0 queued, [cpu: 0.0, gpu: 2.0, objects: 16.0B]:   5%|▌         | 41/800 [00:22<03:59,  3.17it/s][A[A[A
+
+
+- MapBatches(inference): 2 active, 0 queued, [cpu: 0.0, gpu: 2.0, objects: 16.0B]:   6%|▌         | 48/800 [00:22<03:06,  4.03it/s][A[A[ARunning: 4.99/8 CPU, 4/4 GPU, 1.4GB/12.0GB object_store_memory:   6%|▌         | 44/800 [00:23<03:38,  3.46it/s]Running: 4.99/8 CPU, 4/4 GPU, 1.4GB/12.0GB object_store_memory:   6%|▋         | 50/800 [00:23<03:03,  4.09it/s]
+- ReadRange->MapBatches(produce): 5 active, 144 queued, [cpu: 5.0, objects: 1.1GB]:   6%|▋         | 51/800 [00:23<03:20,  3.73it/s]   [A
+- ReadRange->MapBatches(produce): 5 active, 144 queued, [cpu: 5.0, objects: 1.1GB]:   7%|▋         | 55/800 [00:23<03:27,  3.59it/s][A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:   7%|▋         | 54/800 [00:23<03:22,  3.68it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6357.44 MB (27.80%)
+  Available Memory: 22893.38 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   6%|▌         | 48/800 [00:23<03:06,  4.03it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   6%|▋         | 51/800 [00:23<03:24,  3.66it/s][A[A[ARunning: 7.96/8 CPU, 1/4 GPU, 1.8GB/12.0GB object_store_memory:   6%|▋         | 50/800 [00:24<03:03,  4.09it/s]Running: 7.96/8 CPU, 1/4 GPU, 1.8GB/12.0GB object_store_memory:   7%|▋         | 54/800 [00:24<03:04,  4.04it/s]
+- ReadRange->MapBatches(produce): 4 active, 144 queued, [cpu: 4.0, objects: 900.0MB]:   7%|▋         | 55/800 [00:24<03:27,  3.59it/s][A
+- ReadRange->MapBatches(produce): 4 active, 144 queued, [cpu: 4.0, objects: 900.0MB]:   8%|▊         | 60/800 [00:24<03:08,  3.92it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:   7%|▋         | 54/800 [00:25<03:22,  3.68it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:   7%|▋         | 59/800 [00:25<03:15,  3.79it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   7%|▋         | 56/800 [00:25<03:21,  3.69it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:   7%|▋         | 54/800 [00:25<03:04,  4.04it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:   7%|▋         | 59/800 [00:25<03:03,  4.04it/s]
+- ReadRange->MapBatches(produce): 4 active, 143 queued, [cpu: 4.0, objects: 1.1GB]:   8%|▊         | 60/800 [00:25<03:08,  3.92it/s]  [A
+- ReadRange->MapBatches(produce): 4 active, 143 queued, [cpu: 4.0, objects: 1.1GB]:   8%|▊         | 65/800 [00:25<02:56,  4.17it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6937.26 MB (29.70%)
+  Available Memory: 22313.56 MB
+
+
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:   7%|▋         | 59/800 [00:26<03:15,  3.79it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:   8%|▊         | 64/800 [00:26<03:15,  3.77it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   8%|▊         | 61/800 [00:26<03:14,  3.79it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:   7%|▋         | 59/800 [00:26<03:03,  4.04it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:   8%|▊         | 64/800 [00:26<02:52,  4.26it/s]
+- ReadRange->MapBatches(produce): 4 active, 142 queued, [cpu: 4.0, objects: 1.2GB]:   8%|▊         | 65/800 [00:27<02:56,  4.17it/s][A
+- ReadRange->MapBatches(produce): 4 active, 142 queued, [cpu: 4.0, objects: 1.2GB]:   9%|▉         | 70/800 [00:27<03:01,  4.03it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:   8%|▊         | 64/800 [00:27<03:15,  3.77it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:   9%|▊         | 69/800 [00:27<03:05,  3.95it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   8%|▊         | 66/800 [00:27<03:14,  3.78it/s][A[A[ARunning: 7.96/8 CPU, 3/4 GPU, 2.1GB/12.0GB object_store_memory:   8%|▊         | 64/800 [00:27<02:52,  4.26it/s]Running: 7.96/8 CPU, 3/4 GPU, 2.1GB/12.0GB object_store_memory:   8%|▊         | 65/800 [00:27<03:40,  3.33it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6931.47 MB (29.60%)
+  Available Memory: 22319.35 MB
+
+
+- ReadRange->MapBatches(produce): 4 active, 141 queued, [cpu: 4.0, objects: 1.1GB]:   9%|▉         | 70/800 [00:28<03:01,  4.03it/s][A
+- ReadRange->MapBatches(produce): 4 active, 141 queued, [cpu: 4.0, objects: 1.1GB]:   9%|▉         | 75/800 [00:28<02:55,  4.14it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:   9%|▊         | 69/800 [00:28<03:05,  3.95it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:   9%|▉         | 74/800 [00:28<02:53,  4.19it/s][A[ARunning: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:   8%|▊         | 65/800 [00:28<03:40,  3.33it/s]Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:   9%|▉         | 70/800 [00:28<03:13,  3.78it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:   9%|▉         | 71/800 [00:28<03:04,  3.95it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 140 queued, [cpu: 4.0, objects: 1.1GB]:   9%|▉         | 75/800 [00:29<02:55,  4.14it/s][A
+- ReadRange->MapBatches(produce): 4 active, 140 queued, [cpu: 4.0, objects: 1.1GB]:  10%|█         | 80/800 [00:29<02:54,  4.12it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:   9%|▉         | 74/800 [00:29<02:53,  4.19it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  10%|▉         | 78/800 [00:29<02:55,  4.11it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6692.25 MB (28.90%)
+  Available Memory: 22558.57 MB
+
+Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:   9%|▉         | 70/800 [00:29<03:13,  3.78it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:   9%|▉         | 75/800 [00:29<02:56,  4.10it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  10%|▉         | 76/800 [00:30<03:01,  3.99it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  10%|▉         | 78/800 [00:30<02:55,  4.11it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  10%|█         | 81/800 [00:30<03:15,  3.68it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 139 queued, [cpu: 4.0, objects: 1.1GB]:  10%|█         | 80/800 [00:30<02:54,  4.12it/s][A
+- ReadRange->MapBatches(produce): 4 active, 139 queued, [cpu: 4.0, objects: 1.1GB]:  11%|█         | 85/800 [00:30<02:54,  4.10it/s][ARunning: 4.99/8 CPU, 3/4 GPU, 1.4GB/12.0GB object_store_memory:   9%|▉         | 75/800 [00:30<02:56,  4.10it/s]Running: 4.99/8 CPU, 3/4 GPU, 1.4GB/12.0GB object_store_memory:  10%|▉         | 79/800 [00:30<02:58,  4.04it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  10%|█         | 81/800 [00:31<02:59,  4.01it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  11%|█         | 86/800 [00:31<03:02,  3.90it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 138 queued, [cpu: 4.0, objects: 1.1GB]:  11%|█         | 85/800 [00:31<02:54,  4.10it/s][A
+- ReadRange->MapBatches(produce): 4 active, 138 queued, [cpu: 4.0, objects: 1.1GB]:  11%|█▏        | 90/800 [00:31<02:49,  4.19it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6555.66 MB (28.50%)
+  Available Memory: 22695.16 MB
+
+Running: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  10%|▉         | 79/800 [00:31<02:58,  4.04it/s]Running: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  10%|█         | 84/800 [00:31<02:47,  4.28it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  11%|█         | 86/800 [00:32<02:52,  4.13it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  11%|█▏        | 90/800 [00:32<03:02,  3.90it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  10%|█         | 84/800 [00:33<02:47,  4.28it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  11%|█         | 89/800 [00:33<02:48,  4.21it/s]
+- ReadRange->MapBatches(produce): 4 active, 137 queued, [cpu: 4.0, objects: 1.1GB]:  11%|█▏        | 90/800 [00:33<02:49,  4.19it/s][A
+- ReadRange->MapBatches(produce): 4 active, 137 queued, [cpu: 4.0, objects: 1.1GB]:  12%|█▏        | 95/800 [00:33<02:54,  4.05it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6770.66 MB (29.10%)
+  Available Memory: 22480.45 MB
+
+
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  11%|█▏        | 90/800 [00:33<03:02,  3.90it/s][A[A
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  12%|█▏        | 95/800 [00:33<02:48,  4.18it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  11%|█▏        | 91/800 [00:33<02:57,  4.00it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  12%|█▏        | 94/800 [00:34<02:45,  4.28it/s]
+- ReadRange->MapBatches(produce): 4 active, 136 queued, [cpu: 4.0, objects: 1.1GB]:  12%|█▏        | 95/800 [00:34<02:54,  4.05it/s][A
+- ReadRange->MapBatches(produce): 4 active, 136 queued, [cpu: 4.0, objects: 1.1GB]:  12%|█▎        | 100/800 [00:34<02:48,  4.16it/s][A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  12%|█▏        | 95/800 [00:34<02:48,  4.18it/s][A[A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  12%|█▏        | 99/800 [00:34<02:51,  4.10it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  12%|█▏        | 96/800 [00:35<02:51,  4.11it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  12%|█▏        | 94/800 [00:35<02:45,  4.28it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  12%|█▏        | 98/800 [00:35<02:48,  4.16it/s]
+- ReadRange->MapBatches(produce): 4 active, 135 queued, [cpu: 4.0, objects: 1.1GB]:  12%|█▎        | 100/800 [00:35<02:48,  4.16it/s][A
+- ReadRange->MapBatches(produce): 4 active, 135 queued, [cpu: 4.0, objects: 1.1GB]:  13%|█▎        | 105/800 [00:35<02:48,  4.12it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6349.38 MB (27.80%)
+  Available Memory: 22901.45 MB
+
+
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  12%|█▏        | 99/800 [00:35<02:51,  4.10it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  13%|█▎        | 104/800 [00:35<02:41,  4.31it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  13%|█▎        | 101/800 [00:36<02:50,  4.10it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  12%|█▏        | 98/800 [00:36<02:48,  4.16it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  13%|█▎        | 102/800 [00:36<02:51,  4.08it/s]
+- ReadRange->MapBatches(produce): 4 active, 134 queued, [cpu: 4.0, objects: 1.1GB]:  13%|█▎        | 105/800 [00:36<02:48,  4.12it/s][A
+- ReadRange->MapBatches(produce): 4 active, 134 queued, [cpu: 4.0, objects: 1.1GB]:  14%|█▍        | 110/800 [00:36<02:44,  4.20it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  13%|█▎        | 104/800 [00:37<02:41,  4.31it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  14%|█▎        | 109/800 [00:37<02:34,  4.47it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  13%|█▎        | 106/800 [00:37<02:45,  4.19it/s][A[A[ARunning: 6.97/8 CPU, 2/4 GPU, 1.9GB/12.0GB object_store_memory:  13%|█▎        | 102/800 [00:37<02:51,  4.08it/s]Running: 6.97/8 CPU, 2/4 GPU, 1.9GB/12.0GB object_store_memory:  13%|█▎        | 105/800 [00:37<03:05,  3.74it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6536.21 MB (28.40%)
+  Available Memory: 22714.61 MB
+
+
+- ReadRange->MapBatches(produce): 4 active, 133 queued, [cpu: 4.0, objects: 1.1GB]:  14%|█▍        | 110/800 [00:37<02:44,  4.20it/s][A
+- ReadRange->MapBatches(produce): 4 active, 133 queued, [cpu: 4.0, objects: 1.1GB]:  14%|█▍        | 115/800 [00:37<02:44,  4.16it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  14%|█▎        | 109/800 [00:38<02:34,  4.47it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  14%|█▍        | 113/800 [00:38<02:39,  4.31it/s][A[ARunning: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  13%|█▎        | 105/800 [00:38<03:05,  3.74it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  14%|█▍        | 110/800 [00:38<02:49,  4.08it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  14%|█▍        | 111/800 [00:38<02:46,  4.15it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  14%|█▍        | 113/800 [00:39<02:39,  4.31it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  14%|█▍        | 116/800 [00:39<03:00,  3.78it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 132 queued, [cpu: 4.0, objects: 1.1GB]:  14%|█▍        | 115/800 [00:39<02:44,  4.16it/s][A
+- ReadRange->MapBatches(produce): 4 active, 132 queued, [cpu: 4.0, objects: 1.1GB]:  15%|█▌        | 120/800 [00:39<02:44,  4.13it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  14%|█▍        | 110/800 [00:39<02:49,  4.08it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  14%|█▍        | 115/800 [00:39<02:38,  4.31it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6972.95 MB (29.80%)
+  Available Memory: 22277.87 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  14%|█▍        | 116/800 [00:39<02:45,  4.12it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  15%|█▌        | 121/800 [00:40<02:50,  3.98it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 131 queued, [cpu: 4.0, objects: 1.1GB]:  15%|█▌        | 120/800 [00:40<02:44,  4.13it/s][A
+- ReadRange->MapBatches(produce): 4 active, 131 queued, [cpu: 4.0, objects: 1.1GB]:  16%|█▌        | 125/800 [00:40<02:40,  4.21it/s][ARunning: 4.99/8 CPU, 4/4 GPU, 1.5GB/12.0GB object_store_memory:  14%|█▍        | 115/800 [00:40<02:38,  4.31it/s]Running: 4.99/8 CPU, 4/4 GPU, 1.5GB/12.0GB object_store_memory:  15%|█▍        | 119/800 [00:40<02:42,  4.19it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  15%|█▌        | 121/800 [00:41<02:41,  4.20it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  16%|█▌        | 125/800 [00:41<02:50,  3.95it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  15%|█▍        | 119/800 [00:41<02:42,  4.19it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  16%|█▌        | 124/800 [00:41<02:34,  4.39it/s]
+- ReadRange->MapBatches(produce): 4 active, 130 queued, [cpu: 4.0, objects: 1.1GB]:  16%|█▌        | 125/800 [00:41<02:40,  4.21it/s][A
+- ReadRange->MapBatches(produce): 4 active, 130 queued, [cpu: 4.0, objects: 1.1GB]:  16%|█▋        | 130/800 [00:41<02:41,  4.16it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6917.88 MB (29.60%)
+  Available Memory: 22332.94 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  16%|█▌        | 126/800 [00:42<02:42,  4.16it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  16%|█▌        | 125/800 [00:42<02:50,  3.95it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  16%|█▋        | 130/800 [00:42<02:38,  4.22it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  16%|█▌        | 129/800 [00:42<02:32,  4.40it/s]
+- ReadRange->MapBatches(produce): 4 active, 129 queued, [cpu: 4.0, objects: 1.1GB]:  16%|█▋        | 130/800 [00:42<02:41,  4.16it/s][A
+- ReadRange->MapBatches(produce): 4 active, 129 queued, [cpu: 4.0, objects: 1.1GB]:  17%|█▋        | 135/800 [00:42<02:36,  4.24it/s][A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  16%|█▋        | 130/800 [00:43<02:38,  4.22it/s][A[A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  17%|█▋        | 135/800 [00:43<02:30,  4.41it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  16%|█▋        | 131/800 [00:43<02:37,  4.24it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  16%|█▌        | 129/800 [00:43<02:32,  4.40it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  17%|█▋        | 133/800 [00:43<02:36,  4.25it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6851.31 MB (29.40%)
+  Available Memory: 22399.51 MB
+
+
+- ReadRange->MapBatches(produce): 4 active, 128 queued, [cpu: 4.0, objects: 1.1GB]:  17%|█▋        | 135/800 [00:43<02:36,  4.24it/s][A
+- ReadRange->MapBatches(produce): 4 active, 128 queued, [cpu: 4.0, objects: 1.1GB]:  18%|█▊        | 140/800 [00:43<02:37,  4.18it/s][A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  17%|█▋        | 139/800 [00:44<02:35,  4.26it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  17%|█▋        | 136/800 [00:44<02:38,  4.18it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  17%|█▋        | 133/800 [00:44<02:36,  4.25it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  17%|█▋        | 137/800 [00:44<02:39,  4.14it/s]
+- ReadRange->MapBatches(produce): 4 active, 127 queued, [cpu: 4.0, objects: 1.1GB]:  18%|█▊        | 140/800 [00:45<02:37,  4.18it/s][A
+- ReadRange->MapBatches(produce): 4 active, 127 queued, [cpu: 4.0, objects: 1.1GB]:  18%|█▊        | 145/800 [00:45<02:33,  4.25it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  17%|█▋        | 139/800 [00:45<02:35,  4.26it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  18%|█▊        | 144/800 [00:45<02:32,  4.31it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  18%|█▊        | 141/800 [00:45<02:34,  4.25it/s][A[A[ARunning: 6.97/8 CPU, 2/4 GPU, 1.9GB/12.0GB object_store_memory:  17%|█▋        | 137/800 [00:45<02:39,  4.14it/s]Running: 6.97/8 CPU, 2/4 GPU, 1.9GB/12.0GB object_store_memory:  18%|█▊        | 140/800 [00:45<02:54,  3.78it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6615.42 MB (28.60%)
+  Available Memory: 22635.40 MB
+
+
+- ReadRange->MapBatches(produce): 4 active, 126 queued, [cpu: 4.0, objects: 1.1GB]:  18%|█▊        | 145/800 [00:46<02:33,  4.25it/s][A
+- ReadRange->MapBatches(produce): 4 active, 126 queued, [cpu: 4.0, objects: 1.1GB]:  19%|█▉        | 150/800 [00:46<02:35,  4.19it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  19%|█▊        | 149/800 [00:46<02:29,  4.35it/s][A[ARunning: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  18%|█▊        | 140/800 [00:46<02:54,  3.78it/s]Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  18%|█▊        | 145/800 [00:46<02:39,  4.11it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  18%|█▊        | 146/800 [00:46<02:35,  4.19it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 125 queued, [cpu: 4.0, objects: 1.1GB]:  19%|█▉        | 150/800 [00:47<02:35,  4.19it/s][A
+- ReadRange->MapBatches(produce): 4 active, 125 queued, [cpu: 4.0, objects: 1.1GB]:  19%|█▉        | 155/800 [00:47<02:31,  4.26it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  19%|█▊        | 149/800 [00:47<02:29,  4.35it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  19%|█▉        | 154/800 [00:47<02:23,  4.50it/s][A[ARunning: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  18%|█▊        | 145/800 [00:47<02:39,  4.11it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  19%|█▉        | 150/800 [00:47<02:29,  4.34it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6707.88 MB (28.90%)
+  Available Memory: 22542.95 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  19%|█▉        | 151/800 [00:48<02:32,  4.26it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 124 queued, [cpu: 4.0, objects: 1.1GB]:  19%|█▉        | 155/800 [00:48<02:31,  4.26it/s][A
+- ReadRange->MapBatches(produce): 4 active, 124 queued, [cpu: 4.0, objects: 1.1GB]:  20%|██        | 160/800 [00:48<02:32,  4.20it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  19%|█▉        | 154/800 [00:48<02:23,  4.50it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  20%|█▉        | 158/800 [00:48<02:28,  4.32it/s][A[ARunning: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  19%|█▉        | 150/800 [00:48<02:29,  4.34it/s]Running: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  19%|█▉        | 154/800 [00:48<02:33,  4.20it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  20%|█▉        | 156/800 [00:49<02:33,  4.20it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  20%|█▉        | 158/800 [00:49<02:28,  4.32it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  20%|██        | 161/800 [00:49<02:43,  3.91it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 123 queued, [cpu: 4.0, objects: 1.1GB]:  20%|██        | 160/800 [00:49<02:32,  4.20it/s][A
+- ReadRange->MapBatches(produce): 4 active, 123 queued, [cpu: 4.0, objects: 1.1GB]:  21%|██        | 165/800 [00:49<02:28,  4.26it/s][ARunning: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  19%|█▉        | 154/800 [00:49<02:33,  4.20it/s]Running: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  20%|█▉        | 159/800 [00:49<02:25,  4.40it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6657.82 MB (28.80%)
+  Available Memory: 22593.00 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  20%|██        | 161/800 [00:50<02:29,  4.26it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  21%|██        | 165/800 [00:50<02:42,  3.90it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  20%|█▉        | 159/800 [00:50<02:25,  4.40it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  20%|██        | 164/800 [00:50<02:24,  4.41it/s]
+- ReadRange->MapBatches(produce): 4 active, 122 queued, [cpu: 4.0, objects: 1.1GB]:  21%|██        | 165/800 [00:50<02:28,  4.26it/s][A
+- ReadRange->MapBatches(produce): 4 active, 122 queued, [cpu: 4.0, objects: 1.1GB]:  21%|██▏       | 170/800 [00:50<02:30,  4.20it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  21%|██        | 166/800 [00:51<02:31,  4.20it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  21%|██        | 165/800 [00:51<02:42,  3.90it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  21%|██▏       | 170/800 [00:51<02:30,  4.19it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7028.59 MB (29.90%)
+  Available Memory: 22222.23 MB
+
+Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  21%|██        | 169/800 [00:52<02:22,  4.41it/s]
+- ReadRange->MapBatches(produce): 4 active, 121 queued, [cpu: 4.0, objects: 1.1GB]:  21%|██▏       | 170/800 [00:52<02:30,  4.20it/s][A
+- ReadRange->MapBatches(produce): 4 active, 121 queued, [cpu: 4.0, objects: 1.1GB]:  22%|██▏       | 175/800 [00:52<02:26,  4.26it/s][A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  21%|██▏       | 170/800 [00:52<02:30,  4.19it/s][A[A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  22%|██▏       | 175/800 [00:52<02:22,  4.39it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  21%|██▏       | 171/800 [00:52<02:27,  4.26it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  21%|██        | 169/800 [00:53<02:22,  4.41it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  22%|██▏       | 173/800 [00:53<02:27,  4.26it/s]
+- ReadRange->MapBatches(produce): 4 active, 120 queued, [cpu: 4.0, objects: 1.1GB]:  22%|██▏       | 175/800 [00:53<02:26,  4.26it/s][A
+- ReadRange->MapBatches(produce): 4 active, 120 queued, [cpu: 4.0, objects: 1.1GB]:  22%|██▎       | 180/800 [00:53<02:27,  4.20it/s][A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  22%|██▏       | 179/800 [00:53<02:26,  4.24it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7049.38 MB (30.00%)
+  Available Memory: 22201.44 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  22%|██▏       | 176/800 [00:54<02:28,  4.20it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  22%|██▏       | 173/800 [00:54<02:27,  4.26it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  22%|██▏       | 177/800 [00:54<02:30,  4.15it/s]
+- ReadRange->MapBatches(produce): 4 active, 119 queued, [cpu: 4.0, objects: 1.1GB]:  22%|██▎       | 180/800 [00:54<02:27,  4.20it/s][A
+- ReadRange->MapBatches(produce): 4 active, 119 queued, [cpu: 4.0, objects: 1.1GB]:  23%|██▎       | 185/800 [00:54<02:24,  4.26it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  22%|██▏       | 179/800 [00:54<02:26,  4.24it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  23%|██▎       | 184/800 [00:54<02:19,  4.43it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  23%|██▎       | 181/800 [00:55<02:25,  4.26it/s][A[A[ARunning: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  22%|██▏       | 177/800 [00:55<02:30,  4.15it/s]Running: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  22%|██▎       | 180/800 [00:55<02:43,  3.79it/s]
+- ReadRange->MapBatches(produce): 4 active, 118 queued, [cpu: 4.0, objects: 1.1GB]:  23%|██▎       | 185/800 [00:55<02:24,  4.26it/s][A
+- ReadRange->MapBatches(produce): 4 active, 118 queued, [cpu: 4.0, objects: 1.1GB]:  24%|██▍       | 190/800 [00:55<02:21,  4.31it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6776.83 MB (29.20%)
+  Available Memory: 22473.99 MB
+
+
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  23%|██▎       | 184/800 [00:55<02:19,  4.43it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  24%|██▎       | 189/800 [00:55<02:14,  4.56it/s][A[ARunning: 6.98/8 CPU, 4/4 GPU, 2.0GB/12.0GB object_store_memory:  22%|██▎       | 180/800 [00:56<02:43,  3.79it/s]Running: 6.98/8 CPU, 4/4 GPU, 2.0GB/12.0GB object_store_memory:  23%|██▎       | 185/800 [00:56<02:29,  4.11it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  23%|██▎       | 186/800 [00:56<02:22,  4.31it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 117 queued, [cpu: 4.0, objects: 1.2GB]:  24%|██▍       | 190/800 [00:56<02:21,  4.31it/s][A
+- ReadRange->MapBatches(produce): 4 active, 117 queued, [cpu: 4.0, objects: 1.2GB]:  24%|██▍       | 195/800 [00:56<02:23,  4.23it/s][A
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 600.0MB]:  24%|██▎       | 189/800 [00:56<02:14,  4.56it/s][A[A
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 600.0MB]:  24%|██▍       | 192/800 [00:56<02:29,  4.07it/s][A[ARunning: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  23%|██▎       | 185/800 [00:57<02:29,  4.11it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  24%|██▍       | 190/800 [00:57<02:20,  4.33it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  24%|██▍       | 191/800 [00:57<02:24,  4.23it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6751.19 MB (29.10%)
+  Available Memory: 22499.62 MB
+
+
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  24%|██▍       | 192/800 [00:57<02:29,  4.07it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  24%|██▍       | 196/800 [00:57<02:30,  4.02it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 116 queued, [cpu: 4.0, objects: 1.1GB]:  24%|██▍       | 195/800 [00:57<02:23,  4.23it/s][A
+- ReadRange->MapBatches(produce): 4 active, 116 queued, [cpu: 4.0, objects: 1.1GB]:  25%|██▌       | 200/800 [00:57<02:20,  4.28it/s][ARunning: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  24%|██▍       | 190/800 [00:58<02:20,  4.33it/s]Running: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  24%|██▍       | 194/800 [00:58<02:24,  4.20it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  24%|██▍       | 196/800 [00:58<02:20,  4.28it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  25%|██▌       | 200/800 [00:58<02:30,  3.98it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 115 queued, [cpu: 4.0, objects: 1.1GB]:  25%|██▌       | 200/800 [00:59<02:20,  4.28it/s][A
+- ReadRange->MapBatches(produce): 4 active, 115 queued, [cpu: 4.0, objects: 1.1GB]:  26%|██▌       | 205/800 [00:59<02:21,  4.21it/s][ARunning: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  24%|██▍       | 194/800 [00:59<02:24,  4.20it/s]Running: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  25%|██▍       | 199/800 [00:59<02:16,  4.40it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6880.27 MB (29.50%)
+  Available Memory: 22370.55 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  25%|██▌       | 201/800 [00:59<02:22,  4.21it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  25%|██▌       | 200/800 [01:00<02:30,  3.98it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  26%|██▌       | 205/800 [01:00<02:20,  4.24it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  25%|██▍       | 199/800 [01:00<02:16,  4.40it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  26%|██▌       | 204/800 [01:00<02:11,  4.54it/s]
+- ReadRange->MapBatches(produce): 4 active, 114 queued, [cpu: 4.0, objects: 1.1GB]:  26%|██▌       | 205/800 [01:00<02:21,  4.21it/s][A
+- ReadRange->MapBatches(produce): 4 active, 114 queued, [cpu: 4.0, objects: 1.1GB]:  26%|██▋       | 210/800 [01:00<02:18,  4.27it/s][A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  26%|██▌       | 205/800 [01:01<02:20,  4.24it/s][A[A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  26%|██▋       | 210/800 [01:01<02:13,  4.42it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  26%|██▌       | 206/800 [01:01<02:19,  4.27it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  26%|██▌       | 204/800 [01:01<02:11,  4.54it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  26%|██▌       | 208/800 [01:01<02:16,  4.34it/s]
+- ReadRange->MapBatches(produce): 4 active, 113 queued, [cpu: 4.0, objects: 1.1GB]:  26%|██▋       | 210/800 [01:01<02:18,  4.27it/s][A
+- ReadRange->MapBatches(produce): 4 active, 113 queued, [cpu: 4.0, objects: 1.1GB]:  27%|██▋       | 215/800 [01:01<02:19,  4.20it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6711.84 MB (29.00%)
+  Available Memory: 22538.98 MB
+
+
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  27%|██▋       | 214/800 [01:02<02:17,  4.26it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  26%|██▋       | 211/800 [01:02<02:20,  4.20it/s][A[A[ARunning: 8.95/8 CPU, 3/4 GPU, 2.1GB/12.0GB object_store_memory:  26%|██▌       | 208/800 [01:02<02:16,  4.34it/s]Running: 8.95/8 CPU, 3/4 GPU, 2.1GB/12.0GB object_store_memory:  26%|██▋       | 212/800 [01:02<02:19,  4.20it/s]
+- ReadRange->MapBatches(produce): 4 active, 112 queued, [cpu: 4.0, objects: 1.1GB]:  27%|██▋       | 215/800 [01:02<02:19,  4.20it/s][A
+- ReadRange->MapBatches(produce): 4 active, 112 queued, [cpu: 4.0, objects: 1.1GB]:  28%|██▊       | 220/800 [01:02<02:15,  4.27it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  27%|██▋       | 214/800 [01:03<02:17,  4.26it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  27%|██▋       | 219/800 [01:03<02:14,  4.32it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  27%|██▋       | 216/800 [01:03<02:16,  4.27it/s][A[A[ARunning: 6.97/8 CPU, 2/4 GPU, 1.9GB/12.0GB object_store_memory:  26%|██▋       | 212/800 [01:03<02:19,  4.20it/s]Running: 6.97/8 CPU, 2/4 GPU, 1.9GB/12.0GB object_store_memory:  27%|██▋       | 215/800 [01:03<02:33,  3.82it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6720.23 MB (29.00%)
+  Available Memory: 22530.59 MB
+
+
+- ReadRange->MapBatches(produce): 4 active, 111 queued, [cpu: 4.0, objects: 1.1GB]:  28%|██▊       | 220/800 [01:03<02:15,  4.27it/s][A
+- ReadRange->MapBatches(produce): 4 active, 111 queued, [cpu: 4.0, objects: 1.1GB]:  28%|██▊       | 225/800 [01:03<02:16,  4.20it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  28%|██▊       | 224/800 [01:04<02:12,  4.35it/s][A[ARunning: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  27%|██▋       | 215/800 [01:04<02:33,  3.82it/s]Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  28%|██▊       | 220/800 [01:04<02:20,  4.13it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  28%|██▊       | 221/800 [01:04<02:17,  4.20it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 110 queued, [cpu: 4.0, objects: 1.1GB]:  28%|██▊       | 225/800 [01:05<02:16,  4.20it/s][A
+- ReadRange->MapBatches(produce): 4 active, 110 queued, [cpu: 4.0, objects: 1.1GB]:  29%|██▉       | 230/800 [01:05<02:13,  4.26it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  28%|██▊       | 224/800 [01:05<02:12,  4.35it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  29%|██▊       | 229/800 [01:05<02:06,  4.50it/s][A[ARunning: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  28%|██▊       | 220/800 [01:05<02:20,  4.13it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  28%|██▊       | 225/800 [01:05<02:12,  4.35it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  28%|██▊       | 226/800 [01:05<02:14,  4.26it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6370.24 MB (27.90%)
+  Available Memory: 22880.58 MB
+
+
+- ReadRange->MapBatches(produce): 4 active, 109 queued, [cpu: 4.0, objects: 1.1GB]:  29%|██▉       | 230/800 [01:06<02:13,  4.26it/s][A
+- ReadRange->MapBatches(produce): 4 active, 109 queued, [cpu: 4.0, objects: 1.1GB]:  29%|██▉       | 235/800 [01:06<02:11,  4.31it/s][A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  29%|██▊       | 229/800 [01:06<02:06,  4.50it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  29%|██▉       | 234/800 [01:06<02:03,  4.60it/s][A[ARunning: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  28%|██▊       | 225/800 [01:06<02:12,  4.35it/s]Running: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  29%|██▊       | 229/800 [01:06<02:15,  4.21it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  29%|██▉       | 231/800 [01:06<02:12,  4.31it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  29%|██▉       | 234/800 [01:07<02:03,  4.60it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  30%|██▉       | 236/800 [01:07<02:27,  3.82it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 108 queued, [cpu: 4.0, objects: 1.1GB]:  29%|██▉       | 235/800 [01:07<02:11,  4.31it/s][A
+- ReadRange->MapBatches(produce): 4 active, 108 queued, [cpu: 4.0, objects: 1.1GB]:  30%|███       | 240/800 [01:07<02:12,  4.23it/s][ARunning: 6.97/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  29%|██▊       | 229/800 [01:07<02:15,  4.21it/s]Running: 6.97/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  29%|██▉       | 234/800 [01:07<02:08,  4.41it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6680.94 MB (28.90%)
+  Available Memory: 22569.88 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  30%|██▉       | 236/800 [01:08<02:13,  4.23it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  30%|███       | 241/800 [01:08<02:19,  4.01it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  29%|██▉       | 234/800 [01:08<02:08,  4.41it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  30%|██▉       | 239/800 [01:08<02:03,  4.55it/s]
+- ReadRange->MapBatches(produce): 4 active, 107 queued, [cpu: 4.0, objects: 1.1GB]:  30%|███       | 240/800 [01:08<02:12,  4.23it/s][A
+- ReadRange->MapBatches(produce): 4 active, 107 queued, [cpu: 4.0, objects: 1.1GB]:  31%|███       | 245/800 [01:08<02:09,  4.29it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  30%|███       | 241/800 [01:09<02:10,  4.29it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  30%|██▉       | 239/800 [01:09<02:03,  4.55it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  30%|███       | 243/800 [01:09<02:08,  4.35it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  31%|███       | 245/800 [01:09<02:19,  3.98it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 105 queued, [cpu: 5.0, objects: 1.3GB]:  31%|███       | 245/800 [01:09<02:09,  4.29it/s][A
+- ReadRange->MapBatches(produce): 5 active, 105 queued, [cpu: 5.0, objects: 1.3GB]:  31%|███▏      | 250/800 [01:09<02:10,  4.21it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6436.07 MB (28.10%)
+  Available Memory: 22814.75 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  31%|███       | 246/800 [01:10<02:10,  4.24it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  30%|███       | 243/800 [01:10<02:08,  4.35it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  31%|███       | 247/800 [01:10<02:10,  4.24it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  31%|███       | 245/800 [01:10<02:19,  3.98it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  31%|███▏      | 250/800 [01:10<02:08,  4.26it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 104 queued, [cpu: 5.0, objects: 1.3GB]:  31%|███▏      | 250/800 [01:10<02:10,  4.21it/s][A
+- ReadRange->MapBatches(produce): 5 active, 104 queued, [cpu: 5.0, objects: 1.3GB]:  32%|███▏      | 255/800 [01:10<02:10,  4.19it/s][ARunning: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  31%|███       | 247/800 [01:11<02:10,  4.24it/s]Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  31%|███▏      | 250/800 [01:11<02:23,  3.84it/s]
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  31%|███▏      | 250/800 [01:11<02:08,  4.26it/s][A[A
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  32%|███▏      | 254/800 [01:11<02:11,  4.15it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  31%|███▏      | 251/800 [01:11<02:11,  4.18it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6677.53 MB (28.80%)
+  Available Memory: 22573.29 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 103 queued, [cpu: 5.0, objects: 1.3GB]:  32%|███▏      | 255/800 [01:12<02:10,  4.19it/s][A
+- ReadRange->MapBatches(produce): 5 active, 103 queued, [cpu: 5.0, objects: 1.3GB]:  32%|███▎      | 260/800 [01:12<02:06,  4.26it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  31%|███▏      | 250/800 [01:12<02:23,  3.84it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  32%|███▏      | 255/800 [01:12<02:11,  4.15it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  32%|███▏      | 254/800 [01:12<02:11,  4.15it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  32%|███▏      | 259/800 [01:12<02:03,  4.37it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  32%|███▏      | 256/800 [01:12<02:07,  4.25it/s][A[A[A
+- ReadRange->MapBatches(produce): 5 active, 102 queued, [cpu: 5.0, objects: 1.3GB]:  32%|███▎      | 260/800 [01:13<02:06,  4.26it/s][A
+- ReadRange->MapBatches(produce): 5 active, 102 queued, [cpu: 5.0, objects: 1.3GB]:  33%|███▎      | 265/800 [01:13<02:07,  4.19it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  32%|███▏      | 255/800 [01:13<02:11,  4.15it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  32%|███▎      | 260/800 [01:13<02:03,  4.37it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  33%|███▎      | 264/800 [01:13<02:02,  4.38it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6237.05 MB (27.50%)
+  Available Memory: 23013.77 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  33%|███▎      | 261/800 [01:14<02:08,  4.19it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 102 queued, [cpu: 4.0, objects: 1.1GB]:  33%|███▎      | 265/800 [01:14<02:07,  4.19it/s][A
+- ReadRange->MapBatches(produce): 4 active, 102 queued, [cpu: 4.0, objects: 1.1GB]:  34%|███▍      | 270/800 [01:14<02:04,  4.26it/s][ARunning: 6.98/8 CPU, 4/4 GPU, 1.9GB/12.0GB object_store_memory:  32%|███▎      | 260/800 [01:14<02:03,  4.37it/s]Running: 6.98/8 CPU, 4/4 GPU, 1.9GB/12.0GB object_store_memory:  33%|███▎      | 264/800 [01:14<02:07,  4.21it/s]
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  33%|███▎      | 264/800 [01:14<02:02,  4.38it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  34%|███▎      | 269/800 [01:14<01:57,  4.51it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  33%|███▎      | 266/800 [01:15<02:05,  4.25it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 101 queued, [cpu: 4.0, objects: 1.2GB]:  34%|███▍      | 270/800 [01:15<02:04,  4.26it/s][A
+- ReadRange->MapBatches(produce): 4 active, 101 queued, [cpu: 4.0, objects: 1.2GB]:  34%|███▍      | 275/800 [01:15<01:58,  4.42it/s][ARunning: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  33%|███▎      | 264/800 [01:15<02:07,  4.21it/s]Running: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  34%|███▎      | 269/800 [01:15<02:00,  4.41it/s]
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  34%|███▍      | 274/800 [01:15<01:53,  4.62it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6579.73 MB (28.50%)
+  Available Memory: 22671.09 MB
+
+
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  33%|███▎      | 266/800 [01:16<02:05,  4.25it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  34%|███▍      | 271/800 [01:16<01:59,  4.42it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  34%|███▎      | 269/800 [01:16<02:00,  4.41it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  34%|███▍      | 274/800 [01:16<01:55,  4.55it/s]
+- ReadRange->MapBatches(produce): 4 active, 100 queued, [cpu: 4.0, objects: 1.1GB]:  34%|███▍      | 275/800 [01:16<01:58,  4.42it/s][A
+- ReadRange->MapBatches(produce): 4 active, 100 queued, [cpu: 4.0, objects: 1.1GB]:  35%|███▌      | 280/800 [01:16<02:00,  4.30it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  34%|███▍      | 274/800 [01:16<01:53,  4.62it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  35%|███▍      | 278/800 [01:16<01:58,  4.40it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  34%|███▍      | 271/800 [01:17<01:59,  4.42it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  34%|███▍      | 276/800 [01:17<02:01,  4.30it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6291.60 MB (27.60%)
+  Available Memory: 22959.22 MB
+
+
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  35%|███▍      | 278/800 [01:17<01:58,  4.40it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  35%|███▌      | 281/800 [01:17<02:10,  3.96it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  35%|███▍      | 279/800 [01:17<01:55,  4.51it/s]
+- ReadRange->MapBatches(produce): 4 active, 99 queued, [cpu: 4.0, objects: 1.1GB]:  35%|███▌      | 280/800 [01:17<02:00,  4.30it/s] [A
+- ReadRange->MapBatches(produce): 4 active, 99 queued, [cpu: 4.0, objects: 1.1GB]:  36%|███▌      | 285/800 [01:17<01:58,  4.33it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  35%|███▌      | 281/800 [01:18<01:59,  4.34it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  35%|███▍      | 279/800 [01:18<01:55,  4.51it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  35%|███▌      | 283/800 [01:18<01:59,  4.32it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  36%|███▌      | 285/800 [01:18<02:10,  3.94it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 98 queued, [cpu: 4.0, objects: 1.1GB]:  36%|███▌      | 285/800 [01:19<01:58,  4.33it/s][A
+- ReadRange->MapBatches(produce): 4 active, 98 queued, [cpu: 4.0, objects: 1.1GB]:  36%|███▋      | 290/800 [01:19<02:00,  4.25it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  36%|███▌      | 286/800 [01:19<02:01,  4.25it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6000.00 MB (26.70%)
+  Available Memory: 23250.82 MB
+
+Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  35%|███▌      | 283/800 [01:19<01:59,  4.32it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  36%|███▌      | 287/800 [01:19<02:02,  4.19it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  36%|███▌      | 285/800 [01:19<02:10,  3.94it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  36%|███▋      | 290/800 [01:19<02:01,  4.21it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 96 queued, [cpu: 5.0, objects: 1.3GB]:  36%|███▋      | 290/800 [01:20<02:00,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 96 queued, [cpu: 5.0, objects: 1.3GB]:  37%|███▋      | 295/800 [01:20<02:00,  4.19it/s][ARunning: 8.95/8 CPU, 4/4 GPU, 2.2GB/12.0GB object_store_memory:  36%|███▌      | 287/800 [01:20<02:02,  4.19it/s]Running: 8.95/8 CPU, 4/4 GPU, 2.2GB/12.0GB object_store_memory:  36%|███▋      | 290/800 [01:20<02:13,  3.82it/s]
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  36%|███▋      | 290/800 [01:21<02:01,  4.21it/s][A[A
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  37%|███▋      | 295/800 [01:21<01:57,  4.28it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  36%|███▋      | 291/800 [01:21<02:01,  4.19it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 96 queued, [cpu: 4.0, objects: 1.1GB]:  37%|███▋      | 295/800 [01:21<02:00,  4.19it/s][A
+- ReadRange->MapBatches(produce): 4 active, 96 queued, [cpu: 4.0, objects: 1.1GB]:  38%|███▊      | 300/800 [01:21<01:54,  4.37it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5963.98 MB (26.60%)
+  Available Memory: 23286.84 MB
+
+Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  36%|███▋      | 290/800 [01:22<02:13,  3.82it/s]Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  37%|███▋      | 295/800 [01:22<02:02,  4.13it/s]
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  37%|███▋      | 295/800 [01:22<01:57,  4.28it/s][A[A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  38%|███▊      | 300/800 [01:22<01:52,  4.45it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  37%|███▋      | 296/800 [01:22<01:55,  4.37it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 95 queued, [cpu: 4.0, objects: 1.1GB]:  38%|███▊      | 300/800 [01:22<01:54,  4.37it/s][A
+- ReadRange->MapBatches(produce): 4 active, 95 queued, [cpu: 4.0, objects: 1.1GB]:  38%|███▊      | 305/800 [01:22<01:55,  4.27it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  37%|███▋      | 295/800 [01:23<02:02,  4.13it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  38%|███▊      | 300/800 [01:23<01:54,  4.35it/s]
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  38%|███▊      | 304/800 [01:23<01:55,  4.28it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  38%|███▊      | 301/800 [01:23<01:56,  4.27it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 94 queued, [cpu: 4.0, objects: 1.1GB]:  38%|███▊      | 305/800 [01:23<01:55,  4.27it/s][A
+- ReadRange->MapBatches(produce): 4 active, 94 queued, [cpu: 4.0, objects: 1.1GB]:  39%|███▉      | 310/800 [01:23<01:53,  4.31it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6493.20 MB (28.30%)
+  Available Memory: 22757.62 MB
+
+Running: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  38%|███▊      | 300/800 [01:24<01:54,  4.35it/s]Running: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  38%|███▊      | 304/800 [01:24<01:57,  4.21it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  38%|███▊      | 304/800 [01:24<01:55,  4.28it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  39%|███▊      | 309/800 [01:24<01:53,  4.33it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  38%|███▊      | 301/800 [01:24<01:56,  4.27it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  38%|███▊      | 305/800 [01:24<01:58,  4.16it/s][A[A[A
+- ReadRange->MapBatches(produce): 5 active, 92 queued, [cpu: 5.0, objects: 1.3GB]:  39%|███▉      | 310/800 [01:24<01:53,  4.31it/s][A
+- ReadRange->MapBatches(produce): 5 active, 92 queued, [cpu: 5.0, objects: 1.3GB]:  39%|███▉      | 315/800 [01:24<01:54,  4.23it/s][ARunning: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  38%|███▊      | 304/800 [01:25<01:57,  4.21it/s]Running: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  39%|███▊      | 309/800 [01:25<01:51,  4.40it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  39%|███▉      | 314/800 [01:25<01:51,  4.36it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  38%|███▊      | 305/800 [01:25<01:58,  4.16it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  39%|███▉      | 311/800 [01:25<01:54,  4.27it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6306.33 MB (27.70%)
+  Available Memory: 22944.49 MB
+
+Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  39%|███▊      | 309/800 [01:26<01:51,  4.40it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  39%|███▉      | 314/800 [01:26<01:46,  4.54it/s]
+- ReadRange->MapBatches(produce): 4 active, 92 queued, [cpu: 4.0, objects: 1.1GB]:  39%|███▉      | 315/800 [01:26<01:54,  4.23it/s][A
+- ReadRange->MapBatches(produce): 4 active, 92 queued, [cpu: 4.0, objects: 1.1GB]:  40%|████      | 320/800 [01:26<01:52,  4.29it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  39%|███▉      | 314/800 [01:26<01:51,  4.36it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  40%|███▉      | 319/800 [01:26<01:46,  4.50it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  40%|███▉      | 316/800 [01:26<01:52,  4.32it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  39%|███▉      | 314/800 [01:27<01:46,  4.54it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  40%|███▉      | 318/800 [01:27<01:50,  4.35it/s]
+- ReadRange->MapBatches(produce): 4 active, 91 queued, [cpu: 4.0, objects: 1.1GB]:  40%|████      | 320/800 [01:27<01:52,  4.29it/s][A
+- ReadRange->MapBatches(produce): 4 active, 91 queued, [cpu: 4.0, objects: 1.1GB]:  41%|████      | 325/800 [01:27<01:49,  4.32it/s][A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  40%|███▉      | 319/800 [01:27<01:46,  4.50it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  40%|████      | 324/800 [01:27<01:43,  4.61it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6604.12 MB (28.60%)
+  Available Memory: 22646.70 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  40%|████      | 321/800 [01:27<01:50,  4.35it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  40%|████      | 323/800 [01:28<01:49,  4.37it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  40%|████      | 324/800 [01:28<01:43,  4.61it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  41%|████      | 326/800 [01:28<02:03,  3.83it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 89 queued, [cpu: 5.0, objects: 1.3GB]:  41%|████      | 325/800 [01:28<01:49,  4.32it/s][A
+- ReadRange->MapBatches(produce): 5 active, 89 queued, [cpu: 5.0, objects: 1.3GB]:  41%|████▏     | 330/800 [01:28<01:50,  4.24it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  41%|████      | 326/800 [01:29<01:51,  4.25it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  40%|████      | 323/800 [01:29<01:49,  4.37it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  41%|████      | 327/800 [01:29<01:51,  4.22it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  41%|████▏     | 331/800 [01:29<01:56,  4.01it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 88 queued, [cpu: 5.0, objects: 1.3GB]:  41%|████▏     | 330/800 [01:29<01:50,  4.24it/s][A
+- ReadRange->MapBatches(produce): 5 active, 88 queued, [cpu: 5.0, objects: 1.3GB]:  42%|████▏     | 335/800 [01:29<01:48,  4.29it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6367.63 MB (27.90%)
+  Available Memory: 22883.19 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  41%|████▏     | 331/800 [01:30<01:49,  4.30it/s][A[A[ARunning: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  41%|████      | 327/800 [01:30<01:51,  4.22it/s]Running: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  41%|████▏     | 330/800 [01:30<02:02,  3.84it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  42%|████▏     | 335/800 [01:30<01:57,  3.97it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 88 queued, [cpu: 4.0, objects: 1.1GB]:  42%|████▏     | 335/800 [01:30<01:48,  4.29it/s][A
+- ReadRange->MapBatches(produce): 4 active, 88 queued, [cpu: 4.0, objects: 1.1GB]:  42%|████▎     | 340/800 [01:30<01:46,  4.33it/s][ARunning: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  41%|████▏     | 330/800 [01:31<02:02,  3.84it/s]Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  42%|████▏     | 335/800 [01:31<01:52,  4.13it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  42%|████▏     | 336/800 [01:31<01:47,  4.32it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  42%|████▎     | 340/800 [01:31<01:52,  4.10it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6360.64 MB (27.80%)
+  Available Memory: 22890.18 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 86 queued, [cpu: 5.0, objects: 1.3GB]:  42%|████▎     | 340/800 [01:31<01:46,  4.33it/s][A
+- ReadRange->MapBatches(produce): 5 active, 86 queued, [cpu: 5.0, objects: 1.3GB]:  43%|████▎     | 345/800 [01:31<01:47,  4.23it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  42%|████▏     | 335/800 [01:32<01:52,  4.13it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  42%|████▎     | 340/800 [01:32<01:45,  4.35it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  43%|████▎     | 341/800 [01:32<01:48,  4.23it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  42%|████▎     | 340/800 [01:32<01:52,  4.10it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  43%|████▎     | 345/800 [01:32<01:45,  4.32it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 86 queued, [cpu: 4.0, objects: 1.1GB]:  43%|████▎     | 345/800 [01:33<01:47,  4.23it/s][A
+- ReadRange->MapBatches(produce): 4 active, 86 queued, [cpu: 4.0, objects: 1.1GB]:  44%|████▍     | 350/800 [01:33<01:45,  4.28it/s][ARunning: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  42%|████▎     | 340/800 [01:33<01:45,  4.35it/s]Running: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  43%|████▎     | 344/800 [01:33<01:48,  4.21it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  43%|████▎     | 341/800 [01:33<01:48,  4.23it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  43%|████▎     | 345/800 [01:33<01:49,  4.14it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  43%|████▎     | 345/800 [01:33<01:45,  4.32it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  44%|████▍     | 350/800 [01:33<01:40,  4.47it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6584.30 MB (28.50%)
+  Available Memory: 22666.53 MB
+
+
+- ReadRange->MapBatches(produce): 4 active, 85 queued, [cpu: 4.0, objects: 1.1GB]:  44%|████▍     | 350/800 [01:34<01:45,  4.28it/s][A
+- ReadRange->MapBatches(produce): 4 active, 85 queued, [cpu: 4.0, objects: 1.1GB]:  44%|████▍     | 355/800 [01:34<01:42,  4.32it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  43%|████▎     | 344/800 [01:34<01:48,  4.21it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  44%|████▎     | 349/800 [01:34<01:42,  4.40it/s]
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  44%|████▍     | 350/800 [01:34<01:40,  4.47it/s][A[A
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  44%|████▍     | 354/800 [01:34<01:43,  4.30it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  43%|████▎     | 345/800 [01:34<01:49,  4.14it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  44%|████▍     | 351/800 [01:34<01:42,  4.37it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 84 queued, [cpu: 4.0, objects: 1.1GB]:  44%|████▍     | 355/800 [01:35<01:42,  4.32it/s][A
+- ReadRange->MapBatches(produce): 4 active, 84 queued, [cpu: 4.0, objects: 1.1GB]:  45%|████▌     | 360/800 [01:35<01:41,  4.35it/s][ARunning: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  44%|████▎     | 349/800 [01:35<01:42,  4.40it/s]Running: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  44%|████▍     | 354/800 [01:35<01:38,  4.53it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6269.21 MB (27.60%)
+  Available Memory: 22981.61 MB
+
+
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  44%|████▍     | 354/800 [01:35<01:43,  4.30it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  45%|████▍     | 359/800 [01:35<01:38,  4.46it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  44%|████▍     | 356/800 [01:36<01:41,  4.38it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  44%|████▍     | 354/800 [01:36<01:38,  4.53it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  45%|████▍     | 359/800 [01:36<01:38,  4.50it/s]
+- ReadRange->MapBatches(produce): 5 active, 82 queued, [cpu: 5.0, objects: 1.3GB]:  45%|████▌     | 360/800 [01:36<01:41,  4.35it/s][A
+- ReadRange->MapBatches(produce): 5 active, 82 queued, [cpu: 5.0, objects: 1.3GB]:  46%|████▌     | 365/800 [01:36<01:42,  4.25it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  46%|████▌     | 364/800 [01:37<01:38,  4.45it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  45%|████▌     | 361/800 [01:37<01:42,  4.28it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  46%|████▌     | 364/800 [01:37<01:37,  4.47it/s]
+- ReadRange->MapBatches(produce): 5 active, 81 queued, [cpu: 5.0, objects: 1.3GB]:  46%|████▌     | 365/800 [01:37<01:42,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 81 queued, [cpu: 5.0, objects: 1.3GB]:  46%|████▋     | 370/800 [01:37<01:39,  4.30it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6473.52 MB (28.20%)
+  Available Memory: 22777.30 MB
+
+
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  46%|████▌     | 364/800 [01:38<01:38,  4.45it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  46%|████▌     | 369/800 [01:38<01:34,  4.57it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  46%|████▌     | 366/800 [01:38<01:40,  4.32it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  46%|████▌     | 364/800 [01:38<01:37,  4.47it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  46%|████▌     | 368/800 [01:38<01:40,  4.30it/s]
+- ReadRange->MapBatches(produce): 5 active, 80 queued, [cpu: 5.0, objects: 1.4GB]:  46%|████▋     | 370/800 [01:38<01:39,  4.30it/s][A
+- ReadRange->MapBatches(produce): 5 active, 80 queued, [cpu: 5.0, objects: 1.4GB]:  47%|████▋     | 375/800 [01:38<01:40,  4.23it/s][A
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 700.0MB]:  46%|████▌     | 369/800 [01:39<01:34,  4.57it/s][A[A
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 700.0MB]:  47%|████▋     | 373/800 [01:39<01:37,  4.37it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  46%|████▋     | 371/800 [01:39<01:41,  4.24it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  46%|████▌     | 368/800 [01:39<01:40,  4.30it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  46%|████▋     | 372/800 [01:39<01:42,  4.18it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6238.77 MB (27.50%)
+  Available Memory: 23012.05 MB
+
+
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  47%|████▋     | 373/800 [01:40<01:37,  4.37it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  47%|████▋     | 376/800 [01:40<01:47,  3.95it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 79 queued, [cpu: 5.0, objects: 1.3GB]:  47%|████▋     | 375/800 [01:40<01:40,  4.23it/s][A
+- ReadRange->MapBatches(produce): 5 active, 79 queued, [cpu: 5.0, objects: 1.3GB]:  48%|████▊     | 380/800 [01:40<01:38,  4.28it/s][A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  46%|████▋     | 371/800 [01:40<01:41,  4.24it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  47%|████▋     | 375/800 [01:40<01:43,  4.11it/s][A[A[ARunning: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  46%|████▋     | 372/800 [01:40<01:42,  4.18it/s]Running: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  47%|████▋     | 375/800 [01:40<01:52,  3.78it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  48%|████▊     | 380/800 [01:41<01:47,  3.89it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 78 queued, [cpu: 5.0, objects: 1.3GB]:  48%|████▊     | 380/800 [01:41<01:38,  4.28it/s][A
+- ReadRange->MapBatches(produce): 5 active, 78 queued, [cpu: 5.0, objects: 1.3GB]:  48%|████▊     | 385/800 [01:41<01:36,  4.29it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6503.13 MB (28.30%)
+  Available Memory: 22747.69 MB
+
+Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  47%|████▋     | 375/800 [01:41<01:52,  3.78it/s]Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  48%|████▊     | 380/800 [01:41<01:42,  4.10it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  47%|████▋     | 375/800 [01:42<01:43,  4.11it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  48%|████▊     | 381/800 [01:42<01:36,  4.35it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  48%|████▊     | 385/800 [01:42<01:42,  4.06it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 78 queued, [cpu: 4.0, objects: 1.1GB]:  48%|████▊     | 385/800 [01:42<01:36,  4.29it/s][A
+- ReadRange->MapBatches(produce): 4 active, 78 queued, [cpu: 4.0, objects: 1.1GB]:  49%|████▉     | 390/800 [01:42<01:34,  4.33it/s][ARunning: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  48%|████▊     | 380/800 [01:42<01:42,  4.10it/s]Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  48%|████▊     | 385/800 [01:42<01:36,  4.32it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  48%|████▊     | 386/800 [01:43<01:34,  4.37it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  49%|████▉     | 390/800 [01:43<01:38,  4.17it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 77 queued, [cpu: 4.0, objects: 1.1GB]:  49%|████▉     | 390/800 [01:43<01:34,  4.33it/s][A
+- ReadRange->MapBatches(produce): 4 active, 77 queued, [cpu: 4.0, objects: 1.1GB]:  49%|████▉     | 395/800 [01:43<01:33,  4.35it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6287.23 MB (27.60%)
+  Available Memory: 22963.59 MB
+
+Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  48%|████▊     | 385/800 [01:43<01:36,  4.32it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  49%|████▉     | 390/800 [01:43<01:31,  4.48it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  49%|████▉     | 391/800 [01:44<01:33,  4.38it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  49%|████▉     | 395/800 [01:44<01:35,  4.24it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 75 queued, [cpu: 5.0, objects: 1.3GB]:  49%|████▉     | 395/800 [01:44<01:33,  4.35it/s][A
+- ReadRange->MapBatches(produce): 5 active, 75 queued, [cpu: 5.0, objects: 1.3GB]:  50%|█████     | 400/800 [01:44<01:34,  4.25it/s][ARunning: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  49%|████▉     | 390/800 [01:45<01:31,  4.48it/s]Running: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  49%|████▉     | 394/800 [01:45<01:34,  4.30it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  50%|████▉     | 396/800 [01:45<01:34,  4.27it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  49%|████▉     | 395/800 [01:45<01:35,  4.24it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  50%|█████     | 400/800 [01:45<01:30,  4.41it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6178.96 MB (27.30%)
+  Available Memory: 23071.84 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 74 queued, [cpu: 5.0, objects: 1.3GB]:  50%|█████     | 400/800 [01:45<01:34,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 74 queued, [cpu: 5.0, objects: 1.3GB]:  51%|█████     | 405/800 [01:45<01:31,  4.30it/s][ARunning: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  49%|████▉     | 394/800 [01:46<01:34,  4.30it/s]Running: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  50%|████▉     | 399/800 [01:46<01:29,  4.47it/s]
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  50%|█████     | 400/800 [01:46<01:30,  4.41it/s][A[A
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  51%|█████     | 405/800 [01:46<01:26,  4.54it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  50%|█████     | 401/800 [01:46<01:32,  4.31it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  50%|████▉     | 399/800 [01:47<01:29,  4.47it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  50%|█████     | 404/800 [01:47<01:26,  4.58it/s]
+- ReadRange->MapBatches(produce): 4 active, 74 queued, [cpu: 4.0, objects: 1.1GB]:  51%|█████     | 405/800 [01:47<01:31,  4.30it/s][A
+- ReadRange->MapBatches(produce): 4 active, 74 queued, [cpu: 4.0, objects: 1.1GB]:  51%|█████▏    | 410/800 [01:47<01:30,  4.33it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  51%|█████     | 405/800 [01:47<01:26,  4.54it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  51%|█████▏    | 410/800 [01:47<01:24,  4.64it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  50%|█████     | 401/800 [01:47<01:32,  4.31it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  51%|█████     | 405/800 [01:47<01:34,  4.20it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6697.50 MB (28.90%)
+  Available Memory: 22553.32 MB
+
+Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  50%|█████     | 404/800 [01:48<01:26,  4.58it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  51%|█████     | 408/800 [01:48<01:29,  4.37it/s]
+- ReadRange->MapBatches(produce): 5 active, 72 queued, [cpu: 5.0, objects: 1.3GB]:  51%|█████▏    | 410/800 [01:48<01:30,  4.33it/s][A
+- ReadRange->MapBatches(produce): 5 active, 72 queued, [cpu: 5.0, objects: 1.3GB]:  52%|█████▏    | 415/800 [01:48<01:30,  4.24it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  52%|█████▏    | 414/800 [01:48<01:27,  4.41it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  51%|█████     | 405/800 [01:49<01:34,  4.20it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  51%|█████▏    | 411/800 [01:49<01:30,  4.29it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  51%|█████     | 408/800 [01:49<01:29,  4.37it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  52%|█████▏    | 412/800 [01:49<01:31,  4.22it/s]
+- ReadRange->MapBatches(produce): 5 active, 71 queued, [cpu: 5.0, objects: 1.3GB]:  52%|█████▏    | 415/800 [01:49<01:30,  4.24it/s][A
+- ReadRange->MapBatches(produce): 5 active, 71 queued, [cpu: 5.0, objects: 1.3GB]:  52%|█████▎    | 420/800 [01:49<01:28,  4.29it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  52%|█████▏    | 414/800 [01:49<01:27,  4.41it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  52%|█████▏    | 419/800 [01:49<01:23,  4.54it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6781.57 MB (29.20%)
+  Available Memory: 22469.25 MB
+
+
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  51%|█████▏    | 411/800 [01:50<01:30,  4.29it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  52%|█████▏    | 415/800 [01:50<01:32,  4.18it/s][A[A[ARunning: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  52%|█████▏    | 412/800 [01:50<01:31,  4.22it/s]Running: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  52%|█████▏    | 415/800 [01:50<01:40,  3.83it/s]
+- ReadRange->MapBatches(produce): 4 active, 71 queued, [cpu: 4.0, objects: 1.1GB]:  52%|█████▎    | 420/800 [01:50<01:28,  4.29it/s][A
+- ReadRange->MapBatches(produce): 4 active, 71 queued, [cpu: 4.0, objects: 1.1GB]:  53%|█████▎    | 425/800 [01:50<01:26,  4.33it/s][A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  52%|█████▏    | 419/800 [01:50<01:23,  4.54it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  53%|█████▎    | 424/800 [01:50<01:21,  4.62it/s][A[ARunning: 7.96/8 CPU, 4/4 GPU, 2.2GB/12.0GB object_store_memory:  52%|█████▏    | 415/800 [01:51<01:40,  3.83it/s]Running: 7.96/8 CPU, 4/4 GPU, 2.2GB/12.0GB object_store_memory:  52%|█████▎    | 420/800 [01:51<01:32,  4.12it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  52%|█████▎    | 420/800 [01:51<01:29,  4.23it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 70 queued, [cpu: 4.0, objects: 1.1GB]:  53%|█████▎    | 425/800 [01:51<01:26,  4.33it/s][A
+- ReadRange->MapBatches(produce): 4 active, 70 queued, [cpu: 4.0, objects: 1.1GB]:  54%|█████▍    | 430/800 [01:51<01:25,  4.34it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  53%|█████▎    | 424/800 [01:51<01:21,  4.62it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  54%|█████▎    | 428/800 [01:51<01:24,  4.40it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6626.09 MB (28.70%)
+  Available Memory: 22624.73 MB
+
+Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  52%|█████▎    | 420/800 [01:52<01:32,  4.12it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  53%|█████▎    | 425/800 [01:52<01:26,  4.34it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  53%|█████▎    | 425/800 [01:52<01:27,  4.29it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  54%|█████▎    | 428/800 [01:52<01:24,  4.40it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  54%|█████▍    | 431/800 [01:52<01:35,  3.85it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 68 queued, [cpu: 5.0, objects: 1.3GB]:  54%|█████▍    | 430/800 [01:52<01:25,  4.34it/s][A
+- ReadRange->MapBatches(produce): 5 active, 68 queued, [cpu: 5.0, objects: 1.3GB]:  54%|█████▍    | 435/800 [01:52<01:25,  4.25it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  53%|█████▎    | 425/800 [01:53<01:26,  4.34it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  54%|█████▍    | 430/800 [01:53<01:22,  4.50it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  53%|█████▎    | 425/800 [01:53<01:27,  4.29it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  54%|█████▍    | 431/800 [01:53<01:24,  4.36it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6499.40 MB (28.30%)
+  Available Memory: 22751.42 MB
+
+
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  55%|█████▍    | 436/800 [01:54<01:30,  4.02it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 67 queued, [cpu: 5.0, objects: 1.3GB]:  54%|█████▍    | 435/800 [01:54<01:25,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 67 queued, [cpu: 5.0, objects: 1.3GB]:  55%|█████▌    | 440/800 [01:54<01:23,  4.30it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  54%|█████▍    | 430/800 [01:54<01:22,  4.50it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  54%|█████▍    | 434/800 [01:54<01:24,  4.31it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  54%|█████▍    | 431/800 [01:54<01:24,  4.36it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  54%|█████▍    | 435/800 [01:54<01:26,  4.23it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  55%|█████▌    | 440/800 [01:55<01:30,  3.98it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 67 queued, [cpu: 4.0, objects: 1.1GB]:  55%|█████▌    | 440/800 [01:55<01:23,  4.30it/s][A
+- ReadRange->MapBatches(produce): 4 active, 67 queued, [cpu: 4.0, objects: 1.1GB]:  56%|█████▌    | 445/800 [01:55<01:21,  4.33it/s][ARunning: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  54%|█████▍    | 434/800 [01:55<01:24,  4.31it/s]Running: 5.98/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  55%|█████▍    | 439/800 [01:55<01:20,  4.48it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6202.33 MB (27.30%)
+  Available Memory: 23048.49 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  54%|█████▍    | 435/800 [01:55<01:26,  4.23it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  55%|█████▌    | 441/800 [01:55<01:21,  4.41it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  56%|█████▌    | 445/800 [01:56<01:26,  4.10it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  55%|█████▍    | 439/800 [01:56<01:20,  4.48it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  56%|█████▌    | 444/800 [01:56<01:20,  4.44it/s]
+- ReadRange->MapBatches(produce): 5 active, 65 queued, [cpu: 5.0, objects: 1.3GB]:  56%|█████▌    | 445/800 [01:56<01:21,  4.33it/s][A
+- ReadRange->MapBatches(produce): 5 active, 65 queued, [cpu: 5.0, objects: 1.3GB]:  56%|█████▋    | 450/800 [01:56<01:22,  4.23it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  56%|█████▌    | 446/800 [01:57<01:22,  4.30it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  56%|█████▌    | 445/800 [01:57<01:26,  4.10it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  56%|█████▋    | 450/800 [01:57<01:21,  4.31it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  56%|█████▌    | 449/800 [01:57<01:19,  4.43it/s]
+- ReadRange->MapBatches(produce): 5 active, 64 queued, [cpu: 5.0, objects: 1.3GB]:  56%|█████▋    | 450/800 [01:57<01:22,  4.23it/s][A
+- ReadRange->MapBatches(produce): 5 active, 64 queued, [cpu: 5.0, objects: 1.3GB]:  57%|█████▋    | 455/800 [01:57<01:20,  4.28it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6361.42 MB (27.80%)
+  Available Memory: 22889.40 MB
+
+
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  56%|█████▌    | 446/800 [01:58<01:22,  4.30it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  56%|█████▋    | 450/800 [01:58<01:23,  4.19it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  56%|█████▋    | 450/800 [01:58<01:21,  4.31it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  57%|█████▋    | 455/800 [01:58<01:17,  4.47it/s][A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  56%|█████▌    | 449/800 [01:58<01:19,  4.43it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  57%|█████▋    | 453/800 [01:58<01:21,  4.27it/s]
+- ReadRange->MapBatches(produce): 4 active, 64 queued, [cpu: 4.0, objects: 1.1GB]:  57%|█████▋    | 455/800 [01:58<01:20,  4.28it/s][A
+- ReadRange->MapBatches(produce): 4 active, 64 queued, [cpu: 4.0, objects: 1.1GB]:  57%|█████▊    | 460/800 [01:58<01:18,  4.32it/s][A
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  57%|█████▋    | 455/800 [01:59<01:17,  4.47it/s][A[A
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  57%|█████▋    | 459/800 [01:59<01:19,  4.29it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  56%|█████▋    | 450/800 [01:59<01:23,  4.19it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  57%|█████▋    | 456/800 [01:59<01:18,  4.39it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  57%|█████▋    | 458/800 [01:59<01:19,  4.31it/s]
+- ReadRange->MapBatches(produce): 4 active, 63 queued, [cpu: 4.0, objects: 1.1GB]:  57%|█████▊    | 460/800 [01:59<01:18,  4.32it/s][A
+- ReadRange->MapBatches(produce): 4 active, 63 queued, [cpu: 4.0, objects: 1.1GB]:  58%|█████▊    | 465/800 [01:59<01:17,  4.34it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7081.75 MB (30.10%)
+  Available Memory: 22169.07 MB
+
+
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  57%|█████▋    | 459/800 [02:00<01:19,  4.29it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  58%|█████▊    | 464/800 [02:00<01:15,  4.46it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  58%|█████▊    | 461/800 [02:00<01:17,  4.40it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  58%|█████▊    | 463/800 [02:00<01:16,  4.41it/s]
+- ReadRange->MapBatches(produce): 5 active, 61 queued, [cpu: 5.0, objects: 1.3GB]:  58%|█████▊    | 465/800 [02:01<01:17,  4.34it/s][A
+- ReadRange->MapBatches(produce): 5 active, 61 queued, [cpu: 5.0, objects: 1.3GB]:  59%|█████▉    | 470/800 [02:01<01:18,  4.20it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  59%|█████▊    | 469/800 [02:01<01:15,  4.39it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  58%|█████▊    | 461/800 [02:01<01:17,  4.40it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  58%|█████▊    | 465/800 [02:01<01:21,  4.09it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.1GB/12.0GB object_store_memory:  58%|█████▊    | 463/800 [02:01<01:16,  4.41it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.1GB/12.0GB object_store_memory:  58%|█████▊    | 465/800 [02:01<01:30,  3.69it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7057.90 MB (30.00%)
+  Available Memory: 22192.92 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 60 queued, [cpu: 5.0, objects: 1.3GB]:  59%|█████▉    | 470/800 [02:02<01:18,  4.20it/s][A
+- ReadRange->MapBatches(produce): 5 active, 60 queued, [cpu: 5.0, objects: 1.3GB]:  59%|█████▉    | 475/800 [02:02<01:16,  4.26it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  59%|█████▊    | 469/800 [02:02<01:15,  4.39it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  59%|█████▉    | 474/800 [02:02<01:12,  4.52it/s][A[ARunning: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  58%|█████▊    | 465/800 [02:02<01:30,  3.69it/s]Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  59%|█████▉    | 470/800 [02:02<01:21,  4.03it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  58%|█████▊    | 465/800 [02:03<01:21,  4.09it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  59%|█████▉    | 471/800 [02:03<01:16,  4.33it/s][A[A[A
+- ReadRange->MapBatches(produce): 5 active, 59 queued, [cpu: 5.0, objects: 1.3GB]:  59%|█████▉    | 475/800 [02:03<01:16,  4.26it/s][A
+- ReadRange->MapBatches(produce): 5 active, 59 queued, [cpu: 5.0, objects: 1.3GB]:  60%|██████    | 480/800 [02:03<01:14,  4.30it/s][A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  59%|█████▉    | 474/800 [02:03<01:12,  4.52it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  60%|█████▉    | 479/800 [02:03<01:09,  4.62it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7102.94 MB (30.20%)
+  Available Memory: 22147.88 MB
+
+Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  59%|█████▉    | 470/800 [02:03<01:21,  4.03it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  59%|█████▉    | 475/800 [02:03<01:15,  4.28it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  60%|█████▉    | 476/800 [02:04<01:14,  4.35it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  60%|█████▉    | 479/800 [02:04<01:09,  4.62it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  60%|██████    | 481/800 [02:04<01:23,  3.84it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 58 queued, [cpu: 5.0, objects: 1.3GB]:  60%|██████    | 480/800 [02:04<01:14,  4.30it/s][A
+- ReadRange->MapBatches(produce): 5 active, 58 queued, [cpu: 5.0, objects: 1.3GB]:  61%|██████    | 485/800 [02:04<01:14,  4.22it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  59%|█████▉    | 475/800 [02:04<01:15,  4.28it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  60%|██████    | 480/800 [02:04<01:11,  4.45it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  60%|██████    | 481/800 [02:05<01:14,  4.26it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  61%|██████    | 486/800 [02:05<01:18,  4.02it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 57 queued, [cpu: 5.0, objects: 1.3GB]:  61%|██████    | 485/800 [02:05<01:14,  4.22it/s][A
+- ReadRange->MapBatches(produce): 5 active, 57 queued, [cpu: 5.0, objects: 1.3GB]:  61%|██████▏   | 490/800 [02:05<01:12,  4.28it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6730.28 MB (29.00%)
+  Available Memory: 22520.54 MB
+
+Running: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  60%|██████    | 480/800 [02:06<01:11,  4.45it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  60%|██████    | 484/800 [02:06<01:14,  4.24it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  60%|██████    | 481/800 [02:06<01:14,  4.26it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  61%|██████    | 485/800 [02:06<01:16,  4.12it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  61%|██████▏   | 490/800 [02:06<01:18,  3.94it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 56 queued, [cpu: 5.0, objects: 1.3GB]:  61%|██████▏   | 490/800 [02:06<01:12,  4.28it/s][A
+- ReadRange->MapBatches(produce): 5 active, 56 queued, [cpu: 5.0, objects: 1.3GB]:  62%|██████▏   | 495/800 [02:06<01:11,  4.28it/s][ARunning: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  60%|██████    | 484/800 [02:07<01:14,  4.24it/s]Running: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  61%|██████    | 489/800 [02:07<01:10,  4.42it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  61%|██████▏   | 490/800 [02:07<01:13,  4.21it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6903.67 MB (29.60%)
+  Available Memory: 22347.43 MB
+
+
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  62%|██████▏   | 495/800 [02:07<01:14,  4.09it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  61%|██████    | 489/800 [02:08<01:10,  4.42it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  62%|██████▏   | 494/800 [02:08<01:07,  4.56it/s]
+- ReadRange->MapBatches(produce): 5 active, 55 queued, [cpu: 5.0, objects: 1.3GB]:  62%|██████▏   | 495/800 [02:08<01:11,  4.28it/s][A
+- ReadRange->MapBatches(produce): 5 active, 55 queued, [cpu: 5.0, objects: 1.3GB]:  62%|██████▎   | 500/800 [02:08<01:09,  4.32it/s][A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  62%|██████▏   | 495/800 [02:08<01:11,  4.27it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  62%|██████▏   | 494/800 [02:09<01:07,  4.56it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  62%|██████▏   | 498/800 [02:09<01:09,  4.36it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  62%|██████▎   | 500/800 [02:09<01:11,  4.19it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 55 queued, [cpu: 4.0, objects: 1.1GB]:  62%|██████▎   | 500/800 [02:09<01:09,  4.32it/s][A
+- ReadRange->MapBatches(produce): 4 active, 55 queued, [cpu: 4.0, objects: 1.1GB]:  63%|██████▎   | 505/800 [02:09<01:07,  4.35it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6782.24 MB (29.20%)
+  Available Memory: 22468.58 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  62%|██████▏   | 495/800 [02:09<01:11,  4.27it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  63%|██████▎   | 501/800 [02:09<01:07,  4.46it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  63%|██████▎   | 503/800 [02:10<01:07,  4.37it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  63%|██████▎   | 505/800 [02:10<01:09,  4.25it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 53 queued, [cpu: 5.0, objects: 1.3GB]:  63%|██████▎   | 505/800 [02:10<01:07,  4.35it/s][A
+- ReadRange->MapBatches(produce): 5 active, 53 queued, [cpu: 5.0, objects: 1.3GB]:  64%|██████▍   | 510/800 [02:10<01:08,  4.25it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  63%|██████▎   | 506/800 [02:11<01:08,  4.31it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  63%|██████▎   | 503/800 [02:11<01:07,  4.37it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  63%|██████▎   | 507/800 [02:11<01:09,  4.21it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  63%|██████▎   | 505/800 [02:11<01:09,  4.25it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  64%|██████▍   | 510/800 [02:11<01:05,  4.40it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 52 queued, [cpu: 5.0, objects: 1.3GB]:  64%|██████▍   | 510/800 [02:11<01:08,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 52 queued, [cpu: 5.0, objects: 1.3GB]:  64%|██████▍   | 515/800 [02:11<01:06,  4.28it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6492.78 MB (28.30%)
+  Available Memory: 22758.05 MB
+
+
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  64%|██████▍   | 510/800 [02:12<01:05,  4.40it/s][A[A
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  64%|██████▍   | 515/800 [02:12<01:02,  4.54it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  64%|██████▍   | 511/800 [02:12<01:06,  4.34it/s][A[A[ARunning: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  63%|██████▎   | 507/800 [02:12<01:09,  4.21it/s]Running: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  64%|██████▍   | 510/800 [02:12<01:15,  3.83it/s]
+- ReadRange->MapBatches(produce): 5 active, 51 queued, [cpu: 5.0, objects: 1.3GB]:  64%|██████▍   | 515/800 [02:12<01:06,  4.28it/s][A
+- ReadRange->MapBatches(produce): 5 active, 51 queued, [cpu: 5.0, objects: 1.3GB]:  65%|██████▌   | 520/800 [02:12<01:04,  4.32it/s][ARunning: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  64%|██████▍   | 510/800 [02:13<01:15,  3.83it/s]Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  64%|██████▍   | 515/800 [02:13<01:08,  4.13it/s]
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  65%|██████▍   | 519/800 [02:13<01:04,  4.34it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  64%|██████▍   | 516/800 [02:13<01:05,  4.36it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 51 queued, [cpu: 4.0, objects: 1.1GB]:  65%|██████▌   | 520/800 [02:13<01:04,  4.32it/s][A
+- ReadRange->MapBatches(produce): 4 active, 51 queued, [cpu: 4.0, objects: 1.1GB]:  66%|██████▌   | 525/800 [02:13<01:03,  4.35it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6795.94 MB (29.20%)
+  Available Memory: 22454.89 MB
+
+Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  64%|██████▍   | 515/800 [02:14<01:08,  4.13it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  65%|██████▌   | 520/800 [02:14<01:04,  4.35it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  65%|██████▍   | 519/800 [02:14<01:04,  4.34it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  66%|██████▌   | 524/800 [02:14<01:01,  4.49it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  64%|██████▍   | 516/800 [02:14<01:05,  4.36it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  65%|██████▌   | 520/800 [02:14<01:06,  4.23it/s][A[A[A
+- ReadRange->MapBatches(produce): 5 active, 49 queued, [cpu: 5.0, objects: 1.3GB]:  66%|██████▌   | 525/800 [02:15<01:03,  4.35it/s][A
+- ReadRange->MapBatches(produce): 5 active, 49 queued, [cpu: 5.0, objects: 1.3GB]:  66%|██████▋   | 530/800 [02:15<01:03,  4.25it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  65%|██████▌   | 520/800 [02:15<01:04,  4.35it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  66%|██████▌   | 525/800 [02:15<01:01,  4.50it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  66%|██████▌   | 529/800 [02:15<01:00,  4.47it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  65%|██████▌   | 520/800 [02:15<01:06,  4.23it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  66%|██████▌   | 526/800 [02:15<01:03,  4.31it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7160.85 MB (30.40%)
+  Available Memory: 22089.98 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 48 queued, [cpu: 5.0, objects: 1.3GB]:  66%|██████▋   | 530/800 [02:16<01:03,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 48 queued, [cpu: 5.0, objects: 1.3GB]:  67%|██████▋   | 535/800 [02:16<01:01,  4.29it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  66%|██████▌   | 525/800 [02:16<01:01,  4.50it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  66%|██████▌   | 529/800 [02:16<01:03,  4.30it/s]
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  66%|██████▌   | 529/800 [02:16<01:00,  4.47it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  67%|██████▋   | 534/800 [02:16<00:58,  4.57it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  66%|██████▌   | 526/800 [02:16<01:03,  4.31it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  66%|██████▋   | 530/800 [02:16<01:04,  4.18it/s][A[A[A
+- ReadRange->MapBatches(produce): 5 active, 47 queued, [cpu: 5.0, objects: 1.3GB]:  67%|██████▋   | 535/800 [02:17<01:01,  4.29it/s][A
+- ReadRange->MapBatches(produce): 5 active, 47 queued, [cpu: 5.0, objects: 1.3GB]:  68%|██████▊   | 540/800 [02:17<01:00,  4.32it/s][ARunning: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  66%|██████▌   | 529/800 [02:17<01:03,  4.30it/s]Running: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  67%|██████▋   | 534/800 [02:17<00:59,  4.46it/s]
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  67%|██████▋   | 534/800 [02:17<00:58,  4.57it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  67%|██████▋   | 539/800 [02:17<00:56,  4.65it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6926.68 MB (29.60%)
+  Available Memory: 22324.15 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  66%|██████▋   | 530/800 [02:18<01:04,  4.18it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  67%|██████▋   | 536/800 [02:18<01:00,  4.40it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  67%|██████▋   | 534/800 [02:18<00:59,  4.46it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  67%|██████▋   | 539/800 [02:18<00:56,  4.58it/s]
+- ReadRange->MapBatches(produce): 4 active, 47 queued, [cpu: 4.0, objects: 1.1GB]:  68%|██████▊   | 540/800 [02:18<01:00,  4.32it/s][A
+- ReadRange->MapBatches(produce): 4 active, 47 queued, [cpu: 4.0, objects: 1.1GB]:  68%|██████▊   | 545/800 [02:18<00:58,  4.35it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  67%|██████▋   | 539/800 [02:18<00:56,  4.65it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  68%|██████▊   | 543/800 [02:18<00:58,  4.43it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  68%|██████▊   | 541/800 [02:19<00:58,  4.40it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  67%|██████▋   | 539/800 [02:19<00:56,  4.58it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  68%|██████▊   | 543/800 [02:19<00:58,  4.37it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  68%|██████▊   | 543/800 [02:19<00:58,  4.43it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  68%|██████▊   | 546/800 [02:19<01:05,  3.87it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 45 queued, [cpu: 5.0, objects: 1.3GB]:  68%|██████▊   | 545/800 [02:19<00:58,  4.35it/s][A
+- ReadRange->MapBatches(produce): 5 active, 45 queued, [cpu: 5.0, objects: 1.3GB]:  69%|██████▉   | 550/800 [02:19<00:58,  4.25it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6984.33 MB (29.80%)
+  Available Memory: 22266.50 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  68%|██████▊   | 546/800 [02:20<00:59,  4.29it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  68%|██████▊   | 543/800 [02:20<00:58,  4.37it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  68%|██████▊   | 547/800 [02:20<00:59,  4.22it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  69%|██████▉   | 551/800 [02:20<01:01,  4.03it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 44 queued, [cpu: 5.0, objects: 1.3GB]:  69%|██████▉   | 550/800 [02:20<00:58,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 44 queued, [cpu: 5.0, objects: 1.3GB]:  69%|██████▉   | 555/800 [02:20<00:57,  4.30it/s][A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  68%|██████▊   | 546/800 [02:21<00:59,  4.29it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  69%|██████▉   | 550/800 [02:21<01:00,  4.15it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.1GB/12.0GB object_store_memory:  68%|██████▊   | 547/800 [02:21<00:59,  4.22it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.1GB/12.0GB object_store_memory:  69%|██████▉   | 550/800 [02:21<01:05,  3.80it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6961.78 MB (29.70%)
+  Available Memory: 22289.05 MB
+
+
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  69%|██████▉   | 555/800 [02:21<01:01,  3.96it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 43 queued, [cpu: 5.0, objects: 1.3GB]:  69%|██████▉   | 555/800 [02:22<00:57,  4.30it/s][A
+- ReadRange->MapBatches(produce): 5 active, 43 queued, [cpu: 5.0, objects: 1.3GB]:  70%|███████   | 560/800 [02:22<00:55,  4.31it/s][ARunning: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  69%|██████▉   | 550/800 [02:22<01:05,  3.80it/s]Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  69%|██████▉   | 555/800 [02:22<00:59,  4.12it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  69%|██████▉   | 550/800 [02:22<01:00,  4.15it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  70%|██████▉   | 556/800 [02:22<00:55,  4.37it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  70%|███████   | 560/800 [02:23<00:58,  4.10it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 43 queued, [cpu: 4.0, objects: 1.1GB]:  70%|███████   | 560/800 [02:23<00:55,  4.31it/s][A
+- ReadRange->MapBatches(produce): 4 active, 43 queued, [cpu: 4.0, objects: 1.1GB]:  71%|███████   | 565/800 [02:23<00:54,  4.34it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  69%|██████▉   | 555/800 [02:23<00:59,  4.12it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  70%|███████   | 560/800 [02:23<00:55,  4.34it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  70%|███████   | 561/800 [02:23<00:54,  4.38it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6809.31 MB (29.30%)
+  Available Memory: 22441.52 MB
+
+
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  71%|███████   | 565/800 [02:24<00:56,  4.19it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 41 queued, [cpu: 5.0, objects: 1.3GB]:  71%|███████   | 565/800 [02:24<00:54,  4.34it/s][A
+- ReadRange->MapBatches(produce): 5 active, 41 queued, [cpu: 5.0, objects: 1.3GB]:  71%|███████▏  | 570/800 [02:24<00:54,  4.24it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  70%|███████   | 560/800 [02:24<00:55,  4.34it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  71%|███████   | 565/800 [02:24<00:52,  4.49it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  71%|███████   | 566/800 [02:25<00:54,  4.28it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  71%|███████   | 565/800 [02:25<00:56,  4.19it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  71%|███████▏  | 570/800 [02:25<00:52,  4.38it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 40 queued, [cpu: 5.0, objects: 1.3GB]:  71%|███████▏  | 570/800 [02:25<00:54,  4.24it/s][A
+- ReadRange->MapBatches(produce): 5 active, 40 queued, [cpu: 5.0, objects: 1.3GB]:  72%|███████▏  | 575/800 [02:25<00:52,  4.29it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  71%|███████   | 565/800 [02:25<00:52,  4.49it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  71%|███████   | 569/800 [02:25<00:53,  4.30it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6794.26 MB (29.20%)
+  Available Memory: 22456.57 MB
+
+
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  71%|███████   | 566/800 [02:26<00:54,  4.28it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  71%|███████▏  | 570/800 [02:26<00:55,  4.13it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  71%|███████▏  | 570/800 [02:26<00:52,  4.38it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  72%|███████▏  | 575/800 [02:26<00:50,  4.47it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 39 queued, [cpu: 5.0, objects: 1.3GB]:  72%|███████▏  | 575/800 [02:26<00:52,  4.29it/s][A
+- ReadRange->MapBatches(produce): 5 active, 39 queued, [cpu: 5.0, objects: 1.3GB]:  72%|███████▎  | 580/800 [02:26<00:51,  4.29it/s][ARunning: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  71%|███████   | 569/800 [02:26<00:53,  4.30it/s]Running: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  72%|███████▏  | 574/800 [02:26<00:51,  4.43it/s]
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  72%|███████▏  | 575/800 [02:27<00:50,  4.47it/s][A[A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  72%|███████▎  | 580/800 [02:27<00:47,  4.59it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  72%|███████▏  | 575/800 [02:27<00:53,  4.21it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  72%|███████▏  | 574/800 [02:27<00:51,  4.43it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  72%|███████▏  | 579/800 [02:27<00:48,  4.56it/s]
+- ReadRange->MapBatches(produce): 5 active, 38 queued, [cpu: 5.0, objects: 1.3GB]:  72%|███████▎  | 580/800 [02:27<00:51,  4.29it/s][A
+- ReadRange->MapBatches(produce): 5 active, 38 queued, [cpu: 5.0, objects: 1.3GB]:  73%|███████▎  | 585/800 [02:27<00:49,  4.33it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7000.66 MB (29.90%)
+  Available Memory: 22250.17 MB
+
+
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  72%|███████▎  | 580/800 [02:28<00:47,  4.59it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  73%|███████▎  | 584/800 [02:28<00:49,  4.38it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  72%|███████▏  | 575/800 [02:28<00:53,  4.21it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  73%|███████▎  | 581/800 [02:28<00:49,  4.42it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  72%|███████▏  | 579/800 [02:28<00:48,  4.56it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  73%|███████▎  | 583/800 [02:28<00:49,  4.35it/s]
+- ReadRange->MapBatches(produce): 5 active, 37 queued, [cpu: 5.0, objects: 1.3GB]:  73%|███████▎  | 585/800 [02:29<00:49,  4.33it/s][A
+- ReadRange->MapBatches(produce): 5 active, 37 queued, [cpu: 5.0, objects: 1.3GB]:  74%|███████▍  | 590/800 [02:29<00:49,  4.24it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  74%|███████▎  | 589/800 [02:29<00:48,  4.39it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  73%|███████▎  | 586/800 [02:29<00:49,  4.30it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6683.97 MB (28.90%)
+  Available Memory: 22566.86 MB
+
+Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  73%|███████▎  | 583/800 [02:29<00:49,  4.35it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  73%|███████▎  | 587/800 [02:29<00:50,  4.21it/s]
+- ReadRange->MapBatches(produce): 5 active, 36 queued, [cpu: 5.0, objects: 1.3GB]:  74%|███████▍  | 590/800 [02:30<00:49,  4.24it/s][A
+- ReadRange->MapBatches(produce): 5 active, 36 queued, [cpu: 5.0, objects: 1.3GB]:  74%|███████▍  | 595/800 [02:30<00:47,  4.29it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  74%|███████▎  | 589/800 [02:30<00:48,  4.39it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  74%|███████▍  | 594/800 [02:30<00:45,  4.52it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  73%|███████▎  | 586/800 [02:30<00:49,  4.30it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  74%|███████▍  | 590/800 [02:30<00:50,  4.19it/s][A[A[ARunning: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  73%|███████▎  | 587/800 [02:30<00:50,  4.21it/s]Running: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  74%|███████▍  | 590/800 [02:30<00:54,  3.82it/s]
+- ReadRange->MapBatches(produce): 5 active, 35 queued, [cpu: 5.0, objects: 1.3GB]:  74%|███████▍  | 595/800 [02:31<00:47,  4.29it/s][A
+- ReadRange->MapBatches(produce): 5 active, 35 queued, [cpu: 5.0, objects: 1.3GB]:  75%|███████▌  | 600/800 [02:31<00:47,  4.23it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  74%|███████▍  | 594/800 [02:31<00:45,  4.52it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  75%|███████▍  | 599/800 [02:31<00:43,  4.65it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6429.44 MB (28.10%)
+  Available Memory: 22821.39 MB
+
+Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  74%|███████▍  | 590/800 [02:31<00:54,  3.82it/s]Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  74%|███████▍  | 595/800 [02:31<00:49,  4.15it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  74%|███████▍  | 595/800 [02:32<00:49,  4.16it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 35 queued, [cpu: 4.0, objects: 1.1GB]:  75%|███████▌  | 600/800 [02:32<00:47,  4.23it/s][A
+- ReadRange->MapBatches(produce): 4 active, 35 queued, [cpu: 4.0, objects: 1.1GB]:  76%|███████▌  | 605/800 [02:32<00:44,  4.40it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  75%|███████▍  | 599/800 [02:32<00:43,  4.65it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  75%|███████▌  | 603/800 [02:32<00:44,  4.42it/s][A[ARunning: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  74%|███████▍  | 595/800 [02:32<00:49,  4.15it/s]Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  75%|███████▌  | 600/800 [02:32<00:45,  4.36it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  75%|███████▌  | 600/800 [02:33<00:45,  4.35it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  75%|███████▌  | 603/800 [02:33<00:44,  4.42it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  76%|███████▌  | 606/800 [02:33<00:48,  3.97it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 34 queued, [cpu: 4.0, objects: 1.1GB]:  76%|███████▌  | 605/800 [02:33<00:44,  4.40it/s][A
+- ReadRange->MapBatches(produce): 4 active, 34 queued, [cpu: 4.0, objects: 1.1GB]:  76%|███████▋  | 610/800 [02:33<00:43,  4.40it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6302.04 MB (27.70%)
+  Available Memory: 22948.80 MB
+
+Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  75%|███████▌  | 600/800 [02:34<00:45,  4.36it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  76%|███████▌  | 605/800 [02:34<00:43,  4.51it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  76%|███████▌  | 605/800 [02:34<00:44,  4.37it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  76%|███████▌  | 606/800 [02:34<00:48,  3.97it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  76%|███████▋  | 610/800 [02:34<00:48,  3.94it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 32 queued, [cpu: 5.0, objects: 1.3GB]:  76%|███████▋  | 610/800 [02:34<00:43,  4.40it/s][A
+- ReadRange->MapBatches(produce): 5 active, 32 queued, [cpu: 5.0, objects: 1.3GB]:  77%|███████▋  | 615/800 [02:34<00:43,  4.29it/s][ARunning: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  76%|███████▌  | 605/800 [02:35<00:43,  4.51it/s]Running: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  76%|███████▌  | 609/800 [02:35<00:44,  4.32it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  76%|███████▌  | 605/800 [02:35<00:44,  4.37it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  76%|███████▋  | 611/800 [02:35<00:42,  4.40it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  76%|███████▋  | 610/800 [02:35<00:48,  3.94it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  77%|███████▋  | 615/800 [02:35<00:43,  4.21it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6570.53 MB (28.50%)
+  Available Memory: 22680.30 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 31 queued, [cpu: 5.0, objects: 1.3GB]:  77%|███████▋  | 615/800 [02:35<00:43,  4.29it/s][A
+- ReadRange->MapBatches(produce): 5 active, 31 queued, [cpu: 5.0, objects: 1.3GB]:  78%|███████▊  | 620/800 [02:35<00:41,  4.32it/s][ARunning: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  76%|███████▌  | 609/800 [02:36<00:44,  4.32it/s]Running: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  77%|███████▋  | 614/800 [02:36<00:41,  4.48it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  76%|███████▋  | 611/800 [02:36<00:42,  4.40it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  77%|███████▋  | 615/800 [02:36<00:43,  4.25it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  77%|███████▋  | 615/800 [02:36<00:43,  4.21it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  78%|███████▊  | 620/800 [02:36<00:41,  4.37it/s][A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  77%|███████▋  | 614/800 [02:37<00:41,  4.48it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  77%|███████▋  | 619/800 [02:37<00:40,  4.44it/s]
+- ReadRange->MapBatches(produce): 5 active, 30 queued, [cpu: 5.0, objects: 1.3GB]:  78%|███████▊  | 620/800 [02:37<00:41,  4.32it/s][A
+- ReadRange->MapBatches(produce): 5 active, 30 queued, [cpu: 5.0, objects: 1.3GB]:  78%|███████▊  | 625/800 [02:37<00:41,  4.21it/s][A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  78%|███████▊  | 620/800 [02:37<00:41,  4.37it/s][A[A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  78%|███████▊  | 624/800 [02:37<00:41,  4.23it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6775.90 MB (29.20%)
+  Available Memory: 22474.93 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  77%|███████▋  | 615/800 [02:37<00:43,  4.25it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  78%|███████▊  | 621/800 [02:37<00:41,  4.32it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  78%|███████▊  | 624/800 [02:38<00:39,  4.43it/s]
+- ReadRange->MapBatches(produce): 5 active, 29 queued, [cpu: 5.0, objects: 1.3GB]:  78%|███████▊  | 625/800 [02:38<00:41,  4.21it/s][A
+- ReadRange->MapBatches(produce): 5 active, 29 queued, [cpu: 5.0, objects: 1.3GB]:  79%|███████▉  | 630/800 [02:38<00:39,  4.27it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  78%|███████▊  | 624/800 [02:38<00:41,  4.23it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  79%|███████▊  | 629/800 [02:38<00:38,  4.41it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  78%|███████▊  | 626/800 [02:39<00:40,  4.34it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  78%|███████▊  | 624/800 [02:39<00:39,  4.43it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  78%|███████▊  | 628/800 [02:39<00:40,  4.26it/s]
+- ReadRange->MapBatches(produce): 5 active, 28 queued, [cpu: 5.0, objects: 1.3GB]:  79%|███████▉  | 630/800 [02:39<00:39,  4.27it/s][A
+- ReadRange->MapBatches(produce): 5 active, 28 queued, [cpu: 5.0, objects: 1.3GB]:  79%|███████▉  | 635/800 [02:39<00:38,  4.30it/s][A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  79%|███████▊  | 629/800 [02:39<00:38,  4.41it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  79%|███████▉  | 634/800 [02:39<00:36,  4.54it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6539.21 MB (28.40%)
+  Available Memory: 22711.62 MB
+
+
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  78%|███████▊  | 626/800 [02:40<00:40,  4.34it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  79%|███████▉  | 630/800 [02:40<00:40,  4.21it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  79%|███████▉  | 633/800 [02:40<00:38,  4.31it/s]
+- ReadRange->MapBatches(produce): 5 active, 27 queued, [cpu: 5.0, objects: 1.3GB]:  79%|███████▉  | 635/800 [02:40<00:38,  4.30it/s][A
+- ReadRange->MapBatches(produce): 5 active, 27 queued, [cpu: 5.0, objects: 1.3GB]:  80%|████████  | 640/800 [02:40<00:36,  4.34it/s][A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  79%|███████▉  | 634/800 [02:40<00:36,  4.54it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  80%|███████▉  | 639/800 [02:40<00:34,  4.63it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  79%|███████▉  | 635/800 [02:41<00:38,  4.27it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  80%|███████▉  | 638/800 [02:41<00:37,  4.32it/s]
+- ReadRange->MapBatches(produce): 5 active, 26 queued, [cpu: 5.0, objects: 1.3GB]:  80%|████████  | 640/800 [02:41<00:36,  4.34it/s][A
+- ReadRange->MapBatches(produce): 5 active, 26 queued, [cpu: 5.0, objects: 1.3GB]:  81%|████████  | 645/800 [02:41<00:35,  4.34it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  80%|███████▉  | 639/800 [02:41<00:34,  4.63it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  80%|████████  | 643/800 [02:41<00:35,  4.39it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6379.95 MB (27.90%)
+  Available Memory: 22870.88 MB
+
+
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  80%|████████  | 640/800 [02:42<00:37,  4.30it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  80%|████████  | 643/800 [02:42<00:36,  4.35it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  80%|████████  | 643/800 [02:43<00:35,  4.39it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  81%|████████  | 646/800 [02:43<00:40,  3.84it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 25 queued, [cpu: 5.0, objects: 1.3GB]:  81%|████████  | 645/800 [02:43<00:35,  4.34it/s][A
+- ReadRange->MapBatches(produce): 5 active, 25 queued, [cpu: 5.0, objects: 1.3GB]:  81%|████████▏ | 650/800 [02:43<00:35,  4.25it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  80%|████████  | 640/800 [02:43<00:37,  4.30it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  81%|████████  | 646/800 [02:43<00:35,  4.36it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  80%|████████  | 643/800 [02:43<00:36,  4.35it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  81%|████████  | 647/800 [02:43<00:36,  4.21it/s]  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6670.32 MB (28.80%)
+  Available Memory: 22580.52 MB
+
+
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  81%|████████▏ | 651/800 [02:44<00:37,  4.02it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 24 queued, [cpu: 5.0, objects: 1.3GB]:  81%|████████▏ | 650/800 [02:44<00:35,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 24 queued, [cpu: 5.0, objects: 1.3GB]:  82%|████████▏ | 655/800 [02:44<00:33,  4.30it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  81%|████████▏ | 651/800 [02:44<00:34,  4.37it/s][A[A[ARunning: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  81%|████████  | 647/800 [02:44<00:36,  4.21it/s]Running: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  81%|████████▏ | 650/800 [02:44<00:39,  3.83it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  82%|████████▏ | 655/800 [02:45<00:36,  3.97it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 23 queued, [cpu: 5.0, objects: 1.3GB]:  82%|████████▏ | 655/800 [02:45<00:33,  4.30it/s][A
+- ReadRange->MapBatches(produce): 5 active, 23 queued, [cpu: 5.0, objects: 1.3GB]:  82%|████████▎ | 660/800 [02:45<00:32,  4.32it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6372.70 MB (27.90%)
+  Available Memory: 22878.13 MB
+
+Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  81%|████████▏ | 650/800 [02:45<00:39,  3.83it/s]Running: 7.96/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  82%|████████▏ | 655/800 [02:45<00:35,  4.13it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  82%|████████▏ | 656/800 [02:46<00:32,  4.38it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  82%|████████▎ | 660/800 [02:46<00:34,  4.10it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 22 queued, [cpu: 5.0, objects: 1.3GB]:  82%|████████▎ | 660/800 [02:46<00:32,  4.32it/s][A
+- ReadRange->MapBatches(produce): 5 active, 22 queued, [cpu: 5.0, objects: 1.3GB]:  83%|████████▎ | 665/800 [02:46<00:31,  4.34it/s][ARunning: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  82%|████████▏ | 655/800 [02:46<00:35,  4.13it/s]Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  82%|████████▎ | 660/800 [02:46<00:32,  4.27it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  83%|████████▎ | 661/800 [02:47<00:31,  4.44it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  83%|████████▎ | 665/800 [02:47<00:31,  4.25it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 21 queued, [cpu: 5.0, objects: 1.3GB]:  83%|████████▎ | 665/800 [02:47<00:31,  4.34it/s][A
+- ReadRange->MapBatches(produce): 5 active, 21 queued, [cpu: 5.0, objects: 1.3GB]:  84%|████████▍ | 670/800 [02:47<00:30,  4.30it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5792.91 MB (26.10%)
+  Available Memory: 23457.93 MB
+
+Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  82%|████████▎ | 660/800 [02:48<00:32,  4.27it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  83%|████████▎ | 665/800 [02:48<00:31,  4.32it/s]
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  83%|████████▎ | 666/800 [02:48<00:31,  4.31it/s][A[A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  83%|████████▎ | 665/800 [02:48<00:31,  4.25it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  84%|████████▍ | 670/800 [02:48<00:29,  4.41it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 20 queued, [cpu: 5.0, objects: 1.3GB]:  84%|████████▍ | 670/800 [02:48<00:30,  4.30it/s][A
+- ReadRange->MapBatches(produce): 5 active, 20 queued, [cpu: 5.0, objects: 1.3GB]:  84%|████████▍ | 675/800 [02:48<00:29,  4.21it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  83%|████████▎ | 665/800 [02:49<00:31,  4.32it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  84%|████████▍ | 670/800 [02:49<00:29,  4.46it/s]
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  84%|████████▍ | 670/800 [02:49<00:29,  4.41it/s][A[A
+
+- MapBatches(consume): 5 active, 1 queued, [cpu: 5.0, objects: 900.0MB]:  84%|████████▍ | 674/800 [02:49<00:29,  4.26it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  84%|████████▍ | 671/800 [02:49<00:30,  4.22it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 20 queued, [cpu: 4.0, objects: 1.2GB]:  84%|████████▍ | 675/800 [02:49<00:29,  4.21it/s][A
+- ReadRange->MapBatches(produce): 4 active, 20 queued, [cpu: 4.0, objects: 1.2GB]:  85%|████████▌ | 680/800 [02:49<00:27,  4.38it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5656.22 MB (25.60%)
+  Available Memory: 23594.61 MB
+
+Running: 5.99/8 CPU, 4/4 GPU, 1.7GB/12.0GB object_store_memory:  84%|████████▍ | 674/800 [02:50<00:29,  4.29it/s]
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 800.0MB]:  84%|████████▍ | 674/800 [02:50<00:29,  4.26it/s][A[A
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 800.0MB]:  85%|████████▌ | 680/800 [02:50<00:25,  4.71it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  84%|████████▍ | 671/800 [02:50<00:30,  4.22it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  84%|████████▍ | 676/800 [02:50<00:28,  4.39it/s][A[A[A
+- ReadRange->MapBatches(produce): 4 active, 19 queued, [cpu: 4.0, objects: 1.2GB]:  85%|████████▌ | 680/800 [02:51<00:27,  4.38it/s][A
+- ReadRange->MapBatches(produce): 4 active, 19 queued, [cpu: 4.0, objects: 1.2GB]:  86%|████████▌ | 685/800 [02:51<00:26,  4.39it/s][ARunning: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  84%|████████▍ | 674/800 [02:51<00:29,  4.29it/s]Running: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  85%|████████▍ | 679/800 [02:51<00:27,  4.45it/s]
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 800.0MB]:  86%|████████▌ | 684/800 [02:51<00:26,  4.46it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  84%|████████▍ | 676/800 [02:51<00:28,  4.39it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  85%|████████▌ | 681/800 [02:51<00:27,  4.40it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6437.94 MB (28.10%)
+  Available Memory: 22812.89 MB
+
+
+- ReadRange->MapBatches(produce): 4 active, 18 queued, [cpu: 4.0, objects: 1.2GB]:  86%|████████▌ | 685/800 [02:52<00:26,  4.39it/s][A
+- ReadRange->MapBatches(produce): 4 active, 18 queued, [cpu: 4.0, objects: 1.2GB]:  86%|████████▋ | 690/800 [02:52<00:24,  4.40it/s][ARunning: 6.97/8 CPU, 2/4 GPU, 1.7GB/12.0GB object_store_memory:  85%|████████▍ | 679/800 [02:52<00:27,  4.45it/s]Running: 6.97/8 CPU, 2/4 GPU, 1.7GB/12.0GB object_store_memory:  86%|████████▌ | 684/800 [02:52<00:25,  4.58it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  86%|████████▌ | 684/800 [02:52<00:26,  4.46it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  86%|████████▌ | 689/800 [02:52<00:24,  4.46it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  86%|████████▌ | 686/800 [02:52<00:25,  4.40it/s][A[A[ARunning: 7.96/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  86%|████████▌ | 684/800 [02:53<00:25,  4.58it/s]Running: 7.96/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  86%|████████▌ | 689/800 [02:53<00:24,  4.52it/s]
+- ReadRange->MapBatches(produce): 5 active, 16 queued, [cpu: 5.0, objects: 1.4GB]:  86%|████████▋ | 690/800 [02:53<00:24,  4.40it/s][A
+- ReadRange->MapBatches(produce): 5 active, 16 queued, [cpu: 5.0, objects: 1.4GB]:  87%|████████▋ | 695/800 [02:53<00:24,  4.28it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6054.23 MB (26.90%)
+  Available Memory: 23196.60 MB
+
+
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  87%|████████▋ | 694/800 [02:53<00:24,  4.32it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  86%|████████▋ | 691/800 [02:54<00:25,  4.29it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  86%|████████▌ | 689/800 [02:54<00:24,  4.52it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  87%|████████▋ | 694/800 [02:54<00:24,  4.37it/s]
+- ReadRange->MapBatches(produce): 5 active, 15 queued, [cpu: 5.0, objects: 1.3GB]:  87%|████████▋ | 695/800 [02:54<00:24,  4.28it/s][A
+- ReadRange->MapBatches(produce): 5 active, 15 queued, [cpu: 5.0, objects: 1.3GB]:  88%|████████▊ | 700/800 [02:54<00:23,  4.21it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  87%|████████▋ | 699/800 [02:55<00:23,  4.35it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  87%|████████▋ | 696/800 [02:55<00:24,  4.21it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  87%|████████▋ | 699/800 [02:55<00:23,  4.38it/s]
+- ReadRange->MapBatches(produce): 5 active, 14 queued, [cpu: 5.0, objects: 1.3GB]:  88%|████████▊ | 700/800 [02:55<00:23,  4.21it/s][A
+- ReadRange->MapBatches(produce): 5 active, 14 queued, [cpu: 5.0, objects: 1.3GB]:  88%|████████▊ | 705/800 [02:55<00:22,  4.27it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6343.93 MB (27.80%)
+  Available Memory: 22906.91 MB
+
+
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  87%|████████▋ | 699/800 [02:56<00:23,  4.35it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  88%|████████▊ | 704/800 [02:56<00:21,  4.49it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  88%|████████▊ | 701/800 [02:56<00:23,  4.27it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  87%|████████▋ | 699/800 [02:56<00:23,  4.38it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  88%|████████▊ | 703/800 [02:56<00:23,  4.20it/s]
+- ReadRange->MapBatches(produce): 5 active, 13 queued, [cpu: 5.0, objects: 1.3GB]:  88%|████████▊ | 705/800 [02:56<00:22,  4.27it/s][A
+- ReadRange->MapBatches(produce): 5 active, 13 queued, [cpu: 5.0, objects: 1.3GB]:  89%|████████▉ | 710/800 [02:56<00:21,  4.27it/s][A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  88%|████████▊ | 704/800 [02:57<00:21,  4.49it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  89%|████████▊ | 709/800 [02:57<00:20,  4.55it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  88%|████████▊ | 701/800 [02:57<00:23,  4.27it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  88%|████████▊ | 705/800 [02:57<00:23,  4.12it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6411.24 MB (28.00%)
+  Available Memory: 22839.59 MB
+
+Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  88%|████████▊ | 708/800 [02:57<00:21,  4.26it/s]
+- ReadRange->MapBatches(produce): 5 active, 12 queued, [cpu: 5.0, objects: 1.3GB]:  89%|████████▉ | 710/800 [02:58<00:21,  4.27it/s][A
+- ReadRange->MapBatches(produce): 5 active, 12 queued, [cpu: 5.0, objects: 1.3GB]:  89%|████████▉ | 715/800 [02:58<00:19,  4.31it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  89%|████████▊ | 709/800 [02:58<00:20,  4.55it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  89%|████████▉ | 713/800 [02:58<00:19,  4.35it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  88%|████████▊ | 705/800 [02:58<00:23,  4.12it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  89%|████████▉ | 711/800 [02:58<00:20,  4.35it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  89%|████████▉ | 713/800 [02:59<00:20,  4.30it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  89%|████████▉ | 713/800 [02:59<00:19,  4.35it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  90%|████████▉ | 716/800 [02:59<00:21,  3.93it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 11 queued, [cpu: 5.0, objects: 1.3GB]:  89%|████████▉ | 715/800 [02:59<00:19,  4.31it/s][A
+- ReadRange->MapBatches(produce): 5 active, 11 queued, [cpu: 5.0, objects: 1.3GB]:  90%|█████████ | 720/800 [02:59<00:18,  4.33it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6595.08 MB (28.60%)
+  Available Memory: 22655.75 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  90%|████████▉ | 716/800 [02:59<00:19,  4.37it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  90%|████████▉ | 718/800 [03:00<00:18,  4.33it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  90%|█████████ | 720/800 [03:00<00:20,  3.91it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 10 queued, [cpu: 5.0, objects: 1.3GB]:  90%|█████████ | 720/800 [03:00<00:18,  4.33it/s][A
+- ReadRange->MapBatches(produce): 5 active, 10 queued, [cpu: 5.0, objects: 1.3GB]:  91%|█████████ | 725/800 [03:00<00:17,  4.24it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  90%|█████████ | 721/800 [03:01<00:18,  4.26it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  90%|████████▉ | 718/800 [03:01<00:18,  4.33it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  90%|█████████ | 722/800 [03:01<00:18,  4.20it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  90%|█████████ | 720/800 [03:01<00:20,  3.91it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 700.0MB]:  91%|█████████ | 725/800 [03:01<00:17,  4.18it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 9 queued, [cpu: 5.0, objects: 1.3GB]:  91%|█████████ | 725/800 [03:01<00:17,  4.24it/s] [A
+- ReadRange->MapBatches(produce): 5 active, 9 queued, [cpu: 5.0, objects: 1.3GB]:  91%|█████████▏| 730/800 [03:01<00:16,  4.29it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6164.93 MB (27.20%)
+  Available Memory: 23085.90 MB
+
+
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  90%|█████████ | 721/800 [03:02<00:18,  4.26it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  91%|█████████ | 725/800 [03:02<00:18,  4.13it/s][A[A[ARunning: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  90%|█████████ | 722/800 [03:02<00:18,  4.20it/s]Running: 7.96/8 CPU, 2/4 GPU, 2.0GB/12.0GB object_store_memory:  91%|█████████ | 725/800 [03:02<00:19,  3.80it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  91%|█████████ | 725/800 [03:02<00:17,  4.18it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  91%|█████████▏| 730/800 [03:02<00:16,  4.35it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 8 queued, [cpu: 5.0, objects: 1.3GB]:  91%|█████████▏| 730/800 [03:02<00:16,  4.29it/s][A
+- ReadRange->MapBatches(produce): 5 active, 8 queued, [cpu: 5.0, objects: 1.3GB]:  92%|█████████▏| 735/800 [03:02<00:15,  4.30it/s][A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  91%|█████████▏| 730/800 [03:03<00:16,  4.35it/s][A[A
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  92%|█████████▏| 735/800 [03:03<00:14,  4.50it/s][A[ARunning: 7.96/8 CPU, 4/4 GPU, 2.2GB/12.0GB object_store_memory:  91%|█████████ | 725/800 [03:03<00:19,  3.80it/s]Running: 7.96/8 CPU, 4/4 GPU, 2.2GB/12.0GB object_store_memory:  91%|█████████▏| 730/800 [03:03<00:17,  4.11it/s]
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  91%|█████████▏| 730/800 [03:03<00:16,  4.21it/s][A[A[A
+- ReadRange->MapBatches(produce): 5 active, 7 queued, [cpu: 5.0, objects: 1.3GB]:  92%|█████████▏| 735/800 [03:03<00:15,  4.30it/s][A
+- ReadRange->MapBatches(produce): 5 active, 7 queued, [cpu: 5.0, objects: 1.3GB]:  92%|█████████▎| 740/800 [03:03<00:13,  4.33it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6105.52 MB (27.00%)
+  Available Memory: 23145.30 MB
+
+Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  91%|█████████▏| 730/800 [03:04<00:17,  4.11it/s]Running: 7.97/8 CPU, 4/4 GPU, 2.1GB/12.0GB object_store_memory:  92%|█████████▏| 735/800 [03:04<00:15,  4.32it/s]
+
+- MapBatches(consume): 4 active, 1 queued, [cpu: 4.0, objects: 800.0MB]:  92%|█████████▏| 739/800 [03:04<00:14,  4.31it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  91%|█████████▏| 730/800 [03:04<00:16,  4.21it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  92%|█████████▏| 736/800 [03:04<00:14,  4.41it/s][A[A[A
+- ReadRange->MapBatches(produce): 5 active, 6 queued, [cpu: 5.0, objects: 1.3GB]:  92%|█████████▎| 740/800 [03:05<00:13,  4.33it/s][A
+- ReadRange->MapBatches(produce): 5 active, 6 queued, [cpu: 5.0, objects: 1.3GB]:  93%|█████████▎| 745/800 [03:05<00:12,  4.35it/s][ARunning: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  92%|█████████▏| 735/800 [03:05<00:15,  4.32it/s]Running: 5.99/8 CPU, 4/4 GPU, 1.6GB/12.0GB object_store_memory:  92%|█████████▎| 740/800 [03:05<00:13,  4.48it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  92%|█████████▏| 739/800 [03:05<00:14,  4.31it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  93%|█████████▎| 744/800 [03:05<00:12,  4.34it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  93%|█████████▎| 741/800 [03:05<00:13,  4.41it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6352.95 MB (27.80%)
+  Available Memory: 22897.88 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 5 queued, [cpu: 5.0, objects: 1.3GB]:  93%|█████████▎| 745/800 [03:06<00:12,  4.35it/s][A
+- ReadRange->MapBatches(produce): 5 active, 5 queued, [cpu: 5.0, objects: 1.3GB]:  94%|█████████▍| 750/800 [03:06<00:11,  4.25it/s][ARunning: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  92%|█████████▎| 740/800 [03:06<00:13,  4.48it/s]Running: 5.99/8 CPU, 3/4 GPU, 1.6GB/12.0GB object_store_memory:  93%|█████████▎| 744/800 [03:06<00:13,  4.30it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 700.0MB]:  94%|█████████▎| 749/800 [03:06<00:11,  4.36it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  93%|█████████▎| 746/800 [03:07<00:12,  4.26it/s][A[A[A
+- ReadRange->MapBatches(produce): 5 active, 4 queued, [cpu: 5.0, objects: 1.3GB]:  94%|█████████▍| 750/800 [03:07<00:11,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 4 queued, [cpu: 5.0, objects: 1.3GB]:  94%|█████████▍| 755/800 [03:07<00:10,  4.25it/s][ARunning: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  93%|█████████▎| 744/800 [03:07<00:13,  4.30it/s]Running: 6.98/8 CPU, 3/4 GPU, 1.8GB/12.0GB object_store_memory:  94%|█████████▎| 749/800 [03:07<00:11,  4.41it/s]
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  94%|█████████▎| 749/800 [03:07<00:11,  4.36it/s][A[A
+
+- MapBatches(consume): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  94%|█████████▍| 754/800 [03:07<00:10,  4.45it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6707.68 MB (28.90%)
+  Available Memory: 22543.15 MB
+
+
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  93%|█████████▎| 746/800 [03:08<00:12,  4.26it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  94%|█████████▍| 750/800 [03:08<00:12,  4.14it/s][A[A[ARunning: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  94%|█████████▎| 749/800 [03:08<00:11,  4.41it/s]Running: 6.97/8 CPU, 1/4 GPU, 1.7GB/12.0GB object_store_memory:  94%|█████████▍| 754/800 [03:08<00:10,  4.54it/s]
+- ReadRange->MapBatches(produce): 5 active, 3 queued, [cpu: 5.0, objects: 1.3GB]:  94%|█████████▍| 755/800 [03:08<00:10,  4.25it/s][A
+- ReadRange->MapBatches(produce): 5 active, 3 queued, [cpu: 5.0, objects: 1.3GB]:  95%|█████████▌| 760/800 [03:08<00:09,  4.29it/s][A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  94%|█████████▍| 754/800 [03:08<00:10,  4.45it/s][A[A
+
+- MapBatches(consume): 2 active, 0 queued, [cpu: 2.0, objects: 600.0MB]:  95%|█████████▍| 759/800 [03:08<00:08,  4.56it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  94%|█████████▍| 750/800 [03:09<00:12,  4.14it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  94%|█████████▍| 756/800 [03:09<00:10,  4.36it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  94%|█████████▍| 754/800 [03:09<00:10,  4.54it/s]Running: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  95%|█████████▍| 758/800 [03:09<00:09,  4.34it/s]
+- ReadRange->MapBatches(produce): 5 active, 2 queued, [cpu: 5.0, objects: 1.3GB]:  95%|█████████▌| 760/800 [03:09<00:09,  4.29it/s][A
+- ReadRange->MapBatches(produce): 5 active, 2 queued, [cpu: 5.0, objects: 1.3GB]:  96%|█████████▌| 765/800 [03:09<00:08,  4.32it/s][A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  95%|█████████▍| 759/800 [03:09<00:08,  4.56it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 600.0MB]:  95%|█████████▌| 763/800 [03:09<00:08,  4.36it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6281.48 MB (27.60%)
+  Available Memory: 22969.35 MB
+
+
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  95%|█████████▌| 761/800 [03:10<00:08,  4.38it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  95%|█████████▌| 763/800 [03:10<00:08,  4.36it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  95%|█████████▌| 763/800 [03:10<00:08,  4.36it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  96%|█████████▌| 766/800 [03:10<00:08,  3.93it/s][A[A
+- ReadRange->MapBatches(produce): 5 active, 1 queued, [cpu: 5.0, objects: 1.3GB]:  96%|█████████▌| 765/800 [03:10<00:08,  4.32it/s][A
+- ReadRange->MapBatches(produce): 5 active, 1 queued, [cpu: 5.0, objects: 1.3GB]:  96%|█████████▋| 770/800 [03:10<00:06,  4.35it/s][A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  96%|█████████▌| 766/800 [03:11<00:07,  4.38it/s][A[A[ARunning: 8.95/8 CPU, 1/4 GPU, 1.9GB/12.0GB object_store_memory:  96%|█████████▌| 768/800 [03:11<00:07,  4.37it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 600.0MB]:  96%|█████████▋| 770/800 [03:11<00:07,  3.91it/s][A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6831.33 MB (29.30%)
+  Available Memory: 22419.48 MB
+
+
+- ReadRange->MapBatches(produce): 5 active, 0 queued, [cpu: 5.0, objects: 1.3GB]:  96%|█████████▋| 770/800 [03:12<00:06,  4.35it/s][A
+- ReadRange->MapBatches(produce): 5 active, 0 queued, [cpu: 5.0, objects: 1.3GB]:  97%|█████████▋| 775/800 [03:12<00:06,  4.13it/s][A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  96%|█████████▌| 766/800 [03:12<00:07,  4.38it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  96%|█████████▋| 770/800 [03:12<00:07,  4.02it/s][A[A[ARunning: 8.95/8 CPU, 2/4 GPU, 2.1GB/12.0GB object_store_memory:  96%|█████████▌| 768/800 [03:12<00:07,  4.37it/s]Running: 8.95/8 CPU, 2/4 GPU, 2.1GB/12.0GB object_store_memory:  96%|█████████▋| 770/800 [03:12<00:08,  3.67it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  96%|█████████▋| 770/800 [03:12<00:07,  3.91it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 800.0MB]:  97%|█████████▋| 775/800 [03:12<00:05,  4.19it/s][A[A
+- ReadRange->MapBatches(produce): 4 active, 0 queued, [cpu: 4.0, objects: 1.1GB]:  97%|█████████▋| 775/800 [03:13<00:06,  4.13it/s][A
+- ReadRange->MapBatches(produce): 4 active, 0 queued, [cpu: 4.0, objects: 1.1GB]:  98%|█████████▊| 780/800 [03:13<00:04,  4.33it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6559.50 MB (28.50%)
+  Available Memory: 22691.34 MB
+
+
+
+- MapBatches(consume): 6 active, 0 queued, [cpu: 5.9, objects: 1000.0MB]:  97%|█████████▋| 775/800 [03:13<00:05,  4.19it/s][A[A
+
+- MapBatches(consume): 6 active, 0 queued, [cpu: 5.9, objects: 1000.0MB]:  98%|█████████▊| 780/800 [03:13<00:04,  4.39it/s][A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  96%|█████████▋| 770/800 [03:13<00:07,  4.02it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 0 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  97%|█████████▋| 776/800 [03:13<00:05,  4.39it/s][A[A[ARunning: 7.95/8 CPU, 2/4 GPU, 1.9GB/12.0GB object_store_memory:  96%|█████████▋| 770/800 [03:13<00:08,  3.67it/s]Running: 7.95/8 CPU, 2/4 GPU, 1.9GB/12.0GB object_store_memory:  97%|█████████▋| 775/800 [03:13<00:06,  4.01it/s]
+- ReadRange->MapBatches(produce): 3 active, 0 queued, [cpu: 3.0, objects: 900.0MB]:  98%|█████████▊| 780/800 [03:14<00:04,  4.33it/s][A
+- ReadRange->MapBatches(produce): 3 active, 0 queued, [cpu: 3.0, objects: 900.0MB]:  98%|█████████▊| 785/800 [03:14<00:03,  4.36it/s][ARunning: 5.96/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  97%|█████████▋| 775/800 [03:14<00:06,  4.01it/s]Running: 5.96/8 CPU, 4/4 GPU, 1.8GB/12.0GB object_store_memory:  98%|█████████▊| 780/800 [03:14<00:04,  4.27it/s]
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 1000.0MB]:  98%|█████████▊| 780/800 [03:14<00:04,  4.39it/s][A[A
+
+- MapBatches(consume): 5 active, 0 queued, [cpu: 5.0, objects: 1000.0MB]:  98%|█████████▊| 785/800 [03:14<00:03,  4.53it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  97%|█████████▋| 776/800 [03:15<00:05,  4.39it/s][A[A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  98%|█████████▊| 781/800 [03:15<00:04,  4.41it/s][A[A[A
+- ReadRange->MapBatches(produce): 2 active, 0 queued, [cpu: 2.0, objects: 700.0MB]:  98%|█████████▊| 785/800 [03:15<00:03,  4.36it/s][A
+- ReadRange->MapBatches(produce): 2 active, 0 queued, [cpu: 2.0, objects: 700.0MB]:  99%|█████████▉| 790/800 [03:15<00:02,  4.38it/s][A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6344.55 MB (27.80%)
+  Available Memory: 22906.28 MB
+
+Running: 3.98/8 CPU, 4/4 GPU, 1.5GB/12.0GB object_store_memory:  98%|█████████▊| 780/800 [03:15<00:04,  4.27it/s]Running: 3.98/8 CPU, 4/4 GPU, 1.5GB/12.0GB object_store_memory:  98%|█████████▊| 785/800 [03:15<00:03,  4.45it/s]
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 900.0MB]:  98%|█████████▊| 785/800 [03:15<00:03,  4.53it/s] [A[A
+
+- MapBatches(consume): 4 active, 0 queued, [cpu: 4.0, objects: 900.0MB]:  99%|█████████▉| 790/800 [03:15<00:02,  4.64it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  98%|█████████▊| 786/800 [03:16<00:03,  4.42it/s][A[A[A
+- ReadRange->MapBatches(produce): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  99%|█████████▉| 790/800 [03:16<00:02,  4.38it/s][A
+- ReadRange->MapBatches(produce): 1 active, 0 queued, [cpu: 1.0, objects: 500.0MB]:  99%|█████████▉| 795/800 [03:16<00:01,  4.40it/s][ARunning: 1/8 CPU, 4/4 GPU, 700.0MB/12.0GB object_store_memory:  98%|█████████▊| 785/800 [03:16<00:03,  4.45it/s] Running: 1/8 CPU, 4/4 GPU, 700.0MB/12.0GB object_store_memory:  99%|█████████▉| 790/800 [03:16<00:02,  4.58it/s]
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 800.0MB]:  99%|█████████▉| 790/800 [03:17<00:02,  4.64it/s][A[A
+
+- MapBatches(consume): 3 active, 0 queued, [cpu: 3.0, objects: 800.0MB]:  99%|█████████▉| 795/800 [03:17<00:01,  4.34it/s][A[A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]:  99%|█████████▉| 791/800 [03:17<00:02,  4.32it/s][A[A[A  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6325.18 MB (27.70%)
+  Available Memory: 22925.65 MB
+
+Running: 1.98/8 CPU, 1/4 GPU, 800.0MB/12.0GB object_store_memory:  99%|█████████▉| 790/800 [03:18<00:02,  4.58it/s]Running: 1.98/8 CPU, 1/4 GPU, 800.0MB/12.0GB object_store_memory:  99%|█████████▉| 794/800 [03:18<00:01,  4.39it/s]
+- ReadRange->MapBatches(produce): 0 active, 0 queued, [cpu: 0.0, objects: 200.0MB]:  99%|█████████▉| 795/800 [03:18<00:01,  4.40it/s][A
+- ReadRange->MapBatches(produce): 0 active, 0 queued, [cpu: 0.0, objects: 200.0MB]: 100%|██████████| 800/800 [03:18<00:00,  4.09it/s][A
+
+
+- MapBatches(inference): 4 active, 1 queued, [cpu: 0.0, gpu: 4.0, objects: 32.0B]: 100%|█████████▉| 796/800 [03:18<00:00,  4.14it/s][A[A[A
+
+- MapBatches(consume): 0 active, 0 queued, [cpu: 0.0, objects: 200.0MB]:  99%|█████████▉| 795/800 [03:18<00:01,  4.34it/s][A[A
+
+- MapBatches(consume): 0 active, 0 queued, [cpu: 0.0, objects: 200.0MB]: 100%|██████████| 800/800 [03:18<00:00,  4.04it/s][A[ARunning: 0/8 CPU, 0/4 GPU, 8.0B/12.0GB object_store_memory:  99%|█████████▉| 794/800 [03:19<00:01,  4.39it/s]      Running: 0/8 CPU, 0/4 GPU, 8.0B/12.0GB object_store_memory: 100%|█████████▉| 799/800 [03:19<00:00,  4.13it/s]✔️  Dataset execution finished in 199.60 seconds: 100%|█████████▉| 799/800 [03:19<00:00,  4.13it/s]          ✔️  Dataset execution finished in 199.60 seconds: 100%|██████████| 800/800 [03:19<00:00,  4.01it/s]
+
+- ReadRange->MapBatches(produce): 0 active, 0 queued, [cpu: 0.0, objects: 0.0B]: 100%|██████████| 800/800 [03:19<00:00,  4.09it/s]   [A- ReadRange->MapBatches(produce): 0 active, 0 queued, [cpu: 0.0, objects: 0.0B]: 100%|██████████| 800/800 [03:19<00:00,  4.01it/s]
+
+
+- MapBatches(consume): 0 active, 0 queued, [cpu: 0.0, objects: 0.0B]: 100%|██████████| 800/800 [03:19<00:00,  4.04it/s]   [A[A- MapBatches(consume): 0 active, 0 queued, [cpu: 0.0, objects: 0.0B]: 100%|██████████| 800/800 [03:19<00:00,  4.01it/s]
+
+
+
+- MapBatches(inference): 0 active, 0 queued, [cpu: 0.0, objects: 8.0B]: 100%|█████████▉| 796/800 [03:19<00:00,  4.14it/s]           [A[A[A
+
+
+- MapBatches(inference): 0 active, 0 queued, [cpu: 0.0, objects: 8.0B]: 100%|██████████| 800/800 [03:19<00:00,  4.49it/s][A[A[A- MapBatches(inference): 0 active, 0 queued, [cpu: 0.0, objects: 8.0B]: 100%|██████████| 800/800 [03:19<00:00,  4.01it/s]
+Operator 1 ReadRange->MapBatches(produce): 160 tasks executed, 800 blocks produced in 197.26s
+* Remote wall time: 1.34ms min, 5.02s max, 1.0s mean, 801.25s total
+* Remote cpu time: 1.37ms min, 17.99ms max, 4.33ms mean, 3.47s total
+* UDF time: 5.0s min, 5.02s max, 5.0s mean, 4000.41s total
+* Peak heap memory usage (MiB): 156.18 min, 1917.79 max, 1650 mean
+* Output num rows per block: 1 min, 1 max, 1 mean, 800 total
+* Output size bytes per block: 104857612 min, 104857612 max, 104857612 mean, 83886089600 total
+* Output rows per task: 5 min, 5 max, 5 mean, 160 tasks used
+* Tasks per node: 160 min, 160 max, 160 mean; 1 nodes used
+* Operator throughput:
+	* Ray Data throughput: 4.055479346563965 rows/s
+	* Estimated single node throughput: 0.9984376741327202 rows/s
+
+Operator 2 MapBatches(consume): 800 tasks executed, 800 blocks produced in 192.82s
+* Remote wall time: 637.07ms min, 741.44ms max, 652.75ms mean, 522.2s total
+* Remote cpu time: 138.32ms min, 187.58ms max, 153.75ms mean, 123.0s total
+* UDF time: 511.69ms min, 548.97ms max, 514.6ms mean, 411.68s total
+* Peak heap memory usage (MiB): 546.64 min, 1917.82 max, 1700 mean
+* Output num rows per block: 1 min, 1 max, 1 mean, 800 total
+* Output size bytes per block: 104857612 min, 104857612 max, 104857612 mean, 83886089600 total
+* Output rows per task: 1 min, 1 max, 1 mean, 800 tasks used
+* Tasks per node: 800 min, 800 max, 800 mean; 1 nodes used
+* Operator throughput:
+	* Ray Data throughput: 4.149000386259182 rows/s
+	* Estimated single node throughput: 1.5319900425785018 rows/s
+
+Operator 3 MapBatches(inference): 800 tasks executed, 800 blocks produced in 192.64s
+* Remote wall time: 637.16ms min, 736.38ms max, 659.28ms mean, 527.43s total
+* Remote cpu time: 138.26ms min, 207.93ms max, 160.58ms mean, 128.46s total
+* UDF time: 500.08ms min, 503.3ms max, 500.16ms mean, 400.13s total
+* Peak heap memory usage (MiB): 448.88 min, 1720.64 max, 1573 mean
+* Output num rows per block: 1 min, 1 max, 1 mean, 800 total
+* Output size bytes per block: 8 min, 8 max, 8 mean, 6400 total
+* Output rows per task: 1 min, 1 max, 1 mean, 800 tasks used
+* Tasks per node: 800 min, 800 max, 800 mean; 1 nodes used
+* Operator throughput:
+	* Ray Data throughput: 4.15280148701065 rows/s
+	* Estimated single node throughput: 1.5167976907901723 rows/s
+
+Dataset throughput:
+	* Ray Data throughput: 4.01271512893109 rows/s
+	* Estimated single node throughput: 0.43222791028966423 rows/s
+
+--- Aggregate object store stats across all nodes ---
+Plasma memory usage 0 MiB, 163 objects, 0.0% full, 0.0% needed
+Objects consumed by Ray tasks: 63617 MiB.
+
+Run time: 199.6277s
+  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5290.39 MB (24.50%)
+  Available Memory: 23960.43 MB
+
+Processed and saved modified data to timeline_ray_data_12.json
+  Process Memory Usage: 73.80 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3006.30 MB (11.00%)
+  Available Memory: 28245.13 MB
+

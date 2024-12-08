@@ -18,7 +18,8 @@ from setting import (
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
     append_dict_to_file,
-    log_memory_usage_process
+    log_memory_usage_process,
+    limit_cpu_memory
 )
 
 class Producer(FlatMapFunction):
@@ -133,7 +134,7 @@ def run_flink(env, mem_limit):
 
     end = time.perf_counter()
     print(f"Total rows: {count:,}")
-    print(f"Time: {end - start:.4f}s")
+    print(f"Run time: {end - start:.4f}s")
 
 
 def run_experiment(mem_limit):
@@ -145,9 +146,6 @@ def run_experiment(mem_limit):
     mem_limit_mb = mem_limit * 1024  # Convert GB to MB
     print("memory: ", f"{mem_limit_mb / NUM_CPUS}m")
     config.set_string("taskmanager.memory.process.size", f"{mem_limit_mb / NUM_CPUS}m")
-    # config.set_string("jobmanager.memory.process.size", f"{mem_limit_mb}m")
-    # This will oom.
-    # limit_cpu_memory(mem_limit)
     env = StreamExecutionEnvironment.get_execution_environment(config)
     run_flink(env, mem_limit)
 
@@ -164,10 +162,11 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    import multiprocessing
+    # import multiprocessing
     # Start memory usage logging in a separate process
-    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
-    logging_process.start()
-    
+    # logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    # logging_process.start()
+    limit_cpu_memory(args.mem_limit)
+
     main(args.mem_limit)
-    logging_process.terminate()
+    # logging_process.terminate()

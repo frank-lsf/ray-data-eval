@@ -1,466 +1,83 @@
-2024-12-08 07:11:01.887022: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
-2024-12-08 07:11:01.891302: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:32] Could not find cuda drivers on your machine, GPU will not be used.
-2024-12-08 07:11:01.905632: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:477] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
-WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-E0000 00:00:1733641861.928973   13426 cuda_dnn.cc:8310] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
-E0000 00:00:1733641861.935756   13426 cuda_blas.cc:1418] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-2024-12-08 07:11:01.960063: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+memory:  1024.0m
+[4.789s][warning][os,thread] Failed to start thread "Unknown thread" - pthread_create failed (EAGAIN) for attributes: stacksize: 1024k, guardsize: 0k, detached.
+[4.789s][warning][os,thread] Failed to start the native thread for java.lang.Thread "flink-metrics-pekko.actor.internal-dispatcher-2"
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 171, in <module>
+    main(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 154, in main
+    run_experiment(mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 150, in run_experiment
+    run_flink(env, mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 131, in run_flink
+    for length in ds.execute_and_collect():
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/datastream/data_stream.py", line 858, in execute_and_collect
+    return CloseableIterator(self._j_data_stream.executeAndCollect(), self.get_type())
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1322, in __call__
+    return_value = get_return_value(
+                   ^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/util/exceptions.py", line 146, in deco
+    return f(*a, **kw)
+           ^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/protocol.py", line 326, in get_return_value
+    raise Py4JJavaError(
+py4j.protocol.Py4JJavaError: An error occurred while calling o100.executeAndCollect.
+: java.lang.Exception: Could not create actor system
+	at org.apache.flink.runtime.rpc.pekko.ActorSystemBootstrapTools.startLocalActorSystem(ActorSystemBootstrapTools.java:238)
+	at org.apache.flink.runtime.rpc.pekko.PekkoRpcServiceUtils$PekkoRpcServiceBuilder.createAndStart(PekkoRpcServiceUtils.java:349)
+	at org.apache.flink.runtime.rpc.pekko.PekkoRpcServiceUtils$PekkoRpcServiceBuilder.createAndStart(PekkoRpcServiceUtils.java:326)
+	at org.apache.flink.runtime.rpc.pekko.PekkoRpcServiceUtils$PekkoRpcServiceBuilder.createAndStart(PekkoRpcServiceUtils.java:246)
+	at org.apache.flink.runtime.metrics.util.MetricUtils.startMetricRpcService(MetricUtils.java:217)
+	at org.apache.flink.runtime.metrics.util.MetricUtils.startLocalMetricsRpcService(MetricUtils.java:205)
+	at org.apache.flink.runtime.minicluster.MiniCluster.start(MiniCluster.java:363)
+	at org.apache.flink.client.program.PerJobMiniClusterFactory.submitJob(PerJobMiniClusterFactory.java:76)
+	at org.apache.flink.client.deployment.executors.LocalExecutor.execute(LocalExecutor.java:84)
+	at org.apache.flink.streaming.api.environment.StreamExecutionEnvironment.executeAsync(StreamExecutionEnvironment.java:2472)
+	at org.apache.flink.streaming.api.environment.StreamExecutionEnvironment.executeAsync(StreamExecutionEnvironment.java:2453)
+	at org.apache.flink.streaming.api.datastream.DataStream.executeAndCollectWithClient(DataStream.java:1507)
+	at org.apache.flink.streaming.api.datastream.DataStream.executeAndCollect(DataStream.java:1355)
+	at org.apache.flink.streaming.api.datastream.DataStream.executeAndCollect(DataStream.java:1341)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.flink.api.python.shaded.py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+	at org.apache.flink.api.python.shaded.py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at org.apache.flink.api.python.shaded.py4j.Gateway.invoke(Gateway.java:282)
+	at org.apache.flink.api.python.shaded.py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+	at org.apache.flink.api.python.shaded.py4j.commands.CallCommand.execute(CallCommand.java:79)
+	at org.apache.flink.api.python.shaded.py4j.GatewayConnection.run(GatewayConnection.java:238)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+Caused by: java.lang.OutOfMemoryError: unable to create native thread: possibly out of memory or process/resource limits reached
+	at java.base/java.lang.Thread.start0(Native Method)
+	at java.base/java.lang.Thread.start(Thread.java:798)
+	at java.base/java.util.concurrent.ForkJoinPool.createWorker(ForkJoinPool.java:1329)
+	at java.base/java.util.concurrent.ForkJoinPool.tryAddWorker(ForkJoinPool.java:1352)
+	at java.base/java.util.concurrent.ForkJoinPool.signalWork(ForkJoinPool.java:1476)
+	at java.base/java.util.concurrent.ForkJoinPool.externalPush(ForkJoinPool.java:1903)
+	at java.base/java.util.concurrent.ForkJoinPool.externalSubmit(ForkJoinPool.java:1921)
+	at java.base/java.util.concurrent.ForkJoinPool.execute(ForkJoinPool.java:2435)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinPool.execute(ForkJoinExecutorConfigurator.scala:41)
+	at org.apache.pekko.dispatch.ExecutorServiceDelegate.execute(ThreadPoolBuilder.scala:228)
+	at org.apache.pekko.dispatch.ExecutorServiceDelegate.execute$(ThreadPoolBuilder.scala:228)
+	at org.apache.pekko.dispatch.Dispatcher$LazyExecutorServiceDelegate.execute(Dispatcher.scala:53)
+	at org.apache.pekko.dispatch.Dispatcher.registerForExecution(Dispatcher.scala:137)
+	at org.apache.pekko.dispatch.MessageDispatcher.attach(AbstractDispatcher.scala:163)
+	at org.apache.pekko.actor.dungeon.Dispatch.start(Dispatch.scala:130)
+	at org.apache.pekko.actor.dungeon.Dispatch.start$(Dispatch.scala:128)
+	at org.apache.pekko.actor.ActorCell.start(ActorCell.scala:420)
+	at org.apache.pekko.actor.LocalActorRef.start(ActorRef.scala:394)
+	at org.apache.pekko.actor.LocalActorRefProvider.init(ActorRefProvider.scala:615)
+	at org.apache.pekko.actor.ActorSystemImpl.liftedTree2$1(ActorSystem.scala:1045)
+	at org.apache.pekko.actor.ActorSystemImpl._start$lzycompute(ActorSystem.scala:1041)
+	at org.apache.pekko.actor.ActorSystemImpl._start(ActorSystem.scala:1040)
+	at org.apache.pekko.actor.ActorSystemImpl.start(ActorSystem.scala:1064)
+	at org.apache.flink.runtime.rpc.pekko.RobustActorSystem.create(RobustActorSystem.java:102)
+	at org.apache.flink.runtime.rpc.pekko.RobustActorSystem.create(RobustActorSystem.java:62)
+	at org.apache.flink.runtime.rpc.pekko.RobustActorSystem.create(RobustActorSystem.java:54)
+	at org.apache.flink.runtime.rpc.pekko.PekkoUtils.createActorSystem(PekkoUtils.java:443)
+	at org.apache.flink.runtime.rpc.pekko.ActorSystemBootstrapTools.startActorSystem(ActorSystemBootstrapTools.java:253)
+	at org.apache.flink.runtime.rpc.pekko.ActorSystemBootstrapTools.startLocalActorSystem(ActorSystemBootstrapTools.java:236)
+	... 24 more
 
-A module that was compiled using NumPy 1.x cannot be run in
-NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
-versions of NumPy, modules must be compiled with NumPy 2.0.
-Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
-
-If you are a user of the module, the easiest solution will be to
-downgrade to 'numpy<2' or try to upgrade the affected module.
-We expect that some modules will need time to support NumPy 2.
-
-Traceback (most recent call last):  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 1, in <module>
-    import tensorflow as tf
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/tensorflow/__init__.py", line 467, in <module>
-    importlib.import_module("keras.src.optimizers")
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/__init__.py", line 2, in <module>
-    from keras.api import DTypePolicy
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/api/__init__.py", line 8, in <module>
-    from keras.api import activations
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/api/activations/__init__.py", line 7, in <module>
-    from keras.src.activations import deserialize
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/__init__.py", line 1, in <module>
-    from keras.src import activations
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/activations/__init__.py", line 30, in <module>
-    from keras.src.saving import object_registration
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/saving/__init__.py", line 7, in <module>
-    from keras.src.saving.saving_api import load_model
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/saving/saving_api.py", line 7, in <module>
-    from keras.src.legacy.saving import legacy_h5_format
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/legacy/saving/legacy_h5_format.py", line 13, in <module>
-    from keras.src.legacy.saving import saving_utils
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/legacy/saving/saving_utils.py", line 10, in <module>
-    from keras.src import models
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/__init__.py", line 1, in <module>
-    from keras.src.models.functional import Functional
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/functional.py", line 16, in <module>
-    from keras.src.models.model import Model
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/model.py", line 12, in <module>
-    from keras.src.trainers import trainer as base_trainer
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/trainer.py", line 14, in <module>
-    from keras.src.trainers.data_adapters import data_adapter_utils
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/__init__.py", line 4, in <module>
-    from keras.src.trainers.data_adapters import array_data_adapter
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/array_data_adapter.py", line 7, in <module>
-    from keras.src.trainers.data_adapters import array_slicing
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/array_slicing.py", line 12, in <module>
-    import pandas
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/__init__.py", line 26, in <module>
-    from pandas.compat import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/compat/__init__.py", line 27, in <module>
-    from pandas.compat.pyarrow import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/compat/pyarrow.py", line 8, in <module>
-    import pyarrow as pa
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pyarrow/__init__.py", line 65, in <module>
-    import pyarrow.lib as _lib
-AttributeError: _ARRAY_API not found
-
-A module that was compiled using NumPy 1.x cannot be run in
-NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
-versions of NumPy, modules must be compiled with NumPy 2.0.
-Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
-
-If you are a user of the module, the easiest solution will be to
-downgrade to 'numpy<2' or try to upgrade the affected module.
-We expect that some modules will need time to support NumPy 2.
-
-Traceback (most recent call last):  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 1, in <module>
-    import tensorflow as tf
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/tensorflow/__init__.py", line 467, in <module>
-    importlib.import_module("keras.src.optimizers")
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/__init__.py", line 2, in <module>
-    from keras.api import DTypePolicy
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/api/__init__.py", line 8, in <module>
-    from keras.api import activations
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/api/activations/__init__.py", line 7, in <module>
-    from keras.src.activations import deserialize
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/__init__.py", line 1, in <module>
-    from keras.src import activations
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/activations/__init__.py", line 30, in <module>
-    from keras.src.saving import object_registration
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/saving/__init__.py", line 7, in <module>
-    from keras.src.saving.saving_api import load_model
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/saving/saving_api.py", line 7, in <module>
-    from keras.src.legacy.saving import legacy_h5_format
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/legacy/saving/legacy_h5_format.py", line 13, in <module>
-    from keras.src.legacy.saving import saving_utils
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/legacy/saving/saving_utils.py", line 10, in <module>
-    from keras.src import models
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/__init__.py", line 1, in <module>
-    from keras.src.models.functional import Functional
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/functional.py", line 16, in <module>
-    from keras.src.models.model import Model
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/models/model.py", line 12, in <module>
-    from keras.src.trainers import trainer as base_trainer
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/trainer.py", line 14, in <module>
-    from keras.src.trainers.data_adapters import data_adapter_utils
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/__init__.py", line 4, in <module>
-    from keras.src.trainers.data_adapters import array_data_adapter
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/array_data_adapter.py", line 7, in <module>
-    from keras.src.trainers.data_adapters import array_slicing
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/keras/src/trainers/data_adapters/array_slicing.py", line 12, in <module>
-    import pandas
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/__init__.py", line 49, in <module>
-    from pandas.core.api import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/core/api.py", line 9, in <module>
-    from pandas.core.dtypes.dtypes import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pandas/core/dtypes/dtypes.py", line 24, in <module>
-    from pandas._libs import (
-  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/site-packages/pyarrow/__init__.py", line 65, in <module>
-    import pyarrow.lib as _lib
-AttributeError: _ARRAY_API not found
-  Process Memory Usage: 210.82 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2169.95 MB (31.80%)
-  Available Memory: 5334.23 MB
-
-2024-12-08 07:11:04.391572: E external/local_xla/xla/stream_executor/cuda/cuda_driver.cc:152] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2217.70 MB (32.40%)
-  Available Memory: 5286.48 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2218.44 MB (32.40%)
-  Available Memory: 5285.74 MB
-
-2024-12-08 07:11:09.747590: W external/local_xla/xla/tsl/framework/cpu_allocator_impl.cc:83] Allocation of 104857600 exceeds 10% of free system memory.
-2024-12-08 07:11:09.843568: W external/local_xla/xla/tsl/framework/cpu_allocator_impl.cc:83] Allocation of 104857600 exceeds 10% of free system memory.
-2024-12-08 07:11:10.006533: W external/local_xla/xla/tsl/framework/cpu_allocator_impl.cc:83] Allocation of 104857600 exceeds 10% of free system memory.
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2694.25 MB (38.50%)
-  Available Memory: 4809.93 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2695.73 MB (38.50%)
-  Available Memory: 4808.45 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 2695.73 MB (38.50%)
-  Available Memory: 4808.45 MB
-
-2024-12-08 07:11:15.033627: W external/local_xla/xla/tsl/framework/cpu_allocator_impl.cc:83] Allocation of 104857600 exceeds 10% of free system memory.
-2024-12-08 07:11:15.307773: W external/local_xla/xla/tsl/framework/cpu_allocator_impl.cc:83] Allocation of 104857600 exceeds 10% of free system memory.
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3411.23 MB (47.70%)
-  Available Memory: 4092.95 MB
-
-ret: 1/100
-ret: 2/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3700.29 MB (51.40%)
-  Available Memory: 3803.89 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4130.07 MB (56.90%)
-  Available Memory: 3373.87 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4396.69 MB (60.30%)
-  Available Memory: 3107.48 MB
-
-ret: 3/100
-ret: 4/100
-ret: 5/100
-ret: 6/100
-ret: 7/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3817.67 MB (52.90%)
-  Available Memory: 3686.50 MB
-
-ret: 8/100
-ret: 9/100
-ret: 10/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3977.97 MB (54.90%)
-  Available Memory: 3526.20 MB
-
-ret: 11/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3906.55 MB (54.00%)
-  Available Memory: 3597.61 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3969.11 MB (54.80%)
-  Available Memory: 3535.06 MB
-
-ret: 12/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4483.68 MB (61.40%)
-  Available Memory: 3020.48 MB
-
-ret: 13/100
-ret: 14/100
-ret: 15/100
-ret: 16/100
-ret: 17/100
-ret: 18/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4227.36 MB (58.10%)
-  Available Memory: 3276.81 MB
-
-ret: 19/100
-ret: 20/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4110.42 MB (56.60%)
-  Available Memory: 3393.75 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4024.67 MB (55.50%)
-  Available Memory: 3479.50 MB
-
-ret: 21/100
-ret: 22/100
-ret: 23/100
-ret: 24/100
-ret: 25/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3923.11 MB (54.20%)
-  Available Memory: 3581.05 MB
-
-ret: 26/100
-ret: 27/100
-ret: 28/100
-ret: 29/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3601.11 MB (50.10%)
-  Available Memory: 3903.06 MB
-
-ret: 30/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3636.96 MB (50.60%)
-  Available Memory: 3867.20 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4087.16 MB (56.30%)
-  Available Memory: 3417.01 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4102.66 MB (56.50%)
-  Available Memory: 3401.51 MB
-
-ret: 31/100
-ret: 32/100
-ret: 33/100
-ret: 34/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4069.07 MB (56.10%)
-  Available Memory: 3435.09 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4010.36 MB (55.30%)
-  Available Memory: 3493.81 MB
-
-ret: 35/100
-ret: 36/100
-ret: 37/100
-ret: 38/100
-ret: 39/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3909.07 MB (54.00%)
-  Available Memory: 3595.10 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3711.87 MB (51.50%)
-  Available Memory: 3792.29 MB
-
-ret: 40/100
-ret: 41/100
-ret: 42/100
-ret: 43/100
-ret: 44/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4275.45 MB (58.70%)
-  Available Memory: 3228.72 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4244.61 MB (58.30%)
-  Available Memory: 3259.56 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3956.77 MB (54.60%)
-  Available Memory: 3547.40 MB
-
-ret: 45/100
-ret: 46/100
-ret: 47/100
-ret: 48/100
-ret: 49/100
-ret: 50/100
-ret: 51/100
-ret: 52/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4022.10 MB (55.50%)
-  Available Memory: 3482.07 MB
-
-ret: 53/100
-ret: 54/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3957.54 MB (54.70%)
-  Available Memory: 3546.62 MB
-
-ret: 55/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4145.14 MB (57.10%)
-  Available Memory: 3359.03 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4071.11 MB (56.10%)
-  Available Memory: 3433.06 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4069.43 MB (56.10%)
-  Available Memory: 3434.74 MB
-
-ret: 56/100
-ret: 57/100
-ret: 58/100
-ret: 59/100
-ret: 60/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4094.92 MB (56.40%)
-  Available Memory: 3409.25 MB
-
-ret: 61/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4355.89 MB (59.70%)
-  Available Memory: 3148.28 MB
-
-ret: 62/100
-ret: 63/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4339.98 MB (59.50%)
-  Available Memory: 3164.19 MB
-
-ret: 64/100
-ret: 65/100
-ret: 66/100
-ret: 67/100
-ret: 68/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4287.14 MB (58.90%)
-  Available Memory: 3217.03 MB
-
-ret: 69/100
-ret: 70/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4348.28 MB (59.60%)
-  Available Memory: 3155.89 MB
-
-ret: 71/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4434.88 MB (60.80%)
-  Available Memory: 3069.29 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4306.23 MB (59.10%)
-  Available Memory: 3197.94 MB
-
-ret: 72/100
-ret: 73/100
-ret: 74/100
-ret: 75/100
-ret: 76/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3952.61 MB (54.60%)
-  Available Memory: 3551.56 MB
-
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3745.44 MB (51.90%)
-  Available Memory: 3758.73 MB
-
-ret: 77/100
-ret: 78/100
-ret: 79/100
-ret: 80/100
-ret: 81/100
-ret: 82/100
-ret: 83/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 4053.68 MB (55.90%)
-  Available Memory: 3450.49 MB
-
-ret: 84/100
-ret: 85/100
-ret: 86/100
-ret: 87/100
-ret: 88/100
-ret: 89/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3599.87 MB (50.10%)
-  Available Memory: 3904.30 MB
-
-ret: 90/100
-ret: 91/100
-ret: 92/100
-ret: 93/100
-ret: 94/100
-  Process Memory Usage: 211.45 MB
-  Total Memory: 7820.91 MB
-  Used Memory: 3242.44 MB (45.50%)
-  Available Memory: 4261.73 MB
-
-ret: 95/100
-ret: 96/100
-ret: 97/100
-ret: 98/100
-ret: 99/100
-ret: 100/100
-2024-12-08 07:12:38.115362: I tensorflow/core/framework/local_rendezvous.cc:405] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
-Sum: 100
-Run time: 93.74 seconds

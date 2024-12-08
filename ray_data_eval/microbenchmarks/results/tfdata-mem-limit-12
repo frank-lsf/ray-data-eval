@@ -1,204 +1,811 @@
-2024-12-08 03:57:00.114586: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:485] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
-2024-12-08 03:57:00.131459: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:8454] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
-2024-12-08 03:57:00.136603: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1452] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-2024-12-08 03:57:00.149162: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-  Process Memory Usage: 221.40 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 5238.99 MB (18.20%)
-  Available Memory: 25952.48 MB
-
+2024-12-08 23:27:40.279379: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:477] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
 WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-I0000 00:00:1733630222.011186  264636 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-I0000 00:00:1733630222.070631  264636 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-I0000 00:00:1733630222.070971  264636 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-I0000 00:00:1733630222.072166  264636 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-I0000 00:00:1733630222.072448  264636 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-I0000 00:00:1733630222.072685  264636 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-I0000 00:00:1733630222.142025  264636 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-I0000 00:00:1733630222.142352  264636 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-I0000 00:00:1733630222.142618  264636 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
-2024-12-08 03:57:02.142812: I tensorflow/core/common_runtime/gpu/gpu_device.cc:2021] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 20926 MB memory:  -> device: 0, name: NVIDIA A10G, pci bus id: 0000:00:1e.0, compute capability: 8.6
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 6022.56 MB (20.70%)
-  Available Memory: 25160.90 MB
-
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 5943.43 MB (20.40%)
-  Available Memory: 25240.04 MB
-
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 6544.44 MB (22.30%)
-  Available Memory: 24639.03 MB
-
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 9254.46 MB (30.90%)
-  Available Memory: 21929.00 MB
-
-ret: 1/100
-ret: 2/100
-ret: 3/100
-ret: 4/100
-ret: 5/100
-ret: 6/100
-ret: 7/100
-ret: 8/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 9314.04 MB (31.10%)
-  Available Memory: 21865.43 MB
-
-ret: 9/100
-ret: 10/100
-ret: 11/100
-ret: 12/100
-ret: 13/100
-ret: 14/100
-ret: 15/100
-ret: 16/100
-ret: 17/100
-ret: 18/100
-ret: 19/100
-ret: 20/100
-ret: 21/100
-ret: 22/100
-ret: 23/100
-ret: 24/100
-ret: 25/100
-ret: 26/100
-ret: 27/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 8313.25 MB (27.90%)
-  Available Memory: 22866.22 MB
-
-ret: 28/100
-ret: 29/100
-ret: 30/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 8112.36 MB (27.30%)
-  Available Memory: 23067.11 MB
-
-ret: 31/100
-ret: 32/100
-ret: 33/100
-ret: 34/100
-ret: 35/100
-ret: 36/100
-ret: 37/100
-ret: 38/100
-ret: 39/100
-ret: 40/100
-ret: 41/100  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 8314.68 MB (27.90%)
-  Available Memory: 22864.79 MB
-
-
-ret: 42/100
-ret: 43/100
-ret: 44/100
-ret: 45/100
-ret: 46/100
-ret: 47/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 8506.18 MB (28.50%)
-  Available Memory: 22673.29 MB
-
-ret: 48/100
-ret: 49/100
-ret: 50/100
-ret: 51/100
-ret: 52/100
-ret: 53/100
-ret: 54/100
-ret: 55/100
-ret: 56/100
-ret: 57/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 8257.54 MB (27.70%)
-  Available Memory: 22921.93 MB
-
-ret: 58/100
-ret: 59/100
-ret: 60/100
-ret: 61/100
-ret: 62/100
-ret: 63/100
-ret: 64/100
-ret: 65/100
-ret: 66/100
-ret: 67/100
-ret: 68/100
-ret: 69/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 7964.06 MB (26.80%)
-  Available Memory: 23215.41 MB
-
-ret: 70/100
-ret: 71/100
-ret: 72/100
-ret: 73/100
-ret: 74/100
-ret: 75/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 7835.57 MB (26.40%)
-  Available Memory: 23343.90 MB
-
-ret: 76/100
-ret: 77/100
-ret: 78/100
-ret: 79/100
-ret: 80/100
-ret: 81/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 7833.59 MB (26.40%)
-  Available Memory: 23345.88 MB
-
-ret: 82/100
-ret: 83/100
-ret: 84/100
-ret: 85/100
-ret: 86/100
-ret: 87/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 7804.93 MB (26.30%)
-  Available Memory: 23374.54 MB
-
-ret: 88/100
-ret: 89/100
-ret: 90/100
-ret: 91/100
-ret: 92/100
-ret: 93/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 7313.39 MB (24.80%)
-  Available Memory: 23866.07 MB
-
-ret: 94/100
-ret: 95/100
-ret: 96/100
-ret: 97/100
-ret: 98/100
-ret: 99/100
-  Process Memory Usage: 221.77 MB
-  Total Memory: 31722.86 MB
-  Used Memory: 6739.11 MB (23.00%)
-  Available Memory: 24440.36 MB
-
-ret: 100/100
-2024-12-08 03:57:34.429566: I tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
-Sum: 100
-Run time: 32.46 seconds
+E0000 00:00:1733700460.565410  568335 cuda_dnn.cc:8310] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1733700460.639603  568335 cuda_blas.cc:1418] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-12-08 23:27:41.593868: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+W0000 00:00:1733700467.168318  568335 gpu_device.cc:2344] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+ret: 1/800
+ret: 2/800
+ret: 3/800
+ret: 4/800
+ret: 5/800
+ret: 6/800
+ret: 7/800
+ret: 8/800
+ret: 9/800
+ret: 10/800
+ret: 11/800
+ret: 12/800
+ret: 13/800
+ret: 14/800
+ret: 15/800
+ret: 16/800
+ret: 17/800
+ret: 18/800
+ret: 19/800
+ret: 20/800
+ret: 21/800
+ret: 22/800
+ret: 23/800
+ret: 24/800
+ret: 25/800
+ret: 26/800
+ret: 27/800
+ret: 28/800
+ret: 29/800
+ret: 30/800
+ret: 31/800
+ret: 32/800
+ret: 33/800
+ret: 34/800
+ret: 35/800
+ret: 36/800
+ret: 37/800
+ret: 38/800
+ret: 39/800
+ret: 40/800
+ret: 41/800
+ret: 42/800
+ret: 43/800
+ret: 44/800
+ret: 45/800
+ret: 46/800
+ret: 47/800
+ret: 48/800
+ret: 49/800
+ret: 50/800
+ret: 51/800
+ret: 52/800
+ret: 53/800
+ret: 54/800
+ret: 55/800
+ret: 56/800
+ret: 57/800
+ret: 58/800
+ret: 59/800
+ret: 60/800
+ret: 61/800
+ret: 62/800
+ret: 63/800
+ret: 64/800
+ret: 65/800
+ret: 66/800
+ret: 67/800
+ret: 68/800
+ret: 69/800
+ret: 70/800
+ret: 71/800
+ret: 72/800
+ret: 73/800
+ret: 74/800
+ret: 75/800
+ret: 76/800
+ret: 77/800
+ret: 78/800
+ret: 79/800
+ret: 80/800
+ret: 81/800
+ret: 82/800
+ret: 83/800
+ret: 84/800
+ret: 85/800
+ret: 86/800
+ret: 87/800
+ret: 88/800
+ret: 89/800
+ret: 90/800
+ret: 91/800
+ret: 92/800
+ret: 93/800
+ret: 94/800
+ret: 95/800
+ret: 96/800
+ret: 97/800
+ret: 98/800
+ret: 99/800
+ret: 100/800
+ret: 101/800
+ret: 102/800
+ret: 103/800
+ret: 104/800
+ret: 105/800
+ret: 106/800
+ret: 107/800
+ret: 108/800
+ret: 109/800
+ret: 110/800
+ret: 111/800
+ret: 112/800
+ret: 113/800
+ret: 114/800
+ret: 115/800
+ret: 116/800
+ret: 117/800
+ret: 118/800
+ret: 119/800
+ret: 120/800
+ret: 121/800
+ret: 122/800
+ret: 123/800
+ret: 124/800
+ret: 125/800
+ret: 126/800
+ret: 127/800
+ret: 128/800
+ret: 129/800
+ret: 130/800
+ret: 131/800
+ret: 132/800
+ret: 133/800
+ret: 134/800
+ret: 135/800
+ret: 136/800
+ret: 137/800
+ret: 138/800
+ret: 139/800
+ret: 140/800
+ret: 141/800
+ret: 142/800
+ret: 143/800
+ret: 144/800
+ret: 145/800
+ret: 146/800
+ret: 147/800
+ret: 148/800
+ret: 149/800
+ret: 150/800
+ret: 151/800
+ret: 152/800
+ret: 153/800
+ret: 154/800
+ret: 155/800
+ret: 156/800
+ret: 157/800
+ret: 158/800
+ret: 159/800
+ret: 160/800
+ret: 161/800
+ret: 162/800
+ret: 163/800
+ret: 164/800
+ret: 165/800
+ret: 166/800
+ret: 167/800
+ret: 168/800
+ret: 169/800
+ret: 170/800
+ret: 171/800
+ret: 172/800
+ret: 173/800
+ret: 174/800
+ret: 175/800
+ret: 176/800
+ret: 177/800
+ret: 178/800
+ret: 179/800
+ret: 180/800
+ret: 181/800
+ret: 182/800
+ret: 183/800
+ret: 184/800
+ret: 185/800
+ret: 186/800
+ret: 187/800
+ret: 188/800
+ret: 189/800
+ret: 190/800
+ret: 191/800
+ret: 192/800
+ret: 193/800
+ret: 194/800
+ret: 195/800
+ret: 196/800
+ret: 197/800
+ret: 198/800
+ret: 199/800
+ret: 200/800
+ret: 201/800
+ret: 202/800
+ret: 203/800
+ret: 204/800
+ret: 205/800
+ret: 206/800
+ret: 207/800
+ret: 208/800
+ret: 209/800
+ret: 210/800
+ret: 211/800
+ret: 212/800
+ret: 213/800
+ret: 214/800
+ret: 215/800
+ret: 216/800
+ret: 217/800
+ret: 218/800
+ret: 219/800
+ret: 220/800
+ret: 221/800
+ret: 222/800
+ret: 223/800
+ret: 224/800
+ret: 225/800
+ret: 226/800
+ret: 227/800
+ret: 228/800
+ret: 229/800
+ret: 230/800
+ret: 231/800
+ret: 232/800
+ret: 233/800
+ret: 234/800
+ret: 235/800
+ret: 236/800
+ret: 237/800
+ret: 238/800
+ret: 239/800
+ret: 240/800
+ret: 241/800
+ret: 242/800
+ret: 243/800
+ret: 244/800
+ret: 245/800
+ret: 246/800
+ret: 247/800
+ret: 248/800
+ret: 249/800
+ret: 250/800
+ret: 251/800
+ret: 252/800
+ret: 253/800
+ret: 254/800
+ret: 255/800
+ret: 256/800
+ret: 257/800
+ret: 258/800
+ret: 259/800
+ret: 260/800
+ret: 261/800
+ret: 262/800
+ret: 263/800
+ret: 264/800
+ret: 265/800
+ret: 266/800
+ret: 267/800
+ret: 268/800
+ret: 269/800
+ret: 270/800
+ret: 271/800
+ret: 272/800
+ret: 273/800
+ret: 274/800
+ret: 275/800
+ret: 276/800
+ret: 277/800
+ret: 278/800
+ret: 279/800
+ret: 280/800
+ret: 281/800
+ret: 282/800
+ret: 283/800
+ret: 284/800
+ret: 285/800
+ret: 286/800
+ret: 287/800
+ret: 288/800
+ret: 289/800
+ret: 290/800
+ret: 291/800
+ret: 292/800
+ret: 293/800
+ret: 294/800
+ret: 295/800
+ret: 296/800
+ret: 297/800
+ret: 298/800
+ret: 299/800
+ret: 300/800
+ret: 301/800
+ret: 302/800
+ret: 303/800
+ret: 304/800
+ret: 305/800
+ret: 306/800
+ret: 307/800
+ret: 308/800
+ret: 309/800
+ret: 310/800
+ret: 311/800
+ret: 312/800
+ret: 313/800
+ret: 314/800
+ret: 315/800
+ret: 316/800
+ret: 317/800
+ret: 318/800
+ret: 319/800
+ret: 320/800
+ret: 321/800
+ret: 322/800
+ret: 323/800
+ret: 324/800
+ret: 325/800
+ret: 326/800
+ret: 327/800
+ret: 328/800
+ret: 329/800
+ret: 330/800
+ret: 331/800
+ret: 332/800
+ret: 333/800
+ret: 334/800
+ret: 335/800
+ret: 336/800
+ret: 337/800
+ret: 338/800
+ret: 339/800
+ret: 340/800
+ret: 341/800
+ret: 342/800
+ret: 343/800
+ret: 344/800
+ret: 345/800
+ret: 346/800
+ret: 347/800
+ret: 348/800
+ret: 349/800
+ret: 350/800
+ret: 351/800
+ret: 352/800
+ret: 353/800
+ret: 354/800
+ret: 355/800
+ret: 356/800
+ret: 357/800
+ret: 358/800
+ret: 359/800
+ret: 360/800
+ret: 361/800
+ret: 362/800
+ret: 363/800
+ret: 364/800
+ret: 365/800
+ret: 366/800
+ret: 367/800
+ret: 368/800
+ret: 369/800
+ret: 370/800
+ret: 371/800
+ret: 372/800
+ret: 373/800
+ret: 374/800
+ret: 375/800
+ret: 376/800
+ret: 377/800
+ret: 378/800
+ret: 379/800
+ret: 380/800
+ret: 381/800
+ret: 382/800
+ret: 383/800
+ret: 384/800
+ret: 385/800
+ret: 386/800
+ret: 387/800
+ret: 388/800
+ret: 389/800
+ret: 390/800
+ret: 391/800
+ret: 392/800
+ret: 393/800
+ret: 394/800
+ret: 395/800
+ret: 396/800
+ret: 397/800
+ret: 398/800
+ret: 399/800
+ret: 400/800
+ret: 401/800
+ret: 402/800
+ret: 403/800
+ret: 404/800
+ret: 405/800
+ret: 406/800
+ret: 407/800
+ret: 408/800
+ret: 409/800
+ret: 410/800
+ret: 411/800
+ret: 412/800
+ret: 413/800
+ret: 414/800
+ret: 415/800
+ret: 416/800
+ret: 417/800
+ret: 418/800
+ret: 419/800
+ret: 420/800
+ret: 421/800
+ret: 422/800
+ret: 423/800
+ret: 424/800
+ret: 425/800
+ret: 426/800
+ret: 427/800
+ret: 428/800
+ret: 429/800
+ret: 430/800
+ret: 431/800
+ret: 432/800
+ret: 433/800
+ret: 434/800
+ret: 435/800
+ret: 436/800
+ret: 437/800
+ret: 438/800
+ret: 439/800
+ret: 440/800
+ret: 441/800
+ret: 442/800
+ret: 443/800
+ret: 444/800
+ret: 445/800
+ret: 446/800
+ret: 447/800
+ret: 448/800
+ret: 449/800
+ret: 450/800
+ret: 451/800
+ret: 452/800
+ret: 453/800
+ret: 454/800
+ret: 455/800
+ret: 456/800
+ret: 457/800
+ret: 458/800
+ret: 459/800
+ret: 460/800
+ret: 461/800
+ret: 462/800
+ret: 463/800
+ret: 464/800
+ret: 465/800
+ret: 466/800
+ret: 467/800
+ret: 468/800
+ret: 469/800
+ret: 470/800
+ret: 471/800
+ret: 472/800
+ret: 473/800
+ret: 474/800
+ret: 475/800
+ret: 476/800
+ret: 477/800
+ret: 478/800
+ret: 479/800
+ret: 480/800
+ret: 481/800
+ret: 482/800
+ret: 483/800
+ret: 484/800
+ret: 485/800
+ret: 486/800
+ret: 487/800
+ret: 488/800
+ret: 489/800
+ret: 490/800
+ret: 491/800
+ret: 492/800
+ret: 493/800
+ret: 494/800
+ret: 495/800
+ret: 496/800
+ret: 497/800
+ret: 498/800
+ret: 499/800
+ret: 500/800
+ret: 501/800
+ret: 502/800
+ret: 503/800
+ret: 504/800
+ret: 505/800
+ret: 506/800
+ret: 507/800
+ret: 508/800
+ret: 509/800
+ret: 510/800
+ret: 511/800
+ret: 512/800
+ret: 513/800
+ret: 514/800
+ret: 515/800
+ret: 516/800
+ret: 517/800
+ret: 518/800
+ret: 519/800
+ret: 520/800
+ret: 521/800
+ret: 522/800
+ret: 523/800
+ret: 524/800
+ret: 525/800
+ret: 526/800
+ret: 527/800
+ret: 528/800
+ret: 529/800
+ret: 530/800
+ret: 531/800
+ret: 532/800
+ret: 533/800
+ret: 534/800
+ret: 535/800
+ret: 536/800
+ret: 537/800
+ret: 538/800
+ret: 539/800
+ret: 540/800
+ret: 541/800
+ret: 542/800
+ret: 543/800
+ret: 544/800
+ret: 545/800
+ret: 546/800
+ret: 547/800
+ret: 548/800
+ret: 549/800
+ret: 550/800
+ret: 551/800
+ret: 552/800
+ret: 553/800
+ret: 554/800
+ret: 555/800
+ret: 556/800
+ret: 557/800
+ret: 558/800
+ret: 559/800
+ret: 560/800
+ret: 561/800
+ret: 562/800
+ret: 563/800
+ret: 564/800
+ret: 565/800
+ret: 566/800
+ret: 567/800
+ret: 568/800
+ret: 569/800
+ret: 570/800
+ret: 571/800
+ret: 572/800
+ret: 573/800
+ret: 574/800
+ret: 575/800
+ret: 576/800
+ret: 577/800
+ret: 578/800
+ret: 579/800
+ret: 580/800
+ret: 581/800
+ret: 582/800
+ret: 583/800
+ret: 584/800
+ret: 585/800
+ret: 586/800
+ret: 587/800
+ret: 588/800
+ret: 589/800
+ret: 590/800
+ret: 591/800
+ret: 592/800
+ret: 593/800
+ret: 594/800
+ret: 595/800
+ret: 596/800
+ret: 597/800
+ret: 598/800
+ret: 599/800
+ret: 600/800
+ret: 601/800
+ret: 602/800
+ret: 603/800
+ret: 604/800
+ret: 605/800
+ret: 606/800
+ret: 607/800
+ret: 608/800
+ret: 609/800
+ret: 610/800
+ret: 611/800
+ret: 612/800
+ret: 613/800
+ret: 614/800
+ret: 615/800
+ret: 616/800
+ret: 617/800
+ret: 618/800
+ret: 619/800
+ret: 620/800
+ret: 621/800
+ret: 622/800
+ret: 623/800
+ret: 624/800
+ret: 625/800
+ret: 626/800
+ret: 627/800
+ret: 628/800
+ret: 629/800
+ret: 630/800
+ret: 631/800
+ret: 632/800
+ret: 633/800
+ret: 634/800
+ret: 635/800
+ret: 636/800
+ret: 637/800
+ret: 638/800
+ret: 639/800
+ret: 640/800
+ret: 641/800
+ret: 642/800
+ret: 643/800
+ret: 644/800
+ret: 645/800
+ret: 646/800
+ret: 647/800
+ret: 648/800
+ret: 649/800
+ret: 650/800
+ret: 651/800
+ret: 652/800
+ret: 653/800
+ret: 654/800
+ret: 655/800
+ret: 656/800
+ret: 657/800
+ret: 658/800
+ret: 659/800
+ret: 660/800
+ret: 661/800
+ret: 662/800
+ret: 663/800
+ret: 664/800
+ret: 665/800
+ret: 666/800
+ret: 667/800
+ret: 668/800
+ret: 669/800
+ret: 670/800
+ret: 671/800
+ret: 672/800
+ret: 673/800
+ret: 674/800
+ret: 675/800
+ret: 676/800
+ret: 677/800
+ret: 678/800
+ret: 679/800
+ret: 680/800
+ret: 681/800
+ret: 682/800
+ret: 683/800
+ret: 684/800
+ret: 685/800
+ret: 686/800
+ret: 687/800
+ret: 688/800
+ret: 689/800
+ret: 690/800
+ret: 691/800
+ret: 692/800
+ret: 693/800
+ret: 694/800
+ret: 695/800
+ret: 696/800
+ret: 697/800
+ret: 698/800
+ret: 699/800
+ret: 700/800
+ret: 701/800
+ret: 702/800
+ret: 703/800
+ret: 704/800
+ret: 705/800
+ret: 706/800
+ret: 707/800
+ret: 708/800
+ret: 709/800
+ret: 710/800
+ret: 711/800
+ret: 712/800
+ret: 713/800
+ret: 714/800
+ret: 715/800
+ret: 716/800
+ret: 717/800
+ret: 718/800
+ret: 719/800
+ret: 720/800
+ret: 721/800
+ret: 722/800
+ret: 723/800
+ret: 724/800
+ret: 725/800
+ret: 726/800
+ret: 727/800
+ret: 728/800
+ret: 729/800
+ret: 730/800
+ret: 731/800
+ret: 732/800
+ret: 733/800
+ret: 734/800
+ret: 735/800
+ret: 736/800
+ret: 737/800
+ret: 738/800
+ret: 739/800
+ret: 740/800
+ret: 741/800
+ret: 742/800
+ret: 743/800
+ret: 744/800
+ret: 745/800
+ret: 746/800
+ret: 747/800
+ret: 748/800
+ret: 749/800
+ret: 750/800
+ret: 751/800
+ret: 752/800
+ret: 753/800
+ret: 754/800
+ret: 755/800
+ret: 756/800
+ret: 757/800
+ret: 758/800
+ret: 759/800
+ret: 760/800
+ret: 761/800
+ret: 762/800
+ret: 763/800
+ret: 764/800
+ret: 765/800
+ret: 766/800
+ret: 767/800
+ret: 768/800
+ret: 769/800
+ret: 770/800
+ret: 771/800
+ret: 772/800
+ret: 773/800
+ret: 774/800
+ret: 775/800
+ret: 776/800
+ret: 777/800
+ret: 778/800
+ret: 779/800
+ret: 780/800
+ret: 781/800
+ret: 782/800
+ret: 783/800
+ret: 784/800
+ret: 785/800
+ret: 786/800
+ret: 787/800
+ret: 788/800
+ret: 789/800
+ret: 790/800
+ret: 791/800
+ret: 792/800
+ret: 793/800
+ret: 794/800
+ret: 795/800
+ret: 796/800
+ret: 797/800
+ret: 798/800
+ret: 799/800
+ret: 800/800
+2024-12-08 23:35:54.774951: I tensorflow/core/framework/local_rendezvous.cc:405] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+Sum: 800
+Run time: 487.68 seconds

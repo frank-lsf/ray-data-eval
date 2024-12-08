@@ -112,7 +112,7 @@ def run_spark_data(ssc, mem_limit, stage_level_scheduling):
     def process_batch(rdd):
         if rdd.isEmpty():
             run_time = time.perf_counter() - start
-            print(f"\nTotal runtime of streaming computation: {run_time:.2f} seconds")
+            print(f"\nRun time: {run_time:.2f} seconds")
             ssc.stop(stopSparkContext=True, stopGraceFully=True)
             return
 
@@ -158,14 +158,14 @@ if __name__ == "__main__":
         default=False,
     )
     args = parser.parse_args()
-    # limit_cpu_memory(4)
+    limit_cpu_memory(args.mem_limit)
 
-    import multiprocessing
+    # import multiprocessing
     # Start memory usage logging in a separate process
-    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
-    logging_process.start()
+    # logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    # logging_process.start()
     
     # assert not args.stage_level_scheduling, "Receive error: TaskResourceProfiles are only supported for Standalone, Yarn and Kubernetes cluster for now when dynamic allocation is disabled."
 
     bench(args.mem_limit, args.stage_level_scheduling)
-    logging_process.terminate()
+    # logging_process.terminate()
