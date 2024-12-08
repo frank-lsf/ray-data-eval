@@ -1,0 +1,189 @@
+2024-12-08 03:56:29.680487: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:485] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2024-12-08 03:56:29.700648: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:8454] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2024-12-08 03:56:29.706309: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1452] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-12-08 03:56:29.720941: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+  Process Memory Usage: 221.31 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4624.55 MB (16.30%)
+  Available Memory: 26566.92 MB
+
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1733630191.633759  264343 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733630191.689774  264343 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733630191.690119  264343 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733630191.691359  264343 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733630191.691625  264343 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733630191.691860  264343 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733630191.773767  264343 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733630191.774069  264343 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733630191.774345  264343 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+2024-12-08 03:56:31.774549: I tensorflow/core/common_runtime/gpu/gpu_device.cc:2021] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 20926 MB memory:  -> device: 0, name: NVIDIA A10G, pci bus id: 0000:00:1e.0, compute capability: 8.6
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5080.12 MB (17.70%)
+  Available Memory: 26103.34 MB
+
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5074.86 MB (17.70%)
+  Available Memory: 26108.61 MB
+
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6099.20 MB (20.90%)
+  Available Memory: 25084.27 MB
+
+ret: 1/100
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 8981.90 MB (30.00%)
+  Available Memory: 22201.57 MB
+
+ret: 2/100
+ret: 3/100
+ret: 4/100
+ret: 5/100
+ret: 6/100
+ret: 7/100
+ret: 8/100
+ret: 9/100
+ret: 10/100
+ret: 11/100
+ret: 12/100
+ret: 13/100
+ret: 14/100
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 8933.59 MB (29.90%)
+  Available Memory: 22249.88 MB
+
+ret: 15/100
+ret: 16/100
+ret: 17/100
+ret: 18/100
+ret: 19/100
+ret: 20/100
+ret: 21/100
+ret: 22/100
+ret: 23/100
+ret: 24/100
+ret: 25/100
+ret: 26/100
+ret: 27/100
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 8426.69 MB (28.30%)
+  Available Memory: 22756.78 MB
+
+ret: 28/100
+ret: 29/100
+ret: 30/100
+ret: 31/100
+ret: 32/100
+ret: 33/100
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 8244.27 MB (27.70%)
+  Available Memory: 22939.20 MB
+
+ret: 34/100
+ret: 35/100
+ret: 36/100
+ret: 37/100
+ret: 38/100
+ret: 39/100
+ret: 40/100
+ret: 41/100
+ret: 42/100
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7676.26 MB (25.90%)
+  Available Memory: 23507.21 MB
+
+ret: 43/100
+ret: 44/100
+ret: 45/100
+ret: 46/100
+ret: 47/100
+ret: 48/100
+ret: 49/100
+ret: 50/100
+ret: 51/100
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7920.60 MB (26.70%)
+  Available Memory: 23262.87 MB
+
+ret: 52/100
+ret: 53/100
+ret: 54/100
+ret: 55/100
+ret: 56/100
+ret: 57/100
+ret: 58/100
+ret: 59/100
+ret: 60/100
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7667.49 MB (25.90%)
+  Available Memory: 23515.98 MB
+
+ret: 61/100
+ret: 62/100
+ret: 63/100
+ret: 64/100
+ret: 65/100
+ret: 66/100
+ret: 67/100
+ret: 68/100  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7982.63 MB (26.90%)
+  Available Memory: 23200.84 MB
+
+
+ret: 69/100
+ret: 70/100
+ret: 71/100
+ret: 72/100
+ret: 73/100
+ret: 74/100
+ret: 75/100
+ret: 76/100
+ret: 77/100
+ret: 78/100
+ret: 79/100
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7594.79 MB (25.60%)
+  Available Memory: 23588.68 MB
+
+ret: 80/100
+ret: 81/100
+ret: 82/100
+ret: 83/100
+ret: 84/100
+ret: 85/100
+ret: 86/100
+ret: 87/100
+ret: 88/100
+ret: 89/100
+ret: 90/100
+ret: 91/100
+  Process Memory Usage: 221.81 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7427.65 MB (25.10%)
+  Available Memory: 23755.81 MB
+
+ret: 92/100
+ret: 93/100
+ret: 94/100
+ret: 95/100
+ret: 96/100
+ret: 97/100
+ret: 98/100
+ret: 99/100
+ret: 100/100
+2024-12-08 03:56:59.185577: I tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+Sum: 100
+Run time: 27.59 seconds

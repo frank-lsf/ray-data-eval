@@ -6,7 +6,7 @@ from pyspark.resource.requests import TaskResourceRequests
 from pyspark.resource import ResourceProfileBuilder
 import resource
 import argparse
-from setting import TIME_UNIT, FRAMES_PER_VIDEO, NUM_VIDEOS, NUM_CPUS, FRAME_SIZE_B, GB, limit_cpu_memory
+from setting import TIME_UNIT, FRAMES_PER_VIDEO, NUM_VIDEOS, NUM_CPUS, FRAME_SIZE_B, GB, limit_cpu_memory, log_memory_usage_process
 from pyspark.sql import SparkSession
 import os
 
@@ -36,16 +36,29 @@ def start_spark_streaming(mem_limit, stage_level_scheduling):
             # Allocate 1 GPU per executor and 1 GPU per task.
             .config("spark.executor.resource.gpu.amount", 1)
             .config("spark.task.resource.gpu.amount", 1)
+            .config("spark.driver.memory", "1g")
         )
     else:
-        spark_config = (
-            spark_config.config("spark.dynamicAllocation.enabled", "false")
-            .config("spark.executor.instances", 4)
-            .config("spark.executor.cores", 2)
-            .config("spark.executor.memory", f"{int(mem_limit / 4 * 1024)}m")
-            # Allocate 1 GPU per executor.
-            .config("spark.executor.resource.gpu.amount", 1)
-        )
+        if mem_limit <= 16:
+            spark_config = (
+                spark_config.config("spark.dynamicAllocation.enabled", "false")
+                .config("spark.executor.instances", 1)
+                .config("spark.executor.cores", 1)
+                .config("spark.executor.memory", f"1g")
+                # Allocate 1 GPU per executor.
+                .config("spark.executor.resource.gpu.amount", 1)
+                .config("spark.driver.memory", "1g")
+            ) 
+        else:        
+            spark_config = (
+                spark_config.config("spark.dynamicAllocation.enabled", "false")
+                .config("spark.executor.instances", 4)
+                .config("spark.executor.cores", 2)
+                .config("spark.executor.memory", f"{int(mem_limit / 4 * 1024)}m")
+                # Allocate 1 GPU per executor.
+                .config("spark.executor.resource.gpu.amount", 1)
+                .config("spark.driver.memory", "1g")
+            )
 
 
     spark = spark_config.getOrCreate()
@@ -100,7 +113,7 @@ def run_spark_data(ssc, mem_limit, stage_level_scheduling):
         if rdd.isEmpty():
             run_time = time.perf_counter() - start
             print(f"\nTotal runtime of streaming computation: {run_time:.2f} seconds")
-            # ssc.stop(stopSparkContext=True, stopGraceFully=True)
+            ssc.stop(stopSparkContext=True, stopGraceFully=True)
             return
 
         consumer_rdd = rdd.map(lambda x: consumer(x))
@@ -146,7 +159,13 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     # limit_cpu_memory(4)
+
+    import multiprocessing
+    # Start memory usage logging in a separate process
+    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    logging_process.start()
     
     # assert not args.stage_level_scheduling, "Receive error: TaskResourceProfiles are only supported for Standalone, Yarn and Kubernetes cluster for now when dynamic allocation is disabled."
 
     bench(args.mem_limit, args.stage_level_scheduling)
+    logging_process.terminate()

@@ -17,7 +17,8 @@ from setting import (
     NUM_VIDEOS,
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
-    append_dict_to_file
+    append_dict_to_file,
+    log_memory_usage_process
 )
 
 class Producer(FlatMapFunction):
@@ -105,16 +106,24 @@ def run_flink(env, mem_limit):
     ds = env.from_collection(items, type_info=Types.INT())
 
     producer = Producer()
+
+
+    if mem_limit <= 8:
+        p = 1
+    else:
+        p =  NUM_CPUS // 2
+        
+        
     ds = ds.flat_map(producer, output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        NUM_CPUS // 2
+        p
     )
 
     ds = ds.map(Consumer(), output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        NUM_CPUS // 2
+        p
     )
 
     ds = ds.map(Inference(), output_type=Types.LONG()).set_parallelism(
-        NUM_GPUS
+        NUM_GPUS if mem_limit > 8 else 1
     )
 
     count = 0
@@ -148,10 +157,17 @@ def main(mem_limit):
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--mem-limit", type=int, required=False, help="Memory limit in GB", default=20
     )
     args = parser.parse_args()
 
+    import multiprocessing
+    # Start memory usage logging in a separate process
+    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    logging_process.start()
+    
     main(args.mem_limit)
+    logging_process.terminate()

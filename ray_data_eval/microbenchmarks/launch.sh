@@ -1,10 +1,11 @@
-echo "Spark" 
-cd spark
+
+echo "Flink"
+cd flink
 bash launch.sh
 
 cd ..
-echo "Spark Streaming"
-cd spark_streaming
+echo "Spark" 
+cd spark
 bash launch.sh
 
 cd ..
@@ -13,10 +14,11 @@ cd tfdata
 bash launch.sh
 
 cd ..
-echo "Flink"
-cd flink
+echo "Spark Streaming"
+cd spark_streaming
 bash launch.sh
 
+cd ..
 cd raydata
 echo "Ray Data"
 bash launch.sh

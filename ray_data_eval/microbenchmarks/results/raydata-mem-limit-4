@@ -1,0 +1,50 @@
+  Process Memory Usage: 73.97 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 963.78 MB (4.50%)
+  Available Memory: 30287.68 MB
+
+Memory tracking interrupted, shutting down.
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 79, in <module>
+    bench(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 46, in bench
+    ray.init(num_cpus=NUM_CPUS, num_gpus=NUM_GPUS, object_store_memory= min(12, mem_limit) * GB, include_dashboard=False)
+  File "/home/ubuntu/ray/python/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/worker.py", line 1728, in init
+    _global_node = ray._private.node.Node(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 336, in __init__
+    self.start_head_processes()
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 1376, in start_head_processes
+    self.start_monitor()
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 1266, in start_monitor
+    from ray.autoscaler.v2.utils import is_autoscaler_v2
+  File "/home/ubuntu/ray/python/ray/autoscaler/__init__.py", line 4, in <module>
+    from ray.autoscaler import sdk
+  File "/home/ubuntu/ray/python/ray/autoscaler/sdk/__init__.py", line 1, in <module>
+    from ray.autoscaler.sdk.sdk import (
+  File "/home/ubuntu/ray/python/ray/autoscaler/sdk/sdk.py", line 9, in <module>
+    from ray.autoscaler._private import commands
+  File "/home/ubuntu/ray/python/ray/autoscaler/_private/commands.py", line 23, in <module>
+    from ray.autoscaler._private.autoscaler import AutoscalerSummary
+  File "/home/ubuntu/ray/python/ray/autoscaler/_private/autoscaler.py", line 39, in <module>
+    from ray.autoscaler._private.node_launcher import BaseNodeLauncher, NodeLauncher
+  File "/home/ubuntu/ray/python/ray/autoscaler/_private/node_launcher.py", line 12, in <module>
+    from ray.autoscaler._private.prom_metrics import AutoscalerPrometheusMetrics
+  File "/home/ubuntu/ray/python/ray/autoscaler/_private/prom_metrics.py", line 25, in <module>
+    from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/prometheus_client/__init__.py", line 3, in <module>
+    from . import (
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/prometheus_client/metrics.py", line 12, in <module>
+    from .context_managers import ExceptionCounter, InprogressTracker, Timer
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/prometheus_client/context_managers.py", line 8, in <module>
+    from .decorator import decorate
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1069, in get_code
+  File "<frozen importlib._bootstrap_external>", line 729, in _compile_bytecode
+KeyboardInterrupt

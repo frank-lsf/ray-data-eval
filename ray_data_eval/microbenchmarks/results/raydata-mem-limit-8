@@ -1,0 +1,28 @@
+  Process Memory Usage: 74.00 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 962.91 MB (4.50%)
+  Available Memory: 30288.54 MB
+
+Memory tracking interrupted, shutting down.
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 79, in <module>
+    bench(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 46, in bench
+    ray.init(num_cpus=NUM_CPUS, num_gpus=NUM_GPUS, object_store_memory= min(12, mem_limit) * GB, include_dashboard=False)
+  File "/home/ubuntu/ray/python/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/worker.py", line 1728, in init
+    _global_node = ray._private.node.Node(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 336, in __init__
+    self.start_head_processes()
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 1372, in start_head_processes
+    assert self.get_gcs_client() is not None
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 721, in get_gcs_client
+    self._init_gcs_client()
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 739, in _init_gcs_client
+    client = GcsClient(
+             ^^^^^^^^^^
+KeyboardInterrupt

@@ -1,0 +1,135 @@
+  Process Memory Usage: 74.00 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3709.81 MB (13.40%)
+  Available Memory: 27473.66 MB
+
+2024-12-08 04:11:27,252	ERROR services.py:1353 -- Failed to start the dashboard , return code -11
+2024-12-08 04:11:27,252	ERROR services.py:1378 -- Error should be written to 'dashboard.log' or 'dashboard.err'. We are printing the last 20 lines for you. See 'https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#logging-directory-structure' to find where the log file is.
+2024-12-08 04:11:27,252	ERROR services.py:1422 -- 
+The last 20 lines of /tmp/ray/session_2024-12-08_04-11-26_459920_270439/logs/dashboard.log (it contains the error message from the dashboard): 
+2024-12-08 04:11:27,086	INFO head.py:221 -- Starting dashboard metrics server on port 44227
+
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 79, in <module>
+    bench(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 46, in bench
+    ray.init(num_cpus=NUM_CPUS, num_gpus=NUM_GPUS, object_store_memory= min(16, mem_limit) * GB, include_dashboard=False)
+  File "/home/ubuntu/ray/python/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/worker.py", line 1728, in init
+    _global_node = ray._private.node.Node(
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 339, in __init__
+    self.start_ray_processes()
+  File "/home/ubuntu/ray/python/ray/_private/node.py", line 1424, in start_ray_processes
+    ) = ray._private.services.determine_plasma_store_config(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray/python/ray/_private/services.py", line 2032, in determine_plasma_store_config
+    raise ValueError(
+ValueError: The configured object store size (17.179869184 GB) exceeds /dev/shm size (16.6319104 GB). This will harm performance. Consider deleting files in /dev/shm or increasing its size with --shm-size in Docker. To ignore this warning, set RAY_OBJECT_STORE_ALLOW_SLOW_STORAGE=1.
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3877.99 MB (13.90%)
+  Available Memory: 27305.48 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3881.19 MB (13.90%)
+  Available Memory: 27302.28 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3883.37 MB (13.90%)
+  Available Memory: 27300.10 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3884.60 MB (13.90%)
+  Available Memory: 27298.87 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3874.38 MB (13.90%)
+  Available Memory: 27309.09 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3875.02 MB (13.90%)
+  Available Memory: 27308.45 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3876.35 MB (13.90%)
+  Available Memory: 27307.12 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3875.24 MB (13.90%)
+  Available Memory: 27308.23 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3875.22 MB (13.90%)
+  Available Memory: 27308.22 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3875.32 MB (13.90%)
+  Available Memory: 27308.12 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3875.32 MB (13.90%)
+  Available Memory: 27308.15 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3879.96 MB (13.90%)
+  Available Memory: 27303.50 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3879.96 MB (13.90%)
+  Available Memory: 27303.50 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3880.18 MB (13.90%)
+  Available Memory: 27303.29 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3882.95 MB (13.90%)
+  Available Memory: 27300.52 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3882.04 MB (13.90%)
+  Available Memory: 27301.43 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3883.23 MB (13.90%)
+  Available Memory: 27300.23 MB
+
+  Process Memory Usage: 74.38 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3883.24 MB (13.90%)
+  Available Memory: 27300.22 MB
+
+Memory tracking interrupted, shutting down.
+Exception ignored in atexit callback: <function _exit_function at 0x716e71578540>
+Traceback (most recent call last):
+  File "/opt/conda/envs/ray-data/lib/python3.11/multiprocessing/util.py", line 360, in _exit_function
+    p.join()
+  File "/opt/conda/envs/ray-data/lib/python3.11/multiprocessing/process.py", line 149, in join
+    res = self._popen.wait(timeout)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/multiprocessing/popen_fork.py", line 43, in wait
+    return self.poll(os.WNOHANG if timeout == 0.0 else 0)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/multiprocessing/popen_fork.py", line 27, in poll
+    pid, sts = os.waitpid(self.pid, flag)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt: 

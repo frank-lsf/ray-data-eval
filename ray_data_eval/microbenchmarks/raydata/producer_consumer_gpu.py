@@ -14,6 +14,7 @@ from ray_data_eval.microbenchmarks.setting import (
     NUM_VIDEOS,
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
+    log_memory_usage_process
 )
 from ray_data_eval.microbenchmarks.raydata import timeline_utils
 
@@ -37,12 +38,12 @@ def bench(mem_limit):
         return {"id": batch["id"]}
 
     data_context = ray.data.DataContext.get_current()
-    data_context.execution_options.verbose_progress = True
+    # data_context.execution_options.verbose_progress = True
     data_context.target_max_block_size = FRAME_SIZE_B
     data_context.is_budget_policy = True
     # data_context.is_conservative_policy = True
 
-    ray.init(num_cpus=NUM_CPUS, num_gpus=NUM_GPUS, object_store_memory=mem_limit * GB, include_dashboard=False)
+    ray.init(num_cpus=NUM_CPUS, num_gpus=NUM_GPUS, object_store_memory= min(12, mem_limit) * GB, include_dashboard=False)
 
     ds = ray.data.range(NUM_FRAMES_TOTAL, override_num_blocks=NUM_VIDEOS)
     ds = ds.map_batches(produce, batch_size=FRAMES_PER_VIDEO)
@@ -63,9 +64,17 @@ def bench(mem_limit):
 
 
 if __name__ == "__main__":
+    
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--mem-limit", type=int, required=False, help="Memory limit in GB", default=20
     )
     args = parser.parse_args()
+
+    import multiprocessing
+    # Start memory usage logging in a separate process
+    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    logging_process.start()
+    
     bench(args.mem_limit)
+    logging_process.terminate()

@@ -1,0 +1,317 @@
+2024-12-08 04:26:45.327108: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:485] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2024-12-08 04:26:45.344027: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:8454] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2024-12-08 04:26:45.349236: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1452] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-12-08 04:26:45.361783: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE4.1 SSE4.2 AVX AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+  Process Memory Usage: 221.26 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4201.57 MB (14.90%)
+  Available Memory: 26981.90 MB
+
+Memory exceeded!
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1733632007.211728  283296 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733632007.266891  283296 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733632007.267259  283296 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733632007.268496  283296 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733632007.268773  283296 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733632007.269027  283296 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733632007.350004  283296 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733632007.350345  283296 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+I0000 00:00:1733632007.350627  283296 cuda_executor.cc:1015] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero. See more at https://github.com/torvalds/linux/blob/v6.0/Documentation/ABI/testing/sysfs-bus-pci#L344-L355
+2024-12-08 04:26:47.350840: I tensorflow/core/common_runtime/gpu/gpu_device.cc:2021] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 20926 MB memory:  -> device: 0, name: NVIDIA A10G, pci bus id: 0000:00:1e.0, compute capability: 8.6
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4968.18 MB (17.40%)
+  Available Memory: 26207.29 MB
+
+Memory exceeded!
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4965.48 MB (17.40%)
+  Available Memory: 26209.99 MB
+
+Memory exceeded!
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6007.52 MB (20.70%)
+  Available Memory: 25167.95 MB
+
+Memory exceeded!
+ret: 1/100
+ret: 2/100
+ret: 3/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6527.79 MB (22.30%)
+  Available Memory: 24647.68 MB
+
+Memory exceeded!
+ret: 4/100
+ret: 5/100
+ret: 6/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6349.62 MB (21.70%)
+  Available Memory: 24825.84 MB
+
+Memory exceeded!
+ret: 7/100
+ret: 8/100
+ret: 9/100
+ret: 10/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6169.82 MB (21.20%)
+  Available Memory: 25005.65 MB
+
+Memory exceeded!
+ret: 11/100
+ret: 12/100
+ret: 13/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6029.81 MB (20.70%)
+  Available Memory: 25145.66 MB
+
+Memory exceeded!
+ret: 14/100
+ret: 15/100
+ret: 16/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6195.43 MB (21.30%)
+  Available Memory: 24980.04 MB
+
+Memory exceeded!
+ret: 17/100
+ret: 18/100
+ret: 19/100
+ret: 20/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6560.51 MB (22.40%)
+  Available Memory: 24614.96 MB
+
+Memory exceeded!
+ret: 21/100
+ret: 22/100
+ret: 23/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6559.27 MB (22.40%)
+  Available Memory: 24616.20 MB
+
+Memory exceeded!
+ret: 24/100
+ret: 25/100
+ret: 26/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6513.85 MB (22.30%)
+  Available Memory: 24661.62 MB
+
+Memory exceeded!
+ret: 27/100
+ret: 28/100
+ret: 29/100
+ret: 30/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6927.24 MB (23.60%)
+  Available Memory: 24248.23 MB
+
+Memory exceeded!
+ret: 31/100
+ret: 32/100
+ret: 33/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6765.25 MB (23.10%)
+  Available Memory: 24410.22 MB
+
+Memory exceeded!
+ret: 34/100
+ret: 35/100
+ret: 36/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6882.13 MB (23.40%)
+  Available Memory: 24293.33 MB
+
+Memory exceeded!
+ret: 37/100
+ret: 38/100
+ret: 39/100
+ret: 40/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6731.75 MB (22.90%)
+  Available Memory: 24443.70 MB
+
+Memory exceeded!
+ret: 41/100
+ret: 42/100
+ret: 43/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6435.76 MB (22.00%)
+  Available Memory: 24739.71 MB
+
+Memory exceeded!
+ret: 44/100
+ret: 45/100
+ret: 46/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6462.26 MB (22.10%)
+  Available Memory: 24713.21 MB
+
+Memory exceeded!
+ret: 47/100
+ret: 48/100
+ret: 49/100
+ret: 50/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6629.78 MB (22.60%)
+  Available Memory: 24545.69 MB
+
+Memory exceeded!
+ret: 51/100
+ret: 52/100
+ret: 53/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6346.74 MB (21.70%)
+  Available Memory: 24828.73 MB
+
+Memory exceeded!
+ret: 54/100
+ret: 55/100
+ret: 56/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6445.00 MB (22.00%)
+  Available Memory: 24730.46 MB
+
+Memory exceeded!
+ret: 57/100
+ret: 58/100
+ret: 59/100
+ret: 60/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6489.23 MB (22.20%)
+  Available Memory: 24686.24 MB
+
+Memory exceeded!
+ret: 61/100
+ret: 62/100
+ret: 63/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6252.64 MB (21.40%)
+  Available Memory: 24922.83 MB
+
+Memory exceeded!
+ret: 64/100
+ret: 65/100
+ret: 66/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6337.52 MB (21.70%)
+  Available Memory: 24837.95 MB
+
+Memory exceeded!
+ret: 67/100
+ret: 68/100
+ret: 69/100
+ret: 70/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6474.16 MB (22.10%)
+  Available Memory: 24701.30 MB
+
+Memory exceeded!
+ret: 71/100
+ret: 72/100
+ret: 73/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6231.24 MB (21.40%)
+  Available Memory: 24944.23 MB
+
+Memory exceeded!
+ret: 74/100
+ret: 75/100
+ret: 76/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6237.71 MB (21.40%)
+  Available Memory: 24937.75 MB
+
+Memory exceeded!
+ret: 77/100
+ret: 78/100
+ret: 79/100
+ret: 80/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6368.65 MB (21.80%)
+  Available Memory: 24806.82 MB
+
+Memory exceeded!
+ret: 81/100
+ret: 82/100
+ret: 83/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6340.28 MB (21.70%)
+  Available Memory: 24835.18 MB
+
+Memory exceeded!
+ret: 84/100
+ret: 85/100
+ret: 86/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6431.22 MB (22.00%)
+  Available Memory: 24744.25 MB
+
+Memory exceeded!
+ret: 87/100
+ret: 88/100
+ret: 89/100
+ret: 90/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6224.41 MB (21.30%)
+  Available Memory: 24951.05 MB
+
+Memory exceeded!
+ret: 91/100
+ret: 92/100
+ret: 93/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6310.02 MB (21.60%)
+  Available Memory: 24865.45 MB
+
+Memory exceeded!
+ret: 94/100
+ret: 95/100
+ret: 96/100
+  Process Memory Usage: 221.76 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 6223.21 MB (21.30%)
+  Available Memory: 24952.26 MB
+
+Memory exceeded!
+ret: 97/100
+ret: 98/100
+ret: 99/100
+ret: 100/100
+2024-12-08 04:27:53.179054: I tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+Sum: 100
+Run time: 66.01 seconds

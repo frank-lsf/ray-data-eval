@@ -13,6 +13,7 @@ from setting import (
     NUM_VIDEOS,
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
+    log_memory_usage_process
 )
 import sys
 
@@ -54,6 +55,11 @@ def bench(mem_limit):
     items = list(range(NUM_VIDEOS))
     ds = tf.data.Dataset.from_tensor_slices(items)
 
+    if mem_limit <= 8:
+        p = 1
+    else:
+        p = tf.data.experimental.AUTOTUNE
+        
     # flat_map doesn't have num_parallel_calls
     ds = ds.with_options(options).interleave(
         lambda item: tf.data.Dataset.from_generator(
@@ -66,7 +72,7 @@ def bench(mem_limit):
             name="producer",
         ),
         block_length=1,
-        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 4 else 1,
+        num_parallel_calls= p,
         name="producer_interleave",
     )
 
@@ -77,7 +83,7 @@ def bench(mem_limit):
             Tout=tf.uint8,
             name="consumer",
         ),
-        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 4 else 1,
+        num_parallel_calls=p,
         name="consumer_map",
     )
 
@@ -110,4 +116,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if not os.path.exists(TF_PROFILER_LOGS):
         os.makedirs(TF_PROFILER_LOGS)
+        
+    import multiprocessing
+    # Start memory usage logging in a separate process
+    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    logging_process.start()
+    
     bench(args.mem_limit)
+    logging_process.terminate()

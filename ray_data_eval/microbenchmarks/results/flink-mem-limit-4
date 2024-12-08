@@ -1,0 +1,130 @@
+  Process Memory Usage: 18.32 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7550.54 MB (25.50%)
+  Available Memory: 23632.93 MB
+
+Memory exceeded!
+memory:  512.0m
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4561.48 MB (16.10%)
+  Available Memory: 26621.99 MB
+
+Memory exceeded!
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4659.80 MB (16.40%)
+  Available Memory: 26523.67 MB
+
+Memory exceeded!
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4754.42 MB (16.70%)
+  Available Memory: 26429.05 MB
+
+Memory exceeded!
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4755.19 MB (16.70%)
+  Available Memory: 26428.28 MB
+
+Memory exceeded!
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4746.48 MB (16.70%)
+  Available Memory: 26436.98 MB
+
+Memory exceeded!
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4818.93 MB (16.90%)
+  Available Memory: 26364.54 MB
+
+Memory exceeded!
+Processed 1/100
+Processed 2/100
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4814.66 MB (16.90%)
+  Available Memory: 26368.81 MB
+
+Memory exceeded!
+Processed 3/100
+Processed 4/100
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4903.81 MB (17.20%)
+  Available Memory: 26279.66 MB
+
+Memory exceeded!
+Processed 5/100
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4807.12 MB (16.90%)
+  Available Memory: 26376.35 MB
+
+Memory exceeded!
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4777.12 MB (16.80%)
+  Available Memory: 26406.35 MB
+
+Memory exceeded!
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4801.95 MB (16.80%)
+  Available Memory: 26381.52 MB
+
+Memory exceeded!
+Processed 6/100
+Processed 7/100
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4899.59 MB (17.10%)
+  Available Memory: 26283.88 MB
+
+Memory exceeded!
+Processed 8/100
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4971.62 MB (17.40%)
+  Available Memory: 26211.85 MB
+
+Memory exceeded!
+Processed 9/100
+Processed 10/100
+  Process Memory Usage: 18.95 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4834.71 MB (16.90%)
+  Available Memory: 26348.75 MB
+
+Memory exceeded!
+Memory tracking interrupted, shutting down.
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 172, in <module>
+    main(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 156, in main
+    run_experiment(mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 152, in run_experiment
+    run_flink(env, mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 130, in run_flink
+    for length in ds.execute_and_collect():
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/datastream/data_stream.py", line 2920, in __next__
+    return self.next()
+           ^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/datastream/data_stream.py", line 2929, in next
+    if not self._j_closeable_iterator.hasNext():
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1321, in __call__
+    answer = self.gateway_client.send_command(command)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1217, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/socket.py", line 718, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

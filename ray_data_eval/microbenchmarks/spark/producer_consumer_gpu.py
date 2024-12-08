@@ -7,7 +7,7 @@ from pyspark.resource import ResourceProfileBuilder
 import os
 import argparse
 
-from setting import TIME_UNIT, NUM_CPUS, FRAMES_PER_VIDEO, NUM_VIDEOS, FRAME_SIZE_B, busy_loop, limit_cpu_memory
+from setting import TIME_UNIT, NUM_CPUS, FRAMES_PER_VIDEO, NUM_VIDEOS, FRAME_SIZE_B, busy_loop, limit_cpu_memory, log_memory_usage, log_memory_usage_process
 
 
 def start_spark(stage_level_scheduling: bool, mem_limit: int):
@@ -22,7 +22,6 @@ def start_spark(stage_level_scheduling: bool, mem_limit: int):
         .config("spark.ui.port", "4040")
     )
     if not stage_level_scheduling:
-        
         assert False, "Please use stage_level_scheduling"
 
         spark_config = (
@@ -32,16 +31,39 @@ def start_spark(stage_level_scheduling: bool, mem_limit: int):
             # Allocate 1 GPU per executor and 1 GPU per task.
             .config("spark.executor.resource.gpu.amount", 1)
             .config("spark.task.resource.gpu.amount", 1)
+            .config("spark.driver.memory", "1g")
         )
     else:
-        spark_config = (
-            spark_config.config("spark.dynamicAllocation.enabled", "false")
-            .config("spark.executor.instances", 4)
-            .config("spark.executor.cores", 2)
-            .config("spark.executor.memory", f"{int(mem_limit / 4 * 1024)}m")
-            # Allocate 1 GPU per executor.
-            .config("spark.executor.resource.gpu.amount", 1)
-        )
+        if mem_limit <= 12:
+            spark_config = (
+                spark_config.config("spark.dynamicAllocation.enabled", "false")
+                .config("spark.executor.instances", 1)
+                .config("spark.executor.cores", 1)
+                .config("spark.executor.memory", f"1g")
+                # Allocate 1 GPU per executor.
+                .config("spark.executor.resource.gpu.amount", 1)
+                .config("spark.driver.memory", "1g")
+            ) 
+        elif mem_limit <= 16:
+            spark_config = (
+                spark_config.config("spark.dynamicAllocation.enabled", "false")
+                .config("spark.executor.instances", 2)
+                .config("spark.executor.cores", 2)
+                .config("spark.executor.memory", f"{int(mem_limit / 2 * 1024)}m")
+                # Allocate 1 GPU per executor.
+                .config("spark.executor.resource.gpu.amount", 1)
+                .config("spark.driver.memory", "1g")
+            )
+        else:        
+            spark_config = (
+                spark_config.config("spark.dynamicAllocation.enabled", "false")
+                .config("spark.executor.instances", 4)
+                .config("spark.executor.cores", 2)
+                .config("spark.executor.memory", f"{int(mem_limit / 4 * 1024)}m")
+                # Allocate 1 GPU per executor.
+                .config("spark.executor.resource.gpu.amount", 1)
+                .config("spark.driver.memory", "1g")
+            )
 
     spark = spark_config.getOrCreate()
     return spark
@@ -124,6 +146,7 @@ def bench(stage_level_scheduling, cache, cache_disk, mem_limit):
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stage-level-scheduling",
@@ -151,4 +174,12 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
+    import multiprocessing
+    # Start memory usage logging in a separate process
+    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    logging_process.start()
+    
+
     bench(args.stage_level_scheduling, args.cache, args.cache_disk, args.mem_limit)
+    logging_process.terminate()
+
