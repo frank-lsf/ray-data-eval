@@ -18,16 +18,8 @@ import sys
 
 TF_PROFILER_LOGS = "logs/tf"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "0"
-
-
 parent_directory = os.path.abspath("..")
 sys.path.append(parent_directory)
-
-
-def limit_cpu_memory(mem_limit):
-    # limit cpu memory with resources
-    mem_limit_bytes = mem_limit * GB
-    resource.setrlimit(resource.RLIMIT_AS, (mem_limit_bytes, mem_limit_bytes))
 
 
 def bench(mem_limit):
@@ -74,7 +66,7 @@ def bench(mem_limit):
             name="producer",
         ),
         block_length=1,
-        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 10 else 1,
+        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 4 else 1,
         name="producer_interleave",
     )
 
@@ -85,7 +77,7 @@ def bench(mem_limit):
             Tout=tf.uint8,
             name="consumer",
         ),
-        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 10 else 1,
+        num_parallel_calls=tf.data.experimental.AUTOTUNE if mem_limit > 4 else 1,
         name="consumer_map",
     )
 
@@ -97,7 +89,7 @@ def bench(mem_limit):
             name="inference",
         ),
         # GPU stage.
-        num_parallel_calls=4 if mem_limit > 10 else 1,
+        num_parallel_calls=4 if mem_limit > 4 else 1,
         name="inference_map",
     )
 
@@ -116,16 +108,6 @@ if __name__ == "__main__":
         "--mem-limit", type=int, required=False, help="Memory limit in GB", default=20
     )
     args = parser.parse_args()
-
-    # if args.mem_limit >= 10:
-    #     pass
-    # else:
-    #     pass
-    # SCALE_FACTOR = 20
-    # FRAME_SIZE_B //= SCALE_FACTOR
-    # FRAMES_PER_VIDEO *= SCALE_FACTOR
-    # NUM_FRAMES_TOTAL = FRAMES_PER_VIDEO * NUM_VIDEOS
-
     if not os.path.exists(TF_PROFILER_LOGS):
         os.makedirs(TF_PROFILER_LOGS)
     bench(args.mem_limit)

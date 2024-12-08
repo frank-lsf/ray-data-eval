@@ -34,7 +34,7 @@ class Producer(FlatMapFunction):
 
     def flat_map(self, value):
         self.count.update((self.count.value() or 0) + 1)
-        time.sleep(0.01)
+        time.sleep(TIME_UNIT)
         print(f"count: {self.count.value()}, {value}")
         cnt = 0
         while cnt < 10000:

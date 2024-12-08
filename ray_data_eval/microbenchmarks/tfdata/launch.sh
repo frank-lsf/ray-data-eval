@@ -1,7 +1,8 @@
 export PYTHONPATH=$(dirname $(pwd)):$PYTHONPATH
+export MICROBENCHMARK_HOME=/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks
 
-# High memory
-# python -u producer_consumer_gpu.py --mem-limit 10 > mem-limit-10.log 2>&1
-
-# Low memory
-python -u producer_consumer_gpu.py --mem-limit 4 > mem-limit-4.log 2>&1
+for mem_limit in {10..2..2}; do
+    echo "Running $mem_limit GB"
+    echo "Log: $MICROBENCHMARK_HOME/results/tfdata/mem-limit-${mem_limit}.log"
+    python -u producer_consumer_gpu.py --mem-limit $mem_limit > $MICROBENCHMARK_HOME/results/tfdata/mem-limit-${mem_limit}.log 2>&1
+done

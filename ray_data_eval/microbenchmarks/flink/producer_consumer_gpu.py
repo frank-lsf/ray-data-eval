@@ -5,6 +5,7 @@ from pyflink.common import Configuration
 from pyflink.datastream.functions import FlatMapFunction, RuntimeContext, MapFunction
 import argparse
 import resource
+import json
 
 from setting import (
     GB,
@@ -16,14 +17,8 @@ from setting import (
     NUM_VIDEOS,
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
+    append_dict_to_file
 )
-
-
-def limit_cpu_memory(mem_limit):
-    # limit cpu memory with resources
-    mem_limit_bytes = mem_limit * GB
-    resource.setrlimit(resource.RLIMIT_AS, (mem_limit_bytes, mem_limit_bytes))
-
 
 class Producer(FlatMapFunction):
     def open(self, runtime_context: RuntimeContext):
@@ -31,7 +26,24 @@ class Producer(FlatMapFunction):
         self.task_index = runtime_context.get_index_of_this_subtask()
 
     def flat_map(self, value):
+        
+        producer_start = time.time()
         time.sleep(TIME_UNIT * 10)
+        producer_end = time.time()
+
+        # Log processing details
+        log = {
+            "cat": "producer:" + str(self.task_index),
+            "name": "producer:" + str(self.task_index),
+            "pid": "",  # Be overwritten by parse.py
+            "tid": "",  # Be overwritten by parse.py
+            "ts": f"{producer_start * 1e6:.0f}",  # time is in microseconds
+            "dur": f"{producer_end * 1e6 - producer_start * 1e6:.0f}",
+            "ph": "X",
+            "args": {},
+        }
+        append_dict_to_file(log, 'flink_logs_producer_consumer_gpu.log')
+
         for _ in range(FRAMES_PER_VIDEO):
             yield b"1" * FRAME_SIZE_B
 
@@ -42,7 +54,23 @@ class Consumer(MapFunction):
         self.task_index = runtime_context.get_index_of_this_subtask()
 
     def map(self, value):
+        consumer_start = time.time()
         time.sleep(TIME_UNIT)
+        consumer_end = time.time()
+
+        # Log processing details
+        log = {
+            "cat": "consumer:" + str(self.task_index),
+            "name": "consumer:" + str(self.task_index),
+            "pid": "",  # Be overwritten by parse.py
+            "tid": "",  # Be overwritten by parse.py
+            "ts": f"{consumer_start * 1e6:.0f}",  # time is in microseconds
+            "dur": f"{consumer_end * 1e6 - consumer_start * 1e6:.0f}",
+            "ph": "X",
+            "args": {},
+        }
+        append_dict_to_file(log, 'flink_logs_producer_consumer_gpu.log')
+
         return b"2" * FRAME_SIZE_B
 
 
@@ -52,7 +80,22 @@ class Inference(MapFunction):
         self.task_index = runtime_context.get_index_of_this_subtask()
 
     def map(self, value):
+        inference_start = time.time()
         time.sleep(TIME_UNIT)
+        inference_end = time.time()
+
+        # Log processing details
+        log = {
+            "cat": "inference:" + str(self.task_index),
+            "name": "inference:" + str(self.task_index),
+            "pid": "",  # Be overwritten by parse.py
+            "tid": "",  # Be overwritten by parse.py
+            "ts": f"{inference_start * 1e6:.0f}",  # time is in microseconds
+            "dur": f"{inference_end * 1e6 - inference_start * 1e6:.0f}",
+            "ph": "X",
+            "args": {},
+        }
+        append_dict_to_file(log, 'flink_logs_producer_consumer_gpu.log')
         return 1
 
 
@@ -63,15 +106,15 @@ def run_flink(env, mem_limit):
 
     producer = Producer()
     ds = ds.flat_map(producer, output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        NUM_CPUS // 2 if mem_limit >= 10 else 3
+        NUM_CPUS // 2
     )
 
     ds = ds.map(Consumer(), output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        NUM_CPUS // 2 if mem_limit >= 10 else 3
+        NUM_CPUS // 2
     )
 
     ds = ds.map(Inference(), output_type=Types.LONG()).set_parallelism(
-        NUM_GPUS if mem_limit >= 10 else 3
+        NUM_GPUS
     )
 
     count = 0
@@ -91,8 +134,9 @@ def run_experiment(mem_limit):
     # Set memory limit for the task manager
     # https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/memory/mem_setup/
     mem_limit_mb = mem_limit * 1024  # Convert GB to MB
-    config.set_string("taskmanager.memory.process.size", f"{mem_limit_mb // 2}m")
-    config.set_string("jobmanager.memory.process.size", f"{mem_limit_mb // 2}m")
+    print("memory: ", f"{mem_limit_mb / NUM_CPUS}m")
+    config.set_string("taskmanager.memory.process.size", f"{mem_limit_mb / NUM_CPUS}m")
+    # config.set_string("jobmanager.memory.process.size", f"{mem_limit_mb}m")
     # This will oom.
     # limit_cpu_memory(mem_limit)
     env = StreamExecutionEnvironment.get_execution_environment(config)

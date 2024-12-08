@@ -7,14 +7,14 @@ from pyspark.resource import ResourceProfileBuilder
 import os
 import argparse
 
-from setting import TIME_UNIT, NUM_CPUS, FRAMES_PER_VIDEO, NUM_VIDEOS, FRAME_SIZE_B, busy_loop
+from setting import TIME_UNIT, NUM_CPUS, FRAMES_PER_VIDEO, NUM_VIDEOS, FRAME_SIZE_B, busy_loop, limit_cpu_memory
 
 
-def start_spark(stage_level_scheduling: bool):
+def start_spark(stage_level_scheduling: bool, mem_limit: int):
     spark_config = (
         SparkSession.builder.config("spark.driver.host", "127.0.0.1")
         .appName("Local Spark Example")
-        .master("spark://127.0.0.1:7077")
+        .master("spark://localhost:7077")
         .config("spark.eventLog.enabled", "true")
         .config("spark.eventLog.dir", os.getenv("SPARK_EVENTS_FILEURL"))
         .config("spark.driver.bindAddress", "127.0.0.1")
@@ -22,6 +22,9 @@ def start_spark(stage_level_scheduling: bool):
         .config("spark.ui.port", "4040")
     )
     if not stage_level_scheduling:
+        
+        assert False, "Please use stage_level_scheduling"
+
         spark_config = (
             spark_config.config("spark.executor.cores", 1)
             .config("spark.cores.max", NUM_CPUS)
@@ -35,7 +38,7 @@ def start_spark(stage_level_scheduling: bool):
             spark_config.config("spark.dynamicAllocation.enabled", "false")
             .config("spark.executor.instances", 4)
             .config("spark.executor.cores", 2)
-            .config("spark.executor.memory", "4g")
+            .config("spark.executor.memory", f"{int(mem_limit / 4 * 1024)}m")
             # Allocate 1 GPU per executor.
             .config("spark.executor.resource.gpu.amount", 1)
         )
@@ -115,8 +118,8 @@ def run_spark_data(
     print(f"Run time: {run_time:.2f} seconds")
 
 
-def bench(stage_level_scheduling, cache, cache_disk):
-    spark = start_spark(stage_level_scheduling)
+def bench(stage_level_scheduling, cache, cache_disk, mem_limit):
+    spark = start_spark(stage_level_scheduling, mem_limit)
     run_spark_data(spark, stage_level_scheduling, cache, cache_disk)
 
 
@@ -143,6 +146,9 @@ if __name__ == "__main__":
         help="Whether to cache intermediate datasets in memory and disk",
         default=False,
     )
+    parser.add_argument(
+        "--mem-limit", type=int, required=False, help="Memory limit in GB", default=30
+    )
     args = parser.parse_args()
 
-    bench(args.stage_level_scheduling, args.cache, args.cache_disk)
+    bench(args.stage_level_scheduling, args.cache, args.cache_disk, args.mem_limit)
