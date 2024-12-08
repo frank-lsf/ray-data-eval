@@ -2,16 +2,16 @@ import gc
 import io
 import logging
 import os
+import time
 
 import boto3
-import numpy as np
 from PIL import Image
 import torch
 from diffusers import AutoPipelineForImage2Image
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, StringType, BinaryType
+from pyspark.sql.types import StructType, StructField, StringType
 
-from ray_data_eval.image_generation.common import IMAGE_PROMPTS_DF, S3_BUCKET_NAME, CsvTimerLogger
+from ray_data_eval.image_generation.common import IMAGE_PROMPTS_DF, S3_BUCKET_NAME, wait
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -19,10 +19,12 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
-NUM_BATCHES = 10
+NUM_BATCHES = 50
 BATCH_SIZE = 20
 RESOLUTION = 512
 NUM_GPUS = 1
+
+LOG_FILENAME = "spark_staged_log.log"
 
 
 def gpu_memory_stats() -> dict[str, float]:
@@ -54,6 +56,8 @@ def download_partition(iterator):
         img_buffer = io.BytesIO()
         image.save(img_buffer, format="PNG")
         image_bytes = img_buffer.getvalue()
+
+        wait(4 / BATCH_SIZE, busy=True)
 
         yield (row.s3_path, row.prompt, image_bytes)
 
@@ -143,8 +147,12 @@ def upload_partition(iterator):
 
         # Upload directly from memory
         s3_client.upload_fileobj(io.BytesIO(processed_image), S3_BUCKET_NAME, output_path)
+        wait(8 / BATCH_SIZE, busy=True)
 
         yield (s3_path, output_path)
+
+        with open(LOG_FILENAME, "a") as f:
+            print(f"1,{time.time()}", file=f)
 
 
 def main():
@@ -158,6 +166,8 @@ def main():
         .config("spark.executor.logs.python.enabled", "true")
         .getOrCreate()
     )
+    with open(LOG_FILENAME, "w") as f:
+        print(f"0,{time.time()}", file=f)
 
     # Create initial dataframe
     limit = NUM_BATCHES * BATCH_SIZE

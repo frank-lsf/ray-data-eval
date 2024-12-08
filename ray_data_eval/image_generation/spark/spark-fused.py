@@ -1,4 +1,3 @@
-import gc
 import io
 import logging
 import os
@@ -20,13 +19,13 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
-NUM_BATCHES = 10
+NUM_BATCHES = 50
 BATCH_SIZE = 20
 RESOLUTION = 512
 NUM_GPUS = 1
 NUM_CPUS = 8
 
-CSV_FILENAME = "spark_tput.csv"
+CSV_FILENAME = "spark_fused_tput.csv"
 
 
 def get_memory_stats() -> dict[str, float]:
