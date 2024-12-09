@@ -15,10 +15,6 @@ from pyflink.datastream.functions import (
 import torch
 import numpy as np
 from diffusers import AutoPipelineForImage2Image
-from ray_data_eval.image_generation.raydata.ray_data_pipeline_helpers import (
-    ChromeTracer,
-    # CsvLogger,
-)
 
 
 from ray_data_eval.image_generation.common import (
