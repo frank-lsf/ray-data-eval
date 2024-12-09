@@ -63,8 +63,8 @@ class Model:
         self.model = AutoPipelineForImage2Image.from_pretrained(
             "stable-diffusion-v1-5/stable-diffusion-v1-5",
             torch_dtype=torch.float16,
-            variant="fp16",
-            use_safetensors=True,
+            # variant="fp16",
+            # use_safetensors=True,
         ).to("cuda")  # StableDiffusionImg2ImgPipeline
 
         self.start_time = time.perf_counter()
@@ -97,12 +97,12 @@ class Producer(FlatMapFunction):
         producer_start = time.perf_counter()
         try:
             image: Image = S3Handler(S3_BUCKET_NAME).download_image(value)
-            image = transform_image(image, busy=False)
+            image = transform_image(image, busy=True)
         except Exception as e:
             print("PRODUCER:", e)
             default = "1000148855_0.jpg"
             image: Image = S3Handler(S3_BUCKET_NAME).download_image(default)
-            image = transform_image(image, busy=False)
+            image = transform_image(image, busy=True)
         producer_end = time.perf_counter()
         log = {
             "cat": "producer:" + str(self.task_index),
@@ -175,7 +175,7 @@ class Consumer(MapFunction):
 
         consumer_start = time.perf_counter()
         try:
-            encode_and_upload(batch, busy=False)
+            encode_and_upload(batch, busy=True)
         except Exception as e:
             print("CONSUMER", e)
             print("CONSUMER args:", value)
