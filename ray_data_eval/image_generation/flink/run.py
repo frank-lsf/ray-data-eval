@@ -97,12 +97,12 @@ class Producer(FlatMapFunction):
         producer_start = time.perf_counter()
         try:
             image: Image = S3Handler(S3_BUCKET_NAME).download_image(value)
-            image = transform_image(image, busy=True)
+            image = transform_image(image, busy=False)
         except Exception as e:
             print("PRODUCER:", e)
             default = "1000148855_0.jpg"
             image: Image = S3Handler(S3_BUCKET_NAME).download_image(default)
-            image = transform_image(image, busy=True)
+            image = transform_image(image, busy=False)
         producer_end = time.perf_counter()
         log = {
             "cat": "producer:" + str(self.task_index),
@@ -175,7 +175,7 @@ class Consumer(MapFunction):
 
         consumer_start = time.perf_counter()
         try:
-            encode_and_upload(batch, busy=True)
+            encode_and_upload(batch, busy=False)
         except Exception as e:
             print("CONSUMER", e)
             print("CONSUMER args:", value)
