@@ -56,8 +56,12 @@ def bench(mem_limit):
     items = list(range(NUM_VIDEOS))
     ds = tf.data.Dataset.from_tensor_slices(items)
 
-    if mem_limit <= 12:
+    if mem_limit <= 10:
         p = 1
+    elif mem_limit <= 12:
+        p = 2
+    elif mem_limit <= 14:
+        p = 2
     else:
         p = tf.data.experimental.AUTOTUNE
         

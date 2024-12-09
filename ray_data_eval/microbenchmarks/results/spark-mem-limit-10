@@ -1,0 +1,1069 @@
+  Process Memory Usage: 29.74 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3427.86 MB (12.50%)
+  Available Memory: 27771.60 MB
+
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 3629.41 MB (13.10%)
+  Available Memory: 27570.05 MB
+
+24/12/09 01:44:36 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+24/12/09 01:44:36 WARN ResourceProfile: The executor resource config for resource: gpu was specified but no corresponding task resource request was specified.
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4103.56 MB (14.60%)
+  Available Memory: 27095.90 MB
+
+24/12/09 01:44:39 WARN ResourceUtils: The configuration of cores (exec = 2 task = 1, runnable tasks = 2) will result in wasted resources due to resource gpu limiting the number of runnable tasks per executor to: 1. Please adjust your configuration.
+[Stage 0:>                                                        (0 + 0) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4470.50 MB (15.70%)
+  Available Memory: 26728.96 MB
+
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 4897.72 MB (17.10%)
+  Available Memory: 26301.73 MB
+
+[Stage 0:>                                                        (0 + 4) / 160][Stage 0:>                                                        (0 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5543.76 MB (19.10%)
+  Available Memory: 25655.70 MB
+
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5582.95 MB (19.20%)
+  Available Memory: 25616.50 MB
+
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 5583.95 MB (19.30%)
+  Available Memory: 25615.51 MB
+
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 7981.87 MB (26.80%)
+  Available Memory: 23217.59 MB
+
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 10368.22 MB (34.30%)
+  Available Memory: 20831.24 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 9352.10 MB (31.10%)
+  Available Memory: 21847.36 MB
+
+[Stage 0:>                                                        (0 + 9) / 160][Stage 0:=>                                                       (4 + 8) / 160][Stage 0:==>                                                      (8 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 9556.56 MB (31.80%)
+  Available Memory: 21642.89 MB
+
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 9557.23 MB (31.80%)
+  Available Memory: 21642.23 MB
+
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 10366.38 MB (34.30%)
+  Available Memory: 20833.08 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13615.27 MB (44.60%)
+  Available Memory: 17584.19 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 17337.84 MB (56.30%)
+  Available Memory: 13861.61 MB
+
+Memory exceeded!
+[Stage 0:===>                                                    (10 + 8) / 160][Stage 0:====>                                                   (12 + 8) / 160][Stage 0:=====>                                                  (15 + 8) / 160][Stage 0:=====>                                                  (16 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11568.06 MB (38.10%)
+  Available Memory: 19631.39 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11563.95 MB (38.10%)
+  Available Memory: 19635.51 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12290.13 MB (40.40%)
+  Available Memory: 18909.33 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15637.74 MB (50.90%)
+  Available Memory: 15561.72 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 16783.48 MB (54.60%)
+  Available Memory: 14415.69 MB
+
+Memory exceeded!
+[Stage 0:=====>                                                  (17 + 8) / 160][Stage 0:======>                                                 (19 + 8) / 160][Stage 0:=======>                                                (20 + 8) / 160][Stage 0:========>                                               (24 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11559.55 MB (38.10%)
+  Available Memory: 19639.90 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11558.55 MB (38.10%)
+  Available Memory: 19640.90 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12579.12 MB (41.30%)
+  Available Memory: 18620.34 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15698.55 MB (51.10%)
+  Available Memory: 15500.90 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15550.86 MB (50.70%)
+  Available Memory: 15648.60 MB
+
+Memory exceeded!
+[Stage 0:=========>                                              (26 + 8) / 160][Stage 0:=========>                                              (27 + 8) / 160][Stage 0:=========>                                              (28 + 8) / 160][Stage 0:==========>                                             (30 + 8) / 160][Stage 0:===========>                                            (32 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11600.50 MB (38.20%)
+  Available Memory: 19598.96 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11602.41 MB (38.20%)
+  Available Memory: 19597.04 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12869.84 MB (42.20%)
+  Available Memory: 18329.61 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15882.91 MB (51.70%)
+  Available Memory: 15316.55 MB
+
+Memory exceeded!
+[Stage 0:===========>                                            (33 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13819.09 MB (45.20%)
+  Available Memory: 17380.34 MB
+
+Memory exceeded!
+[Stage 0:===========>                                            (34 + 8) / 160][Stage 0:============>                                           (36 + 8) / 160][Stage 0:=============>                                          (38 + 8) / 160][Stage 0:==============>                                         (40 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11560.00 MB (38.10%)
+  Available Memory: 19639.45 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11561.90 MB (38.10%)
+  Available Memory: 19637.55 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13086.65 MB (42.90%)
+  Available Memory: 18112.80 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15892.83 MB (51.70%)
+  Available Memory: 15306.63 MB
+
+Memory exceeded!
+[Stage 0:==============>                                         (41 + 8) / 160][Stage 0:==============>                                         (42 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13067.16 MB (42.80%)
+  Available Memory: 18132.27 MB
+
+Memory exceeded!
+[Stage 0:===============>                                        (44 + 8) / 160][Stage 0:===============>                                        (45 + 8) / 160][Stage 0:================>                                       (47 + 8) / 160][Stage 0:================>                                       (48 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11587.05 MB (38.20%)
+  Available Memory: 19612.41 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11585.81 MB (38.20%)
+  Available Memory: 19613.65 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13464.29 MB (44.10%)
+  Available Memory: 17735.17 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 16508.22 MB (53.70%)
+  Available Memory: 14691.24 MB
+
+Memory exceeded!
+[Stage 0:=================>                                      (49 + 8) / 160][Stage 0:=================>                                      (50 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11606.87 MB (38.20%)
+  Available Memory: 19592.54 MB
+
+Memory exceeded!
+[Stage 0:=================>                                      (51 + 8) / 160][Stage 0:===================>                                    (56 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11611.17 MB (38.30%)
+  Available Memory: 19588.29 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11612.84 MB (38.30%)
+  Available Memory: 19586.62 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14135.54 MB (46.20%)
+  Available Memory: 17063.91 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 17008.89 MB (55.30%)
+  Available Memory: 14190.57 MB
+
+Memory exceeded!
+[Stage 0:===================>                                    (57 + 8) / 160][Stage 0:====================>                                   (58 + 8) / 160][Stage 0:====================>                                   (59 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11836.94 MB (39.00%)
+  Available Memory: 19362.73 MB
+
+Memory exceeded!
+[Stage 0:======================>                                 (63 + 7) / 160][Stage 0:======================>                                 (64 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11812.29 MB (38.90%)
+  Available Memory: 19387.18 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11991.55 MB (39.50%)
+  Available Memory: 19207.91 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14447.27 MB (47.20%)
+  Available Memory: 16752.20 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15248.05 MB (49.70%)
+  Available Memory: 15951.42 MB
+
+Memory exceeded!
+[Stage 0:=======================>                                (66 + 8) / 160][Stage 0:=======================>                                (67 + 8) / 160][Stage 0:========================>                               (70 + 9) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11680.25 MB (38.50%)
+  Available Memory: 19519.19 MB
+
+Memory exceeded!
+[Stage 0:=========================>                              (72 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11718.59 MB (38.60%)
+  Available Memory: 19480.88 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12184.62 MB (40.10%)
+  Available Memory: 19014.85 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14701.53 MB (48.00%)
+  Available Memory: 16497.94 MB
+
+Memory exceeded!
+[Stage 0:=========================>                              (73 + 8) / 160][Stage 0:=========================>                              (74 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15368.94 MB (50.10%)
+  Available Memory: 15830.50 MB
+
+Memory exceeded!
+[Stage 0:==========================>                             (75 + 8) / 160][Stage 0:===========================>                            (79 + 8) / 160][Stage 0:============================>                           (80 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11721.32 MB (38.60%)
+  Available Memory: 19478.11 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11728.33 MB (38.60%)
+  Available Memory: 19471.14 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12316.79 MB (40.50%)
+  Available Memory: 18882.68 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14808.51 MB (48.30%)
+  Available Memory: 16390.96 MB
+
+Memory exceeded!
+[Stage 0:============================>                           (81 + 8) / 160][Stage 0:============================>                           (82 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15958.68 MB (52.00%)
+  Available Memory: 15240.68 MB
+
+Memory exceeded!
+[Stage 0:=============================>                          (83 + 8) / 160][Stage 0:=============================>                          (84 + 8) / 160][Stage 0:==============================>                         (87 + 8) / 160][Stage 0:==============================>                         (88 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11842.70 MB (39.00%)
+  Available Memory: 19356.71 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11831.55 MB (38.90%)
+  Available Memory: 19367.91 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12603.47 MB (41.40%)
+  Available Memory: 18596.00 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15596.41 MB (50.80%)
+  Available Memory: 15603.06 MB
+
+Memory exceeded!
+[Stage 0:===============================>                        (90 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 16167.77 MB (52.60%)
+  Available Memory: 15031.69 MB
+
+Memory exceeded!
+[Stage 0:===============================>                        (91 + 8) / 160][Stage 0:================================>                       (92 + 8) / 160][Stage 0:=================================>                      (96 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11707.16 MB (38.60%)
+  Available Memory: 19492.23 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11911.64 MB (39.20%)
+  Available Memory: 19287.82 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12761.62 MB (41.90%)
+  Available Memory: 18437.84 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14178.15 MB (46.30%)
+  Available Memory: 17021.29 MB
+
+Memory exceeded!
+[Stage 0:=================================>                      (97 + 8) / 160][Stage 0:==================================>                     (98 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 16113.76 MB (52.40%)
+  Available Memory: 15085.41 MB
+
+Memory exceeded!
+[Stage 0:==================================>                     (99 + 8) / 160][Stage 0:==================================>                    (100 + 8) / 160][Stage 0:==================================>                    (101 + 8) / 160][Stage 0:===================================>                   (103 + 8) / 160][Stage 0:===================================>                   (104 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11941.40 MB (39.30%)
+  Available Memory: 19258.02 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12318.82 MB (40.50%)
+  Available Memory: 18880.63 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13081.76 MB (42.90%)
+  Available Memory: 18117.70 MB
+
+Memory exceeded!
+[Stage 0:====================================>                  (105 + 8) / 160][Stage 0:====================================>                  (106 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14764.07 MB (48.20%)
+  Available Memory: 16435.30 MB
+
+Memory exceeded!
+[Stage 0:====================================>                  (107 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15895.76 MB (51.80%)
+  Available Memory: 15303.70 MB
+
+Memory exceeded!
+[Stage 0:=====================================>                 (108 + 8) / 160][Stage 0:=====================================>                 (110 + 8) / 160][Stage 0:======================================>                (112 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11735.67 MB (38.60%)
+  Available Memory: 19463.78 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12465.86 MB (40.90%)
+  Available Memory: 18733.60 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13832.38 MB (45.30%)
+  Available Memory: 17367.07 MB
+
+Memory exceeded!
+[Stage 0:======================================>                (113 + 8) / 160][Stage 0:=======================================>               (114 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14884.82 MB (48.60%)
+  Available Memory: 16314.63 MB
+
+Memory exceeded!
+[Stage 0:=======================================>               (115 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15689.62 MB (51.10%)
+  Available Memory: 15509.82 MB
+
+Memory exceeded!
+[Stage 0:=======================================>               (116 + 8) / 160][Stage 0:========================================>              (117 + 8) / 160][Stage 0:=========================================>             (120 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11727.94 MB (38.60%)
+  Available Memory: 19471.52 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12637.86 MB (41.50%)
+  Available Memory: 18561.59 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14126.86 MB (46.20%)
+  Available Memory: 17072.59 MB
+
+Memory exceeded!
+[Stage 0:=========================================>             (121 + 8) / 160][Stage 0:=========================================>             (122 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15327.71 MB (50.00%)
+  Available Memory: 15871.75 MB
+
+Memory exceeded!
+[Stage 0:==========================================>            (123 + 8) / 160][Stage 0:==========================================>            (124 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12400.00 MB (40.70%)
+  Available Memory: 18799.41 MB
+
+Memory exceeded!
+[Stage 0:============================================>          (128 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11996.48 MB (39.50%)
+  Available Memory: 19202.98 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12915.62 MB (42.40%)
+  Available Memory: 18283.83 MB
+
+Memory exceeded!
+[Stage 0:============================================>          (130 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13045.99 MB (42.80%)
+  Available Memory: 18153.46 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14615.39 MB (47.70%)
+  Available Memory: 16584.07 MB
+
+Memory exceeded!
+[Stage 0:=============================================>         (131 + 8) / 160][Stage 0:=============================================>         (132 + 8) / 160][Stage 0:=============================================>         (133 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12344.35 MB (40.60%)
+  Available Memory: 18855.12 MB
+
+Memory exceeded!
+[Stage 0:==============================================>        (136 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12894.95 MB (42.30%)
+  Available Memory: 18304.50 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13751.34 MB (45.00%)
+  Available Memory: 17448.11 MB
+
+Memory exceeded!
+[Stage 0:===============================================>       (137 + 8) / 160][Stage 0:===============================================>       (138 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14241.54 MB (46.50%)
+  Available Memory: 16957.87 MB
+
+Memory exceeded!
+[Stage 0:===============================================>       (139 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15449.05 MB (50.30%)
+  Available Memory: 15750.41 MB
+
+Memory exceeded!
+[Stage 0:================================================>      (140 + 8) / 160][Stage 0:================================================>      (142 + 8) / 160][Stage 0:=================================================>     (144 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 11818.37 MB (38.90%)
+  Available Memory: 19381.09 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12603.52 MB (41.40%)
+  Available Memory: 18595.94 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14266.76 MB (46.60%)
+  Available Memory: 16932.70 MB
+
+Memory exceeded!
+[Stage 0:=================================================>     (145 + 8) / 160][Stage 0:==================================================>    (146 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14642.23 MB (47.80%)
+  Available Memory: 16557.23 MB
+
+Memory exceeded!
+[Stage 0:==================================================>    (147 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14737.04 MB (48.10%)
+  Available Memory: 16462.42 MB
+
+Memory exceeded!
+[Stage 0:==================================================>    (148 + 8) / 160][Stage 0:===================================================>   (149 + 8) / 160][Stage 0:====================================================>  (152 + 8) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12262.03 MB (40.30%)
+  Available Memory: 18937.35 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13039.95 MB (42.80%)
+  Available Memory: 18159.51 MB
+
+Memory exceeded!
+[Stage 0:====================================================>  (153 + 7) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12539.28 MB (41.20%)
+  Available Memory: 18660.16 MB
+
+Memory exceeded!
+[Stage 0:====================================================>  (154 + 6) / 160][Stage 0:=====================================================> (155 + 5) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13978.14 MB (45.70%)
+  Available Memory: 17221.33 MB
+
+Memory exceeded!
+[Stage 0:=====================================================> (156 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14699.45 MB (48.00%)
+  Available Memory: 16499.97 MB
+
+Memory exceeded!
+[Stage 0:=====================================================> (157 + 3) / 160][Stage 0:======================================================>(158 + 2) / 160][Stage 1:>                                                        (0 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15188.07 MB (49.50%)
+  Available Memory: 16011.38 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15173.71 MB (49.50%)
+  Available Memory: 16025.75 MB
+
+Memory exceeded!
+[Stage 1:=>                                                       (3 + 4) / 160][Stage 1:=>                                                       (4 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15245.44 MB (49.70%)
+  Available Memory: 15954.02 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15263.30 MB (49.80%)
+  Available Memory: 15936.15 MB
+
+Memory exceeded!
+[Stage 1:=>                                                       (5 + 4) / 160][Stage 1:==>                                                      (7 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15466.81 MB (50.40%)
+  Available Memory: 15732.65 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15398.63 MB (50.20%)
+  Available Memory: 15800.83 MB
+
+Memory exceeded!
+[Stage 1:==>                                                      (8 + 4) / 160][Stage 1:===>                                                    (10 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14960.50 MB (48.80%)
+  Available Memory: 16238.96 MB
+
+Memory exceeded!
+[Stage 1:===>                                                    (11 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14273.59 MB (46.60%)
+  Available Memory: 16925.87 MB
+
+Memory exceeded!
+[Stage 1:====>                                                   (13 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15358.61 MB (50.10%)
+  Available Memory: 15840.85 MB
+
+Memory exceeded!
+[Stage 1:====>                                                   (14 + 4) / 160][Stage 1:=====>                                                  (15 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12753.07 MB (41.90%)
+  Available Memory: 18446.39 MB
+
+Memory exceeded!
+[Stage 1:=====>                                                  (16 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14975.96 MB (48.90%)
+  Available Memory: 16223.49 MB
+
+Memory exceeded!
+[Stage 1:=====>                                                  (17 + 4) / 160][Stage 1:======>                                                 (18 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13146.61 MB (43.10%)
+  Available Memory: 18052.84 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15452.57 MB (50.40%)
+  Available Memory: 15746.88 MB
+
+Memory exceeded!
+[Stage 1:======>                                                 (19 + 4) / 160][Stage 1:=======>                                                (20 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14020.54 MB (45.80%)
+  Available Memory: 17178.92 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14768.83 MB (48.20%)
+  Available Memory: 16430.62 MB
+
+Memory exceeded!
+[Stage 1:=======>                                                (21 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14553.38 MB (47.50%)
+  Available Memory: 16646.07 MB
+
+Memory exceeded!
+[Stage 1:=======>                                                (22 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13451.96 MB (44.10%)
+  Available Memory: 17747.50 MB
+
+Memory exceeded!
+[Stage 1:========>                                               (23 + 4) / 160][Stage 1:========>                                               (24 + 4) / 160][Stage 1:========>                                               (25 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14913.44 MB (48.70%)
+  Available Memory: 16286.02 MB
+
+Memory exceeded!
+[Stage 1:=========>                                              (26 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14620.38 MB (47.70%)
+  Available Memory: 16579.08 MB
+
+Memory exceeded!
+[Stage 1:=========>                                              (27 + 4) / 160][Stage 1:=========>                                              (28 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14983.01 MB (48.90%)
+  Available Memory: 16216.45 MB
+
+Memory exceeded!
+[Stage 1:==========>                                             (29 + 4) / 160][Stage 1:==========>                                             (30 + 4) / 160][Stage 1:==========>                                             (31 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13640.89 MB (44.60%)
+  Available Memory: 17558.86 MB
+
+Memory exceeded!
+[Stage 1:===========>                                            (32 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15028.20 MB (49.00%)
+  Available Memory: 16171.26 MB
+
+Memory exceeded!
+[Stage 1:===========>                                            (33 + 4) / 160][Stage 1:===========>                                            (34 + 4) / 160][Stage 1:============>                                           (35 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13444.06 MB (44.00%)
+  Available Memory: 17755.39 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14861.43 MB (48.50%)
+  Available Memory: 16338.02 MB
+
+Memory exceeded!
+[Stage 1:============>                                           (36 + 4) / 160][Stage 1:============>                                           (37 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14249.82 MB (46.60%)
+  Available Memory: 16949.64 MB
+
+Memory exceeded!
+[Stage 1:=============>                                          (38 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14558.50 MB (47.50%)
+  Available Memory: 16640.95 MB
+
+Memory exceeded!
+[Stage 1:=============>                                          (39 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15060.69 MB (49.10%)
+  Available Memory: 16138.77 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14200.13 MB (46.40%)
+  Available Memory: 16999.32 MB
+
+Memory exceeded!
+[Stage 1:==============>                                         (40 + 4) / 160][Stage 1:==============>                                         (41 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14493.79 MB (47.30%)
+  Available Memory: 16705.66 MB
+
+Memory exceeded!
+[Stage 1:==============>                                         (42 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14547.96 MB (47.50%)
+  Available Memory: 16651.50 MB
+
+Memory exceeded!
+[Stage 1:===============>                                        (43 + 4) / 160][Stage 1:===============>                                        (44 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15027.37 MB (49.00%)
+  Available Memory: 16172.08 MB
+
+Memory exceeded!
+[Stage 1:===============>                                        (45 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13472.36 MB (44.10%)
+  Available Memory: 17727.10 MB
+
+Memory exceeded!
+[Stage 1:================>                                       (46 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14054.60 MB (46.00%)
+  Available Memory: 17144.86 MB
+
+Memory exceeded!
+[Stage 1:================>                                       (47 + 4) / 160][Stage 1:================>                                       (48 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14116.99 MB (46.20%)
+  Available Memory: 17082.47 MB
+
+Memory exceeded!
+[Stage 1:=================>                                      (49 + 4) / 160][Stage 1:=================>                                      (50 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15431.47 MB (50.30%)
+  Available Memory: 15767.98 MB
+
+Memory exceeded!
+[Stage 1:=================>                                      (51 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14193.82 MB (46.40%)
+  Available Memory: 17005.64 MB
+
+Memory exceeded!
+[Stage 1:==================>                                     (52 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14817.39 MB (48.40%)
+  Available Memory: 16382.07 MB
+
+Memory exceeded!
+[Stage 1:==================>                                     (53 + 4) / 160][Stage 1:==================>                                     (54 + 4) / 160][Stage 1:===================>                                    (55 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13767.90 MB (45.10%)
+  Available Memory: 17431.56 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15311.31 MB (49.90%)
+  Available Memory: 15888.15 MB
+
+Memory exceeded!
+[Stage 1:===================>                                    (56 + 4) / 160][Stage 1:===================>                                    (57 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13870.71 MB (45.40%)
+  Available Memory: 17328.75 MB
+
+Memory exceeded!
+[Stage 1:====================>                                   (58 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14171.01 MB (46.30%)
+  Available Memory: 17028.45 MB
+
+Memory exceeded!
+[Stage 1:====================>                                   (59 + 4) / 160][Stage 1:=====================>                                  (60 + 4) / 160][Stage 1:=====================>                                  (61 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15048.98 MB (49.10%)
+  Available Memory: 16150.48 MB
+
+Memory exceeded!
+[Stage 1:=====================>                                  (62 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14473.30 MB (47.30%)
+  Available Memory: 16726.16 MB
+
+Memory exceeded!
+[Stage 1:======================>                                 (63 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14146.82 MB (46.20%)
+  Available Memory: 17052.64 MB
+
+Memory exceeded!
+[Stage 1:======================>                                 (64 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12694.90 MB (41.70%)
+  Available Memory: 18504.56 MB
+
+Memory exceeded!
+[Stage 1:======================>                                 (65 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14836.71 MB (48.40%)
+  Available Memory: 16362.74 MB
+
+Memory exceeded!
+[Stage 1:=======================>                                (66 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14057.53 MB (46.00%)
+  Available Memory: 17141.93 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14613.46 MB (47.70%)
+  Available Memory: 16585.99 MB
+
+Memory exceeded!
+[Stage 1:=======================>                                (67 + 4) / 160][Stage 1:=======================>                                (68 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14948.46 MB (48.80%)
+  Available Memory: 16251.00 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15419.20 MB (50.30%)
+  Available Memory: 15780.26 MB
+
+Memory exceeded!
+[Stage 1:========================>                               (69 + 4) / 160][Stage 1:========================>                               (70 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14372.65 MB (47.00%)
+  Available Memory: 16826.81 MB
+
+Memory exceeded!
+[Stage 1:========================>                               (71 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14080.25 MB (46.00%)
+  Available Memory: 17119.21 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15057.79 MB (49.10%)
+  Available Memory: 16141.67 MB
+
+Memory exceeded!
+[Stage 1:=========================>                              (72 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14168.05 MB (46.30%)
+  Available Memory: 17031.41 MB
+
+Memory exceeded!
+[Stage 1:=========================>                              (73 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15095.13 MB (49.20%)
+  Available Memory: 16104.33 MB
+
+Memory exceeded!
+[Stage 1:=========================>                              (74 + 4) / 160][Stage 1:==========================>                             (75 + 4) / 160][Stage 1:==========================>                             (76 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13938.35 MB (45.60%)
+  Available Memory: 17261.11 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14810.07 MB (48.30%)
+  Available Memory: 16389.38 MB
+
+Memory exceeded!
+[Stage 1:==========================>                             (77 + 4) / 160][Stage 1:===========================>                            (78 + 4) / 160][Stage 1:===========================>                            (79 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15098.71 MB (49.20%)
+  Available Memory: 16100.75 MB
+
+Memory exceeded!
+[Stage 1:============================>                           (80 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14351.10 MB (46.90%)
+  Available Memory: 16848.36 MB
+
+Memory exceeded!
+[Stage 1:============================>                           (81 + 4) / 160][Stage 1:============================>                           (82 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15410.09 MB (50.20%)
+  Available Memory: 15789.36 MB
+
+Memory exceeded!
+[Stage 1:=============================>                          (83 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13401.95 MB (43.90%)
+  Available Memory: 17797.51 MB
+
+Memory exceeded!
+[Stage 1:=============================>                          (84 + 4) / 160][Stage 1:=============================>                          (85 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14623.23 MB (47.70%)
+  Available Memory: 16576.23 MB
+
+Memory exceeded!
+[Stage 1:==============================>                         (86 + 4) / 160][Stage 1:==============================>                         (87 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13988.72 MB (45.70%)
+  Available Memory: 17210.74 MB
+
+Memory exceeded!
+[Stage 1:==============================>                         (88 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15317.83 MB (49.90%)
+  Available Memory: 15881.62 MB
+
+Memory exceeded!
+[Stage 1:===============================>                        (89 + 4) / 160][Stage 1:===============================>                        (90 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14571.88 MB (47.60%)
+  Available Memory: 16627.57 MB
+
+Memory exceeded!
+[Stage 1:===============================>                        (91 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15700.05 MB (51.10%)
+  Available Memory: 15499.41 MB
+
+Memory exceeded!
+[Stage 1:================================>                       (92 + 4) / 160][Stage 1:================================>                       (93 + 4) / 160][Stage 1:================================>                       (94 + 4) / 160][Stage 1:=================================>                      (95 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14223.62 MB (46.50%)
+  Available Memory: 16975.84 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14238.07 MB (46.50%)
+  Available Memory: 16961.39 MB
+
+Memory exceeded!
+[Stage 1:=================================>                      (96 + 4) / 160][Stage 1:=================================>                      (97 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 15524.50 MB (50.60%)
+  Available Memory: 15674.96 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14018.60 MB (45.80%)
+  Available Memory: 17180.86 MB
+
+Memory exceeded!
+[Stage 1:==================================>                     (98 + 4) / 160][Stage 1:==================================>                    (100 + 4) / 160][Stage 1:===================================>                   (102 + 4) / 160][Stage 1:===================================>                   (103 + 4) / 160][Stage 1:====================================>                  (105 + 4) / 160][Stage 1:====================================>                  (106 + 4) / 160][Stage 1:=====================================>                 (108 + 4) / 160][Stage 1:=====================================>                 (109 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 14603.36 MB (47.70%)
+  Available Memory: 16596.09 MB
+
+Memory exceeded!
+[Stage 1:======================================>                (111 + 4) / 160][Stage 1:======================================>                (112 + 4) / 160][Stage 1:=======================================>               (114 + 4) / 160][Stage 1:=======================================>               (115 + 4) / 160][Stage 1:=======================================>               (116 + 4) / 160][Stage 1:========================================>              (119 + 4) / 160][Stage 1:=========================================>             (122 + 4) / 160][Stage 1:===========================================>           (126 + 4) / 160][Stage 1:============================================>          (130 + 4) / 160][Stage 1:==============================================>        (135 + 4) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 13559.04 MB (44.40%)
+  Available Memory: 17640.42 MB
+
+Memory exceeded!
+[Stage 1:===============================================>       (138 + 4) / 160][Stage 1:================================================>      (141 + 4) / 160][Stage 1:==================================================>    (147 + 4) / 160][Stage 1:===================================================>   (150 + 4) / 160][Stage 1:====================================================>  (154 + 4) / 160][Stage 1:======================================================>(158 + 2) / 160][Stage 1:======================================================>(159 + 1) / 160]  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12538.69 MB (41.20%)
+  Available Memory: 18660.77 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12256.79 MB (40.30%)
+  Available Memory: 18942.67 MB
+
+Memory exceeded!
+  Process Memory Usage: 30.24 MB
+  Total Memory: 31722.86 MB
+  Used Memory: 12762.16 MB (41.90%)
+  Available Memory: 18437.30 MB
+
+Memory exceeded!
+                                                                                inference_df.count() 800
+Run time: 352.90 seconds

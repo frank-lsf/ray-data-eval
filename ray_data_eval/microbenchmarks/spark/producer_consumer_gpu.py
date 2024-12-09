@@ -34,26 +34,47 @@ def start_spark(stage_level_scheduling: bool, mem_limit: int):
             .config("spark.driver.memory", "1g")
         )
     else:
-        if mem_limit <= 12:
+        if mem_limit <= 10:
             spark_config = (
                 spark_config.config("spark.dynamicAllocation.enabled", "false")
                 .config("spark.executor.instances", 1)
-                .config("spark.executor.cores", 1)
-                .config("spark.executor.memory", f"1g")
-                # Allocate 1 GPU per executor.
-                .config("spark.executor.resource.gpu.amount", 1)
-                .config("spark.driver.memory", "1g")
-            ) 
-        elif mem_limit <= 16:
-            spark_config = (
-                spark_config.config("spark.dynamicAllocation.enabled", "false")
-                .config("spark.executor.instances", 2)
                 .config("spark.executor.cores", 2)
-                .config("spark.executor.memory", f"{int(mem_limit / 2 * 1024)}m")
+                .config("spark.executor.memory", f"{int(mem_limit // 2 * 1024)}m")
                 # Allocate 1 GPU per executor.
                 .config("spark.executor.resource.gpu.amount", 1)
                 .config("spark.driver.memory", "1g")
             )
+            
+        elif mem_limit <= 14:
+            spark_config = (
+                spark_config.config("spark.dynamicAllocation.enabled", "false")
+                .config("spark.executor.instances", 1)
+                .config("spark.executor.cores", 2)
+                .config("spark.executor.memory", f"{int(mem_limit * 1024)}m")
+                # Allocate 1 GPU per executor.
+                .config("spark.executor.resource.gpu.amount", 1)
+                .config("spark.driver.memory", "1g")
+            )
+        # elif mem_limit <= 14:
+        #     spark_config = (
+        #         spark_config.config("spark.dynamicAllocation.enabled", "false")
+        #         .config("spark.executor.instances", 2)
+        #         .config("spark.executor.cores", 2)
+        #         .config("spark.executor.memory", f"{int(mem_limit / 2 * 1024)}m")
+        #         # Allocate 1 GPU per executor.
+        #         .config("spark.executor.resource.gpu.amount", 1)
+        #         .config("spark.driver.memory", "1g")
+        #     )
+        # elif mem_limit == 12:
+        #     spark_config = (
+        #         spark_config.config("spark.dynamicAllocation.enabled", "false")
+        #         .config("spark.executor.instances", 3)
+        #         .config("spark.executor.cores", 2)
+        #         .config("spark.executor.memory", f"{int(mem_limit / 3 * 1024)}m")
+        #         # Allocate 1 GPU per executor.
+        #         .config("spark.executor.resource.gpu.amount", 1)
+        #         .config("spark.driver.memory", "1g")
+        #     )
         else:        
             spark_config = (
                 spark_config.config("spark.dynamicAllocation.enabled", "false")
@@ -62,7 +83,7 @@ def start_spark(stage_level_scheduling: bool, mem_limit: int):
                 .config("spark.executor.memory", f"{int(mem_limit / 4 * 1024)}m")
                 # Allocate 1 GPU per executor.
                 .config("spark.executor.resource.gpu.amount", 1)
-                .config("spark.driver.memory", "1g")
+                # .config("spark.driver.memory", "1g")
             )
 
     spark = spark_config.getOrCreate()
@@ -174,12 +195,12 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # import multiprocessing
+    import multiprocessing
     # Start memory usage logging in a separate process
-    # logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
-    # logging_process.start()
+    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    logging_process.start()
     
     limit_cpu_memory(args.mem_limit)
     bench(args.stage_level_scheduling, args.cache, args.cache_disk, args.mem_limit)
-    # logging_process.terminate()
+    logging_process.terminate()
 

@@ -6,11 +6,11 @@ from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.colors import ListedColormap, Normalize, to_rgba
 
 # Data
-x_axis = [4, 8, 12, 16]
+x_axis = [8, 10, 12, 14, 16]
 y_axis_labels = ['Radar', 'Flink', 'Spark', 'TFData']
 
 BIG_SIZE   = 9
-FIGRATIO = 3 / 4
+FIGRATIO = 3/5
 FIGWIDTH = 3.335 # inches
 FIGHEIGHT = FIGWIDTH * FIGRATIO
 FIGSIZE = (FIGWIDTH, FIGHEIGHT)
@@ -36,10 +36,10 @@ plt.rc("legend", fontsize=BIG_SIZE) # legend fontsize
 plt.rc("figure", titlesize=BIG_SIZE) # fontsize of the figure title
 
 data = [
-    [np.nan, 200, 200, 200],        # Radar
-    [np.nan, np.nan, 429, 428],  # Flink
-    [np.nan, np.nan, 487, 204], # Spark
-    [np.nan, 520, 520, 449]      # TFData
+    [199.18, 200, 200, 200, 200],        # Radar
+    [np.nan, np.nan, 429, 431.8, 428.9],  # Flink
+    [np.nan, np.nan, 651.79, 651.79, 351.8], # Spark
+    [np.nan, np.nan, 487, 272.05, 204 ]      # TFData
 ]
 
 # Create a DataFrame
@@ -61,7 +61,7 @@ nan_mask = df.isnull()
 
 
 # Plot
-ax = sns.heatmap(df, annot=True, linewidths=1, linecolor='white', fmt=".0f", cmap=custom_cmap, cbar_kws={'label': 'JCT (s)'})
+ax = sns.heatmap(df, annot=True, linewidths=1, linecolor='white', fmt=".0f", cmap=custom_cmap, cbar_kws={'label': 'Job Completion Time (s)'})
 
 plt.imshow(nan_mask, cmap=ListedColormap([nan_color]), alpha=0.4, zorder=-10, extent=ax.get_xlim() + ax.get_ylim())
 

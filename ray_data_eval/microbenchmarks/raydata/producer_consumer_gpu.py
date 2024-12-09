@@ -44,7 +44,7 @@ def bench(mem_limit):
     data_context.is_budget_policy = True
     # data_context.is_conservative_policy = True
 
-    ray.init(num_cpus=NUM_CPUS if mem_limit > 4 else 1, num_gpus=NUM_GPUS if mem_limit > 4 else 1, object_store_memory= min(12, mem_limit if mem_limit > 4 else 2) * GB)
+    ray.init(num_cpus=NUM_CPUS if mem_limit >= 8 else 2, num_gpus=NUM_GPUS if mem_limit >= 8 else 2, object_store_memory= min(12, mem_limit if mem_limit >= 8 else 4) * GB)
 
     ds = ray.data.range(NUM_FRAMES_TOTAL, override_num_blocks=NUM_VIDEOS)
     ds = ds.map_batches(produce, batch_size=FRAMES_PER_VIDEO)

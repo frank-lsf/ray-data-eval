@@ -109,7 +109,7 @@ def run_flink(env, mem_limit):
     producer = Producer()
 
 
-    if mem_limit <= 8:
+    if mem_limit <= 10:
         p = 1
     else:
         p =  NUM_CPUS // 2
