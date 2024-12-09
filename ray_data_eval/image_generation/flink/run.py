@@ -101,12 +101,12 @@ class Producer(FlatMapFunction):
         producer_start = time.perf_counter()
         try:
             image: Image = S3Handler(S3_BUCKET_NAME).download_image(value)
-            image = transform_image(image, busy=True)
+            image = transform_image(image, busy=False)
         except Exception as e:
             print("PRODUCER:", e)
             default = "1000148855_0.jpg"
             image: Image = S3Handler(S3_BUCKET_NAME).download_image(default)
-            image = transform_image(image, busy=True)
+            image = transform_image(image, busy=False)
         producer_end = time.perf_counter()
         log = {
             "cat": "producer:" + str(self.task_index),
@@ -120,7 +120,7 @@ class Producer(FlatMapFunction):
         }
         print(log)
         for _ in range(NUM_ROWS_PER_PRODUCER):
-            yield np.array(image), value
+            yield pickle.dumps(np.array(image)), value
 
 
 class Inference(ProcessFunction):
@@ -133,9 +133,9 @@ class Inference(ProcessFunction):
         self.model = Model()
 
     def process_element(self, value, ctx: "ProcessFunction.Context"):
-        self.images_batch.append(value[0])
+        self.images_batch.append(pickle.loads(value[0]))
         self.paths.append(value[1])
-        self.prompts_batch.append(get_image_prompt(value[1]))
+        self.prompts_batch.append(get_image_prompt(value[1])[:77])
 
         if len(self.images_batch) >= BATCH_SIZE:
             inference_start = time.perf_counter()
@@ -146,9 +146,7 @@ class Inference(ProcessFunction):
                 print("INFERENCE:", e)
                 print(self.paths)
                 print(self.prompts_batch)
-                output = np.array(
-                    [np.zeros((RESOLUTION, RESOLUTION, 3), dtype=np.uint8)] * len(self.images_batch)
-                )
+                output = np.array([np.zeros((RESOLUTION, RESOLUTION, 3), dtype=np.uint8)] * 20)
             inference_end = time.perf_counter()
             log = {
                 "cat": "inference:" + str(self.task_index),
@@ -181,7 +179,7 @@ class Consumer(MapFunction):
 
         consumer_start = time.perf_counter()
         try:
-            encode_and_upload(batch, busy=True)
+            encode_and_upload(batch, busy=False)
         except Exception as e:
             print("CONSUMER", e)
             print("CONSUMER args:", value)
@@ -205,7 +203,7 @@ def run_flink(env):
     start = time.perf_counter()
 
     ds = env.from_collection(
-        IMAGE_PROMPTS_DF.index[: NUM_BATCHES * BATCH_SIZE / 2], type_info=Types.STRING()
+        IMAGE_PROMPTS_DF.index[500 : 500 + NUM_BATCHES * BATCH_SIZE], type_info=Types.STRING()
     )
 
     ds = ds.flat_map(
