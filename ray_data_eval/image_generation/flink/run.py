@@ -1,5 +1,4 @@
 import time
-import pickle
 from PIL import Image
 
 from pyflink.common.typeinfo import Types
@@ -24,18 +23,8 @@ from ray_data_eval.image_generation.common import (
     IMAGE_PROMPTS_DF,
     S3_BUCKET_NAME,
 )
-from ray_data_eval.image_generation.flink.common import postprocess_logs
+from ray_data_eval.image_generation.flink.common import postprocess_logs, CLIP_CONTEXT_LENGTH
 from ray_data_eval.image_generation.spark.spark_fused import S3Handler
-
-import logging
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler("flink_logs.log", mode="w")
-file_handler.setLevel(logging.DEBUG)
-logger.addHandler(file_handler)
-
-LOGGER = logger
 
 EXECUTION_MODE = "thread"
 MB = 1024 * 1024
@@ -97,12 +86,12 @@ class Producer(FlatMapFunction):
         producer_start = time.perf_counter()
         try:
             image: Image = S3Handler(S3_BUCKET_NAME).download_image(value)
-            image = transform_image(image, busy=False)
+            image = transform_image(image, busy=True)
         except Exception as e:
             print("PRODUCER:", e)
             default = "1000148855_0.jpg"
             image: Image = S3Handler(S3_BUCKET_NAME).download_image(default)
-            image = transform_image(image, busy=False)
+            image = transform_image(image, busy=True)
         producer_end = time.perf_counter()
         log = {
             "cat": "producer:" + str(self.task_index),
@@ -116,7 +105,7 @@ class Producer(FlatMapFunction):
         }
         print(log)
         for _ in range(NUM_ROWS_PER_PRODUCER):
-            yield pickle.dumps(np.array(image)), value
+            yield np.array(image), value
 
 
 class Inference(ProcessFunction):
@@ -129,9 +118,9 @@ class Inference(ProcessFunction):
         self.model = Model()
 
     def process_element(self, value, ctx: "ProcessFunction.Context"):
-        self.images_batch.append(pickle.loads(value[0]))
+        self.images_batch.append(value[0])
         self.paths.append(value[1])
-        self.prompts_batch.append(get_image_prompt(value[1])[:77])
+        self.prompts_batch.append(get_image_prompt(value[1])[:CLIP_CONTEXT_LENGTH])
 
         if len(self.images_batch) >= BATCH_SIZE:
             inference_start = time.perf_counter()
@@ -159,7 +148,6 @@ class Inference(ProcessFunction):
             self.images_batch.clear()
             self.prompts_batch.clear()
             self.paths.clear()
-            output = pickle.dumps(output)
             yield output, paths
 
 
@@ -169,13 +157,13 @@ class Consumer(MapFunction):
         self.task_index = runtime_context.get_index_of_this_subtask()
 
     def map(self, value):
-        output = pickle.loads(value[0])
+        output = value[0]
         path = value[1]
         batch = {"path": path, "image": output}
 
         consumer_start = time.perf_counter()
         try:
-            encode_and_upload(batch, busy=False)
+            encode_and_upload(batch, busy=True)
         except Exception as e:
             print("CONSUMER", e)
             print("CONSUMER args:", value)
@@ -230,6 +218,7 @@ def run_experiment():
     config.set_integer("taskmanager.numberOfTaskSlots", NUM_CPUS)
 
     env = StreamExecutionEnvironment.get_execution_environment(config)
+    env.get_config().enable_object_reuse()
 
     run_flink(env)
     postprocess_logs()

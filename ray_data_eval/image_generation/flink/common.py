@@ -1,5 +1,7 @@
 import json
 
+CLIP_CONTEXT_LENGTH = 77
+
 
 def postprocess_logs(file_path: str = "flink_logs.log"):
     data = []

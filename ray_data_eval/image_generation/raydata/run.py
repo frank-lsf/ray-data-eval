@@ -19,14 +19,14 @@ from ray_data_eval.image_generation.common import (
     IMAGE_PROMPTS_DF,
 )
 
-NUM_BATCHES = 10
+NUM_BATCHES = 50
 BATCH_SIZE = 20
 RESOLUTION = 512
 CSV_FILENAME = "log.csv"
 GPU_TIMELINE_FILENAME = "gpu_timeline.json"
 TIMELINE_FILENAME = "ray_timeline.json"
 ACCELERATOR = "NVIDIA_A10G"
-NUM_CPUS = 12
+NUM_CPUS = 8
 NUM_GPUS = 1
 
 
