@@ -114,7 +114,7 @@ def process_partition(iterator, gpu_id: int):
     # Download images
     images = [s3_handler.download_image(row.s3_path) for row in batch]
     prompts = [row.prompt for row in batch]
-    wait(8, busy=True)
+    wait(4 * len(batch), busy=True)
 
     # Process images
 
