@@ -67,8 +67,8 @@ class Model:
         self.model = AutoPipelineForImage2Image.from_pretrained(
             "stable-diffusion-v1-5/stable-diffusion-v1-5",
             torch_dtype=torch.float16,
-            # variant="fp16",
-            # use_safetensors=True,
+            variant="fp16",
+            use_safetensors=True,
         ).to("cuda")  # StableDiffusionImg2ImgPipeline
 
         self.start_time = time.perf_counter()
