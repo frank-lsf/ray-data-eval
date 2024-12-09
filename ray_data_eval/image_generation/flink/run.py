@@ -234,8 +234,6 @@ def run_experiment():
     config.set_integer("taskmanager.numberOfTaskSlots", NUM_CPUS)
 
     env = StreamExecutionEnvironment.get_execution_environment(config)
-    # print("checkpoint enabled: ", env.get_checkpoint_config().is_checkpointing_enabled())
-    # print(config.get_integer("taskmanager.numberOfTaskSlots", 0))
 
     run_flink(env)
     postprocess_logs()
