@@ -11,7 +11,12 @@ from diffusers import AutoPipelineForImage2Image
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType
 
-from ray_data_eval.image_generation.common import IMAGE_PROMPTS_DF, S3_BUCKET_NAME, CsvTimerLogger
+from ray_data_eval.image_generation.common import (
+    IMAGE_PROMPTS_DF,
+    S3_BUCKET_NAME,
+    CsvTimerLogger,
+    wait,
+)
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -109,6 +114,7 @@ def process_partition(iterator, gpu_id: int):
     # Download images
     images = [s3_handler.download_image(row.s3_path) for row in batch]
     prompts = [row.prompt for row in batch]
+    wait(8, busy=True)
 
     # Process images
 
@@ -121,6 +127,7 @@ def process_partition(iterator, gpu_id: int):
     for row, processed_image in zip(batch, processed_images):
         output_path = s3_handler.upload_image(processed_image, row.s3_path)
         results.append((row.s3_path, output_path))
+    wait(8, busy=True)
 
     print("Batch done", time.time())
     yield from results
