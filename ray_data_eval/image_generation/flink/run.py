@@ -203,7 +203,7 @@ def run_flink(env):
     start = time.perf_counter()
 
     ds = env.from_collection(
-        IMAGE_PROMPTS_DF.index[500 : 500 + NUM_BATCHES * BATCH_SIZE], type_info=Types.STRING()
+        IMAGE_PROMPTS_DF.index[: NUM_BATCHES * BATCH_SIZE], type_info=Types.STRING()
     )
 
     ds = ds.flat_map(
