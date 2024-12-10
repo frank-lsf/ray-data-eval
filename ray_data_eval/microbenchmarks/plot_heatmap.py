@@ -37,8 +37,8 @@ plt.rc("figure", titlesize=BIG_SIZE) # fontsize of the figure title
 
 data = [
     [199.18, 200, 200, 200, 200],        # Radar
-    [np.nan, np.nan, 429, 431.8, 428.9],  # Flink
-    [np.nan, np.nan, 651.79, 651.79, 351.8], # Spark
+    [280.2, 280.2, 253, 253, 253],            # Flink
+    [np.nan, np.nan, 651.79, 651.79, 351.8],  # Spark
     [np.nan, np.nan, 487, 272.05, 204 ]      # TFData
 ]
 
@@ -69,11 +69,11 @@ plt.imshow(nan_mask, cmap=ListedColormap([nan_color]), alpha=0.4, zorder=-10, ex
 # plt.imshow(nan_mask, cmap=ListedColormap([nan_color]), alpha=0.7)
 
 # Axis labels and title
-plt.xlabel("Memory (GB)")
+plt.xlabel("Memory Limit (GB)")
 plt.ylabel("Systems")
 # plt.title("Heatmap with Proper Scaling and NaN Highlighted as Dark Brown")
 
 # Save and display the plot
 plt.tight_layout()
-plt.savefig("heatmap_corrected.pdf")
+plt.savefig("synthetic_heatmap.pdf")
 plt.show()

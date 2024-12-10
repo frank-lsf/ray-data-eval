@@ -109,18 +109,12 @@ def run_flink(env, mem_limit):
     producer = Producer()
 
 
-    if mem_limit <= 10:
-        p = 1
-    else:
-        p =  NUM_CPUS // 2
-        
-        
     ds = ds.flat_map(producer, output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        p
+        6 if mem_limit > 10 else 1
     )
 
     ds = ds.map(Consumer(), output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        p
+        4 if mem_limit > 10 else 1
     )
 
     ds = ds.map(Inference(), output_type=Types.LONG()).set_parallelism(
@@ -139,7 +133,7 @@ def run_flink(env, mem_limit):
 
 def run_experiment(mem_limit):
     config = Configuration()
-    config.set_string("python.execution-mode", EXECUTION_MODE)
+    config.set_string("python.execution-mode", "thread")
 
     # Set memory limit for the task manager
     # https://nightlies.apache.org/flink/flink-docs-master/docs/deployment/memory/mem_setup/
@@ -147,6 +141,9 @@ def run_experiment(mem_limit):
     print("memory: ", f"{mem_limit_mb / NUM_CPUS}m")
     config.set_string("taskmanager.memory.process.size", f"{mem_limit_mb / NUM_CPUS}m")
     env = StreamExecutionEnvironment.get_execution_environment(config)
+    
+    execution_config = env.get_config()
+    execution_config.enable_object_reuse()
     run_flink(env, mem_limit)
 
 
@@ -166,7 +163,9 @@ if __name__ == "__main__":
     # Start memory usage logging in a separate process
     # logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
     # logging_process.start()
-    limit_cpu_memory(args.mem_limit)
+    
+    if args.mem_limit != 16:
+        limit_cpu_memory(args.mem_limit)
 
     main(args.mem_limit)
     # logging_process.terminate()
