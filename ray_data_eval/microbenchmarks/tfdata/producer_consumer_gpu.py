@@ -3,7 +3,6 @@ import time
 import os
 import numpy as np
 import argparse
-import resource
 from setting import (
     GB,
     TIME_UNIT,
@@ -13,8 +12,7 @@ from setting import (
     NUM_VIDEOS,
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
-    log_memory_usage_process,
-    limit_cpu_memory
+    limit_cpu_memory,
 )
 import sys
 
@@ -64,7 +62,7 @@ def bench(mem_limit):
         p = 2
     else:
         p = tf.data.experimental.AUTOTUNE
-        
+
     # flat_map doesn't have num_parallel_calls
     ds = ds.with_options(options).interleave(
         lambda item: tf.data.Dataset.from_generator(
@@ -77,7 +75,7 @@ def bench(mem_limit):
             name="producer",
         ),
         block_length=1,
-        num_parallel_calls= p,
+        num_parallel_calls=p,
         name="producer_interleave",
     )
 
@@ -121,7 +119,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if not os.path.exists(TF_PROFILER_LOGS):
         os.makedirs(TF_PROFILER_LOGS)
-        
+
     # import multiprocessing
     # Start memory usage logging in a separate process
     # logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds

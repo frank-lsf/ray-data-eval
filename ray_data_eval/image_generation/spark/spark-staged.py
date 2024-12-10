@@ -4,14 +4,13 @@ import logging
 import os
 
 import boto3
-import numpy as np
 from PIL import Image
 import torch
 from diffusers import AutoPipelineForImage2Image
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, StringType, BinaryType
+from pyspark.sql.types import StructType, StructField, StringType
 
-from ray_data_eval.image_generation.common import IMAGE_PROMPTS_DF, S3_BUCKET_NAME, CsvTimerLogger
+from ray_data_eval.image_generation.common import IMAGE_PROMPTS_DF, S3_BUCKET_NAME
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",

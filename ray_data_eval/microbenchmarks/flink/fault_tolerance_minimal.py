@@ -46,7 +46,6 @@ class Producer(FlatMapFunction):
             raise RuntimeError("Failure injected")
 
 
-
 def run_flink(env):
     start = time.perf_counter()
     number_source = NumberSequenceSource(0, NUM_TASKS)

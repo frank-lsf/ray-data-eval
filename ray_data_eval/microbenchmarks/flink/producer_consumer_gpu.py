@@ -4,12 +4,8 @@ from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.common import Configuration
 from pyflink.datastream.functions import FlatMapFunction, RuntimeContext, MapFunction
 import argparse
-import resource
-import json
 
 from setting import (
-    GB,
-    EXECUTION_MODE,
     TIME_UNIT,
     NUM_CPUS,
     NUM_GPUS,
@@ -18,9 +14,9 @@ from setting import (
     NUM_FRAMES_TOTAL,
     FRAME_SIZE_B,
     append_dict_to_file,
-    log_memory_usage_process,
-    limit_cpu_memory
+    limit_cpu_memory,
 )
+
 
 class Producer(FlatMapFunction):
     def open(self, runtime_context: RuntimeContext):
@@ -28,7 +24,6 @@ class Producer(FlatMapFunction):
         self.task_index = runtime_context.get_index_of_this_subtask()
 
     def flat_map(self, value):
-        
         producer_start = time.time()
         time.sleep(TIME_UNIT * 10)
         producer_end = time.time()
@@ -44,7 +39,7 @@ class Producer(FlatMapFunction):
             "ph": "X",
             "args": {},
         }
-        append_dict_to_file(log, 'flink_logs_producer_consumer_gpu.log')
+        append_dict_to_file(log, "flink_logs_producer_consumer_gpu.log")
 
         for _ in range(FRAMES_PER_VIDEO):
             yield b"1" * FRAME_SIZE_B
@@ -71,7 +66,7 @@ class Consumer(MapFunction):
             "ph": "X",
             "args": {},
         }
-        append_dict_to_file(log, 'flink_logs_producer_consumer_gpu.log')
+        append_dict_to_file(log, "flink_logs_producer_consumer_gpu.log")
 
         return b"2" * FRAME_SIZE_B
 
@@ -97,7 +92,7 @@ class Inference(MapFunction):
             "ph": "X",
             "args": {},
         }
-        append_dict_to_file(log, 'flink_logs_producer_consumer_gpu.log')
+        append_dict_to_file(log, "flink_logs_producer_consumer_gpu.log")
         return 1
 
 
@@ -107,7 +102,6 @@ def run_flink(env, mem_limit):
     ds = env.from_collection(items, type_info=Types.INT())
 
     producer = Producer()
-
 
     ds = ds.flat_map(producer, output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
         6 if mem_limit > 10 else 1
@@ -141,7 +135,7 @@ def run_experiment(mem_limit):
     print("memory: ", f"{mem_limit_mb / NUM_CPUS}m")
     config.set_string("taskmanager.memory.process.size", f"{mem_limit_mb / NUM_CPUS}m")
     env = StreamExecutionEnvironment.get_execution_environment(config)
-    
+
     execution_config = env.get_config()
     execution_config.enable_object_reuse()
     run_flink(env, mem_limit)
@@ -152,7 +146,6 @@ def main(mem_limit):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--mem-limit", type=int, required=False, help="Memory limit in GB", default=20
@@ -163,7 +156,7 @@ if __name__ == "__main__":
     # Start memory usage logging in a separate process
     # logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
     # logging_process.start()
-    
+
     if args.mem_limit != 16:
         limit_cpu_memory(args.mem_limit)
 

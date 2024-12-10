@@ -7,7 +7,16 @@ from pyspark.resource import ResourceProfileBuilder
 import os
 import argparse
 
-from setting import TIME_UNIT, NUM_CPUS, FRAMES_PER_VIDEO, NUM_VIDEOS, FRAME_SIZE_B, busy_loop, limit_cpu_memory, log_memory_usage, log_memory_usage_process
+from setting import (
+    TIME_UNIT,
+    NUM_CPUS,
+    FRAMES_PER_VIDEO,
+    NUM_VIDEOS,
+    FRAME_SIZE_B,
+    busy_loop,
+    limit_cpu_memory,
+    log_memory_usage_process,
+)
 
 
 def start_spark(stage_level_scheduling: bool, mem_limit: int):
@@ -44,7 +53,7 @@ def start_spark(stage_level_scheduling: bool, mem_limit: int):
                 .config("spark.executor.resource.gpu.amount", 1)
                 .config("spark.driver.memory", "1g")
             )
-            
+
         elif mem_limit <= 14:
             spark_config = (
                 spark_config.config("spark.dynamicAllocation.enabled", "false")
@@ -75,7 +84,7 @@ def start_spark(stage_level_scheduling: bool, mem_limit: int):
         #         .config("spark.executor.resource.gpu.amount", 1)
         #         .config("spark.driver.memory", "1g")
         #     )
-        else:        
+        else:
             spark_config = (
                 spark_config.config("spark.dynamicAllocation.enabled", "false")
                 .config("spark.executor.instances", 4)
@@ -167,7 +176,6 @@ def bench(stage_level_scheduling, cache, cache_disk, mem_limit):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stage-level-scheduling",
@@ -196,11 +204,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     import multiprocessing
+
     # Start memory usage logging in a separate process
-    logging_process = multiprocessing.Process(target=log_memory_usage_process, args=(2, args.mem_limit))  # Log every 2 seconds
+    logging_process = multiprocessing.Process(
+        target=log_memory_usage_process, args=(2, args.mem_limit)
+    )  # Log every 2 seconds
     logging_process.start()
-    
+
     limit_cpu_memory(args.mem_limit)
     bench(args.stage_level_scheduling, args.cache, args.cache_disk, args.mem_limit)
     logging_process.terminate()
-
