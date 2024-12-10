@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-FIGRATIO = 3 / 5
-FIGWIDTH = 5  # inches
+FIGRATIO = 3 / 3
+FIGWIDTH = 3  # inches
 FIGHEIGHT = FIGWIDTH * FIGRATIO
 FIGSIZE = (FIGWIDTH, FIGHEIGHT)
 
@@ -50,8 +50,8 @@ Y_smooth_static = np.convolve(Y_smooth_static, kernel, mode="same")
 
 # Create the plot
 plt.figure(figsize=(FIGWIDTH, FIGHEIGHT))
-plt.plot(X_smooth_dynamic, Y_smooth_dynamic, "b-", label="Radar (Adaptive)")
-plt.plot(X_smooth_static, Y_smooth_static, "r-", label="Radar (Static)")
+plt.plot(X_smooth_dynamic, Y_smooth_dynamic, "b-", label="Radar-dynamic")
+plt.plot(X_smooth_static, Y_smooth_static, "r-", label="Radar-static")
 
 plt.xlabel("Time (s)")
 plt.ylabel("Throughput (frames/s)")
