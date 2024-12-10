@@ -7,4 +7,4 @@ log_file=$2
 echo "Running $mem_limit GB"
 echo "Log: $log_file"
 
-python -u producer_consumer_gpu.py --mem-limit $mem_limit > $log_file 2>&1
+python -u ray_data_no_adaptive.py --mem-limit $mem_limit > $log_file 2>&1

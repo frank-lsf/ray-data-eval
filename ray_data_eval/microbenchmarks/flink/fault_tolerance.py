@@ -15,8 +15,8 @@ from pyflink.datastream.functions import RuntimeContext
 NUM_CPUS = 8
 
 # Slot Sharing
-PRODUCER_PARALLELISM = 1
-CONSUMER_PARALLELISM = 1
+PRODUCER_PARALLELISM = 8
+CONSUMER_PARALLELISM = 8
 
 EXECUTION_MODE = "process"
 MB = 1024 * 1024    
@@ -172,10 +172,10 @@ def run_experiment():
     
     config.set_string("state.backend.type", "rocksdb")  # Use a persistent backend
     config.set_string("state.checkpoints.dir", "file:///home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/flink-checkpoints")  # Local or remote path
-    config.set_boolean("state.backend.incremental", True)  # Enable incremental checkpointing
+    # config.set_boolean("state.backend.incremental", True)  # Enable incremental checkpointing
 
     env = StreamExecutionEnvironment.get_execution_environment(config)
-    env.enable_checkpointing(10000, CheckpointingMode.EXACTLY_ONCE)
+    env.enable_checkpointing(30000, CheckpointingMode.EXACTLY_ONCE)
     print("checkpoint enabled: ", env.get_checkpoint_config().is_checkpointing_enabled())
     print("interval: ", env.get_checkpoint_config().get_checkpoint_interval())
     run_flink(env)

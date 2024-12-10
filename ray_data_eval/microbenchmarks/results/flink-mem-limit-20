@@ -1,0 +1,277 @@
+memory:  2560.0m
+Processed 1/800
+Processed 2/800
+Processed 3/800
+Processed 4/800
+Processed 5/800
+Processed 6/800
+Processed 7/800
+Processed 8/800
+Processed 9/800
+Processed 10/800
+Processed 11/800
+Processed 12/800
+Processed 13/800
+Processed 14/800
+Processed 15/800
+Processed 16/800
+Processed 17/800
+Processed 18/800
+Processed 19/800
+Processed 20/800
+Traceback (most recent call last):
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1210, in send_command
+    self.socket.sendall(command.encode("utf-8"))
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 171, in <module>
+    main(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 154, in main
+    run_experiment(mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 150, in run_experiment
+    run_flink(env, mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 131, in run_flink
+    for length in ds.execute_and_collect():
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/datastream/data_stream.py", line 2920, in __next__
+    return self.next()
+     Exception in thread read_grpc_client_inputs:
+Traceback (most recent call last):
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+     self.run() 
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 982, in run
+     Exception in thread read_grpc_client_inputsself._target(*self._args, **self._kwargs) 
+:
+Traceback (most recent call last):
+   File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 669, in <lambda>
+ ^^^^^  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+Exception in thread ^^    ^Exception in thread read_grpc_client_inputs^Exception in thread ^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/datastream/data_stream.py", line 2931, in next
+:
+Traceback (most recent call last):
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+target=lambda: self._read_inputs(elements_iterator),
+    self.run()
+  read_grpc_client_inputsread_grpc_client_inputs:
+Traceback (most recent call last):
+    File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 982, in run
+:
+    Traceback (most recent call last):
+          File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+self.run()    
+Exception in thread      self.run()
+   self.run()  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 982, in run
+      File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 982, in run
+    return convert_to_python_obj(self._j_closeable_iterator.next(), self._type_info)   ^read_grpc_client_inputs:
+self._target(*self._args, **self._kwargs)
+^
+     ^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 669, in <lambda>
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 982, in run
+ self._target(*self._args, **self._kwargs)    self._target(*self._args, **self._kwargs)
+^ ^
+    ^self._target(*self._args, **self._kwargs)Traceback (most recent call last):
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+Exception in thread Exception in thread 
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 669, in <lambda>
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 669, in <lambda>
+    File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 669, in <lambda>
+read_grpc_client_inputs     read_grpc_client_inputs:
+Traceback (most recent call last):
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+    target=lambda: self._read_inputs(elements_iterator),:
+           Traceback (most recent call last):
+^  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+target=lambda: self._read_inputs(elements_iterator),
+  target=lambda: self._read_inputs(elements_iterator),target=lambda: self._read_inputs(elements_iterator),    ^^
+  
+   
+    ^    self.run()
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 982, in run
+      ^^^         ^^^   self.run()
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 982, in run
+self.run()      self._target(*self._args, **self._kwargs) 
+ 
+  File "/opt/conda/envs/ray-data/lib/python3.11/threading.py", line 982, in run
+   ^       ^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 669, in <lambda>
+         ^  ^ self._target(*self._args, **self._kwargs)
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 669, in <lambda>
+   ^^     ^^            ^^^    ^^^     ^^self._target(*self._args, **self._kwargs)
+   ^     ^^^target=lambda: self._read_inputs(elements_iterator), 
+ ^^^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 669, in <lambda>
+     ^target=lambda: self._read_inputs(elements_iterator),^ ^ 
+ ^^    ^ ^^  ^target=lambda: self._read_inputs(elements_iterator),  ^^^^ 
+   ^             ^^^^^^ ^^^^^ ^^   
+    ^^ ^^^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 652, in _read_inputs
+    ^ ^^^^^  ^ ^ ^^     ^^^^^^^^^^^      ^^^^ ^^^^     ^^^^^    ^^   ^^^^
+^for elements in elements_iterator:^
+   ^^ ^^^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+^^^^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 652, in _read_inputs
+ ^^^^^^^ ^^^ ^^^^^^^^^^ ^^       ^^^^^   ^^^for elements in elements_iterator:^^^^^^^^^^^^    ^^^^^return self._next()^^^^^^^
+^^^
+^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+^^^^^ ^^^^^^^^ ^^^^^^^^^ ^^^^^^^ ^^^^^^ 
+^^^^    ^^return self._next()^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_collections.py", line 62, in next
+^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^ ^ ^^^^ ^^^^    return self._methods[self._next_name]()
+^^^ ^^^^  ^^^^^^   ^^^
+^^^^ ^^^^^ ^ ^^^^ ^ ^^
+^^  
+^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 652, in _read_inputs
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 652, in _read_inputs
+    File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 652, in _read_inputs
+^^^ ^^ ^ 
+^^^   ^ ^^^ ^ ^     ^for elements in elements_iterator:^^^    ^
+^^for elements in elements_iterator:^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+^    ^^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 652, in _read_inputs
+^^
+^^for elements in elements_iterator:^^^^
+    ^^for elements in elements_iterator:^^
+^^
+^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+^^^^^^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+    ^^^^return self._next()^
+^^ ^^^
+    ^return self._next()  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 652, in _read_inputs
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+    
+
+    raise self
+^^^^  return self._next()
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/data_plane.py", line 652, in _read_inputs
+  ^^^^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+ ^^  grpc._channel^ ^    ^          return self._next()
+ ._MultiThreadedRendezvous      : <_MultiThreadedRendezvous of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""
+	debug_error_string = "UNKNOWN:Error received from peer ipv6:%5B::1%5D:34379 {created_time:"2024-12-09T00:34:10.764686237+00:00", grpc_status:2, grpc_message:""}"
+>        for elements in elements_iterator: 
+^
+raise self
+grpc._channel._MultiThreadedRendezvous: ^ ^     <_MultiThreadedRendezvous of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""
+	debug_error_string = "UNKNOWN:Error received from peer ipv6:%5B::1%5D:35303 {created_time:"2024-12-09T00:34:10.396891489+00:00", grpc_status:2, grpc_message:""}"
+> ^^ ^^ for elements in elements_iterator:  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+
+^ ^^
+^   File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 543, in __next__
+^^^ ^^^  ^  ^^^
+      ^    ^return self._next()   File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+^
+^   ^^^^ return self._next()     ^^
+^^ ^ ^^raise self
+  
+^grpc._channel  ^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1321, in __call__
+^   ._MultiThreadedRendezvous : <_MultiThreadedRendezvous of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""
+	debug_error_string = "UNKNOWN:Error received from peer ipv6:%5B::1%5D:38611 {created_time:"2024-12-09T00:34:20.144160247+00:00", grpc_status:2, grpc_message:""}"
+>
+    ^^^^^^ ^^ ^^^ ^ ^^^ ^^
+^    
+answer = self.gateway_client.send_command(command)  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+^ ^^ ^^^  ^^ ^^^    ^
+    raise self^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+^raise self
+^grpc._channel ^^ ^.
+^ grpc._channel_MultiThreadedRendezvous^  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+  . : <_MultiThreadedRendezvous of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""
+	debug_error_string = "UNKNOWN:Error received from peer ipv6:%5B::1%5D:42811 {created_time:"2024-12-09T00:34:20.246026855+00:00", grpc_status:2, grpc_message:""}"
+>
+    _MultiThreadedRendezvous^raise self: <_MultiThreadedRendezvous of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""
+	debug_error_string = "UNKNOWN:Error received from peer ipv6:%5B::1%5D:41691 {grpc_message:"", grpc_status:2, created_time:"2024-12-09T00:34:25.023751867+00:00"}"
+>
+ 
+
+grpc._channel    raise self  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/grpc/_channel.py", line 969, in _next
+ .^
+^_MultiThreadedRendezvousgrpc._channel: <_MultiThreadedRendezvous of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""
+	debug_error_string = "UNKNOWN:Error received from peer ipv6:%5B::1%5D:33431 {grpc_message:"", grpc_status:2, created_time:"2024-12-09T00:34:23.37947469+00:00"}"
+>
+.^_MultiThreadedRendezvous^    : <_MultiThreadedRendezvous of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""
+	debug_error_string = "UNKNOWN:Error received from peer ipv6:%5B::1%5D:38161 {created_time:"2024-12-09T00:34:18.529074628+00:00", grpc_status:2, grpc_message:""}"
+>raise self^
+
+^grpc._channel^.^_MultiThreadedRendezvous^: <_MultiThreadedRendezvous of RPC that terminated with:
+	status = StatusCode.UNKNOWN
+	details = ""
+	debug_error_string = "UNKNOWN:Error received from peer ipv6:%5B::1%5D:42647 {created_time:"2024-12-09T00:34:18.786259228+00:00", grpc_status:2, grpc_message:""}"
+>^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1066, in send_command
+    logging.exception("KeyboardInterrupt while sending command.")
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 2116, in exception
+    error(msg, *args, exc_info=exc_info, **kwargs)
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 2108, in error
+    root.error(msg, *args, **kwargs)
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 1518, in error
+    self._log(ERROR, msg, args, **kwargs)
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 1634, in _log
+    self.handle(record)
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 1644, in handle
+    self.callHandlers(record)
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 1706, in callHandlers
+    hdlr.handle(record)
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 978, in handle
+    self.emit(record)
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/apache_beam/runners/worker/log_handler.py", line 127, in emit
+    log_entry.message = self.format(record)
+                        ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 953, in format
+    return fmt.format(record)
+           ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 695, in format
+    record.exc_text = self.formatException(record.exc_info)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/logging/__init__.py", line 645, in formatException
+    traceback.print_exception(ei[0], ei[1], tb, None, sio)
+  File "/opt/conda/envs/ray-data/lib/python3.11/traceback.py", line 124, in print_exception
+    te = TracebackException(type(value), value, tb, limit=limit, compact=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/traceback.py", line 728, in __init__
+    self.stack = StackSummary._extract_from_extended_frame_gen(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/traceback.py", line 433, in _extract_from_extended_frame_gen
+    f.line
+  File "/opt/conda/envs/ray-data/lib/python3.11/traceback.py", line 318, in line
+    self._line = linecache.getline(self.filename, self.lineno)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/linecache.py", line 30, in getline
+    lines = getlines(filename, module_globals)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/linecache.py", line 46, in getlines
+    return updatecache(filename, module_globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/linecache.py", line 136, in updatecache
+    with tokenize.open(fullname) as fp:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/tokenize.py", line 398, in open
+    encoding, lines = detect_encoding(buffer.readline)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/tokenize.py", line 367, in detect_encoding
+    first = read_or_stop()
+            ^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/tokenize.py", line 325, in read_or_stop
+    return readline()
+           ^^^^^^^^^^
+KeyboardInterrupt

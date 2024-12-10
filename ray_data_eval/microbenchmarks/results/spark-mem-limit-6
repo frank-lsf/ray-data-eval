@@ -1,0 +1,54 @@
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+24/12/09 00:25:21 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+24/12/09 00:25:21 WARN ResourceProfile: The executor resource config for resource: gpu was specified but no corresponding task resource request was specified.
+[2.803s][warning][os,thread] Failed to start thread "Unknown thread" - pthread_create failed (EAGAIN) for attributes: stacksize: 1024k, guardsize: 0k, detached.
+[2.804s][warning][os,thread] Failed to start the native thread for java.lang.Thread "rpc-client-1-1"
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 16 bytes for AllocateHeap
+# An error report file with more information is saved as:
+# /home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/spark/hs_err_pid639577.log
+ERROR:root:Exception while sending command.
+Traceback (most recent call last):
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/clientserver.py", line 516, in send_command
+    raise Py4JNetworkError("Answer from Java side is empty")
+py4j.protocol.Py4JNetworkError: Answer from Java side is empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/clientserver.py", line 539, in send_command
+    raise Py4JNetworkError(
+py4j.protocol.Py4JNetworkError: Error while sending or receiving
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/spark/producer_consumer_gpu.py", line 183, in <module>
+    bench(args.stage_level_scheduling, args.cache, args.cache_disk, args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/spark/producer_consumer_gpu.py", line 144, in bench
+    spark = start_spark(stage_level_scheduling, mem_limit)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/spark/producer_consumer_gpu.py", line 68, in start_spark
+    spark = spark_config.getOrCreate()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyspark/sql/session.py", line 497, in getOrCreate
+    sc = SparkContext.getOrCreate(sparkConf)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyspark/context.py", line 515, in getOrCreate
+    SparkContext(conf=conf or SparkConf())
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyspark/context.py", line 203, in __init__
+    self._do_init(
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyspark/context.py", line 296, in _do_init
+    self._jsc = jsc or self._initialize_context(self._conf._jconf)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyspark/context.py", line 421, in _initialize_context
+    return self._jvm.JavaSparkContext(jconf)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1587, in __call__
+    return_value = get_return_value(
+                   ^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/protocol.py", line 334, in get_return_value
+    raise Py4JError(
+py4j.protocol.Py4JError: An error occurred while calling None.org.apache.spark.api.java.JavaSparkContext

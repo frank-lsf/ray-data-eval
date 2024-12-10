@@ -1,0 +1,104 @@
+2024-12-08 23:37:41.445631: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:477] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1733701061.466396  572756 cuda_dnn.cc:8310] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1733701061.472684  572756 cuda_blas.cc:1418] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-12-08 23:37:41.494587: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+W0000 00:00:1733701063.291172  572756 gpu_device.cc:2344] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2024-12-08 23:37:51.029151: W tensorflow/core/framework/op_kernel.cc:1829] RESOURCE_EXHAUSTED: MemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
+Traceback (most recent call last):
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/ops/script_ops.py", line 269, in __call__
+    ret = func(*args)
+          ^^^^^^^^^^^
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/autograph/impl/api.py", line 643, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/from_generator_op.py", line 198, in generator_py_func
+    values = next(generator_state.get_iterator(iterator_id))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 44, in producer_fn
+    "data": np.full(FRAME_SIZE_B, i, dtype=np.uint8),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/numpy/core/numeric.py", line 344, in full
+    a = empty(shape, dtype, order)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
+
+
+2024-12-08 23:37:51.029637: I tensorflow/core/framework/local_rendezvous.cc:405] Local rendezvous is aborting with status: RESOURCE_EXHAUSTED: MemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
+Traceback (most recent call last):
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/ops/script_ops.py", line 269, in __call__
+    ret = func(*args)
+          ^^^^^^^^^^^
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/autograph/impl/api.py", line 643, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/from_generator_op.py", line 198, in generator_py_func
+    values = next(generator_state.get_iterator(iterator_id))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 44, in producer_fn
+    "data": np.full(FRAME_SIZE_B, i, dtype=np.uint8),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/numpy/core/numeric.py", line 344, in full
+    a = empty(shape, dtype, order)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
+
+
+	 [[{{node PyFunc}}]]
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 127, in <module>
+    bench(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 104, in bench
+    for row in ds:
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/iterator_ops.py", line 826, in __next__
+    return self._next_internal()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/iterator_ops.py", line 776, in _next_internal
+    ret = gen_dataset_ops.iterator_get_next(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/ops/gen_dataset_ops.py", line 3086, in iterator_get_next
+    _ops.raise_from_not_ok_status(e, name)
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/framework/ops.py", line 6002, in raise_from_not_ok_status
+    raise core._status_to_exception(e) from None  # pylint: disable=protected-access
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tensorflow.python.framework.errors_impl.ResourceExhaustedError: {{function_node __wrapped__IteratorGetNext_output_types_1_device_/job:localhost/replica:0/task:0/device:CPU:0}} MemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
+Traceback (most recent call last):
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/ops/script_ops.py", line 269, in __call__
+    ret = func(*args)
+          ^^^^^^^^^^^
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/autograph/impl/api.py", line 643, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/tensorflow/python/data/ops/from_generator_op.py", line 198, in generator_py_func
+    values = next(generator_state.get_iterator(iterator_id))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/tfdata/producer_consumer_gpu.py", line 44, in producer_fn
+    "data": np.full(FRAME_SIZE_B, i, dtype=np.uint8),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/numpy/core/numeric.py", line 344, in full
+    a = empty(shape, dtype, order)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 100. MiB for an array with shape (104857600,) and data type uint8
+
+
+	 [[{{node PyFunc}}]] [Op:IteratorGetNext] name: 
