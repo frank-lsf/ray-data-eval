@@ -40,20 +40,38 @@ def bench(mem_limit):
 
     data_context = ray.data.DataContext.get_current()
     data_context.execution_options.verbose_progress = True
-    data_context.target_max_block_size = FRAME_SIZE_B
-    data_context.is_budget_policy = False
+    data_context.target_max_block_size = FRAME_SIZE_B * 10
+    data_context.is_budget_policy = True
     # data_context.is_conservative_policy = True
 
 
+    mem = min(11, mem_limit)
+
+    if mem_limit <= 6:
+        mem = 2
+    elif mem_limit <= 8:
+        mem = 2
+    elif mem_limit <= 10:
+        mem = 2.5
+    elif mem_limit <= 12:
+        mem = 4
+    
+    if mem_limit > 10:
+        num_cpus = NUM_CPUS
+    elif mem_limit > 8:
+        num_cpus = 4
+    else:
+        num_cpus = 2
+        
     ray.init(
-        num_cpus=NUM_CPUS if mem_limit >= 8 else 4,
-        num_gpus=NUM_GPUS if mem_limit >= 8 else 4,
-        object_store_memory=min(12, mem_limit if mem_limit >= 8 else 2.5) * GB,
+        num_cpus=num_cpus,
+        num_gpus=NUM_GPUS if mem_limit > 10 else NUM_GPUS,
+        object_store_memory= mem * GB,
     )
 
     ds = ray.data.range(NUM_FRAMES_TOTAL, override_num_blocks=NUM_VIDEOS)
-    ds = ds.map_batches(produce, batch_size=FRAMES_PER_VIDEO, concurrency=4)
-    ds = ds.map_batches(consume, batch_size=1, num_cpus=0.99, concurrency=4)
+    ds = ds.map_batches(produce, batch_size=FRAMES_PER_VIDEO)
+    ds = ds.map_batches(consume, batch_size=1, num_cpus=0.99)
     ds = ds.map_batches(inference, batch_size=1, num_cpus=0, num_gpus=1)
 
     start_time = time.time()

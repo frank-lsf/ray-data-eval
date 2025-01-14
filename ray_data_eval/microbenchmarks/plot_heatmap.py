@@ -5,10 +5,10 @@ import seaborn as sns
 from matplotlib.colors import ListedColormap, to_rgba
 
 # Data
-x_axis = [8, 10, 12, 14, 16]
-y_axis_labels = ["Radar", "Flink", "Spark", "TFData"]
+x_axis = [6, 8, 10, 12, 14, 16]
+y_axis_labels = ["Spark", "Flink", "TFData",  "Ray Data(-Part.)", "Ray Data(-Adapt.)", "Ray Data"]
 
-BIG_SIZE = 9
+BIG_SIZE = 8
 FIGRATIO = 3 / 5
 FIGWIDTH = 3.335  # inches
 FIGHEIGHT = FIGWIDTH * FIGRATIO
@@ -35,10 +35,12 @@ plt.rc("legend", fontsize=BIG_SIZE)  # legend fontsize
 plt.rc("figure", titlesize=BIG_SIZE)  # fontsize of the figure title
 
 data = [
-    [199.18, 200, 200, 200, 200],  # Radar
-    [280.2, 280.2, 253, 253, 253],  # Flink
-    [np.nan, np.nan, 651.79, 651.79, 351.8],  # Spark
-    [np.nan, np.nan, 487, 272.05, 204],  # TFData
+    [np.nan, np.nan, np.nan, 651.79, 651.79, 351.8],  # Spark
+    [496.714, 280.2, 280.2, 253, 253, 253],  # Flink
+    [np.nan, np.nan, np.nan, 487, 272.05, 204],  # TFData
+    [np.nan, np.nan, 549.0597, 347.9951, 221.8577, 223.3819], # RadarNoPartition
+    [378.6479, 218.8507, 218.8,219.3012,218.8460,218.84], # RadarStatic
+    [290.5227, 199.18, 200, 200, 200, 200],  # Radar
 ]
 
 # Create a DataFrame
@@ -82,10 +84,11 @@ plt.imshow(
 
 # Axis labels and title
 plt.xlabel("Memory Limit (GB)")
-plt.ylabel("Systems")
+# plt.ylabel("Systems")
 # plt.title("Heatmap with Proper Scaling and NaN Highlighted as Dark Brown")
 
 # Save and display the plot
 plt.tight_layout()
+print("synthetic_heatmap.pdf")
 plt.savefig("synthetic_heatmap.pdf")
 plt.show()

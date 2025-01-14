@@ -1,6 +1,6 @@
 MICROBENCHMARK_HOME=/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks
 
-for mem_limit in 16 12 8 4; do
+for mem_limit in 16 14 12 10 8 6; do
     for systems in raydata; do
 
         log_file="$MICROBENCHMARK_HOME/results_ray/$systems-mem-limit-${mem_limit}"

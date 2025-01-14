@@ -1,4 +1,11 @@
 Traceback (most recent call last):
-  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/producer_consumer_gpu.py", line 6, in <module>
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/raydata/ray_data_no_adaptive.py", line 6, in <module>
     import ray
-ModuleNotFoundError: No module named 'ray'
+  File "/home/ubuntu/ray/python/ray/__init__.py", line 75, in <module>
+    _configure_system()
+  File "/home/ubuntu/ray/python/ray/__init__.py", line 72, in _configure_system
+    CDLL(so_path, ctypes.RTLD_GLOBAL)
+  File "/home/ubuntu/miniconda3/envs/ray-data/lib/python3.11/ctypes/__init__.py", line 376, in __init__
+    self._handle = _dlopen(self._name, mode)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: /home/ubuntu/miniconda3/envs/ray-data/bin/../lib/libstdc++.so.6: version `GLIBCXX_3.4.30' not found (required by /home/ubuntu/ray/python/ray/_raylet.so)

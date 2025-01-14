@@ -45,8 +45,8 @@ def bench(mem_limit):
     # data_context.is_conservative_policy = True
 
     ray.init(
-        num_cpus=NUM_CPUS if mem_limit >= 8 else 2,
-        num_gpus=NUM_GPUS if mem_limit >= 8 else 2,
+        num_cpus=NUM_CPUS if mem_limit >= 8 else 6,
+        num_gpus=NUM_GPUS if mem_limit >= 8 else NUM_GPUS,
         object_store_memory=min(12, mem_limit if mem_limit >= 8 else 4) * GB,
     )
 

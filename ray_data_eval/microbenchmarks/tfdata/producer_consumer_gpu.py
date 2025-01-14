@@ -98,7 +98,7 @@ def bench(mem_limit):
             name="inference",
         ),
         # GPU stage.
-        num_parallel_calls=4 if mem_limit > 4 else 1,
+        num_parallel_calls=4 if mem_limit > 10 else 1,
         name="inference_map",
     )
 

@@ -68,9 +68,9 @@ public class FlinkProducerConsumer {
         // Set parallelism and chain transformations
         numberSource
                 .flatMap(new Producer())
-                .setParallelism(6)
+                .setParallelism(4) // 6 if >= 8GB
                 .process(new ConsumerActor())
-                .setParallelism(6)
+                .setParallelism(4) // 6
                 .process(new Inference())
                 .setParallelism(4)
                 .print(); // Printing the results
