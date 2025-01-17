@@ -1,19 +1,32 @@
 import time
 from typing import Any, Iterator
+import io
 
+import boto3
 import cv2
-import mmcv
-from mmagic.apis.mmagic_inferencer import MMagicInferencer
+from decord import VideoReader
+
+# from mmagic.apis.mmagic_inferencer import MMagicInferencer
 import numpy as np
 import ray
 import torch
+from ray_data_eval.image_generation.common import CsvTimerLogger
+from ray_data_eval.video_generation.raydata.data import VIDEO_SEGMENTS
 
+BUCKET = "ray-data-eval-us-west-2"
+CSV_FILENAME = "radar_tput.csv"
 
-INPUT_DIR = "data/input"
-OUTPUT_DIR = "data/output"
+DECORD_NUM_FRAMES_PER_BATCH = 8  # Adjust to avoid CUDA OOM
 
-BATCH_SIZE_LIMIT = 1024 * 1024 * 128
+BATCH_SIZE_LIMIT = 1024 * 1024 * 32  # Adjust to avoid CUDA OOM
 RGB_MAX = 255.0
+NUM_FRAMES_PER_BATCH = 16
+
+
+def sleep(mean: float, std_pct: float = 0.2):
+    std = mean * std_pct
+    duration = np.random.normal(mean, std)
+    time.sleep(duration)
 
 
 def _batch_to_tensor(batch: list[np.ndarray]) -> torch.Tensor:
@@ -22,25 +35,6 @@ def _batch_to_tensor(batch: list[np.ndarray]) -> torch.Tensor:
         torch.from_numpy(batch_np).permute(0, 3, 1, 2) / RGB_MAX
     )  # (frames, channels, width, height)
     return tensor
-
-
-def preprocess(input_path: str) -> Iterator[torch.Tensor]:
-    reader = mmcv.VideoReader(input_path)
-    batch = []
-    batch_total_size = 0
-    last_batch_time = time.time()
-    for frame in reader:
-        batch.append(frame)
-        batch_total_size += frame.nbytes
-        if batch_total_size > BATCH_SIZE_LIMIT:
-            yield _batch_to_tensor(batch)
-            print(f"Time to decode {len(batch)} frames: {time.time() - last_batch_time:.3f}s")
-            batch = []
-            batch_total_size = 0
-            last_batch_time = time.time()
-    if batch:
-        yield _batch_to_tensor(batch)
-        print(f"Time to decode {len(batch)} frames: {time.time() - last_batch_time:.3f}s")
 
 
 class VideoWriter:
@@ -83,50 +77,93 @@ class VideoProcessor:
     def __init__(self):
         self.engine = MMagicInferencer("real_basicvsr", seed=None).inferencer.inferencer
         self.upscaling_factor = 2
+        self.csv_logger = CsvTimerLogger(CSV_FILENAME)
 
     def __call__(self, batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
         start_time = time.time()
-        frames_processed = 0
         tensor = torch.from_numpy(batch["bytes"]).float()
-        batch_start_time = time.time()
+        # tensor = tensor.to("cuda", non_blocking=True)
+
+        # with torch.autocast("cuda"):
         preds = self.engine.forward(tensor)  # (batch, frames, channels, width, height)
-        frames_processed += preds.size(1)
-        print(
-            f"Processed {frames_processed} frames, "
-            f"last batch time {time.time() - batch_start_time:.3f}s, "
-            f"total time {time.time() - start_time:.3f}s"
-        )
         preds_np = preds.detach().cpu().numpy()
+
+        self.csv_logger.log_batch(NUM_FRAMES_PER_BATCH, time.time() - start_time)
         yield {"bytes": preds_np, "path": batch["path"]}
 
 
+class DummyVideoProcessor:
+    def __init__(self):
+        self.csv_logger = CsvTimerLogger(CSV_FILENAME)
+
+    def __call__(self, batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
+        # path = batch["path"][0]
+        start_time = time.time()
+        sleep(0.3)
+        self.csv_logger.log_batch(NUM_FRAMES_PER_BATCH, time.time() - start_time)
+        yield batch
+
+
 def preprocess_operator(batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
-    paths = batch["item"]
-    for path in paths:
-        for tensor in preprocess(path):
-            yield {"bytes": tensor.unsqueeze(0), "path": [path]}
+    item = batch["item"][0]
+    path, start_frame = item.split("#")
+    start_frame = int(start_frame)
+    end_frame = start_frame + NUM_FRAMES_PER_BATCH
+
+    s3_client = boto3.client("s3")
+    video_bytes = io.BytesIO()
+    s3_client.download_fileobj(BUCKET, path, video_bytes)
+
+    start_time = time.time()
+    video_bytes.seek(0)
+    reader = VideoReader(
+        video_bytes,
+        num_threads=1,
+    )
+    batch = []
+    for frame in reader.get_batch(range(start_frame, end_frame)).asnumpy():
+        frame = np.array(frame)
+        batch.append(frame)
+
+    if "high-res" in path:
+        time.sleep(3)
+    yield {"bytes": _batch_to_tensor(batch).unsqueeze(0), "path": [path]}
+    print(f"Time to decode {len(batch)} frames from {path}: {time.time() - start_time:.3f}s")
 
 
 def postprocess_operator(batch: dict[str, Any]) -> Iterator[dict[str, Any]]:
     input_path = batch["path"][0]
-    output_path = input_path.replace("input", "output")
+    filename = input_path.split("/")[-1]
+    output_path = f"/tmp/{filename}"
     output_shape = batch["bytes"].shape
+    if len(output_shape) < 5:
+        yield {"path": [output_path]}
+        return
+
     width = output_shape[-1]
     height = output_shape[-2]
     writer = VideoWriter(width, height, output_path)
     writer.write_batch(batch["bytes"].squeeze(0))
     writer.finish()
+
+    if "low-res" in input_path:
+        sleep(0.3)
+
     yield {"path": [output_path]}
 
 
-ds = ray.data.from_items(["data/input/a.mp4"] * 10)
+ray.init(object_store_memory=1024 * 1024 * 1024 * 12, num_cpus=10)
+
+ds = ray.data.from_items(VIDEO_SEGMENTS)
+
 ds = ds.map_batches(
     preprocess_operator,
     batch_size=1,
     zero_copy_batch=True,
+    concurrency=4,
 )
 ds = ds.map_batches(
-    VideoProcessor,
+    DummyVideoProcessor,
     concurrency=1,
     num_gpus=1,
     batch_size=1,
@@ -136,5 +173,8 @@ ds = ds.map_batches(
     postprocess_operator,
     batch_size=1,
     zero_copy_batch=True,
+    concurrency=4,
 )
 print(ds.take_all())
+
+ray.timeline("timeline.json")
