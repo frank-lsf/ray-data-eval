@@ -1,0 +1,502 @@
+[
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "29506274326",
+    "dur": "97072921",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "29603353474",
+    "dur": "95559231",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "29698918749",
+    "dur": "95399848",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "29794324603",
+    "dur": "96162744",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "29890493564",
+    "dur": "96053730",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "29986553116",
+    "dur": "95621950",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30082181292",
+    "dur": "95961520",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30178148674",
+    "dur": "95765212",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30273920338",
+    "dur": "95164483",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30369090855",
+    "dur": "96256280",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30465353199",
+    "dur": "95866957",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30561226901",
+    "dur": "96067638",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30657300679",
+    "dur": "95488924",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30752795740",
+    "dur": "95459040",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30848261201",
+    "dur": "95528329",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "30943795614",
+    "dur": "96118165",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31039920165",
+    "dur": "95609655",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31135536668",
+    "dur": "95873534",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31231416494",
+    "dur": "95636837",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31327059791",
+    "dur": "95279683",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31422346240",
+    "dur": "95631640",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31517984680",
+    "dur": "95915354",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31613906851",
+    "dur": "95625731",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31709539339",
+    "dur": "95433205",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31804979313",
+    "dur": "96240128",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31901226205",
+    "dur": "96143543",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "31997376758",
+    "dur": "95494832",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32092879096",
+    "dur": "95746228",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32188632906",
+    "dur": "95468242",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32284108393",
+    "dur": "95445481",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32379561191",
+    "dur": "95736401",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32475305095",
+    "dur": "95368085",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32570680410",
+    "dur": "95755275",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32666443093",
+    "dur": "95802405",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32762252501",
+    "dur": "95896056",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32858155701",
+    "dur": "96086465",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "32954249461",
+    "dur": "96169920",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33050426704",
+    "dur": "96252590",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33146686776",
+    "dur": "95324987",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33242019385",
+    "dur": "95941559",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33337968462",
+    "dur": "96107202",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33434083140",
+    "dur": "96310260",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33530400794",
+    "dur": "95735853",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33626144285",
+    "dur": "96076969",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33722228668",
+    "dur": "95821327",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33818057541",
+    "dur": "95462557",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "33913527513",
+    "dur": "95641990",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "34009176831",
+    "dur": "95573487",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "34104757548",
+    "dur": "95925988",
+    "ph": "X",
+    "args": {}
+  },
+  {
+    "cat": "fused:0",
+    "name": "fused:0",
+    "pid": "",
+    "tid": "CPU:0",
+    "ts": "34200690773",
+    "dur": "95840974",
+    "ph": "X",
+    "args": {}
+  }
+]

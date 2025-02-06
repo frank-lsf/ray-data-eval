@@ -1,0 +1,142 @@
+[
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732586226318858.5,
+    "dur": 98966965.5020000041,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "b200abcdc7a98608bd8efccd5851a1bf570c9c4601000000"
+    }
+  },
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732586325287347.75,
+    "dur": 97806274.8369999975,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "d2f01adc5d9d9e1cbd8efccd5851a1bf570c9c4601000000"
+    }
+  },
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732586423094717.5,
+    "dur": 97813365.525000006,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "ff1a14e1a2f7ee43bd8efccd5851a1bf570c9c4601000000"
+    }
+  },
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732586520909103.75,
+    "dur": 97823824.9459999949,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "f29408c8f317b55ebd8efccd5851a1bf570c9c4601000000"
+    }
+  },
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732586618734425.25,
+    "dur": 98284682.7610000074,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "66dcd053231ad188bd8efccd5851a1bf570c9c4601000000"
+    }
+  },
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732586717020233.75,
+    "dur": 98184564.2849999964,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "82630a7b7931b6b0bd8efccd5851a1bf570c9c4601000000"
+    }
+  },
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732586815205831.75,
+    "dur": 98299516.9549999982,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "2d6307193100186bbd8efccd5851a1bf570c9c4601000000"
+    }
+  },
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732586913506861.5,
+    "dur": 97751400.9169999957,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "df417898919e6387bd8efccd5851a1bf570c9c4601000000"
+    }
+  },
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732587011259371.75,
+    "dur": 97992255.4979999959,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "13b0cd2174aeff77bd8efccd5851a1bf570c9c4601000000"
+    }
+  },
+  {
+    "cat": "task::MapBatches(FusedProcessor)",
+    "name": "submit",
+    "pid": "10.0.34.58",
+    "tid": "CPU: 0",
+    "ts": 1732587109252853.0,
+    "dur": 98134918.827000007,
+    "ph": "X",
+    "cname": "rail_response",
+    "args": {
+      "name": "submit",
+      "task_id": "02f91b1a362f2e7bbd8efccd5851a1bf570c9c4601000000"
+    }
+  }
+]
