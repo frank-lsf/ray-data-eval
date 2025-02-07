@@ -9,6 +9,7 @@ import ray
 
 LOG_FILE = "variable_duration_benchmark.log"
 
+
 class Logger:
     def __init__(self, filename: str = LOG_FILE):
         self._filename = filename
@@ -46,7 +47,7 @@ def main(is_flink: bool):
 
     def produce(batch):
         logger.log({"name": "producer_start", "id": [int(x) for x in batch["id"]]})
-        # Enable for variable duration benchmark. 
+        # Enable for variable duration benchmark.
         if int(batch["id"][0].item()) < NUM_ROWS_TOTAL / 2:
             time.sleep(TIME_UNIT * 4)
         else:
@@ -62,7 +63,7 @@ def main(is_flink: bool):
 
     def consume(batch):
         logger.log({"name": "consume", "id": int(batch["id"].item())})
-        # Enable for variable duration benchmark. 
+        # Enable for variable duration benchmark.
         if int(batch["id"].item()) < NUM_ROWS_TOTAL / 2:
             time.sleep(TIME_UNIT)
         else:
@@ -84,7 +85,7 @@ def main(is_flink: bool):
 
     if is_flink:
         ds = ds.map_batches(produce, batch_size=NUM_ROWS_PER_TASK, concurrency=4)
-        ds = ds.map_batches(inference, batch_size=1, num_cpus=0, num_gpus=1,  concurrency=4)
+        ds = ds.map_batches(inference, batch_size=1, num_cpus=0, num_gpus=1, concurrency=4)
         ds = ds.map_batches(consume, batch_size=1, num_cpus=0.99, concurrency=4)
     else:
         ds = ds.map_batches(produce, batch_size=NUM_ROWS_PER_TASK)
@@ -106,6 +107,7 @@ def main(is_flink: bool):
         f"timeline_{'ray' if not is_flink else 'flink'}_variable_3stage.json", NUM_CPUS, NUM_GPUS
     )
     ray.shutdown()
+
 
 if __name__ == "__main__":
     main(is_flink=True)

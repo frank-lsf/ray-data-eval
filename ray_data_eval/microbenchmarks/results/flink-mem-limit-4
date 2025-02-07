@@ -1,0 +1,29 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 32744 bytes for ChunkPool::allocate
+# An error report file with more information is saved as:
+# /home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/hs_err_pid120085.log
+[thread 120102 also had an error]
+[thread 120097 also had an error]
+#
+# Can't open file to dump replay data. Error: Not enough space
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 171, in <module>
+    main(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 154, in main
+    run_experiment(mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 141, in run_experiment
+    config = Configuration()
+             ^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/common/configuration.py", line 43, in __init__
+    gateway = get_gateway()
+              ^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/java_gateway.py", line 64, in get_gateway
+    _gateway = launch_gateway()
+               ^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/java_gateway.py", line 117, in launch_gateway
+    raise RuntimeError(
+RuntimeError: Java gateway process exited before sending its port number.
+Stderr:
+WARNING: Unknown module: jdk.proxy2 specified to --add-opens
+

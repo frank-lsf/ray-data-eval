@@ -55,7 +55,7 @@ bar_width = 0.4
 ax.bar(x, unlimited_memory, width=bar_width, label="Unlim. Mem.", zorder=2)
 ax.bar([p + bar_width for p in x], limited_memory, width=bar_width, label="Lim. Mem.", zorder=2)
 theoretical_minimum = 153
-ax.axhline(y=theoretical_minimum, color='g', linestyle='--', label='Theo. Min.', zorder=1)
+ax.axhline(y=theoretical_minimum, color="g", linestyle="--", label="Theo. Min.", zorder=1)
 
 # Adding text for zero value in large row
 for i, value in enumerate(limited_memory):

@@ -7,7 +7,6 @@ import numpy as np
 import ray
 
 from ray_data_eval.microbenchmarks.setting import (
-    GB,
     TIME_UNIT,
     NUM_CPUS,
     NUM_GPUS,
@@ -18,9 +17,12 @@ from ray_data_eval.microbenchmarks.setting import (
 )
 import timeline_utils
 
+
 def expand_cluster():
     additional_num_pids = 4
-    ray_start_command = f"ray start --address=10.0.33.210:6379 --num-cpus {additional_num_pids} --num-gpus 1"
+    ray_start_command = (
+        f"ray start --address=10.0.33.210:6379 --num-cpus {additional_num_pids} --num-gpus 1"
+    )
 
     try:
         subprocess.run(ray_start_command, shell=True, check=True)
@@ -30,9 +32,9 @@ def expand_cluster():
         time.sleep(5)
     except subprocess.CalledProcessError as e:
         print(f"Failed to start {additional_num_pids} workers. Error: {e}")
-            
+
     print(ray.available_resources())
-    
+
 
 def bench(mem_limit):
     os.environ["RAY_DATA_OP_RESERVATION_RATIO"] = "0"
@@ -58,17 +60,16 @@ def bench(mem_limit):
     data_context.is_budget_policy = True
     # data_context.is_conservative_policy = True
 
-    ray_start_head_command = f"ray start --head --num-cpus 4"
+    ray_start_head_command = "ray start --head --num-cpus 4"
     try:
         subprocess.run(ray_start_head_command, shell=True, check=True)
         time.sleep(5)
     except subprocess.CalledProcessError as e:
         print(f"Failed to start head node. Error: {e}")
-            
-        
+
     ray.init("auto")
     print(ray.available_resources())
-    
+
     ds = ray.data.range(NUM_FRAMES_TOTAL, override_num_blocks=NUM_VIDEOS)
     ds = ds.map_batches(produce, batch_size=FRAMES_PER_VIDEO)
     ds = ds.map_batches(consume, batch_size=1, num_cpus=0.99)
@@ -83,17 +84,18 @@ def bench(mem_limit):
             expand_cluster()
             expanded_cluster = True
         print(f"Seen batch: {seen_batch}/{NUM_FRAMES_TOTAL / FRAMES_PER_VIDEO}")
-        
+
     end_time = time.time()
     print(ds.stats())
     print(ray._private.internal_api.memory_summary(stats_only=True))
     print(f"Total time: {end_time - start_time:.4f}s")
-    
+
     ray.timeline(f"timeline_ray_data_{mem_limit}_original.json")
     timeline_utils.save_timeline_with_cpus_gpus(
         f"timeline_ray_data_{mem_limit}.json", NUM_CPUS, NUM_GPUS
     )
     ray.shutdown()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -1,4 +1,10 @@
 export PYTHONPATH=$(dirname $(pwd)):$PYTHONPATH
+export MICROBENCHMARK_HOME=/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks
 
-python producer_consumer_gpu.py --mem-limit 10 > mem-limit-10.log 2>&1
-python producer_consumer_gpu.py --mem-limit 3 > mem-limit-3.log 2>&1
+mem_limit=$1
+log_file=$2
+
+echo "Running $mem_limit GB"
+echo "Log: $log_file"
+
+python -u producer_consumer_gpu.py --mem-limit $mem_limit > $log_file 2>&1

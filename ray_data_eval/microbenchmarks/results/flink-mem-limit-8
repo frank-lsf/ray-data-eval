@@ -1,0 +1,83 @@
+memory:  1024.0m
+[4.789s][warning][os,thread] Failed to start thread "Unknown thread" - pthread_create failed (EAGAIN) for attributes: stacksize: 1024k, guardsize: 0k, detached.
+[4.789s][warning][os,thread] Failed to start the native thread for java.lang.Thread "flink-metrics-pekko.actor.internal-dispatcher-2"
+Traceback (most recent call last):
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 171, in <module>
+    main(args.mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 154, in main
+    run_experiment(mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 150, in run_experiment
+    run_flink(env, mem_limit)
+  File "/home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/producer_consumer_gpu.py", line 131, in run_flink
+    for length in ds.execute_and_collect():
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/datastream/data_stream.py", line 858, in execute_and_collect
+    return CloseableIterator(self._j_data_stream.executeAndCollect(), self.get_type())
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/java_gateway.py", line 1322, in __call__
+    return_value = get_return_value(
+                   ^^^^^^^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/pyflink/util/exceptions.py", line 146, in deco
+    return f(*a, **kw)
+           ^^^^^^^^^^^
+  File "/opt/conda/envs/ray-data/lib/python3.11/site-packages/py4j/protocol.py", line 326, in get_return_value
+    raise Py4JJavaError(
+py4j.protocol.Py4JJavaError: An error occurred while calling o100.executeAndCollect.
+: java.lang.Exception: Could not create actor system
+	at org.apache.flink.runtime.rpc.pekko.ActorSystemBootstrapTools.startLocalActorSystem(ActorSystemBootstrapTools.java:238)
+	at org.apache.flink.runtime.rpc.pekko.PekkoRpcServiceUtils$PekkoRpcServiceBuilder.createAndStart(PekkoRpcServiceUtils.java:349)
+	at org.apache.flink.runtime.rpc.pekko.PekkoRpcServiceUtils$PekkoRpcServiceBuilder.createAndStart(PekkoRpcServiceUtils.java:326)
+	at org.apache.flink.runtime.rpc.pekko.PekkoRpcServiceUtils$PekkoRpcServiceBuilder.createAndStart(PekkoRpcServiceUtils.java:246)
+	at org.apache.flink.runtime.metrics.util.MetricUtils.startMetricRpcService(MetricUtils.java:217)
+	at org.apache.flink.runtime.metrics.util.MetricUtils.startLocalMetricsRpcService(MetricUtils.java:205)
+	at org.apache.flink.runtime.minicluster.MiniCluster.start(MiniCluster.java:363)
+	at org.apache.flink.client.program.PerJobMiniClusterFactory.submitJob(PerJobMiniClusterFactory.java:76)
+	at org.apache.flink.client.deployment.executors.LocalExecutor.execute(LocalExecutor.java:84)
+	at org.apache.flink.streaming.api.environment.StreamExecutionEnvironment.executeAsync(StreamExecutionEnvironment.java:2472)
+	at org.apache.flink.streaming.api.environment.StreamExecutionEnvironment.executeAsync(StreamExecutionEnvironment.java:2453)
+	at org.apache.flink.streaming.api.datastream.DataStream.executeAndCollectWithClient(DataStream.java:1507)
+	at org.apache.flink.streaming.api.datastream.DataStream.executeAndCollect(DataStream.java:1355)
+	at org.apache.flink.streaming.api.datastream.DataStream.executeAndCollect(DataStream.java:1341)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.apache.flink.api.python.shaded.py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+	at org.apache.flink.api.python.shaded.py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at org.apache.flink.api.python.shaded.py4j.Gateway.invoke(Gateway.java:282)
+	at org.apache.flink.api.python.shaded.py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+	at org.apache.flink.api.python.shaded.py4j.commands.CallCommand.execute(CallCommand.java:79)
+	at org.apache.flink.api.python.shaded.py4j.GatewayConnection.run(GatewayConnection.java:238)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+Caused by: java.lang.OutOfMemoryError: unable to create native thread: possibly out of memory or process/resource limits reached
+	at java.base/java.lang.Thread.start0(Native Method)
+	at java.base/java.lang.Thread.start(Thread.java:798)
+	at java.base/java.util.concurrent.ForkJoinPool.createWorker(ForkJoinPool.java:1329)
+	at java.base/java.util.concurrent.ForkJoinPool.tryAddWorker(ForkJoinPool.java:1352)
+	at java.base/java.util.concurrent.ForkJoinPool.signalWork(ForkJoinPool.java:1476)
+	at java.base/java.util.concurrent.ForkJoinPool.externalPush(ForkJoinPool.java:1903)
+	at java.base/java.util.concurrent.ForkJoinPool.externalSubmit(ForkJoinPool.java:1921)
+	at java.base/java.util.concurrent.ForkJoinPool.execute(ForkJoinPool.java:2435)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinPool.execute(ForkJoinExecutorConfigurator.scala:41)
+	at org.apache.pekko.dispatch.ExecutorServiceDelegate.execute(ThreadPoolBuilder.scala:228)
+	at org.apache.pekko.dispatch.ExecutorServiceDelegate.execute$(ThreadPoolBuilder.scala:228)
+	at org.apache.pekko.dispatch.Dispatcher$LazyExecutorServiceDelegate.execute(Dispatcher.scala:53)
+	at org.apache.pekko.dispatch.Dispatcher.registerForExecution(Dispatcher.scala:137)
+	at org.apache.pekko.dispatch.MessageDispatcher.attach(AbstractDispatcher.scala:163)
+	at org.apache.pekko.actor.dungeon.Dispatch.start(Dispatch.scala:130)
+	at org.apache.pekko.actor.dungeon.Dispatch.start$(Dispatch.scala:128)
+	at org.apache.pekko.actor.ActorCell.start(ActorCell.scala:420)
+	at org.apache.pekko.actor.LocalActorRef.start(ActorRef.scala:394)
+	at org.apache.pekko.actor.LocalActorRefProvider.init(ActorRefProvider.scala:615)
+	at org.apache.pekko.actor.ActorSystemImpl.liftedTree2$1(ActorSystem.scala:1045)
+	at org.apache.pekko.actor.ActorSystemImpl._start$lzycompute(ActorSystem.scala:1041)
+	at org.apache.pekko.actor.ActorSystemImpl._start(ActorSystem.scala:1040)
+	at org.apache.pekko.actor.ActorSystemImpl.start(ActorSystem.scala:1064)
+	at org.apache.flink.runtime.rpc.pekko.RobustActorSystem.create(RobustActorSystem.java:102)
+	at org.apache.flink.runtime.rpc.pekko.RobustActorSystem.create(RobustActorSystem.java:62)
+	at org.apache.flink.runtime.rpc.pekko.RobustActorSystem.create(RobustActorSystem.java:54)
+	at org.apache.flink.runtime.rpc.pekko.PekkoUtils.createActorSystem(PekkoUtils.java:443)
+	at org.apache.flink.runtime.rpc.pekko.ActorSystemBootstrapTools.startActorSystem(ActorSystemBootstrapTools.java:253)
+	at org.apache.flink.runtime.rpc.pekko.ActorSystemBootstrapTools.startLocalActorSystem(ActorSystemBootstrapTools.java:236)
+	... 24 more
+
