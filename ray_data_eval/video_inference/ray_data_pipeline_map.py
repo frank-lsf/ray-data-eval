@@ -4,25 +4,21 @@ import io
 import os
 import time
 
-import humanize
 import numpy as np
 import ray
 from ray.data.block import DataBatch
 
-import torch
-from transformers import (
-    VideoMAEImageProcessor,
-    VideoMAEForVideoClassification,
-)
-import timeline_utils
-
+import humanize
 from ray_data_pipeline_helpers import postprocess
+import timeline_utils
+import torch
+from transformers import VideoMAEForVideoClassification, VideoMAEImageProcessor
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "-s",
     "--source",
-    default="local",
+    default="s3",
     help="local or S3",
 )
 
@@ -34,6 +30,9 @@ IMAGE_SIZE = 224
 NUM_FRAMES = 16
 MODEL_INPUT_SHAPE = (NUM_FRAMES, 3, IMAGE_SIZE, IMAGE_SIZE)
 BATCH_SIZE = 32
+
+PREPROCESSOR_CACHE = "/tmp/videomae_processor"
+MODEL_CACHE = "/tmp/videomae_model"
 
 if args.source == "local":
     print("Using local data.")
@@ -77,7 +76,11 @@ def print_gpu_memory_usage():
 class Classifier:
     def __init__(self):
         start_time = time.time()
-        self.model = VideoMAEForVideoClassification.from_pretrained(MODEL_ID).eval().to(DEVICE)
+        self.model = (
+            VideoMAEForVideoClassification.from_pretrained(MODEL_CACHE, local_files_only=True)
+            .eval()
+            .to(DEVICE)
+        )
         print(f"Time to initialize model: {time.time() - start_time}")
 
     @timeit("Inference")
@@ -125,7 +128,7 @@ def preprocess_video(row: DataBatch) -> DataBatch:
         return {"video": np.zeros((1, NUM_FRAMES, 3, IMAGE_SIZE, IMAGE_SIZE), dtype=np.float32)}
 
     frames = list(frames)
-    processor = VideoMAEImageProcessor.from_pretrained(MODEL_ID)
+    processor = VideoMAEImageProcessor.from_pretrained(PREPROCESSOR_CACHE, local_files_only=True)
     ret = processor(frames, return_tensors="np")
     arr = ret.data["pixel_values"]
 
@@ -149,7 +152,7 @@ def collate_video_frames(batch: DataBatch) -> DataBatch:
 
 @timeit
 def main():
-    ray.init(num_cpus=8, num_gpus=1, object_store_memory=5 * 1024 * 1024 * 1024)
+    ray.init("auto")
 
     print("Starting warmup.", flush=True)
     NUM_CPUS_IN_CLUSTER = int(ray.available_resources()["CPU"])
@@ -193,10 +196,13 @@ def main():
 
     ds = ray.data.read_binary_files(
         INPUT_PATH,
+        concurrency=NUM_CPUS_IN_CLUSTER,
     )
 
-    # ds = ds.limit(1000)
-    ds = ds.map(preprocess_video)
+    ds = ds.map(
+        preprocess_video,
+        concurrency=NUM_CPUS_IN_CLUSTER,
+    )
 
     ds = ds.map_batches(
         Classifier,
@@ -212,8 +218,8 @@ def main():
 
     ray.timeline(f"video_inference_{args.source}_{INSTANCE}_batch_{BATCH_SIZE}_original.json")
     timeline_utils.save_timeline_with_cpus_gpus(
-            TIMELINE_FILENAME, NUM_CPUS_IN_CLUSTER, NUM_GPUS_IN_CLUSTER
-        )
+        TIMELINE_FILENAME, NUM_CPUS_IN_CLUSTER, NUM_GPUS_IN_CLUSTER
+    )
 
     postprocess(OUTPUT_FILENAME)
     ray.shutdown()
