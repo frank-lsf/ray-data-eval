@@ -33,7 +33,7 @@ def assign_slots(events, num_cpus, num_gpus):
 
     def i_to_slot_name(i, cat):
         if cat == consumer_task_name:
-            return f"GPU"
+            return "GPU"
         else:
             return f"CPU: {i}"
         if i < num_cpus:

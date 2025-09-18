@@ -140,13 +140,9 @@ public class FlinkProducerConsumer {
     public void runExperiment() throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        env.enableCheckpointing(10000, CheckpointingMode.EXACTLY_ONCE);
-        env.getCheckpointConfig().setCheckpointTimeout(120000); // 120 seconds
-        env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
-
+        env.enableCheckpointing(60000, CheckpointingMode.EXACTLY_ONCE);
         env.setParallelism(NUM_CPUS);
         env.setRestartStrategy(org.apache.flink.api.common.restartstrategy.RestartStrategies.fixedDelayRestart(3, org.apache.flink.api.common.time.Time.seconds(3)));
-
         env.getCheckpointConfig().setCheckpointStorage("file:///home/ubuntu/ray-data-eval/ray_data_eval/microbenchmarks/flink/flink-checkpoints");
 
         runFlink(env);

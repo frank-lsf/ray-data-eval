@@ -3,9 +3,7 @@ from pyflink.common.typeinfo import Types
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.common import Configuration
 from pyflink.datastream.functions import FlatMapFunction, RuntimeContext, ProcessFunction
-import logging
 import json
-import os
 
 NUM_CPUS = 8
 
@@ -20,7 +18,7 @@ PRODUCER_PARALLELISM = 8
 CONSUMER_PARALLELISM = 8
 
 EXECUTION_MODE = "process"
-MB = 1024 * 1024    
+MB = 1024 * 1024
 
 NUM_TASKS = 16 * 5
 BLOCK_SIZE = int(1 * MB)
@@ -29,21 +27,22 @@ TIME_UNIT = 0.5
 NUM_ROWS_PER_PRODUCER = 1
 NUM_ROWS_PER_CONSUMER = 1
 
+
 def append_dict_to_file(data: dict, file_path: str):
     """
     Append a dictionary to a file as a JSON object.
-    
+
     Args:
         data (dict): The dictionary to append.
         file_path (str): The path to the file.
     """
     if not isinstance(data, dict):
         raise ValueError("Input data must be a dictionary.")
-    
+
     # Open the file in append mode, creating it if it doesn't exist
-    with open(file_path, 'a') as file:
-        file.write(json.dumps(data) + '\n')
-        
+    with open(file_path, "a") as file:
+        file.write(json.dumps(data) + "\n")
+
 
 class Producer(FlatMapFunction):
     def open(self, runtime_context: RuntimeContext):
@@ -66,7 +65,7 @@ class Producer(FlatMapFunction):
             "args": {},
         }
         # print(log)
-        append_dict_to_file(log, 'flink_logs.log')
+        append_dict_to_file(log, "flink_logs.log")
         # logging.warning(json.dumps(log))
 
         for _ in range(NUM_ROWS_PER_PRODUCER):
@@ -104,26 +103,29 @@ class ConsumerActor(ProcessFunction):
             "ph": "X",
             "args": {},
         }
-        append_dict_to_file(log, 'flink_logs.log')
+        append_dict_to_file(log, "flink_logs.log")
 
         # logging.warning(json.dumps(log))
         current_batch_len = len(self.current_batch)
         self.current_batch = []
         return [current_batch_len]
 
+
 def run_flink(env):
     start = time.perf_counter()
     items = list(range(NUM_TASKS))
     ds = env.from_collection(items, type_info=Types.INT())
     producer = Producer()
-    ds = ds.flat_map(producer, output_type=Types.PICKLED_BYTE_ARRAY()).set_parallelism(
-        PRODUCER_PARALLELISM
-    ).slot_sharing_group("default")    
-    
     ds = (
-        ds.process(ConsumerActor()).set_parallelism(CONSUMER_PARALLELISM)
-    ).slot_sharing_group("default")
-    
+        ds.flat_map(producer, output_type=Types.PICKLED_BYTE_ARRAY())
+        .set_parallelism(PRODUCER_PARALLELISM)
+        .slot_sharing_group("default")
+    )
+
+    ds = (ds.process(ConsumerActor()).set_parallelism(CONSUMER_PARALLELISM)).slot_sharing_group(
+        "default"
+    )
+
     result = []
     for length in ds.execute_and_collect():
         result.append(length)
@@ -134,6 +136,7 @@ def run_flink(env):
     print(f"\nTotal data length: {total_length:,}")
     print(f"Time: {end - start:.4f}s")
 
+
 def run_experiment():
     config = Configuration()
     config.set_string("python.execution-mode", EXECUTION_MODE)
@@ -141,6 +144,7 @@ def run_experiment():
 
     env = StreamExecutionEnvironment.get_execution_environment(config)
     run_flink(env)
+
 
 def main():
     run_experiment()

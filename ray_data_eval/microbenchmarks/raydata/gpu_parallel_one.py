@@ -5,7 +5,6 @@ import time
 import numpy as np
 import timeline_utils
 import ray
-import psutil
 
 LOG_FILE = "gpu_parallel_one.log"
 
@@ -29,13 +28,13 @@ class Logger:
         with open(self._filename, "a") as f:
             f.write(json.dumps(payload) + "\n")
 
+
 logger = Logger()
 
 TIME_UNIT = 0.5
 
 
 def main(is_flink: bool):
-
     os.environ["RAY_DATA_OP_RESERVATION_RATIO"] = "0"
 
     NUM_CPUS = 8
@@ -43,13 +42,11 @@ def main(is_flink: bool):
     NUM_ROWS_PER_TASK = 10
     BUFFER_SIZE_LIMIT = 30
     NUM_TASKS = 16 * 5
-    NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS  
+    NUM_ROWS_TOTAL = NUM_ROWS_PER_TASK * NUM_TASKS
     BLOCK_SIZE = 10 * 1024 * 1024 * 10
 
     def produce(batch):
-        logger.log({
-            "name": "producer_start", 
-            "id": [int(x) for x in batch["id"]]})
+        logger.log({"name": "producer_start", "id": [int(x) for x in batch["id"]]})
         time.sleep(TIME_UNIT * 10)
         for id in batch["id"]:
             yield {
@@ -60,18 +57,18 @@ def main(is_flink: bool):
     def transform(batch):
         logger.log({"name": "transform", "id": int(batch["id"].item())})
         time.sleep(TIME_UNIT)
-        
+
         # This will cause spilling
         return {"id": batch["id"], "image": [np.ones(BLOCK_SIZE, dtype=np.uint8)]}
-        
-        # This won't cause spilling. 
+
+        # This won't cause spilling.
         # return {"id": batch["id"], "image": [0]}
 
     def inference(batch):
         logger.log({"name": "inference", "id": [int(x) for x in batch["id"]]})
         time.sleep(TIME_UNIT)
         return {"id": batch["id"]}
-    
+
     def write(batch):
         logger.log({"name": "write", "id": int(batch["id"].item())})
         time.sleep(TIME_UNIT)
@@ -82,24 +79,26 @@ def main(is_flink: bool):
     data_context.target_max_block_size = BLOCK_SIZE
 
     if is_flink:
-        data_context.is_budget_policy = False # Disable our policy. 
+        data_context.is_budget_policy = False  # Disable our policy.
     else:
         data_context.is_budget_policy = True
-        
-    ray.init(num_cpus=NUM_CPUS, num_gpus=NUM_GPUS, object_store_memory=BUFFER_SIZE_LIMIT * BLOCK_SIZE)
+
+    ray.init(
+        num_cpus=NUM_CPUS, num_gpus=NUM_GPUS, object_store_memory=BUFFER_SIZE_LIMIT * BLOCK_SIZE
+    )
 
     ds = ray.data.range(NUM_ROWS_TOTAL, override_num_blocks=NUM_TASKS)
-    
+
     if is_flink:
         ds = ds.map_batches(produce, batch_size=NUM_ROWS_PER_TASK, concurrency=2)
         ds = ds.map_batches(transform, batch_size=1, num_cpus=0.99, concurrency=3)
-        ds = ds.map_batches(inference, batch_size=4, num_gpus=1, concurrency=1) 
-        ds = ds.map_batches(write, batch_size=1, num_cpus=0.99, concurrency=3) 
+        ds = ds.map_batches(inference, batch_size=4, num_gpus=1, concurrency=1)
+        ds = ds.map_batches(write, batch_size=1, num_cpus=0.99, concurrency=3)
 
     else:
         ds = ds.map_batches(produce, batch_size=NUM_ROWS_PER_TASK)
         ds = ds.map_batches(transform, batch_size=1, num_cpus=0.99)
-        ds = ds.map_batches(inference, batch_size=4, num_gpus=1) 
+        ds = ds.map_batches(inference, batch_size=4, num_gpus=1)
         ds = ds.map_batches(write, batch_size=1, num_cpus=0.99)
 
     logger.record_start()
@@ -113,9 +112,12 @@ def main(is_flink: bool):
     print(ds.stats())
     print(ray._private.internal_api.memory_summary(stats_only=True))
     print(f"Total time: {end_time - start_time:.4f}s")
-    timeline_utils.save_timeline_with_cpus_gpus(f"timeline_{'ray' if not is_flink else 'flink'}_gpu_parallel_one.json", NUM_CPUS,  NUM_GPUS)
+    timeline_utils.save_timeline_with_cpus_gpus(
+        f"timeline_{'ray' if not is_flink else 'flink'}_gpu_parallel_one.json", NUM_CPUS, NUM_GPUS
+    )
     ray.shutdown()
 
-if __name__ == "__main__": 
-    # main(is_flink=True) 
+
+if __name__ == "__main__":
+    # main(is_flink=True)
     main(is_flink=False)

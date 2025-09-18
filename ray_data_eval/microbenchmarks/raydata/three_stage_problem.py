@@ -5,7 +5,6 @@ import time
 import numpy as np
 import timeline_utils
 import ray
-import psutil
 
 LOG_FILE = "three_stage_problem.log"
 
